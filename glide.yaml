@@ -5,17 +5,21 @@ import:
 # set to the tag name. To work around this the *EXACT* hash of the tag is used.
 - package: k8s.io/apimachinery
   version: 302974c03f7e50f16561ba237db776ab93594ef6
-  subpackages:
-  - pkg/apimachinery/announced
-  - pkg/apimachinery/registered
-  - pkg/apis/meta/v1
-  - pkg/runtime
-  - pkg/runtime/schema
-  - pkg/util/sets
+# Pin to kubernetes 1.10.8.
+# k8s.io/client-go also imports this package and it complains if the version is
+# set to the tag name. To work around this the *EXACT* hash of the tag is used.
+- package: k8s.io/api
+  version: 73d903622b7391f3312dcbac6483fed484e185f8
+# Pin client-go to the exact tag release for K8s 1.10.8
+- package: k8s.io/client-go
+  version: 23781f4d6632d88e869066eaebb743857aa1ef9b
 # Pin to kubernetes 1.10.8.
 # k8s.io/client-go doesn't import this package so it's OK to use the tag name.
 - package: k8s.io/code-generator
   version: kubernetes-1.10.0
+# Note: code-generator (deepcopy-gen) relies on this, but it isn't picked up
+# since we only reference it from out Makefile.
+- package: golang.org/x/tools/import
 # Pin to the version requested by the API server
 - package: k8s.io/gengo
   version: 4242d8e6c5dba56827bb7bcf14ad11cda38f3991
@@ -29,4 +33,6 @@ import:
 - package: github.com/go-openapi/jsonpointer
 - package: github.com/go-openapi/jsonreference
 - package: github.com/go-openapi/swag
-
+# Using the pin used by Masterminds/sprig to address missing function issue.
+- package: github.com/imdario/mergo
+  version: ~0.3.7

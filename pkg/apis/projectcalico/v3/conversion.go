@@ -9,7 +9,7 @@ import (
 )
 
 func addConversionFuncs(scheme *runtime.Scheme) error {
-	err = scheme.AddFieldLabelConversionFunc("projectcalico.org/v3", "GlobalReportType",
+	err := scheme.AddFieldLabelConversionFunc("projectcalico.org/v3", "GlobalReportType",
 		func(label, value string) (string, string, error) {
 			switch label {
 			case "metadata.name":
