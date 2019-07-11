@@ -1,0 +1,4 @@
+.generate_exes
+.generate_files
+bin/*
+vendor/
