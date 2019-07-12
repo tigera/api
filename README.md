@@ -8,4 +8,12 @@ One way is to import the clientset directly and use it. See [examples/main.go](e
 
 ## Adding new APIs
 
-TODO
+1. Add the new types to `pkg/apis/<apigroup>/types.go`
+
+1. Add the new types to `pkg/apis/<apigroup>/<version>/types.go`
+
+1. Update generated code, including clients, informers, etc.
+
+   ```
+   make .generate_files
+   ```
