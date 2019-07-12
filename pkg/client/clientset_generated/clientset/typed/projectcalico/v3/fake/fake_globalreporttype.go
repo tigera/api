@@ -48,7 +48,7 @@ func (c *FakeGlobalReportTypes) List(opts v1.ListOptions) (result *v3.GlobalRepo
 	if label == nil {
 		label = labels.Everything()
 	}
-	list := &v3.GlobalReportTypeList{}
+	list := &v3.GlobalReportTypeList{ListMeta: obj.(*v3.GlobalReportTypeList).ListMeta}
 	for _, item := range obj.(*v3.GlobalReportTypeList).Items {
 		if label.Matches(labels.Set(item.Labels)) {
 			list.Items = append(list.Items, item)
@@ -105,7 +105,7 @@ func (c *FakeGlobalReportTypes) DeleteCollection(options *v1.DeleteOptions, list
 // Patch applies the patch and returns the patched globalReportType.
 func (c *FakeGlobalReportTypes) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v3.GlobalReportType, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(globalreporttypesResource, c.ns, name, data, subresources...), &v3.GlobalReportType{})
+		Invokes(testing.NewPatchSubresourceAction(globalreporttypesResource, c.ns, name, pt, data, subresources...), &v3.GlobalReportType{})
 
 	if obj == nil {
 		return nil, err

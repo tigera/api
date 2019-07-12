@@ -48,25 +48,15 @@ PIN_BRANCH?=$(shell git rev-parse --abbrev-ref HEAD)
 
 # This section contains the code generation stuff
 #################################################
-.generate_exes: $(BINDIR)/defaulter-gen \
-                $(BINDIR)/deepcopy-gen \
-                $(BINDIR)/conversion-gen \
+.generate_exes: $(BINDIR)/deepcopy-gen \
                 $(BINDIR)/client-gen \
                 $(BINDIR)/lister-gen \
                 $(BINDIR)/informer-gen
 	touch $@
 
-$(BINDIR)/defaulter-gen: vendor/.up-to-date
-	$(DOCKER_RUN) $(CALICO_BUILD) \
-	    sh -c 'go build -o $@ $(PACKAGE_NAME)/vendor/k8s.io/code-generator/cmd/defaulter-gen'
-
 $(BINDIR)/deepcopy-gen: vendor/.up-to-date
 	$(DOCKER_RUN) $(CALICO_BUILD) \
 	    sh -c 'go build -o $@ $(PACKAGE_NAME)/vendor/k8s.io/code-generator/cmd/deepcopy-gen'
-
-$(BINDIR)/conversion-gen: vendor/.up-to-date
-	$(DOCKER_RUN) $(CALICO_BUILD) \
-	    sh -c 'go build -o $@ $(PACKAGE_NAME)/vendor/k8s.io/code-generator/cmd/conversion-gen'
 
 $(BINDIR)/client-gen: vendor/.up-to-date
 	$(DOCKER_RUN) $(CALICO_BUILD) \
@@ -82,16 +72,6 @@ $(BINDIR)/informer-gen: vendor/.up-to-date
 
 # Regenerate all files if the gen exes changed or any "types.go" files changed
 .generate_files: .generate_exes $(TYPES_FILES)
-	# Generate defaults
-	$(DOCKER_RUN) $(CALICO_BUILD) \
-	   sh -c '$(BINDIR)/defaulter-gen \
-		--v 1 --logtostderr \
-		--go-header-file "/go/src/$(PACKAGE_NAME)/hack/boilerplate/boilerplate.go.txt" \
-		--input-dirs "$(PACKAGE_NAME)/pkg/apis/projectcalico" \
-		--input-dirs "$(PACKAGE_NAME)/pkg/apis/projectcalico/v3" \
-		--extra-peer-dirs "$(PACKAGE_NAME)/pkg/apis/projectcalico" \
-		--extra-peer-dirs "$(PACKAGE_NAME)/pkg/apis/projectcalico/v3" \
-		--output-file-base "zz_generated.defaults"'
 	# Generate deep copies
 	$(DOCKER_RUN) $(CALICO_BUILD) \
 	   sh -c '$(BINDIR)/deepcopy-gen \
@@ -101,15 +81,7 @@ $(BINDIR)/informer-gen: vendor/.up-to-date
 		--input-dirs "$(PACKAGE_NAME)/pkg/apis/projectcalico/v3" \
 		--bounding-dirs "github.com/tigera/api" \
 		--output-file-base zz_generated.deepcopy'
-	# Generate conversions
-	$(DOCKER_RUN) $(CALICO_BUILD) \
-	   sh -c '$(BINDIR)/conversion-gen \
-		--v 1 --logtostderr \
-		--go-header-file "/go/src/$(PACKAGE_NAME)/hack/boilerplate/boilerplate.go.txt" \
-		--input-dirs "$(PACKAGE_NAME)/pkg/apis/projectcalico" \
-		--input-dirs "$(PACKAGE_NAME)/pkg/apis/projectcalico/v3" \
-		--output-file-base zz_generated.conversion'
-	# generate all pkg/client contents
+	# Generate all pkg/client contents
 	$(DOCKER_RUN) $(CALICO_BUILD) \
 	   sh -c '$(BUILD_DIR)/update-client-gen.sh'
 	touch $@
