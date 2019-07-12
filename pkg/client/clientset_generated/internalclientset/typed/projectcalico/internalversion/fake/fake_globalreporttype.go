@@ -48,7 +48,7 @@ func (c *FakeGlobalReportTypes) List(opts v1.ListOptions) (result *projectcalico
 	if label == nil {
 		label = labels.Everything()
 	}
-	list := &projectcalico.GlobalReportTypeList{}
+	list := &projectcalico.GlobalReportTypeList{ListMeta: obj.(*projectcalico.GlobalReportTypeList).ListMeta}
 	for _, item := range obj.(*projectcalico.GlobalReportTypeList).Items {
 		if label.Matches(labels.Set(item.Labels)) {
 			list.Items = append(list.Items, item)
@@ -105,7 +105,7 @@ func (c *FakeGlobalReportTypes) DeleteCollection(options *v1.DeleteOptions, list
 // Patch applies the patch and returns the patched globalReportType.
 func (c *FakeGlobalReportTypes) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *projectcalico.GlobalReportType, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(globalreporttypesResource, c.ns, name, data, subresources...), &projectcalico.GlobalReportType{})
+		Invokes(testing.NewPatchSubresourceAction(globalreporttypesResource, c.ns, name, pt, data, subresources...), &projectcalico.GlobalReportType{})
 
 	if obj == nil {
 		return nil, err
