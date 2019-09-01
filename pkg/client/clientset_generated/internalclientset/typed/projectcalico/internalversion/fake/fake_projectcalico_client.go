@@ -18,6 +18,10 @@ func (c *FakeProjectcalico) GlobalReportTypes(namespace string) internalversion.
 	return &FakeGlobalReportTypes{c, namespace}
 }
 
+func (c *FakeProjectcalico) LicenseKeys(namespace string) internalversion.LicenseKeyInterface {
+	return &FakeLicenseKeys{c, namespace}
+}
+
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeProjectcalico) RESTClient() rest.Interface {

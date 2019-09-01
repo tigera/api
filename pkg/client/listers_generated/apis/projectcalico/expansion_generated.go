@@ -11,3 +11,11 @@ type GlobalReportTypeListerExpansion interface{}
 // GlobalReportTypeNamespaceListerExpansion allows custom methods to be added to
 // GlobalReportTypeNamespaceLister.
 type GlobalReportTypeNamespaceListerExpansion interface{}
+
+// LicenseKeyListerExpansion allows custom methods to be added to
+// LicenseKeyLister.
+type LicenseKeyListerExpansion interface{}
+
+// LicenseKeyNamespaceListerExpansion allows custom methods to be added to
+// LicenseKeyNamespaceLister.
+type LicenseKeyNamespaceListerExpansion interface{}

@@ -5,3 +5,5 @@
 package internalversion
 
 type GlobalReportTypeExpansion interface{}
+
+type LicenseKeyExpansion interface{}
