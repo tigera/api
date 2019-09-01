@@ -14,6 +14,7 @@ import (
 type ProjectcalicoV3Interface interface {
 	RESTClient() rest.Interface
 	GlobalReportTypesGetter
+	LicenseKeysGetter
 }
 
 // ProjectcalicoV3Client is used to interact with features provided by the projectcalico.org group.
@@ -23,6 +24,10 @@ type ProjectcalicoV3Client struct {
 
 func (c *ProjectcalicoV3Client) GlobalReportTypes(namespace string) GlobalReportTypeInterface {
 	return newGlobalReportTypes(c, namespace)
+}
+
+func (c *ProjectcalicoV3Client) LicenseKeys(namespace string) LicenseKeyInterface {
+	return newLicenseKeys(c, namespace)
 }
 
 // NewForConfig creates a new ProjectcalicoV3Client for the given config.
