@@ -12,6 +12,8 @@ import (
 type Interface interface {
 	// GlobalReportTypes returns a GlobalReportTypeInformer.
 	GlobalReportTypes() GlobalReportTypeInformer
+	// LicenseKeys returns a LicenseKeyInformer.
+	LicenseKeys() LicenseKeyInformer
 }
 
 type version struct {
@@ -28,4 +30,9 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 // GlobalReportTypes returns a GlobalReportTypeInformer.
 func (v *version) GlobalReportTypes() GlobalReportTypeInformer {
 	return &globalReportTypeInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// LicenseKeys returns a LicenseKeyInformer.
+func (v *version) LicenseKeys() LicenseKeyInformer {
+	return &licenseKeyInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }

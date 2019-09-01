@@ -46,6 +46,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		// Group=projectcalico.org, Version=v3
 	case v3.SchemeGroupVersion.WithResource("globalreporttypes"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().GlobalReportTypes().Informer()}, nil
+	case v3.SchemeGroupVersion.WithResource("licensekeys"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().LicenseKeys().Informer()}, nil
 
 	}
 
