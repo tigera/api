@@ -12,6 +12,7 @@ import (
 type ProjectcalicoInterface interface {
 	RESTClient() rest.Interface
 	GlobalReportTypesGetter
+	LicenseKeysGetter
 }
 
 // ProjectcalicoClient is used to interact with features provided by the projectcalico.org group.
@@ -21,6 +22,10 @@ type ProjectcalicoClient struct {
 
 func (c *ProjectcalicoClient) GlobalReportTypes(namespace string) GlobalReportTypeInterface {
 	return newGlobalReportTypes(c, namespace)
+}
+
+func (c *ProjectcalicoClient) LicenseKeys(namespace string) LicenseKeyInterface {
+	return newLicenseKeys(c, namespace)
 }
 
 // NewForConfig creates a new ProjectcalicoClient for the given config.

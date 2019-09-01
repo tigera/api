@@ -102,3 +102,33 @@ type GlobalReportTypeList struct {
 	metav1.ListMeta `json:"metadata"`
 	Items           []GlobalReportType `json:"items"`
 }
+
+// +genclient
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+// LicenseKey contains the Tigera CNX license key for the cluster.
+type LicenseKey struct {
+	metav1.TypeMeta `json:",inline"`
+	// Standard object's metadata.  This resource is a singleton, always named "default".
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+	// Specification of the LicenseKey.
+	Spec LicenseKeySpec `json:"spec,omitempty"`
+}
+
+// LicenseKeySpec contains the license key itself.
+type LicenseKeySpec struct {
+	// Token is the JWT containing the license claims
+	Token string `json:"token" yaml:"token"`
+	// Certificate is used to validate the token.
+	Certificate string `json:"certificate,omitempty" yaml:"certificate" validate:"omitempty"`
+}
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+// LicenseKeyList contains a list of LicenseKey resources
+// (even though there should only be one).
+type LicenseKeyList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata"`
+	Items           []LicenseKey `json:"items"`
+}
