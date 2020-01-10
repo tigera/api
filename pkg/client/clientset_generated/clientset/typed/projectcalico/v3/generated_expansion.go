@@ -7,3 +7,5 @@ package v3
 type GlobalReportTypeExpansion interface{}
 
 type LicenseKeyExpansion interface{}
+
+type ManagedClusterExpansion interface{}

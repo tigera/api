@@ -7,3 +7,5 @@ package internalversion
 type GlobalReportTypeExpansion interface{}
 
 type LicenseKeyExpansion interface{}
+
+type ManagedClusterExpansion interface{}

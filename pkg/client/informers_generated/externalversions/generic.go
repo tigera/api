@@ -44,12 +44,16 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().Projectcalico().GlobalReportTypes().Informer()}, nil
 	case projectcalico.SchemeGroupVersion.WithResource("licensekeys"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().Projectcalico().LicenseKeys().Informer()}, nil
+	case projectcalico.SchemeGroupVersion.WithResource("managedclusters"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().Projectcalico().ManagedClusters().Informer()}, nil
 
 		// Group=projectcalico.org, Version=v3
 	case v3.SchemeGroupVersion.WithResource("globalreporttypes"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().GlobalReportTypes().Informer()}, nil
 	case v3.SchemeGroupVersion.WithResource("licensekeys"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().LicenseKeys().Informer()}, nil
+	case v3.SchemeGroupVersion.WithResource("managedclusters"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().ManagedClusters().Informer()}, nil
 
 	}
 

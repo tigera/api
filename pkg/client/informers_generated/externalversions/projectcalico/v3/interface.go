@@ -14,6 +14,8 @@ type Interface interface {
 	GlobalReportTypes() GlobalReportTypeInformer
 	// LicenseKeys returns a LicenseKeyInformer.
 	LicenseKeys() LicenseKeyInformer
+	// ManagedClusters returns a ManagedClusterInformer.
+	ManagedClusters() ManagedClusterInformer
 }
 
 type version struct {
@@ -35,4 +37,9 @@ func (v *version) GlobalReportTypes() GlobalReportTypeInformer {
 // LicenseKeys returns a LicenseKeyInformer.
 func (v *version) LicenseKeys() LicenseKeyInformer {
 	return &licenseKeyInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// ManagedClusters returns a ManagedClusterInformer.
+func (v *version) ManagedClusters() ManagedClusterInformer {
+	return &managedClusterInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
