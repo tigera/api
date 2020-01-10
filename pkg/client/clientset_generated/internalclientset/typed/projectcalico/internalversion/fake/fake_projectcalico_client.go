@@ -22,6 +22,10 @@ func (c *FakeProjectcalico) LicenseKeys(namespace string) internalversion.Licens
 	return &FakeLicenseKeys{c, namespace}
 }
 
+func (c *FakeProjectcalico) ManagedClusters() internalversion.ManagedClusterInterface {
+	return &FakeManagedClusters{c}
+}
+
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeProjectcalico) RESTClient() rest.Interface {

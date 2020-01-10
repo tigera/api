@@ -22,6 +22,10 @@ func (c *FakeProjectcalicoV3) LicenseKeys(namespace string) v3.LicenseKeyInterfa
 	return &FakeLicenseKeys{c, namespace}
 }
 
+func (c *FakeProjectcalicoV3) ManagedClusters() v3.ManagedClusterInterface {
+	return &FakeManagedClusters{c}
+}
+
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeProjectcalicoV3) RESTClient() rest.Interface {

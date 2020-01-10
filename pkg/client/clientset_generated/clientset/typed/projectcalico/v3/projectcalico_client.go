@@ -15,6 +15,7 @@ type ProjectcalicoV3Interface interface {
 	RESTClient() rest.Interface
 	GlobalReportTypesGetter
 	LicenseKeysGetter
+	ManagedClustersGetter
 }
 
 // ProjectcalicoV3Client is used to interact with features provided by the projectcalico.org group.
@@ -28,6 +29,10 @@ func (c *ProjectcalicoV3Client) GlobalReportTypes(namespace string) GlobalReport
 
 func (c *ProjectcalicoV3Client) LicenseKeys(namespace string) LicenseKeyInterface {
 	return newLicenseKeys(c, namespace)
+}
+
+func (c *ProjectcalicoV3Client) ManagedClusters() ManagedClusterInterface {
+	return newManagedClusters(c)
 }
 
 // NewForConfig creates a new ProjectcalicoV3Client for the given config.
