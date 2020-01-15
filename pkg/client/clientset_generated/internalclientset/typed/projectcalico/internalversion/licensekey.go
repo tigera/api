@@ -5,6 +5,8 @@
 package internalversion
 
 import (
+	"time"
+
 	projectcalico "github.com/tigera/api/pkg/apis/projectcalico"
 	scheme "github.com/tigera/api/pkg/client/clientset_generated/internalclientset/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -61,11 +63,16 @@ func (c *licenseKeys) Get(name string, options v1.GetOptions) (result *projectca
 
 // List takes label and field selectors, and returns the list of LicenseKeys that match those selectors.
 func (c *licenseKeys) List(opts v1.ListOptions) (result *projectcalico.LicenseKeyList, err error) {
+	var timeout time.Duration
+	if opts.TimeoutSeconds != nil {
+		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
+	}
 	result = &projectcalico.LicenseKeyList{}
 	err = c.client.Get().
 		Namespace(c.ns).
 		Resource("licensekeys").
 		VersionedParams(&opts, scheme.ParameterCodec).
+		Timeout(timeout).
 		Do().
 		Into(result)
 	return
@@ -73,11 +80,16 @@ func (c *licenseKeys) List(opts v1.ListOptions) (result *projectcalico.LicenseKe
 
 // Watch returns a watch.Interface that watches the requested licenseKeys.
 func (c *licenseKeys) Watch(opts v1.ListOptions) (watch.Interface, error) {
+	var timeout time.Duration
+	if opts.TimeoutSeconds != nil {
+		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
+	}
 	opts.Watch = true
 	return c.client.Get().
 		Namespace(c.ns).
 		Resource("licensekeys").
 		VersionedParams(&opts, scheme.ParameterCodec).
+		Timeout(timeout).
 		Watch()
 }
 
@@ -119,10 +131,15 @@ func (c *licenseKeys) Delete(name string, options *v1.DeleteOptions) error {
 
 // DeleteCollection deletes a collection of objects.
 func (c *licenseKeys) DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error {
+	var timeout time.Duration
+	if listOptions.TimeoutSeconds != nil {
+		timeout = time.Duration(*listOptions.TimeoutSeconds) * time.Second
+	}
 	return c.client.Delete().
 		Namespace(c.ns).
 		Resource("licensekeys").
 		VersionedParams(&listOptions, scheme.ParameterCodec).
+		Timeout(timeout).
 		Body(options).
 		Do().
 		Error()

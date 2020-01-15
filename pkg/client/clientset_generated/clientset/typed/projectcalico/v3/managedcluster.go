@@ -5,6 +5,8 @@
 package v3
 
 import (
+	"time"
+
 	v3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
 	scheme "github.com/tigera/api/pkg/client/clientset_generated/clientset/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -59,10 +61,15 @@ func (c *managedClusters) Get(name string, options v1.GetOptions) (result *v3.Ma
 
 // List takes label and field selectors, and returns the list of ManagedClusters that match those selectors.
 func (c *managedClusters) List(opts v1.ListOptions) (result *v3.ManagedClusterList, err error) {
+	var timeout time.Duration
+	if opts.TimeoutSeconds != nil {
+		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
+	}
 	result = &v3.ManagedClusterList{}
 	err = c.client.Get().
 		Resource("managedclusters").
 		VersionedParams(&opts, scheme.ParameterCodec).
+		Timeout(timeout).
 		Do().
 		Into(result)
 	return
@@ -70,10 +77,15 @@ func (c *managedClusters) List(opts v1.ListOptions) (result *v3.ManagedClusterLi
 
 // Watch returns a watch.Interface that watches the requested managedClusters.
 func (c *managedClusters) Watch(opts v1.ListOptions) (watch.Interface, error) {
+	var timeout time.Duration
+	if opts.TimeoutSeconds != nil {
+		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
+	}
 	opts.Watch = true
 	return c.client.Get().
 		Resource("managedclusters").
 		VersionedParams(&opts, scheme.ParameterCodec).
+		Timeout(timeout).
 		Watch()
 }
 
@@ -127,9 +139,14 @@ func (c *managedClusters) Delete(name string, options *v1.DeleteOptions) error {
 
 // DeleteCollection deletes a collection of objects.
 func (c *managedClusters) DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error {
+	var timeout time.Duration
+	if listOptions.TimeoutSeconds != nil {
+		timeout = time.Duration(*listOptions.TimeoutSeconds) * time.Second
+	}
 	return c.client.Delete().
 		Resource("managedclusters").
 		VersionedParams(&listOptions, scheme.ParameterCodec).
+		Timeout(timeout).
 		Body(options).
 		Do().
 		Error()
