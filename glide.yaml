@@ -1,29 +1,37 @@
 package: github.com/tigera/api
+ignore:
+# The internalclientset imports this package but it doesn't actually exist, so glide up fails when the generated files
+# exist
+  - github.com/tigera/api/pkg/apis/projectcalico/install
 import:
-# Pin to kubernetes 1.13.1.
+# Pin for libcalico compatibility
 # k8s.io/client-go also imports this package and it complains if the version is
 # set to the tag name. To work around this the *EXACT* hash of the tag is used.
 - package: k8s.io/apimachinery
-  version: 2b1284ed4c93a43499e781493253e2ac5959c4fd
-# Pin to kubernetes 1.13.1.
+  version: 72ed19daf4bb
+  # Pin for libcalico compatibility
 # k8s.io/client-go also imports this package and it complains if the version is
 # set to the tag name. To work around this the *EXACT* hash of the tag is used.
 - package: k8s.io/api
-  version: 05914d821849570fba9eacfb29466f2d8d3cd229
-# Pin client-go to the exact tag release for K8s 1.13.1
+  version: 16d7abae0d2a
+# Pin for libcalico compatibility
 - package: k8s.io/client-go
-  version: 8d9ed539ba3134352c586810e749e58df4e94e4f
+  version: 6c5935290e33
 # Pin to kubernetes 1.13.1.
 # k8s.io/client-go doesn't import this package so it's OK to use the tag name.
 - package: k8s.io/code-generator
-  version: fe805838f73d9d5f26ee75d1a9b4401cfbeda4be
+  version: 8e001e5d1894
+- package: k8s.io/apiserver
+  version: 9ca1dc586682
+- package: k8s.io/klog
+  version: v1.0.0
   #version: kubernetes-1.13.8
 # Note: code-generator (deepcopy-gen) relies on this, but it isn't picked up
 # since we only reference it from out Makefile.
 - package: golang.org/x/tools/import
 # Pin to the version requested by the API server
 - package: k8s.io/gengo
-  version: 4242d8e6c5dba56827bb7bcf14ad11cda38f3991
+  version: 0689ccc1d7d6
 # Note: code-generator (deepcopy-gen) relies on this, but it isn't picked up
 # since we only reference it from out Makefile.
 - package: golang.org/x/tools/import

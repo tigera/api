@@ -78,7 +78,7 @@ func (in *GlobalReportType) DeepCopyObject() runtime.Object {
 func (in *GlobalReportTypeList) DeepCopyInto(out *GlobalReportTypeList) {
 	*out = *in
 	out.TypeMeta = in.TypeMeta
-	out.ListMeta = in.ListMeta
+	in.ListMeta.DeepCopyInto(&out.ListMeta)
 	if in.Items != nil {
 		in, out := &in.Items, &out.Items
 		*out = make([]GlobalReportType, len(*in))
@@ -138,7 +138,7 @@ func (in *LicenseKey) DeepCopyObject() runtime.Object {
 func (in *LicenseKeyList) DeepCopyInto(out *LicenseKeyList) {
 	*out = *in
 	out.TypeMeta = in.TypeMeta
-	out.ListMeta = in.ListMeta
+	in.ListMeta.DeepCopyInto(&out.ListMeta)
 	if in.Items != nil {
 		in, out := &in.Items, &out.Items
 		*out = make([]LicenseKey, len(*in))
@@ -215,7 +215,7 @@ func (in *ManagedCluster) DeepCopyObject() runtime.Object {
 func (in *ManagedClusterList) DeepCopyInto(out *ManagedClusterList) {
 	*out = *in
 	out.TypeMeta = in.TypeMeta
-	out.ListMeta = in.ListMeta
+	in.ListMeta.DeepCopyInto(&out.ListMeta)
 	if in.Items != nil {
 		in, out := &in.Items, &out.Items
 		*out = make([]ManagedCluster, len(*in))
