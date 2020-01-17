@@ -12,6 +12,8 @@ import (
 
 type ProjectcalicoV3Interface interface {
 	RESTClient() rest.Interface
+	GlobalAlertsGetter
+	GlobalAlertTemplatesGetter
 	GlobalReportTypesGetter
 	LicenseKeysGetter
 	ManagedClustersGetter
@@ -20,6 +22,14 @@ type ProjectcalicoV3Interface interface {
 // ProjectcalicoV3Client is used to interact with features provided by the projectcalico.org group.
 type ProjectcalicoV3Client struct {
 	restClient rest.Interface
+}
+
+func (c *ProjectcalicoV3Client) GlobalAlerts() GlobalAlertInterface {
+	return newGlobalAlerts(c)
+}
+
+func (c *ProjectcalicoV3Client) GlobalAlertTemplates() GlobalAlertTemplateInterface {
+	return newGlobalAlertTemplates(c)
 }
 
 func (c *ProjectcalicoV3Client) GlobalReportTypes(namespace string) GlobalReportTypeInterface {

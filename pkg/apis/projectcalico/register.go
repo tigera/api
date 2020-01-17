@@ -41,6 +41,10 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&LicenseKeyList{},
 		&ManagedCluster{},
 		&ManagedClusterList{},
+		&GlobalAlert{},
+		&GlobalAlertList{},
+		&GlobalAlertTemplate{},
+		&GlobalAlertTemplateList{},
 	)
 	metav1.AddToGroupVersion(scheme, SchemeGroupVersion)
 	return nil

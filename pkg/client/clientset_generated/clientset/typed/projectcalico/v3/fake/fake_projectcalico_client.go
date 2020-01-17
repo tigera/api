@@ -14,6 +14,14 @@ type FakeProjectcalicoV3 struct {
 	*testing.Fake
 }
 
+func (c *FakeProjectcalicoV3) GlobalAlerts() v3.GlobalAlertInterface {
+	return &FakeGlobalAlerts{c}
+}
+
+func (c *FakeProjectcalicoV3) GlobalAlertTemplates() v3.GlobalAlertTemplateInterface {
+	return &FakeGlobalAlertTemplates{c}
+}
+
 func (c *FakeProjectcalicoV3) GlobalReportTypes(namespace string) v3.GlobalReportTypeInterface {
 	return &FakeGlobalReportTypes{c, namespace}
 }

@@ -4,6 +4,10 @@
 
 package v3
 
+type GlobalAlertExpansion interface{}
+
+type GlobalAlertTemplateExpansion interface{}
+
 type GlobalReportTypeExpansion interface{}
 
 type LicenseKeyExpansion interface{}
