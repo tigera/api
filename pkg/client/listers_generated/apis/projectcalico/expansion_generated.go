@@ -4,6 +4,14 @@
 
 package projectcalico
 
+// GlobalAlertListerExpansion allows custom methods to be added to
+// GlobalAlertLister.
+type GlobalAlertListerExpansion interface{}
+
+// GlobalAlertTemplateListerExpansion allows custom methods to be added to
+// GlobalAlertTemplateLister.
+type GlobalAlertTemplateListerExpansion interface{}
+
 // GlobalReportTypeListerExpansion allows custom methods to be added to
 // GlobalReportTypeLister.
 type GlobalReportTypeListerExpansion interface{}

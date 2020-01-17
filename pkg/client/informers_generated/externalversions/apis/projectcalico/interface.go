@@ -10,6 +10,10 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
+	// GlobalAlerts returns a GlobalAlertInformer.
+	GlobalAlerts() GlobalAlertInformer
+	// GlobalAlertTemplates returns a GlobalAlertTemplateInformer.
+	GlobalAlertTemplates() GlobalAlertTemplateInformer
 	// GlobalReportTypes returns a GlobalReportTypeInformer.
 	GlobalReportTypes() GlobalReportTypeInformer
 	// LicenseKeys returns a LicenseKeyInformer.
@@ -27,6 +31,16 @@ type version struct {
 // New returns a new Interface.
 func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakListOptions internalinterfaces.TweakListOptionsFunc) Interface {
 	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
+}
+
+// GlobalAlerts returns a GlobalAlertInformer.
+func (v *version) GlobalAlerts() GlobalAlertInformer {
+	return &globalAlertInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// GlobalAlertTemplates returns a GlobalAlertTemplateInformer.
+func (v *version) GlobalAlertTemplates() GlobalAlertTemplateInformer {
+	return &globalAlertTemplateInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // GlobalReportTypes returns a GlobalReportTypeInformer.
