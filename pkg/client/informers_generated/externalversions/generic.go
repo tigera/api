@@ -39,19 +39,7 @@ func (f *genericInformer) Lister() cache.GenericLister {
 // TODO extend this to unknown resources with a client pool
 func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource) (GenericInformer, error) {
 	switch resource {
-	// Group=projectcalico.org, Version=v3
-	case v3.SchemeGroupVersion.WithResource("globalalerts"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().GlobalAlerts().Informer()}, nil
-	case v3.SchemeGroupVersion.WithResource("globalalerttemplates"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().GlobalAlertTemplates().Informer()}, nil
-	case v3.SchemeGroupVersion.WithResource("globalreporttypes"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().GlobalReportTypes().Informer()}, nil
-	case v3.SchemeGroupVersion.WithResource("licensekeys"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().LicenseKeys().Informer()}, nil
-	case v3.SchemeGroupVersion.WithResource("managedclusters"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().ManagedClusters().Informer()}, nil
-
-		// Group=projectcalico.org, Version=projectcalico
+	// Group=projectcalico.org, Version=projectcalico
 	case projectcalico.SchemeGroupVersion.WithResource("globalalerts"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().Projectcalico().GlobalAlerts().Informer()}, nil
 	case projectcalico.SchemeGroupVersion.WithResource("globalalerttemplates"):
@@ -62,6 +50,18 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().Projectcalico().LicenseKeys().Informer()}, nil
 	case projectcalico.SchemeGroupVersion.WithResource("managedclusters"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().Projectcalico().ManagedClusters().Informer()}, nil
+
+		// Group=projectcalico.org, Version=v3
+	case v3.SchemeGroupVersion.WithResource("globalalerts"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().GlobalAlerts().Informer()}, nil
+	case v3.SchemeGroupVersion.WithResource("globalalerttemplates"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().GlobalAlertTemplates().Informer()}, nil
+	case v3.SchemeGroupVersion.WithResource("globalreporttypes"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().GlobalReportTypes().Informer()}, nil
+	case v3.SchemeGroupVersion.WithResource("licensekeys"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().LicenseKeys().Informer()}, nil
+	case v3.SchemeGroupVersion.WithResource("managedclusters"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().ManagedClusters().Informer()}, nil
 
 	}
 
