@@ -40,6 +40,7 @@ type GlobalAlert struct {
 }
 
 type GlobalAlertSpec struct {
+	Summary     string           `json:"summary,omitempty" validate:"omitempty"`
 	Description string           `json:"description" validate:"required"`
 	Severity    int              `json:"severity" validate:"required,min=1,max=100"`
 	Period      *metav1.Duration `json:"period,omitempty" validate:"omitempty"`
