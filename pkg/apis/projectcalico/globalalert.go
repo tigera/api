@@ -29,14 +29,11 @@ const (
 // +genclient
 // +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-
 type GlobalAlert struct {
-	metav1.TypeMeta `json:",inline"`
-	// Standard object's metadata.
+	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	// Specification of the GlobalAlert.
-	Spec   GlobalAlertSpec   `json:"spec,omitempty"`
-	Status GlobalAlertStatus `json:"status,omitempty"`
+	Spec              GlobalAlertSpec   `json:"spec,omitempty"`
+	Status            GlobalAlertStatus `json:"status,omitempty"`
 }
 
 type GlobalAlertSpec struct {

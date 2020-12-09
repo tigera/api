@@ -5,6 +5,7 @@
 package projectcalico
 
 import (
+	"context"
 	time "time"
 
 	apisprojectcalico "github.com/tigera/api/pkg/apis/projectcalico"
@@ -46,13 +47,13 @@ func NewFilteredGlobalAlertTemplateInformer(client clientset.Interface, resyncPe
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ProjectcalicoProjectcalico().GlobalAlertTemplates().List(options)
+				return client.ProjectcalicoProjectcalico().GlobalAlertTemplates().List(context.TODO(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ProjectcalicoProjectcalico().GlobalAlertTemplates().Watch(options)
+				return client.ProjectcalicoProjectcalico().GlobalAlertTemplates().Watch(context.TODO(), options)
 			},
 		},
 		&apisprojectcalico.GlobalAlertTemplate{},

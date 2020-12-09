@@ -5,6 +5,7 @@
 package v3
 
 import (
+	"context"
 	time "time"
 
 	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
@@ -47,13 +48,13 @@ func NewFilteredLicenseKeyInformer(client clientset.Interface, namespace string,
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ProjectcalicoV3().LicenseKeys(namespace).List(options)
+				return client.ProjectcalicoV3().LicenseKeys(namespace).List(context.TODO(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ProjectcalicoV3().LicenseKeys(namespace).Watch(options)
+				return client.ProjectcalicoV3().LicenseKeys(namespace).Watch(context.TODO(), options)
 			},
 		},
 		&projectcalicov3.LicenseKey{},

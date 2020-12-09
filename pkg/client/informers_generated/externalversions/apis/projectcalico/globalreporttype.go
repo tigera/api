@@ -5,6 +5,7 @@
 package projectcalico
 
 import (
+	"context"
 	time "time"
 
 	apisprojectcalico "github.com/tigera/api/pkg/apis/projectcalico"
@@ -47,13 +48,13 @@ func NewFilteredGlobalReportTypeInformer(client clientset.Interface, namespace s
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ProjectcalicoProjectcalico().GlobalReportTypes(namespace).List(options)
+				return client.ProjectcalicoProjectcalico().GlobalReportTypes(namespace).List(context.TODO(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ProjectcalicoProjectcalico().GlobalReportTypes(namespace).Watch(options)
+				return client.ProjectcalicoProjectcalico().GlobalReportTypes(namespace).Watch(context.TODO(), options)
 			},
 		},
 		&apisprojectcalico.GlobalReportType{},

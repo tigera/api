@@ -5,6 +5,7 @@
 package internalversion
 
 import (
+	"context"
 	"time"
 
 	projectcalico "github.com/tigera/api/pkg/apis/projectcalico"
@@ -23,14 +24,14 @@ type GlobalAlertTemplatesGetter interface {
 
 // GlobalAlertTemplateInterface has methods to work with GlobalAlertTemplate resources.
 type GlobalAlertTemplateInterface interface {
-	Create(*projectcalico.GlobalAlertTemplate) (*projectcalico.GlobalAlertTemplate, error)
-	Update(*projectcalico.GlobalAlertTemplate) (*projectcalico.GlobalAlertTemplate, error)
-	Delete(name string, options *v1.DeleteOptions) error
-	DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error
-	Get(name string, options v1.GetOptions) (*projectcalico.GlobalAlertTemplate, error)
-	List(opts v1.ListOptions) (*projectcalico.GlobalAlertTemplateList, error)
-	Watch(opts v1.ListOptions) (watch.Interface, error)
-	Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *projectcalico.GlobalAlertTemplate, err error)
+	Create(ctx context.Context, globalAlertTemplate *projectcalico.GlobalAlertTemplate, opts v1.CreateOptions) (*projectcalico.GlobalAlertTemplate, error)
+	Update(ctx context.Context, globalAlertTemplate *projectcalico.GlobalAlertTemplate, opts v1.UpdateOptions) (*projectcalico.GlobalAlertTemplate, error)
+	Delete(ctx context.Context, name string, opts v1.DeleteOptions) error
+	DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error
+	Get(ctx context.Context, name string, opts v1.GetOptions) (*projectcalico.GlobalAlertTemplate, error)
+	List(ctx context.Context, opts v1.ListOptions) (*projectcalico.GlobalAlertTemplateList, error)
+	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
+	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *projectcalico.GlobalAlertTemplate, err error)
 	GlobalAlertTemplateExpansion
 }
 
@@ -47,19 +48,19 @@ func newGlobalAlertTemplates(c *ProjectcalicoClient) *globalAlertTemplates {
 }
 
 // Get takes name of the globalAlertTemplate, and returns the corresponding globalAlertTemplate object, and an error if there is any.
-func (c *globalAlertTemplates) Get(name string, options v1.GetOptions) (result *projectcalico.GlobalAlertTemplate, err error) {
+func (c *globalAlertTemplates) Get(ctx context.Context, name string, options v1.GetOptions) (result *projectcalico.GlobalAlertTemplate, err error) {
 	result = &projectcalico.GlobalAlertTemplate{}
 	err = c.client.Get().
 		Resource("globalalerttemplates").
 		Name(name).
 		VersionedParams(&options, scheme.ParameterCodec).
-		Do().
+		Do(ctx).
 		Into(result)
 	return
 }
 
 // List takes label and field selectors, and returns the list of GlobalAlertTemplates that match those selectors.
-func (c *globalAlertTemplates) List(opts v1.ListOptions) (result *projectcalico.GlobalAlertTemplateList, err error) {
+func (c *globalAlertTemplates) List(ctx context.Context, opts v1.ListOptions) (result *projectcalico.GlobalAlertTemplateList, err error) {
 	var timeout time.Duration
 	if opts.TimeoutSeconds != nil {
 		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
@@ -69,13 +70,13 @@ func (c *globalAlertTemplates) List(opts v1.ListOptions) (result *projectcalico.
 		Resource("globalalerttemplates").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
-		Do().
+		Do(ctx).
 		Into(result)
 	return
 }
 
 // Watch returns a watch.Interface that watches the requested globalAlertTemplates.
-func (c *globalAlertTemplates) Watch(opts v1.ListOptions) (watch.Interface, error) {
+func (c *globalAlertTemplates) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
 	var timeout time.Duration
 	if opts.TimeoutSeconds != nil {
 		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
@@ -85,66 +86,69 @@ func (c *globalAlertTemplates) Watch(opts v1.ListOptions) (watch.Interface, erro
 		Resource("globalalerttemplates").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
-		Watch()
+		Watch(ctx)
 }
 
 // Create takes the representation of a globalAlertTemplate and creates it.  Returns the server's representation of the globalAlertTemplate, and an error, if there is any.
-func (c *globalAlertTemplates) Create(globalAlertTemplate *projectcalico.GlobalAlertTemplate) (result *projectcalico.GlobalAlertTemplate, err error) {
+func (c *globalAlertTemplates) Create(ctx context.Context, globalAlertTemplate *projectcalico.GlobalAlertTemplate, opts v1.CreateOptions) (result *projectcalico.GlobalAlertTemplate, err error) {
 	result = &projectcalico.GlobalAlertTemplate{}
 	err = c.client.Post().
 		Resource("globalalerttemplates").
+		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(globalAlertTemplate).
-		Do().
+		Do(ctx).
 		Into(result)
 	return
 }
 
 // Update takes the representation of a globalAlertTemplate and updates it. Returns the server's representation of the globalAlertTemplate, and an error, if there is any.
-func (c *globalAlertTemplates) Update(globalAlertTemplate *projectcalico.GlobalAlertTemplate) (result *projectcalico.GlobalAlertTemplate, err error) {
+func (c *globalAlertTemplates) Update(ctx context.Context, globalAlertTemplate *projectcalico.GlobalAlertTemplate, opts v1.UpdateOptions) (result *projectcalico.GlobalAlertTemplate, err error) {
 	result = &projectcalico.GlobalAlertTemplate{}
 	err = c.client.Put().
 		Resource("globalalerttemplates").
 		Name(globalAlertTemplate.Name).
+		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(globalAlertTemplate).
-		Do().
+		Do(ctx).
 		Into(result)
 	return
 }
 
 // Delete takes name of the globalAlertTemplate and deletes it. Returns an error if one occurs.
-func (c *globalAlertTemplates) Delete(name string, options *v1.DeleteOptions) error {
+func (c *globalAlertTemplates) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	return c.client.Delete().
 		Resource("globalalerttemplates").
 		Name(name).
-		Body(options).
-		Do().
+		Body(&opts).
+		Do(ctx).
 		Error()
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *globalAlertTemplates) DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error {
+func (c *globalAlertTemplates) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
 	var timeout time.Duration
-	if listOptions.TimeoutSeconds != nil {
-		timeout = time.Duration(*listOptions.TimeoutSeconds) * time.Second
+	if listOpts.TimeoutSeconds != nil {
+		timeout = time.Duration(*listOpts.TimeoutSeconds) * time.Second
 	}
 	return c.client.Delete().
 		Resource("globalalerttemplates").
-		VersionedParams(&listOptions, scheme.ParameterCodec).
+		VersionedParams(&listOpts, scheme.ParameterCodec).
 		Timeout(timeout).
-		Body(options).
-		Do().
+		Body(&opts).
+		Do(ctx).
 		Error()
 }
 
 // Patch applies the patch and returns the patched globalAlertTemplate.
-func (c *globalAlertTemplates) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *projectcalico.GlobalAlertTemplate, err error) {
+func (c *globalAlertTemplates) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *projectcalico.GlobalAlertTemplate, err error) {
 	result = &projectcalico.GlobalAlertTemplate{}
 	err = c.client.Patch(pt).
 		Resource("globalalerttemplates").
-		SubResource(subresources...).
 		Name(name).
+		SubResource(subresources...).
+		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(data).
-		Do().
+		Do(ctx).
 		Into(result)
 	return
 }
