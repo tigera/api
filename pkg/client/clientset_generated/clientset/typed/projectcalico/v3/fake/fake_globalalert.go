@@ -5,6 +5,8 @@
 package fake
 
 import (
+	"context"
+
 	v3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
@@ -24,7 +26,7 @@ var globalalertsResource = schema.GroupVersionResource{Group: "projectcalico.org
 var globalalertsKind = schema.GroupVersionKind{Group: "projectcalico.org", Version: "v3", Kind: "GlobalAlert"}
 
 // Get takes name of the globalAlert, and returns the corresponding globalAlert object, and an error if there is any.
-func (c *FakeGlobalAlerts) Get(name string, options v1.GetOptions) (result *v3.GlobalAlert, err error) {
+func (c *FakeGlobalAlerts) Get(ctx context.Context, name string, options v1.GetOptions) (result *v3.GlobalAlert, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewRootGetAction(globalalertsResource, name), &v3.GlobalAlert{})
 	if obj == nil {
@@ -34,7 +36,7 @@ func (c *FakeGlobalAlerts) Get(name string, options v1.GetOptions) (result *v3.G
 }
 
 // List takes label and field selectors, and returns the list of GlobalAlerts that match those selectors.
-func (c *FakeGlobalAlerts) List(opts v1.ListOptions) (result *v3.GlobalAlertList, err error) {
+func (c *FakeGlobalAlerts) List(ctx context.Context, opts v1.ListOptions) (result *v3.GlobalAlertList, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewRootListAction(globalalertsResource, globalalertsKind, opts), &v3.GlobalAlertList{})
 	if obj == nil {
@@ -55,13 +57,13 @@ func (c *FakeGlobalAlerts) List(opts v1.ListOptions) (result *v3.GlobalAlertList
 }
 
 // Watch returns a watch.Interface that watches the requested globalAlerts.
-func (c *FakeGlobalAlerts) Watch(opts v1.ListOptions) (watch.Interface, error) {
+func (c *FakeGlobalAlerts) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
 		InvokesWatch(testing.NewRootWatchAction(globalalertsResource, opts))
 }
 
 // Create takes the representation of a globalAlert and creates it.  Returns the server's representation of the globalAlert, and an error, if there is any.
-func (c *FakeGlobalAlerts) Create(globalAlert *v3.GlobalAlert) (result *v3.GlobalAlert, err error) {
+func (c *FakeGlobalAlerts) Create(ctx context.Context, globalAlert *v3.GlobalAlert, opts v1.CreateOptions) (result *v3.GlobalAlert, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewRootCreateAction(globalalertsResource, globalAlert), &v3.GlobalAlert{})
 	if obj == nil {
@@ -71,7 +73,7 @@ func (c *FakeGlobalAlerts) Create(globalAlert *v3.GlobalAlert) (result *v3.Globa
 }
 
 // Update takes the representation of a globalAlert and updates it. Returns the server's representation of the globalAlert, and an error, if there is any.
-func (c *FakeGlobalAlerts) Update(globalAlert *v3.GlobalAlert) (result *v3.GlobalAlert, err error) {
+func (c *FakeGlobalAlerts) Update(ctx context.Context, globalAlert *v3.GlobalAlert, opts v1.UpdateOptions) (result *v3.GlobalAlert, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewRootUpdateAction(globalalertsResource, globalAlert), &v3.GlobalAlert{})
 	if obj == nil {
@@ -82,7 +84,7 @@ func (c *FakeGlobalAlerts) Update(globalAlert *v3.GlobalAlert) (result *v3.Globa
 
 // UpdateStatus was generated because the type contains a Status member.
 // Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeGlobalAlerts) UpdateStatus(globalAlert *v3.GlobalAlert) (*v3.GlobalAlert, error) {
+func (c *FakeGlobalAlerts) UpdateStatus(ctx context.Context, globalAlert *v3.GlobalAlert, opts v1.UpdateOptions) (*v3.GlobalAlert, error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewRootUpdateSubresourceAction(globalalertsResource, "status", globalAlert), &v3.GlobalAlert{})
 	if obj == nil {
@@ -92,22 +94,22 @@ func (c *FakeGlobalAlerts) UpdateStatus(globalAlert *v3.GlobalAlert) (*v3.Global
 }
 
 // Delete takes name of the globalAlert and deletes it. Returns an error if one occurs.
-func (c *FakeGlobalAlerts) Delete(name string, options *v1.DeleteOptions) error {
+func (c *FakeGlobalAlerts) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
 		Invokes(testing.NewRootDeleteAction(globalalertsResource, name), &v3.GlobalAlert{})
 	return err
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *FakeGlobalAlerts) DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(globalalertsResource, listOptions)
+func (c *FakeGlobalAlerts) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+	action := testing.NewRootDeleteCollectionAction(globalalertsResource, listOpts)
 
 	_, err := c.Fake.Invokes(action, &v3.GlobalAlertList{})
 	return err
 }
 
 // Patch applies the patch and returns the patched globalAlert.
-func (c *FakeGlobalAlerts) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v3.GlobalAlert, err error) {
+func (c *FakeGlobalAlerts) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v3.GlobalAlert, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewRootPatchSubresourceAction(globalalertsResource, name, pt, data, subresources...), &v3.GlobalAlert{})
 	if obj == nil {

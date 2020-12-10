@@ -5,6 +5,7 @@
 package internalversion
 
 import (
+	"context"
 	"time"
 
 	projectcalico "github.com/tigera/api/pkg/apis/projectcalico"
@@ -23,15 +24,15 @@ type ManagedClustersGetter interface {
 
 // ManagedClusterInterface has methods to work with ManagedCluster resources.
 type ManagedClusterInterface interface {
-	Create(*projectcalico.ManagedCluster) (*projectcalico.ManagedCluster, error)
-	Update(*projectcalico.ManagedCluster) (*projectcalico.ManagedCluster, error)
-	UpdateStatus(*projectcalico.ManagedCluster) (*projectcalico.ManagedCluster, error)
-	Delete(name string, options *v1.DeleteOptions) error
-	DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error
-	Get(name string, options v1.GetOptions) (*projectcalico.ManagedCluster, error)
-	List(opts v1.ListOptions) (*projectcalico.ManagedClusterList, error)
-	Watch(opts v1.ListOptions) (watch.Interface, error)
-	Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *projectcalico.ManagedCluster, err error)
+	Create(ctx context.Context, managedCluster *projectcalico.ManagedCluster, opts v1.CreateOptions) (*projectcalico.ManagedCluster, error)
+	Update(ctx context.Context, managedCluster *projectcalico.ManagedCluster, opts v1.UpdateOptions) (*projectcalico.ManagedCluster, error)
+	UpdateStatus(ctx context.Context, managedCluster *projectcalico.ManagedCluster, opts v1.UpdateOptions) (*projectcalico.ManagedCluster, error)
+	Delete(ctx context.Context, name string, opts v1.DeleteOptions) error
+	DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error
+	Get(ctx context.Context, name string, opts v1.GetOptions) (*projectcalico.ManagedCluster, error)
+	List(ctx context.Context, opts v1.ListOptions) (*projectcalico.ManagedClusterList, error)
+	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
+	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *projectcalico.ManagedCluster, err error)
 	ManagedClusterExpansion
 }
 
@@ -48,19 +49,19 @@ func newManagedClusters(c *ProjectcalicoClient) *managedClusters {
 }
 
 // Get takes name of the managedCluster, and returns the corresponding managedCluster object, and an error if there is any.
-func (c *managedClusters) Get(name string, options v1.GetOptions) (result *projectcalico.ManagedCluster, err error) {
+func (c *managedClusters) Get(ctx context.Context, name string, options v1.GetOptions) (result *projectcalico.ManagedCluster, err error) {
 	result = &projectcalico.ManagedCluster{}
 	err = c.client.Get().
 		Resource("managedclusters").
 		Name(name).
 		VersionedParams(&options, scheme.ParameterCodec).
-		Do().
+		Do(ctx).
 		Into(result)
 	return
 }
 
 // List takes label and field selectors, and returns the list of ManagedClusters that match those selectors.
-func (c *managedClusters) List(opts v1.ListOptions) (result *projectcalico.ManagedClusterList, err error) {
+func (c *managedClusters) List(ctx context.Context, opts v1.ListOptions) (result *projectcalico.ManagedClusterList, err error) {
 	var timeout time.Duration
 	if opts.TimeoutSeconds != nil {
 		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
@@ -70,13 +71,13 @@ func (c *managedClusters) List(opts v1.ListOptions) (result *projectcalico.Manag
 		Resource("managedclusters").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
-		Do().
+		Do(ctx).
 		Into(result)
 	return
 }
 
 // Watch returns a watch.Interface that watches the requested managedClusters.
-func (c *managedClusters) Watch(opts v1.ListOptions) (watch.Interface, error) {
+func (c *managedClusters) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
 	var timeout time.Duration
 	if opts.TimeoutSeconds != nil {
 		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
@@ -86,81 +87,84 @@ func (c *managedClusters) Watch(opts v1.ListOptions) (watch.Interface, error) {
 		Resource("managedclusters").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
-		Watch()
+		Watch(ctx)
 }
 
 // Create takes the representation of a managedCluster and creates it.  Returns the server's representation of the managedCluster, and an error, if there is any.
-func (c *managedClusters) Create(managedCluster *projectcalico.ManagedCluster) (result *projectcalico.ManagedCluster, err error) {
+func (c *managedClusters) Create(ctx context.Context, managedCluster *projectcalico.ManagedCluster, opts v1.CreateOptions) (result *projectcalico.ManagedCluster, err error) {
 	result = &projectcalico.ManagedCluster{}
 	err = c.client.Post().
 		Resource("managedclusters").
+		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(managedCluster).
-		Do().
+		Do(ctx).
 		Into(result)
 	return
 }
 
 // Update takes the representation of a managedCluster and updates it. Returns the server's representation of the managedCluster, and an error, if there is any.
-func (c *managedClusters) Update(managedCluster *projectcalico.ManagedCluster) (result *projectcalico.ManagedCluster, err error) {
+func (c *managedClusters) Update(ctx context.Context, managedCluster *projectcalico.ManagedCluster, opts v1.UpdateOptions) (result *projectcalico.ManagedCluster, err error) {
 	result = &projectcalico.ManagedCluster{}
 	err = c.client.Put().
 		Resource("managedclusters").
 		Name(managedCluster.Name).
+		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(managedCluster).
-		Do().
+		Do(ctx).
 		Into(result)
 	return
 }
 
 // UpdateStatus was generated because the type contains a Status member.
 // Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-
-func (c *managedClusters) UpdateStatus(managedCluster *projectcalico.ManagedCluster) (result *projectcalico.ManagedCluster, err error) {
+func (c *managedClusters) UpdateStatus(ctx context.Context, managedCluster *projectcalico.ManagedCluster, opts v1.UpdateOptions) (result *projectcalico.ManagedCluster, err error) {
 	result = &projectcalico.ManagedCluster{}
 	err = c.client.Put().
 		Resource("managedclusters").
 		Name(managedCluster.Name).
 		SubResource("status").
+		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(managedCluster).
-		Do().
+		Do(ctx).
 		Into(result)
 	return
 }
 
 // Delete takes name of the managedCluster and deletes it. Returns an error if one occurs.
-func (c *managedClusters) Delete(name string, options *v1.DeleteOptions) error {
+func (c *managedClusters) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	return c.client.Delete().
 		Resource("managedclusters").
 		Name(name).
-		Body(options).
-		Do().
+		Body(&opts).
+		Do(ctx).
 		Error()
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *managedClusters) DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error {
+func (c *managedClusters) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
 	var timeout time.Duration
-	if listOptions.TimeoutSeconds != nil {
-		timeout = time.Duration(*listOptions.TimeoutSeconds) * time.Second
+	if listOpts.TimeoutSeconds != nil {
+		timeout = time.Duration(*listOpts.TimeoutSeconds) * time.Second
 	}
 	return c.client.Delete().
 		Resource("managedclusters").
-		VersionedParams(&listOptions, scheme.ParameterCodec).
+		VersionedParams(&listOpts, scheme.ParameterCodec).
 		Timeout(timeout).
-		Body(options).
-		Do().
+		Body(&opts).
+		Do(ctx).
 		Error()
 }
 
 // Patch applies the patch and returns the patched managedCluster.
-func (c *managedClusters) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *projectcalico.ManagedCluster, err error) {
+func (c *managedClusters) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *projectcalico.ManagedCluster, err error) {
 	result = &projectcalico.ManagedCluster{}
 	err = c.client.Patch(pt).
 		Resource("managedclusters").
-		SubResource(subresources...).
 		Name(name).
+		SubResource(subresources...).
+		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(data).
-		Do().
+		Do(ctx).
 		Into(result)
 	return
 }
