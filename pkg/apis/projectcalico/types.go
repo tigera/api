@@ -103,6 +103,17 @@ type GlobalReportTypeList struct {
 	Items           []GlobalReportType `json:"items"`
 }
 
+/// +kubebuilder:validation:Enum=CloudCommunity;CloudStarter;CloudPro;Enterprise
+
+type LicensePackageType string
+
+const (
+	CloudCommunity LicensePackageType = "CloudCommunity"
+	CloudStarter   LicensePackageType = "CloudStarter"
+	CloudPro       LicensePackageType = "CloudPro"
+	Enterprise     LicensePackageType = "Enterprise"
+)
+
 // +genclient
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
@@ -113,6 +124,8 @@ type LicenseKey struct {
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 	// Specification of the LicenseKey.
 	Spec LicenseKeySpec `json:"spec,omitempty"`
+	// Status of the LicenseKey.
+	Status LicenseKeyStatus `json:"status,omitempty"`
 }
 
 // LicenseKeySpec contains the license key itself.
@@ -121,6 +134,19 @@ type LicenseKeySpec struct {
 	Token string `json:"token" yaml:"token"`
 	// Certificate is used to validate the token.
 	Certificate string `json:"certificate,omitempty" yaml:"certificate" validate:"omitempty"`
+}
+
+// LicenseKeyStatus contains the license key information.
+type LicenseKeyStatus struct {
+	// Expiry is the expiry date of License
+	// +nullable
+	Expiry metav1.Time `json:"expiry,omitempty" yaml:"expiry"`
+	// Maximum Number of Allowed Nodes
+	MaxNodes int `json:"maxnodes,omitempty" yaml:"maxnodes" validate:"omitempty"`
+	// License package defines type of Calico license that is being enforced
+	Package LicensePackageType `json:"package,omitempty" yaml:"package" validate:"omitempty"`
+	// List of features that are available via the applied license
+	Features []string `json:"features,omitempty" yaml:"features" validate:"omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
