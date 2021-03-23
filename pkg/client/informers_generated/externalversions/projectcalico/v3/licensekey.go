@@ -28,33 +28,32 @@ type LicenseKeyInformer interface {
 type licenseKeyInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
 	tweakListOptions internalinterfaces.TweakListOptionsFunc
-	namespace        string
 }
 
 // NewLicenseKeyInformer constructs a new informer for LicenseKey type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewLicenseKeyInformer(client clientset.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
-	return NewFilteredLicenseKeyInformer(client, namespace, resyncPeriod, indexers, nil)
+func NewLicenseKeyInformer(client clientset.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
+	return NewFilteredLicenseKeyInformer(client, resyncPeriod, indexers, nil)
 }
 
 // NewFilteredLicenseKeyInformer constructs a new informer for LicenseKey type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewFilteredLicenseKeyInformer(client clientset.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
+func NewFilteredLicenseKeyInformer(client clientset.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
 	return cache.NewSharedIndexInformer(
 		&cache.ListWatch{
 			ListFunc: func(options v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ProjectcalicoV3().LicenseKeys(namespace).List(context.TODO(), options)
+				return client.ProjectcalicoV3().LicenseKeys().List(context.TODO(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ProjectcalicoV3().LicenseKeys(namespace).Watch(context.TODO(), options)
+				return client.ProjectcalicoV3().LicenseKeys().Watch(context.TODO(), options)
 			},
 		},
 		&projectcalicov3.LicenseKey{},
@@ -64,7 +63,7 @@ func NewFilteredLicenseKeyInformer(client clientset.Interface, namespace string,
 }
 
 func (f *licenseKeyInformer) defaultInformer(client clientset.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewFilteredLicenseKeyInformer(client, f.namespace, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
+	return NewFilteredLicenseKeyInformer(client, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
 }
 
 func (f *licenseKeyInformer) Informer() cache.SharedIndexInformer {

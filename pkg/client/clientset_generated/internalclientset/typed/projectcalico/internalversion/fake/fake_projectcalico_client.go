@@ -26,8 +26,8 @@ func (c *FakeProjectcalico) GlobalReportTypes(namespace string) internalversion.
 	return &FakeGlobalReportTypes{c, namespace}
 }
 
-func (c *FakeProjectcalico) LicenseKeys(namespace string) internalversion.LicenseKeyInterface {
-	return &FakeLicenseKeys{c, namespace}
+func (c *FakeProjectcalico) LicenseKeys() internalversion.LicenseKeyInterface {
+	return &FakeLicenseKeys{c}
 }
 
 func (c *FakeProjectcalico) ManagedClusters() internalversion.ManagedClusterInterface {

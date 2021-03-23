@@ -17,8 +17,9 @@ type LicenseKeyLister interface {
 	// List lists all LicenseKeys in the indexer.
 	// Objects returned here must be treated as read-only.
 	List(selector labels.Selector) (ret []*v3.LicenseKey, err error)
-	// LicenseKeys returns an object that can list and get LicenseKeys.
-	LicenseKeys(namespace string) LicenseKeyNamespaceLister
+	// Get retrieves the LicenseKey from the index for a given name.
+	// Objects returned here must be treated as read-only.
+	Get(name string) (*v3.LicenseKey, error)
 	LicenseKeyListerExpansion
 }
 
@@ -40,41 +41,9 @@ func (s *licenseKeyLister) List(selector labels.Selector) (ret []*v3.LicenseKey,
 	return ret, err
 }
 
-// LicenseKeys returns an object that can list and get LicenseKeys.
-func (s *licenseKeyLister) LicenseKeys(namespace string) LicenseKeyNamespaceLister {
-	return licenseKeyNamespaceLister{indexer: s.indexer, namespace: namespace}
-}
-
-// LicenseKeyNamespaceLister helps list and get LicenseKeys.
-// All objects returned here must be treated as read-only.
-type LicenseKeyNamespaceLister interface {
-	// List lists all LicenseKeys in the indexer for a given namespace.
-	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v3.LicenseKey, err error)
-	// Get retrieves the LicenseKey from the indexer for a given namespace and name.
-	// Objects returned here must be treated as read-only.
-	Get(name string) (*v3.LicenseKey, error)
-	LicenseKeyNamespaceListerExpansion
-}
-
-// licenseKeyNamespaceLister implements the LicenseKeyNamespaceLister
-// interface.
-type licenseKeyNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all LicenseKeys in the indexer for a given namespace.
-func (s licenseKeyNamespaceLister) List(selector labels.Selector) (ret []*v3.LicenseKey, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v3.LicenseKey))
-	})
-	return ret, err
-}
-
-// Get retrieves the LicenseKey from the indexer for a given namespace and name.
-func (s licenseKeyNamespaceLister) Get(name string) (*v3.LicenseKey, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
+// Get retrieves the LicenseKey from the index for a given name.
+func (s *licenseKeyLister) Get(name string) (*v3.LicenseKey, error) {
+	obj, exists, err := s.indexer.GetByKey(name)
 	if err != nil {
 		return nil, err
 	}

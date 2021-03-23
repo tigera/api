@@ -24,10 +24,6 @@ type GlobalReportTypeNamespaceListerExpansion interface{}
 // LicenseKeyLister.
 type LicenseKeyListerExpansion interface{}
 
-// LicenseKeyNamespaceListerExpansion allows custom methods to be added to
-// LicenseKeyNamespaceLister.
-type LicenseKeyNamespaceListerExpansion interface{}
-
 // ManagedClusterListerExpansion allows custom methods to be added to
 // ManagedClusterLister.
 type ManagedClusterListerExpansion interface{}

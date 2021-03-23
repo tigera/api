@@ -26,8 +26,8 @@ func (c *FakeProjectcalicoV3) GlobalReportTypes(namespace string) v3.GlobalRepor
 	return &FakeGlobalReportTypes{c, namespace}
 }
 
-func (c *FakeProjectcalicoV3) LicenseKeys(namespace string) v3.LicenseKeyInterface {
-	return &FakeLicenseKeys{c, namespace}
+func (c *FakeProjectcalicoV3) LicenseKeys() v3.LicenseKeyInterface {
+	return &FakeLicenseKeys{c}
 }
 
 func (c *FakeProjectcalicoV3) ManagedClusters() v3.ManagedClusterInterface {
