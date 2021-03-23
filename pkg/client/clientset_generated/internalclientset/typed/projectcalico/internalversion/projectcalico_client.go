@@ -35,8 +35,8 @@ func (c *ProjectcalicoClient) GlobalReportTypes(namespace string) GlobalReportTy
 	return newGlobalReportTypes(c, namespace)
 }
 
-func (c *ProjectcalicoClient) LicenseKeys(namespace string) LicenseKeyInterface {
-	return newLicenseKeys(c, namespace)
+func (c *ProjectcalicoClient) LicenseKeys() LicenseKeyInterface {
+	return newLicenseKeys(c)
 }
 
 func (c *ProjectcalicoClient) ManagedClusters() ManagedClusterInterface {

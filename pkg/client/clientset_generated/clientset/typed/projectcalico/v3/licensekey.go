@@ -19,13 +19,14 @@ import (
 // LicenseKeysGetter has a method to return a LicenseKeyInterface.
 // A group's client should implement this interface.
 type LicenseKeysGetter interface {
-	LicenseKeys(namespace string) LicenseKeyInterface
+	LicenseKeys() LicenseKeyInterface
 }
 
 // LicenseKeyInterface has methods to work with LicenseKey resources.
 type LicenseKeyInterface interface {
 	Create(ctx context.Context, licenseKey *v3.LicenseKey, opts v1.CreateOptions) (*v3.LicenseKey, error)
 	Update(ctx context.Context, licenseKey *v3.LicenseKey, opts v1.UpdateOptions) (*v3.LicenseKey, error)
+	UpdateStatus(ctx context.Context, licenseKey *v3.LicenseKey, opts v1.UpdateOptions) (*v3.LicenseKey, error)
 	Delete(ctx context.Context, name string, opts v1.DeleteOptions) error
 	DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error
 	Get(ctx context.Context, name string, opts v1.GetOptions) (*v3.LicenseKey, error)
@@ -38,14 +39,12 @@ type LicenseKeyInterface interface {
 // licenseKeys implements LicenseKeyInterface
 type licenseKeys struct {
 	client rest.Interface
-	ns     string
 }
 
 // newLicenseKeys returns a LicenseKeys
-func newLicenseKeys(c *ProjectcalicoV3Client, namespace string) *licenseKeys {
+func newLicenseKeys(c *ProjectcalicoV3Client) *licenseKeys {
 	return &licenseKeys{
 		client: c.RESTClient(),
-		ns:     namespace,
 	}
 }
 
@@ -53,7 +52,6 @@ func newLicenseKeys(c *ProjectcalicoV3Client, namespace string) *licenseKeys {
 func (c *licenseKeys) Get(ctx context.Context, name string, options v1.GetOptions) (result *v3.LicenseKey, err error) {
 	result = &v3.LicenseKey{}
 	err = c.client.Get().
-		Namespace(c.ns).
 		Resource("licensekeys").
 		Name(name).
 		VersionedParams(&options, scheme.ParameterCodec).
@@ -70,7 +68,6 @@ func (c *licenseKeys) List(ctx context.Context, opts v1.ListOptions) (result *v3
 	}
 	result = &v3.LicenseKeyList{}
 	err = c.client.Get().
-		Namespace(c.ns).
 		Resource("licensekeys").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -87,7 +84,6 @@ func (c *licenseKeys) Watch(ctx context.Context, opts v1.ListOptions) (watch.Int
 	}
 	opts.Watch = true
 	return c.client.Get().
-		Namespace(c.ns).
 		Resource("licensekeys").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -98,7 +94,6 @@ func (c *licenseKeys) Watch(ctx context.Context, opts v1.ListOptions) (watch.Int
 func (c *licenseKeys) Create(ctx context.Context, licenseKey *v3.LicenseKey, opts v1.CreateOptions) (result *v3.LicenseKey, err error) {
 	result = &v3.LicenseKey{}
 	err = c.client.Post().
-		Namespace(c.ns).
 		Resource("licensekeys").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(licenseKey).
@@ -111,9 +106,23 @@ func (c *licenseKeys) Create(ctx context.Context, licenseKey *v3.LicenseKey, opt
 func (c *licenseKeys) Update(ctx context.Context, licenseKey *v3.LicenseKey, opts v1.UpdateOptions) (result *v3.LicenseKey, err error) {
 	result = &v3.LicenseKey{}
 	err = c.client.Put().
-		Namespace(c.ns).
 		Resource("licensekeys").
 		Name(licenseKey.Name).
+		VersionedParams(&opts, scheme.ParameterCodec).
+		Body(licenseKey).
+		Do(ctx).
+		Into(result)
+	return
+}
+
+// UpdateStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
+func (c *licenseKeys) UpdateStatus(ctx context.Context, licenseKey *v3.LicenseKey, opts v1.UpdateOptions) (result *v3.LicenseKey, err error) {
+	result = &v3.LicenseKey{}
+	err = c.client.Put().
+		Resource("licensekeys").
+		Name(licenseKey.Name).
+		SubResource("status").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(licenseKey).
 		Do(ctx).
@@ -124,7 +133,6 @@ func (c *licenseKeys) Update(ctx context.Context, licenseKey *v3.LicenseKey, opt
 // Delete takes name of the licenseKey and deletes it. Returns an error if one occurs.
 func (c *licenseKeys) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	return c.client.Delete().
-		Namespace(c.ns).
 		Resource("licensekeys").
 		Name(name).
 		Body(&opts).
@@ -139,7 +147,6 @@ func (c *licenseKeys) DeleteCollection(ctx context.Context, opts v1.DeleteOption
 		timeout = time.Duration(*listOpts.TimeoutSeconds) * time.Second
 	}
 	return c.client.Delete().
-		Namespace(c.ns).
 		Resource("licensekeys").
 		VersionedParams(&listOpts, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -152,7 +159,6 @@ func (c *licenseKeys) DeleteCollection(ctx context.Context, opts v1.DeleteOption
 func (c *licenseKeys) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v3.LicenseKey, err error) {
 	result = &v3.LicenseKey{}
 	err = c.client.Patch(pt).
-		Namespace(c.ns).
 		Resource("licensekeys").
 		Name(name).
 		SubResource(subresources...).

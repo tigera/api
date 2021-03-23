@@ -50,7 +50,7 @@ func (v *version) GlobalReportTypes() GlobalReportTypeInformer {
 
 // LicenseKeys returns a LicenseKeyInformer.
 func (v *version) LicenseKeys() LicenseKeyInformer {
-	return &licenseKeyInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+	return &licenseKeyInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // ManagedClusters returns a ManagedClusterInformer.
