@@ -10,7 +10,6 @@ import (
 	time "time"
 
 	clientset "github.com/tigera/api/pkg/client/clientset_generated/clientset"
-	apis "github.com/tigera/api/pkg/client/informers_generated/externalversions/apis"
 	internalinterfaces "github.com/tigera/api/pkg/client/informers_generated/externalversions/internalinterfaces"
 	projectcalico "github.com/tigera/api/pkg/client/informers_generated/externalversions/projectcalico"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -159,12 +158,7 @@ type SharedInformerFactory interface {
 	ForResource(resource schema.GroupVersionResource) (GenericInformer, error)
 	WaitForCacheSync(stopCh <-chan struct{}) map[reflect.Type]bool
 
-	Projectcalico() apis.Interface
 	Projectcalico() projectcalico.Interface
-}
-
-func (f *sharedInformerFactory) Projectcalico() apis.Interface {
-	return apis.New(f, f.namespace, f.tweakListOptions)
 }
 
 func (f *sharedInformerFactory) Projectcalico() projectcalico.Interface {

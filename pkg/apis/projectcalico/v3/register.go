@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Tigera, Inc. All rights reserved.
+// Copyright (c) 2019-2021 Tigera, Inc. All rights reserved.
 
 package v3
 
@@ -12,48 +12,74 @@ import (
 const GroupName = "projectcalico.org"
 
 // SchemeGroupVersion is group version used to register these objects
+var SchemeGroupVersion = schema.GroupVersion{Group: GroupName, Version: "v3"}
 
 var (
-	GroupVersion  = schema.GroupVersion{Group: GroupName, Version: "v3"}
-	schemeBuilder = runtime.NewSchemeBuilder(addKnownTypes)
-
-	// Install is a function which adds this version to a scheme
-	Install = schemeBuilder.AddToScheme
-
-	// SchemeGroupVersion generated code relies on this name
-	// Deprecated
-	SchemeGroupVersion = GroupVersion
-
-	// AddToScheme exists solely to keep the old generators creating valid code
-	// DEPRECATED
-	AddToScheme = schemeBuilder.AddToScheme
-
-	// TODO: move SchemeBuilder with zz_generated.deepcopy.go to k8s.io/api.
-	// localSchemeBuilder and AddToScheme will stay in k8s.io/kubernetes.
 	SchemeBuilder      runtime.SchemeBuilder
 	localSchemeBuilder = &SchemeBuilder
+	AddToScheme        = localSchemeBuilder.AddToScheme
 )
 
 func init() {
 	// We only register manually written functions here. The registration of the
 	// generated functions takes place in the generated files. The separation
 	// makes the code compile even when the generated files are missing.
-	localSchemeBuilder.Register(addKnownTypes)
+	localSchemeBuilder.Register(addKnownTypes, addConversionFuncs)
 }
 
 // Adds the list of known types to api.Scheme.
 func addKnownTypes(scheme *runtime.Scheme) error {
 	scheme.AddKnownTypes(SchemeGroupVersion,
-		&GlobalReportType{},
-		&GlobalReportTypeList{},
-		&LicenseKey{},
-		&LicenseKeyList{},
-		&ManagedCluster{},
-		&ManagedClusterList{},
+		&NetworkPolicy{},
+		&NetworkPolicyList{},
+		&GlobalNetworkPolicy{},
+		&GlobalNetworkPolicyList{},
+		&GlobalNetworkSet{},
+		&GlobalNetworkSetList{},
+		&HostEndpoint{},
+		&HostEndpointList{},
+		&IPPool{},
+		&IPPoolList{},
+		&BGPConfiguration{},
+		&BGPConfigurationList{},
+		&BGPPeer{},
+		&BGPPeerList{},
+		&Profile{},
+		&ProfileList{},
+		&FelixConfiguration{},
+		&FelixConfigurationList{},
+		&KubeControllersConfiguration{},
+		&KubeControllersConfigurationList{},
+		&ClusterInformation{},
+		&ClusterInformationList{},
+		&NetworkSet{},
+		&NetworkSetList{},
 		&GlobalAlert{},
 		&GlobalAlertList{},
 		&GlobalAlertTemplate{},
 		&GlobalAlertTemplateList{},
+		&GlobalReport{},
+		&GlobalReportList{},
+		&GlobalReportType{},
+		&GlobalReportTypeList{},
+		&GlobalThreatFeed{},
+		&GlobalThreatFeedList{},
+		&LicenseKey{},
+		&LicenseKeyList{},
+		&ManagedCluster{},
+		&ManagedClusterList{},
+		&PacketCapture{},
+		&PacketCaptureList{},
+		&RemoteClusterConfiguration{},
+		&RemoteClusterConfigurationList{},
+		&StagedGlobalNetworkPolicy{},
+		&StagedGlobalNetworkPolicyList{},
+		&StagedKubernetesNetworkPolicy{},
+		&StagedKubernetesNetworkPolicyList{},
+		&StagedNetworkPolicy{},
+		&StagedNetworkPolicyList{},
+		&Tier{},
+		&TierList{},
 	)
 	metav1.AddToGroupVersion(scheme, SchemeGroupVersion)
 	return nil

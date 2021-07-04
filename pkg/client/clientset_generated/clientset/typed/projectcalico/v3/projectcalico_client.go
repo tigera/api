@@ -12,16 +12,52 @@ import (
 
 type ProjectcalicoV3Interface interface {
 	RESTClient() rest.Interface
+	BGPConfigurationsGetter
+	BGPPeersGetter
+	ClusterInformationsGetter
+	FelixConfigurationsGetter
 	GlobalAlertsGetter
 	GlobalAlertTemplatesGetter
+	GlobalNetworkPoliciesGetter
+	GlobalNetworkSetsGetter
+	GlobalReportsGetter
 	GlobalReportTypesGetter
+	GlobalThreatFeedsGetter
+	HostEndpointsGetter
+	IPPoolsGetter
+	KubeControllersConfigurationsGetter
 	LicenseKeysGetter
 	ManagedClustersGetter
+	NetworkPoliciesGetter
+	NetworkSetsGetter
+	PacketCapturesGetter
+	ProfilesGetter
+	RemoteClusterConfigurationsGetter
+	StagedGlobalNetworkPoliciesGetter
+	StagedKubernetesNetworkPoliciesGetter
+	StagedNetworkPoliciesGetter
+	TiersGetter
 }
 
 // ProjectcalicoV3Client is used to interact with features provided by the projectcalico.org group.
 type ProjectcalicoV3Client struct {
 	restClient rest.Interface
+}
+
+func (c *ProjectcalicoV3Client) BGPConfigurations() BGPConfigurationInterface {
+	return newBGPConfigurations(c)
+}
+
+func (c *ProjectcalicoV3Client) BGPPeers() BGPPeerInterface {
+	return newBGPPeers(c)
+}
+
+func (c *ProjectcalicoV3Client) ClusterInformations() ClusterInformationInterface {
+	return newClusterInformations(c)
+}
+
+func (c *ProjectcalicoV3Client) FelixConfigurations() FelixConfigurationInterface {
+	return newFelixConfigurations(c)
 }
 
 func (c *ProjectcalicoV3Client) GlobalAlerts() GlobalAlertInterface {
@@ -32,8 +68,36 @@ func (c *ProjectcalicoV3Client) GlobalAlertTemplates() GlobalAlertTemplateInterf
 	return newGlobalAlertTemplates(c)
 }
 
-func (c *ProjectcalicoV3Client) GlobalReportTypes(namespace string) GlobalReportTypeInterface {
-	return newGlobalReportTypes(c, namespace)
+func (c *ProjectcalicoV3Client) GlobalNetworkPolicies() GlobalNetworkPolicyInterface {
+	return newGlobalNetworkPolicies(c)
+}
+
+func (c *ProjectcalicoV3Client) GlobalNetworkSets() GlobalNetworkSetInterface {
+	return newGlobalNetworkSets(c)
+}
+
+func (c *ProjectcalicoV3Client) GlobalReports() GlobalReportInterface {
+	return newGlobalReports(c)
+}
+
+func (c *ProjectcalicoV3Client) GlobalReportTypes() GlobalReportTypeInterface {
+	return newGlobalReportTypes(c)
+}
+
+func (c *ProjectcalicoV3Client) GlobalThreatFeeds() GlobalThreatFeedInterface {
+	return newGlobalThreatFeeds(c)
+}
+
+func (c *ProjectcalicoV3Client) HostEndpoints() HostEndpointInterface {
+	return newHostEndpoints(c)
+}
+
+func (c *ProjectcalicoV3Client) IPPools() IPPoolInterface {
+	return newIPPools(c)
+}
+
+func (c *ProjectcalicoV3Client) KubeControllersConfigurations() KubeControllersConfigurationInterface {
+	return newKubeControllersConfigurations(c)
 }
 
 func (c *ProjectcalicoV3Client) LicenseKeys() LicenseKeyInterface {
@@ -42,6 +106,42 @@ func (c *ProjectcalicoV3Client) LicenseKeys() LicenseKeyInterface {
 
 func (c *ProjectcalicoV3Client) ManagedClusters() ManagedClusterInterface {
 	return newManagedClusters(c)
+}
+
+func (c *ProjectcalicoV3Client) NetworkPolicies(namespace string) NetworkPolicyInterface {
+	return newNetworkPolicies(c, namespace)
+}
+
+func (c *ProjectcalicoV3Client) NetworkSets(namespace string) NetworkSetInterface {
+	return newNetworkSets(c, namespace)
+}
+
+func (c *ProjectcalicoV3Client) PacketCaptures() PacketCaptureInterface {
+	return newPacketCaptures(c)
+}
+
+func (c *ProjectcalicoV3Client) Profiles() ProfileInterface {
+	return newProfiles(c)
+}
+
+func (c *ProjectcalicoV3Client) RemoteClusterConfigurations() RemoteClusterConfigurationInterface {
+	return newRemoteClusterConfigurations(c)
+}
+
+func (c *ProjectcalicoV3Client) StagedGlobalNetworkPolicies() StagedGlobalNetworkPolicyInterface {
+	return newStagedGlobalNetworkPolicies(c)
+}
+
+func (c *ProjectcalicoV3Client) StagedKubernetesNetworkPolicies() StagedKubernetesNetworkPolicyInterface {
+	return newStagedKubernetesNetworkPolicies(c)
+}
+
+func (c *ProjectcalicoV3Client) StagedNetworkPolicies(namespace string) StagedNetworkPolicyInterface {
+	return newStagedNetworkPolicies(c, namespace)
+}
+
+func (c *ProjectcalicoV3Client) Tiers() TierInterface {
+	return newTiers(c)
 }
 
 // NewForConfig creates a new ProjectcalicoV3Client for the given config.
