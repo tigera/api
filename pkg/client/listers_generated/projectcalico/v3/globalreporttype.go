@@ -17,8 +17,9 @@ type GlobalReportTypeLister interface {
 	// List lists all GlobalReportTypes in the indexer.
 	// Objects returned here must be treated as read-only.
 	List(selector labels.Selector) (ret []*v3.GlobalReportType, err error)
-	// GlobalReportTypes returns an object that can list and get GlobalReportTypes.
-	GlobalReportTypes(namespace string) GlobalReportTypeNamespaceLister
+	// Get retrieves the GlobalReportType from the index for a given name.
+	// Objects returned here must be treated as read-only.
+	Get(name string) (*v3.GlobalReportType, error)
 	GlobalReportTypeListerExpansion
 }
 
@@ -40,41 +41,9 @@ func (s *globalReportTypeLister) List(selector labels.Selector) (ret []*v3.Globa
 	return ret, err
 }
 
-// GlobalReportTypes returns an object that can list and get GlobalReportTypes.
-func (s *globalReportTypeLister) GlobalReportTypes(namespace string) GlobalReportTypeNamespaceLister {
-	return globalReportTypeNamespaceLister{indexer: s.indexer, namespace: namespace}
-}
-
-// GlobalReportTypeNamespaceLister helps list and get GlobalReportTypes.
-// All objects returned here must be treated as read-only.
-type GlobalReportTypeNamespaceLister interface {
-	// List lists all GlobalReportTypes in the indexer for a given namespace.
-	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v3.GlobalReportType, err error)
-	// Get retrieves the GlobalReportType from the indexer for a given namespace and name.
-	// Objects returned here must be treated as read-only.
-	Get(name string) (*v3.GlobalReportType, error)
-	GlobalReportTypeNamespaceListerExpansion
-}
-
-// globalReportTypeNamespaceLister implements the GlobalReportTypeNamespaceLister
-// interface.
-type globalReportTypeNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all GlobalReportTypes in the indexer for a given namespace.
-func (s globalReportTypeNamespaceLister) List(selector labels.Selector) (ret []*v3.GlobalReportType, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v3.GlobalReportType))
-	})
-	return ret, err
-}
-
-// Get retrieves the GlobalReportType from the indexer for a given namespace and name.
-func (s globalReportTypeNamespaceLister) Get(name string) (*v3.GlobalReportType, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
+// Get retrieves the GlobalReportType from the index for a given name.
+func (s *globalReportTypeLister) Get(name string) (*v3.GlobalReportType, error) {
+	obj, exists, err := s.indexer.GetByKey(name)
 	if err != nil {
 		return nil, err
 	}

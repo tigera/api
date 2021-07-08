@@ -7,7 +7,6 @@ package externalversions
 import (
 	"fmt"
 
-	projectcalico "github.com/tigera/api/pkg/apis/projectcalico"
 	v3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	cache "k8s.io/client-go/tools/cache"
@@ -39,29 +38,57 @@ func (f *genericInformer) Lister() cache.GenericLister {
 // TODO extend this to unknown resources with a client pool
 func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource) (GenericInformer, error) {
 	switch resource {
-	// Group=projectcalico.org, Version=projectcalico
-	case projectcalico.SchemeGroupVersion.WithResource("globalalerts"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().Projectcalico().GlobalAlerts().Informer()}, nil
-	case projectcalico.SchemeGroupVersion.WithResource("globalalerttemplates"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().Projectcalico().GlobalAlertTemplates().Informer()}, nil
-	case projectcalico.SchemeGroupVersion.WithResource("globalreporttypes"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().Projectcalico().GlobalReportTypes().Informer()}, nil
-	case projectcalico.SchemeGroupVersion.WithResource("licensekeys"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().Projectcalico().LicenseKeys().Informer()}, nil
-	case projectcalico.SchemeGroupVersion.WithResource("managedclusters"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().Projectcalico().ManagedClusters().Informer()}, nil
-
-		// Group=projectcalico.org, Version=v3
+	// Group=projectcalico.org, Version=v3
+	case v3.SchemeGroupVersion.WithResource("bgpconfigurations"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().BGPConfigurations().Informer()}, nil
+	case v3.SchemeGroupVersion.WithResource("bgppeers"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().BGPPeers().Informer()}, nil
+	case v3.SchemeGroupVersion.WithResource("clusterinformations"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().ClusterInformations().Informer()}, nil
+	case v3.SchemeGroupVersion.WithResource("felixconfigurations"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().FelixConfigurations().Informer()}, nil
 	case v3.SchemeGroupVersion.WithResource("globalalerts"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().GlobalAlerts().Informer()}, nil
 	case v3.SchemeGroupVersion.WithResource("globalalerttemplates"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().GlobalAlertTemplates().Informer()}, nil
+	case v3.SchemeGroupVersion.WithResource("globalnetworkpolicies"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().GlobalNetworkPolicies().Informer()}, nil
+	case v3.SchemeGroupVersion.WithResource("globalnetworksets"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().GlobalNetworkSets().Informer()}, nil
+	case v3.SchemeGroupVersion.WithResource("globalreports"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().GlobalReports().Informer()}, nil
 	case v3.SchemeGroupVersion.WithResource("globalreporttypes"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().GlobalReportTypes().Informer()}, nil
+	case v3.SchemeGroupVersion.WithResource("globalthreatfeeds"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().GlobalThreatFeeds().Informer()}, nil
+	case v3.SchemeGroupVersion.WithResource("hostendpoints"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().HostEndpoints().Informer()}, nil
+	case v3.SchemeGroupVersion.WithResource("ippools"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().IPPools().Informer()}, nil
+	case v3.SchemeGroupVersion.WithResource("kubecontrollersconfigurations"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().KubeControllersConfigurations().Informer()}, nil
 	case v3.SchemeGroupVersion.WithResource("licensekeys"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().LicenseKeys().Informer()}, nil
 	case v3.SchemeGroupVersion.WithResource("managedclusters"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().ManagedClusters().Informer()}, nil
+	case v3.SchemeGroupVersion.WithResource("networkpolicies"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().NetworkPolicies().Informer()}, nil
+	case v3.SchemeGroupVersion.WithResource("networksets"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().NetworkSets().Informer()}, nil
+	case v3.SchemeGroupVersion.WithResource("packetcaptures"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().PacketCaptures().Informer()}, nil
+	case v3.SchemeGroupVersion.WithResource("profiles"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().Profiles().Informer()}, nil
+	case v3.SchemeGroupVersion.WithResource("remoteclusterconfigurations"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().RemoteClusterConfigurations().Informer()}, nil
+	case v3.SchemeGroupVersion.WithResource("stagedglobalnetworkpolicies"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().StagedGlobalNetworkPolicies().Informer()}, nil
+	case v3.SchemeGroupVersion.WithResource("stagedkubernetesnetworkpolicies"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().StagedKubernetesNetworkPolicies().Informer()}, nil
+	case v3.SchemeGroupVersion.WithResource("stagednetworkpolicies"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().StagedNetworkPolicies().Informer()}, nil
+	case v3.SchemeGroupVersion.WithResource("tiers"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().Tiers().Informer()}, nil
 
 	}
 

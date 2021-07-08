@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Tigera, Inc. All rights reserved.
+// Copyright (c) 2019,2021 Tigera, Inc. All rights reserved.
 
 package v3
 
@@ -58,12 +58,12 @@ type GlobalAlertStatus struct {
 	LastUpdate      *metav1.Time     `json:"lastUpdate,omitempty"`
 	Active          bool             `json:"active"`
 	Healthy         bool             `json:"healthy"`
-	ExecutionState  string           `json:"executionState,omitempty"`
 	LastExecuted    *metav1.Time     `json:"lastExecuted,omitempty"`
 	LastEvent       *metav1.Time     `json:"lastEvent,omitempty"`
 	ErrorConditions []ErrorCondition `json:"errorConditions,omitempty"`
 }
 
+// +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // GlobalAlertList contains a list of GlobalAlert resources.
@@ -73,7 +73,24 @@ type GlobalAlertList struct {
 	Items           []GlobalAlert `json:"items"`
 }
 
-type ErrorCondition struct {
-	Type    string `json:"type" validate:"required"`
-	Message string `json:"message" validate:"required"`
+// NewGlobalAlert creates a new (zeroed) GlobalAlert struct with the TypeMetadata
+// initialized to the current version.
+func NewGlobalAlert() *GlobalAlert {
+	return &GlobalAlert{
+		TypeMeta: metav1.TypeMeta{
+			Kind:       KindGlobalAlert,
+			APIVersion: GroupVersionCurrent,
+		},
+	}
+}
+
+// NewGlobalAlertList creates a new (zeroed) GlobalAlertList struct with the TypeMetadata
+// initialized to the current version.
+func NewGlobalAlertList() *GlobalAlertList {
+	return &GlobalAlertList{
+		TypeMeta: metav1.TypeMeta{
+			Kind:       KindGlobalAlertList,
+			APIVersion: GroupVersionCurrent,
+		},
+	}
 }
