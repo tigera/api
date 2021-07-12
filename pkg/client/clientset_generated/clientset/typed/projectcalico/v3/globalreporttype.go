@@ -19,7 +19,7 @@ import (
 // GlobalReportTypesGetter has a method to return a GlobalReportTypeInterface.
 // A group's client should implement this interface.
 type GlobalReportTypesGetter interface {
-	GlobalReportTypes(namespace string) GlobalReportTypeInterface
+	GlobalReportTypes() GlobalReportTypeInterface
 }
 
 // GlobalReportTypeInterface has methods to work with GlobalReportType resources.
@@ -38,14 +38,12 @@ type GlobalReportTypeInterface interface {
 // globalReportTypes implements GlobalReportTypeInterface
 type globalReportTypes struct {
 	client rest.Interface
-	ns     string
 }
 
 // newGlobalReportTypes returns a GlobalReportTypes
-func newGlobalReportTypes(c *ProjectcalicoV3Client, namespace string) *globalReportTypes {
+func newGlobalReportTypes(c *ProjectcalicoV3Client) *globalReportTypes {
 	return &globalReportTypes{
 		client: c.RESTClient(),
-		ns:     namespace,
 	}
 }
 
@@ -53,7 +51,6 @@ func newGlobalReportTypes(c *ProjectcalicoV3Client, namespace string) *globalRep
 func (c *globalReportTypes) Get(ctx context.Context, name string, options v1.GetOptions) (result *v3.GlobalReportType, err error) {
 	result = &v3.GlobalReportType{}
 	err = c.client.Get().
-		Namespace(c.ns).
 		Resource("globalreporttypes").
 		Name(name).
 		VersionedParams(&options, scheme.ParameterCodec).
@@ -70,7 +67,6 @@ func (c *globalReportTypes) List(ctx context.Context, opts v1.ListOptions) (resu
 	}
 	result = &v3.GlobalReportTypeList{}
 	err = c.client.Get().
-		Namespace(c.ns).
 		Resource("globalreporttypes").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -87,7 +83,6 @@ func (c *globalReportTypes) Watch(ctx context.Context, opts v1.ListOptions) (wat
 	}
 	opts.Watch = true
 	return c.client.Get().
-		Namespace(c.ns).
 		Resource("globalreporttypes").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -98,7 +93,6 @@ func (c *globalReportTypes) Watch(ctx context.Context, opts v1.ListOptions) (wat
 func (c *globalReportTypes) Create(ctx context.Context, globalReportType *v3.GlobalReportType, opts v1.CreateOptions) (result *v3.GlobalReportType, err error) {
 	result = &v3.GlobalReportType{}
 	err = c.client.Post().
-		Namespace(c.ns).
 		Resource("globalreporttypes").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(globalReportType).
@@ -111,7 +105,6 @@ func (c *globalReportTypes) Create(ctx context.Context, globalReportType *v3.Glo
 func (c *globalReportTypes) Update(ctx context.Context, globalReportType *v3.GlobalReportType, opts v1.UpdateOptions) (result *v3.GlobalReportType, err error) {
 	result = &v3.GlobalReportType{}
 	err = c.client.Put().
-		Namespace(c.ns).
 		Resource("globalreporttypes").
 		Name(globalReportType.Name).
 		VersionedParams(&opts, scheme.ParameterCodec).
@@ -124,7 +117,6 @@ func (c *globalReportTypes) Update(ctx context.Context, globalReportType *v3.Glo
 // Delete takes name of the globalReportType and deletes it. Returns an error if one occurs.
 func (c *globalReportTypes) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	return c.client.Delete().
-		Namespace(c.ns).
 		Resource("globalreporttypes").
 		Name(name).
 		Body(&opts).
@@ -139,7 +131,6 @@ func (c *globalReportTypes) DeleteCollection(ctx context.Context, opts v1.Delete
 		timeout = time.Duration(*listOpts.TimeoutSeconds) * time.Second
 	}
 	return c.client.Delete().
-		Namespace(c.ns).
 		Resource("globalreporttypes").
 		VersionedParams(&listOpts, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -152,7 +143,6 @@ func (c *globalReportTypes) DeleteCollection(ctx context.Context, opts v1.Delete
 func (c *globalReportTypes) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v3.GlobalReportType, err error) {
 	result = &v3.GlobalReportType{}
 	err = c.client.Patch(pt).
-		Namespace(c.ns).
 		Resource("globalreporttypes").
 		Name(name).
 		SubResource(subresources...).
