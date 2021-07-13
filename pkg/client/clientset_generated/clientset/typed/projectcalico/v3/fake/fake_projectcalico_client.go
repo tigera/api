@@ -26,6 +26,10 @@ func (c *FakeProjectcalicoV3) ClusterInformations() v3.ClusterInformationInterfa
 	return &FakeClusterInformations{c}
 }
 
+func (c *FakeProjectcalicoV3) DeepPacketInspections(namespace string) v3.DeepPacketInspectionInterface {
+	return &FakeDeepPacketInspections{c, namespace}
+}
+
 func (c *FakeProjectcalicoV3) FelixConfigurations() v3.FelixConfigurationInterface {
 	return &FakeFelixConfigurations{c}
 }

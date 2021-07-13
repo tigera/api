@@ -16,6 +16,8 @@ type Interface interface {
 	BGPPeers() BGPPeerInformer
 	// ClusterInformations returns a ClusterInformationInformer.
 	ClusterInformations() ClusterInformationInformer
+	// DeepPacketInspections returns a DeepPacketInspectionInformer.
+	DeepPacketInspections() DeepPacketInspectionInformer
 	// FelixConfigurations returns a FelixConfigurationInformer.
 	FelixConfigurations() FelixConfigurationInformer
 	// GlobalAlerts returns a GlobalAlertInformer.
@@ -86,6 +88,11 @@ func (v *version) BGPPeers() BGPPeerInformer {
 // ClusterInformations returns a ClusterInformationInformer.
 func (v *version) ClusterInformations() ClusterInformationInformer {
 	return &clusterInformationInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// DeepPacketInspections returns a DeepPacketInspectionInformer.
+func (v *version) DeepPacketInspections() DeepPacketInspectionInformer {
+	return &deepPacketInspectionInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // FelixConfigurations returns a FelixConfigurationInformer.
