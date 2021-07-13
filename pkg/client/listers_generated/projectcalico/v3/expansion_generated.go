@@ -16,6 +16,14 @@ type BGPPeerListerExpansion interface{}
 // ClusterInformationLister.
 type ClusterInformationListerExpansion interface{}
 
+// DeepPacketInspectionListerExpansion allows custom methods to be added to
+// DeepPacketInspectionLister.
+type DeepPacketInspectionListerExpansion interface{}
+
+// DeepPacketInspectionNamespaceListerExpansion allows custom methods to be added to
+// DeepPacketInspectionNamespaceLister.
+type DeepPacketInspectionNamespaceListerExpansion interface{}
+
 // FelixConfigurationListerExpansion allows custom methods to be added to
 // FelixConfigurationLister.
 type FelixConfigurationListerExpansion interface{}

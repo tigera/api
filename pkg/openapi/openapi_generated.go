@@ -43,6 +43,13 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.Community":                          schema_pkg_apis_projectcalico_v3_Community(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.CompletedReportJob":                 schema_pkg_apis_projectcalico_v3_CompletedReportJob(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.ControllersConfig":                  schema_pkg_apis_projectcalico_v3_ControllersConfig(ref),
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.DPIActive":                          schema_pkg_apis_projectcalico_v3_DPIActive(ref),
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.DPIErrorCondition":                  schema_pkg_apis_projectcalico_v3_DPIErrorCondition(ref),
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.DPINode":                            schema_pkg_apis_projectcalico_v3_DPINode(ref),
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.DeepPacketInspection":               schema_pkg_apis_projectcalico_v3_DeepPacketInspection(ref),
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.DeepPacketInspectionList":           schema_pkg_apis_projectcalico_v3_DeepPacketInspectionList(ref),
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.DeepPacketInspectionSpec":           schema_pkg_apis_projectcalico_v3_DeepPacketInspectionSpec(ref),
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.DeepPacketInspectionStatus":         schema_pkg_apis_projectcalico_v3_DeepPacketInspectionStatus(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.EgressSpec":                         schema_pkg_apis_projectcalico_v3_EgressSpec(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.EndpointPort":                       schema_pkg_apis_projectcalico_v3_EndpointPort(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.EndpointsReportEndpoint":            schema_pkg_apis_projectcalico_v3_EndpointsReportEndpoint(ref),
@@ -1719,6 +1726,246 @@ func schema_pkg_apis_projectcalico_v3_ControllersConfig(ref common.ReferenceCall
 		},
 		Dependencies: []string{
 			"github.com/tigera/api/pkg/apis/projectcalico/v3.FederatedServicesControllerConfig", "github.com/tigera/api/pkg/apis/projectcalico/v3.NamespaceControllerConfig", "github.com/tigera/api/pkg/apis/projectcalico/v3.NodeControllerConfig", "github.com/tigera/api/pkg/apis/projectcalico/v3.PolicyControllerConfig", "github.com/tigera/api/pkg/apis/projectcalico/v3.ServiceAccountControllerConfig", "github.com/tigera/api/pkg/apis/projectcalico/v3.WorkloadEndpointControllerConfig"},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_DPIActive(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"success": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Success indicates if deep packet inspection is running on all workloads matching the selector.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"lastUpdated": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Timestamp of when the active status was last updated.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_DPIErrorCondition(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"message": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Message from deep packet inspection error.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"lastUpdated": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Timestamp of when this error message was added.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_DPINode(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"node": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Node identifies with a physical node from the cluster via its hostname.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"active": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.DPIActive"),
+						},
+					},
+					"errorConditions": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.DPIErrorCondition"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/tigera/api/pkg/apis/projectcalico/v3.DPIActive", "github.com/tigera/api/pkg/apis/projectcalico/v3.DPIErrorCondition"},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_DeepPacketInspection(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Standard object's metadata.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specification of the DeepPacketInspection.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.DeepPacketInspectionSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Status of the DeepPacketInspection.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.DeepPacketInspectionStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/tigera/api/pkg/apis/projectcalico/v3.DeepPacketInspectionSpec", "github.com/tigera/api/pkg/apis/projectcalico/v3.DeepPacketInspectionStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_DeepPacketInspectionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DeepPacketInspectionList contains list of DeepPacketInspection resource.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.DeepPacketInspection"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata", "items"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/tigera/api/pkg/apis/projectcalico/v3.DeepPacketInspection", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_DeepPacketInspectionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DeepPacketInspectionSpec contains the values of the deep packet inspection.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"selector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The selector is an expression used to pick out the endpoints for which deep packet inspection should be performed on. The selector will only match endpoints in the same namespace as the DeepPacketInspection resource.\n\nSelector expressions follow this syntax:\n\n\tlabel == \"string_literal\"  ->  comparison, e.g. my_label == \"foo bar\"\n\tlabel != \"string_literal\"   ->  not equal; also matches if label is not present\n\tlabel in { \"a\", \"b\", \"c\", ... }  ->  true if the value of label X is one of \"a\", \"b\", \"c\"\n\tlabel not in { \"a\", \"b\", \"c\", ... }  ->  true if the value of label X is not one of \"a\", \"b\", \"c\"\n\thas(label_name)  -> True if that label is present\n\t! expr -> negation of expr\n\texpr && expr  -> Short-circuit and\n\texpr || expr  -> Short-circuit or\n\t( expr ) -> parens for grouping\n\tall() or the empty selector -> matches all endpoints.\n\nLabel names are allowed to contain alphanumerics, -, _ and /. String literals are more permissive but they do not support escape characters.\n\nExamples (with made-up labels):\n\n\ttype == \"webserver\" && deployment == \"prod\"\n\ttype in {\"frontend\", \"backend\"}\n\tdeployment != \"dev\"\n\t! has(label_name)",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_DeepPacketInspectionStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DeepPacketInspectionStatus contains status of deep packet inspection in each node.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"nodes": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.DPINode"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/tigera/api/pkg/apis/projectcalico/v3.DPINode"},
 	}
 }
 
