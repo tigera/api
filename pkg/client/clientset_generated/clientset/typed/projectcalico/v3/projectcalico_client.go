@@ -15,6 +15,7 @@ type ProjectcalicoV3Interface interface {
 	BGPConfigurationsGetter
 	BGPPeersGetter
 	ClusterInformationsGetter
+	DeepPacketInspectionsGetter
 	FelixConfigurationsGetter
 	GlobalAlertsGetter
 	GlobalAlertTemplatesGetter
@@ -54,6 +55,10 @@ func (c *ProjectcalicoV3Client) BGPPeers() BGPPeerInterface {
 
 func (c *ProjectcalicoV3Client) ClusterInformations() ClusterInformationInterface {
 	return newClusterInformations(c)
+}
+
+func (c *ProjectcalicoV3Client) DeepPacketInspections(namespace string) DeepPacketInspectionInterface {
+	return newDeepPacketInspections(c, namespace)
 }
 
 func (c *ProjectcalicoV3Client) FelixConfigurations() FelixConfigurationInterface {
