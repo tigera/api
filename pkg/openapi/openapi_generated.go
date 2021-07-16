@@ -4143,6 +4143,13 @@ func schema_pkg_apis_projectcalico_v3_GlobalAlertSpec(ref common.ReferenceCallba
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "if Type is not provided assume UserDefined to  avoid breaking changes",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"summary": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
@@ -4154,6 +4161,13 @@ func schema_pkg_apis_projectcalico_v3_GlobalAlertSpec(ref common.ReferenceCallba
 							Default: "",
 							Type:    []string{"string"},
 							Format:  "",
+						},
+					},
+					"job": {
+						SchemaProps: spec.SchemaProps{
+							Description: "required if Type is of AnomalyDetection",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"severity": {
