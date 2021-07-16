@@ -126,6 +126,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCapture":                      schema_pkg_apis_projectcalico_v3_PacketCapture(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCaptureFile":                  schema_pkg_apis_projectcalico_v3_PacketCaptureFile(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCaptureList":                  schema_pkg_apis_projectcalico_v3_PacketCaptureList(ref),
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCaptureRule":                  schema_pkg_apis_projectcalico_v3_PacketCaptureRule(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCaptureSpec":                  schema_pkg_apis_projectcalico_v3_PacketCaptureSpec(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCaptureStatus":                schema_pkg_apis_projectcalico_v3_PacketCaptureStatus(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.PolicyControllerConfig":             schema_pkg_apis_projectcalico_v3_PolicyControllerConfig(ref),
@@ -3125,6 +3126,13 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 							},
 						},
 					},
+					"kubeMasqueradeBit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "KubeMasqueradeBit should be set to the same value as --iptables-masquerade-bit of kube-proxy when TPROXY is used. The default is the same as kube-proxy default thus only needs a change if kube-proxy is using a non-standard setting. Must be within the range of 0-31.  [Default: 14]",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
 					"kubeNodePortRanges": {
 						SchemaProps: spec.SchemaProps{
 							Description: "KubeNodePortRanges holds list of port ranges used for service node ports. Only used if felix detects kube-proxy running in ipvs mode. Felix uses these ranges to separate host and workload traffic. [Default: 30000:32767].",
@@ -3909,6 +3917,13 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 							Description: "WireguardMTU controls the MTU on the Wireguard interface. See Configuring MTU [Default: 1420]",
 							Type:        []string{"integer"},
 							Format:      "int32",
+						},
+					},
+					"wireguardHostEncryptionEnabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "WireguardHostEncryptionEnabled controls whether Wireguard host-to-host encryption is enabled. [Default: false]",
+							Type:        []string{"boolean"},
+							Format:      "",
 						},
 					},
 					"captureDir": {
@@ -6795,6 +6810,41 @@ func schema_pkg_apis_projectcalico_v3_PacketCaptureList(ref common.ReferenceCall
 	}
 }
 
+func schema_pkg_apis_projectcalico_v3_PacketCaptureRule(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "A PacketCaptureRule encapsulates a set of match criteria for traffic captured from an interface.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"protocol": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Protocol is an optional field that defines a filter for all traffic for a specific IP protocol.\n\nMust be one of these string values: \"TCP\", \"UDP\", \"ICMP\", \"ICMPv6\", \"SCTP\", \"UDPLite\" or an integer in the range 1-255.",
+							Ref:         ref("github.com/tigera/api/pkg/lib/numorstring.Protocol"),
+						},
+					},
+					"ports": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Ports is an optional field that defines a filter for all traffic that has a source or destination port that matches one of these ranges/values. This value is a list of integers or strings that represent ranges of ports.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/tigera/api/pkg/lib/numorstring.Port"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/tigera/api/pkg/lib/numorstring.Port", "github.com/tigera/api/pkg/lib/numorstring.Protocol"},
+	}
+}
+
 func schema_pkg_apis_projectcalico_v3_PacketCaptureSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -6809,9 +6859,25 @@ func schema_pkg_apis_projectcalico_v3_PacketCaptureSpec(ref common.ReferenceCall
 							Format:      "",
 						},
 					},
+					"filters": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The ordered set of filters applied to traffic captured from an interface.  Each rule contains a set of packet match criteria.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCaptureRule"),
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
+		Dependencies: []string{
+			"github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCaptureRule"},
 	}
 }
 
