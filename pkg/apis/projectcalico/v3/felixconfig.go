@@ -257,6 +257,11 @@ type FelixConfigurationSpec struct {
 	// [Default: tcp:179, tcp:2379, tcp:2380, tcp:6443, tcp:6666, tcp:6667, udp:53, udp:67]
 	FailsafeOutboundHostPorts *[]ProtoPort `json:"failsafeOutboundHostPorts,omitempty"`
 
+	// KubeMasqueradeBit should be set to the same value as --iptables-masquerade-bit of kube-proxy
+	// when TPROXY is used. The default is the same as kube-proxy default thus only needs a change
+	// if kube-proxy is using a non-standard setting. Must be within the range of 0-31.  [Default: 14]
+	KubeMasqueradeBit *int `json:"kubeMasqueradeBit,omitempty" validate:"omitempty,gte=0,lte=31"`
+
 	// KubeNodePortRanges holds list of port ranges used for service node ports. Only used if felix detects kube-proxy running in ipvs mode.
 	// Felix uses these ranges to separate host and workload traffic. [Default: 30000:32767].
 	KubeNodePortRanges *[]numorstring.Port `json:"kubeNodePortRanges,omitempty" validate:"omitempty,dive"`
@@ -635,6 +640,8 @@ type FelixConfigurationSpec struct {
 	WireguardInterfaceName string `json:"wireguardInterfaceName,omitempty" validate:"omitempty,interface"`
 	// WireguardMTU controls the MTU on the Wireguard interface. See Configuring MTU [Default: 1420]
 	WireguardMTU *int `json:"wireguardMTU,omitempty"`
+	// WireguardHostEncryptionEnabled controls whether Wireguard host-to-host encryption is enabled. [Default: false]
+	WireguardHostEncryptionEnabled *bool `json:"wireguardHostEncryptionEnabled,omitempty"`
 
 	// +kubebuilder:validation:MinLength=1
 	// CaptureDir controls directory to store file capture. [Default: /var/log/calico/pcap]
