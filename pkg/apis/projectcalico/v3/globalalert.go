@@ -12,6 +12,9 @@ const (
 	KindGlobalAlert     = "GlobalAlert"
 	KindGlobalAlertList = "GlobalAlertList"
 
+	GlobalAlertTypeUserDefined      = "UserDefined"
+	GlobalAlertTypeAnomalyDetection = "AnomalyDetection"
+
 	GlobalAlertDataSetAudit = "audit"
 	GlobalAlertDataSetDNS   = "dns"
 	GlobalAlertDataSetFlows = "flows"
@@ -40,8 +43,12 @@ type GlobalAlert struct {
 }
 
 type GlobalAlertSpec struct {
-	Summary     string           `json:"summary,omitempty" validate:"omitempty"`
-	Description string           `json:"description" validate:"required"`
+	// if Type is not provided assume UserDefined to  avoid breaking changes
+	Type        string `json:"type,omitempty" validate:"omitempty,oneof=UserDefined AnomalyDetection"`
+	Summary     string `json:"summary,omitempty" validate:"omitempty"`
+	Description string `json:"description" validate:"required"`
+	// required if Type is of AnomalyDetection
+	Job         string           `json:"job,omitempty" validate:"omitempty"`
 	Severity    int              `json:"severity" validate:"required,min=1,max=100"`
 	Period      *metav1.Duration `json:"period,omitempty" validate:"omitempty"`
 	Lookback    *metav1.Duration `json:"lookback,omitempty" validate:"omitempty"`
