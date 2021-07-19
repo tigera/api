@@ -1533,6 +1533,11 @@ func (in *FelixConfigurationSpec) DeepCopyInto(out *FelixConfigurationSpec) {
 		*out = new(bool)
 		**out = **in
 	}
+	if in.FlowLogsCollectProcessPath != nil {
+		in, out := &in.FlowLogsCollectProcessPath, &out.FlowLogsCollectProcessPath
+		*out = new(bool)
+		**out = **in
+	}
 	if in.FlowLogsFileEnabled != nil {
 		in, out := &in.FlowLogsFileEnabled, &out.FlowLogsFileEnabled
 		*out = new(bool)
