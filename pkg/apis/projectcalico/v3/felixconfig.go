@@ -469,7 +469,7 @@ type FelixConfigurationSpec struct {
 	FlowLogsFilePerFlowProcessLimit *int `json:"flowLogsFilePerFlowProcessLimit,omitempty" validate:"omitempty"`
 	// FlowLogsFilePerFlowProcessArgsLimit is used to specify the maximum number of distinct process args that will appear in the flowLogs.
 	// Default value is 5
-	FlowLogsFilePerFlowProcessArgsLimit *int `json:"flowLogsFilePerFlowProcessLimit,omitempty" validate:"omitempty"`
+	FlowLogsFilePerFlowProcessArgsLimit *int `json:"flowLogsFilePerFlowProcessArgsLimit,omitempty" validate:"omitempty"`
 
 	// WindowsFlowLogsFileDirectory sets the directory where flow logs files are stored on Windows nodes. [Default: "c:\\TigeraCalico\\flowlogs"].
 	WindowsFlowLogsFileDirectory string `json:"windowsFlowLogsFileDirectory,omitempty"`

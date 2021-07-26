@@ -3602,7 +3602,7 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 							Format:      "int32",
 						},
 					},
-					"flowLogsFilePerFlowProcessLimit": {
+					"flowLogsFilePerFlowProcessArgsLimit": {
 						SchemaProps: spec.SchemaProps{
 							Description: "FlowLogsFilePerFlowProcessArgsLimit is used to specify the maximum number of distinct process args that will appear in the flowLogs. Default value is 5",
 							Type:        []string{"integer"},
