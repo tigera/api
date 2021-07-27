@@ -3490,6 +3490,13 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 							Format:      "",
 						},
 					},
+					"flowLogsCollectProcessPath": {
+						SchemaProps: spec.SchemaProps{
+							Description: "When FlowLogsCollectProcessPath and FlowLogsCollectProcessInfo are both enabled, each flow log will include information about the process that is sending or receiving the packets in that flow: the `process_name` field will contain the full path of the process executable, and the `process_args` field will have the arguments with which the executable was invoked.  Process information will not be reported for connections which use raw sockets.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 					"flowLogsFileEnabled": {
 						SchemaProps: spec.SchemaProps{
 							Description: "FlowLogsFileEnabled when set to true, enables logging flow logs to a file. If false no flow logging to file will occur.",
