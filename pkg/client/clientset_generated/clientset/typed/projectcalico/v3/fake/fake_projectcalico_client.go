@@ -126,6 +126,10 @@ func (c *FakeProjectcalicoV3) Tiers() v3.TierInterface {
 	return &FakeTiers{c}
 }
 
+func (c *FakeProjectcalicoV3) UISettingsGroups() v3.UISettingsGroupInterface {
+	return &FakeUISettingsGroups{c}
+}
+
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeProjectcalicoV3) RESTClient() rest.Interface {
