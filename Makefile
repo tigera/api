@@ -12,7 +12,7 @@ ORGANIZATION=projectcalico
 SEMAPHORE_PROJECT_ID?=$(SEMAPHORE_API_PROJECT_ID)
 
 # Used so semaphore can trigger the update pin pipelines in projects that have this project as a dependency.
-SEMAPHORE_AUTO_PIN_UPDATE_PROJECT_IDS=$(SEMAPHORE_LIBCALICO_GO_PROJECT_ID)
+SEMAPHORE_AUTO_PIN_UPDATE_PROJECT_IDS=$(SEMAPHORE_LIBCALICO_GO_PRIVATE_PROJECT_ID)
 
 ##############################################################################
 # Download and include Makefile.common before anything else
