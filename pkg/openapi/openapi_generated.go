@@ -183,6 +183,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.Tier":                                  schema_pkg_apis_projectcalico_v3_Tier(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.TierList":                              schema_pkg_apis_projectcalico_v3_TierList(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.TierSpec":                              schema_pkg_apis_projectcalico_v3_TierSpec(ref),
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.UISettingsGroup":                       schema_pkg_apis_projectcalico_v3_UISettingsGroup(ref),
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.UISettingsGroupList":                   schema_pkg_apis_projectcalico_v3_UISettingsGroupList(ref),
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.UISettingsGroupSpec":                   schema_pkg_apis_projectcalico_v3_UISettingsGroupSpec(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.WorkloadEndpointControllerConfig":      schema_pkg_apis_projectcalico_v3_WorkloadEndpointControllerConfig(ref),
 		"github.com/tigera/api/pkg/lib/numorstring.Port":                                        schema_api_pkg_lib_numorstring_Port(ref),
 		"github.com/tigera/api/pkg/lib/numorstring.Protocol":                                    schema_api_pkg_lib_numorstring_Protocol(ref),
@@ -9473,6 +9476,135 @@ func schema_pkg_apis_projectcalico_v3_TierSpec(ref common.ReferenceCallback) com
 						},
 					},
 				},
+			},
+		},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_UISettingsGroup(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "UISettingsGroup contains the settings that dictate how many UI settings may be created for a specific cluster/user combination. UI settings may only be persisted if there is a corresponding UISettingsGroup resource.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Standard object's metadata.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specification of the UISettingsGroup.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.UISettingsGroupSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/tigera/api/pkg/apis/projectcalico/v3.UISettingsGroupSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_UISettingsGroupList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "UISettingsGroupList contains a list of UISettingsGroup resources.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.UISettingsGroup"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata", "items"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/tigera/api/pkg/apis/projectcalico/v3.UISettingsGroup", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_UISettingsGroupSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "UISettingsGroupSpec contains the specification for a UISettingsGroup resource.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"description": {
+						SchemaProps: spec.SchemaProps{
+							Description: "This description is displayed by the UI when asking where to store any UI-specific settings such as views, layers, dashboards etc.  This name should be a short description that relates the settings to the set of clusters defined below, the set of users or groups that are able to access to these settings (defined via RBAC) or the set of applications common to the set of users or groups that can access these settings. Examples might be: - \"cluster\" when these settings apply to the whole cluster - \"global\" when these settings apply to all clusters (in an Multi-Cluster environment) - \"security team\" if these settings are accessible only to the security group and therefore applicable to the\n  applications accessible by that team.\n- \"storefront\" if these settings are accessible to all users and groups that can access the storefront set of\n  applications.\n- \"user\" if these settings are accessible to only a single user.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"clusters": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The set of clusters that these settings are valid for. This is only used in the management cluster of a multi cluster deployment. A value of \"*\" means all clusters. No value, or a value of \"cluster\" indicates local cluster only.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"description", "clusters"},
 			},
 		},
 	}
