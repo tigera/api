@@ -123,3 +123,11 @@ type StagedNetworkPolicyNamespaceListerExpansion interface{}
 // TierListerExpansion allows custom methods to be added to
 // TierLister.
 type TierListerExpansion interface{}
+
+// UISettingsGroupListerExpansion allows custom methods to be added to
+// UISettingsGroupLister.
+type UISettingsGroupListerExpansion interface{}
+
+// UISettingsGroupNamespaceListerExpansion allows custom methods to be added to
+// UISettingsGroupNamespaceLister.
+type UISettingsGroupNamespaceListerExpansion interface{}
