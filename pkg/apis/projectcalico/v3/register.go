@@ -54,6 +54,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&ClusterInformationList{},
 		&NetworkSet{},
 		&NetworkSetList{},
+
+		// Enterprise-only types.
 		&GlobalAlert{},
 		&GlobalAlertList{},
 		&GlobalAlertTemplate{},
