@@ -80,6 +80,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&StagedNetworkPolicyList{},
 		&Tier{},
 		&TierList{},
+		&UISettingsGroup{},
+		&UISettingsGroupList{},
 	)
 	metav1.AddToGroupVersion(scheme, SchemeGroupVersion)
 	return nil
