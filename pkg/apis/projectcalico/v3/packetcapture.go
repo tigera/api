@@ -69,13 +69,12 @@ type PacketCaptureRule struct {
 	// a specific IP protocol.
 	//
 	// Must be one of these string values: "TCP", "UDP", "ICMP", "ICMPv6", "SCTP", "UDPLite"
-	// or an integer in the range 1-255.
 	Protocol *numorstring.Protocol `json:"protocol,omitempty" validate:"omitempty"`
 
 	// Ports is an optional field that defines a filter for all traffic that has a
 	// source or destination port that matches one of these ranges/values. This value is a
 	// list of integers or strings that represent ranges of ports.
-	Ports []numorstring.Port `json:"ports,omitempty" validate:"omitempty,dive"`
+	Ports []numorstring.NumPort `json:"ports,omitempty" validate:"omitempty,dive"`
 }
 
 // PacketCaptureStatus describes the files that have been captured, for a given PacketCapture, on each node
