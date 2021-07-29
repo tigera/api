@@ -58,6 +58,8 @@ type PacketCaptureSpec struct {
 	// 	! has(label_name)
 	Selector string `json:"selector,omitempty" validate:"selector"`
 
+	// +kubebuilder:validation:MaxItems:=65535
+
 	// The ordered set of filters applied to traffic captured from an interface.  Each rule contains a set of
 	// packet match criteria.
 	Filters []PacketCaptureRule `json:"filters,omitempty" validate:"omitempty,dive"`
@@ -71,10 +73,12 @@ type PacketCaptureRule struct {
 	// Must be one of these string values: "TCP", "UDP", "ICMP", "ICMPv6", "SCTP", "UDPLite"
 	Protocol *numorstring.Protocol `json:"protocol,omitempty" validate:"omitempty"`
 
+	// +kubebuilder:validation:MaxItems:=10000
+
 	// Ports is an optional field that defines a filter for all traffic that has a
 	// source or destination port that matches one of these ranges/values. This value is a
 	// list of integers or strings that represent ranges of ports.
-	Ports []numorstring.NumPort `json:"ports,omitempty" validate:"omitempty,dive"`
+	Ports []numorstring.Port `json:"ports,omitempty" validate:"omitempty,dive"`
 }
 
 // PacketCaptureStatus describes the files that have been captured, for a given PacketCapture, on each node
