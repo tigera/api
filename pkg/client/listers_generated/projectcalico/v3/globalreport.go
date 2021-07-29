@@ -12,13 +12,10 @@ import (
 )
 
 // GlobalReportLister helps list GlobalReports.
-// All objects returned here must be treated as read-only.
 type GlobalReportLister interface {
 	// List lists all GlobalReports in the indexer.
-	// Objects returned here must be treated as read-only.
 	List(selector labels.Selector) (ret []*v3.GlobalReport, err error)
 	// Get retrieves the GlobalReport from the index for a given name.
-	// Objects returned here must be treated as read-only.
 	Get(name string) (*v3.GlobalReport, error)
 	GlobalReportListerExpansion
 }

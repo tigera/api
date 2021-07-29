@@ -12,13 +12,10 @@ import (
 )
 
 // BGPPeerLister helps list BGPPeers.
-// All objects returned here must be treated as read-only.
 type BGPPeerLister interface {
 	// List lists all BGPPeers in the indexer.
-	// Objects returned here must be treated as read-only.
 	List(selector labels.Selector) (ret []*v3.BGPPeer, err error)
 	// Get retrieves the BGPPeer from the index for a given name.
-	// Objects returned here must be treated as read-only.
 	Get(name string) (*v3.BGPPeer, error)
 	BGPPeerListerExpansion
 }

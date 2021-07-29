@@ -5,7 +5,6 @@
 package v3
 
 import (
-	"context"
 	time "time"
 
 	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
@@ -47,13 +46,13 @@ func NewFilteredGlobalReportInformer(client clientset.Interface, resyncPeriod ti
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ProjectcalicoV3().GlobalReports().List(context.TODO(), options)
+				return client.ProjectcalicoV3().GlobalReports().List(options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ProjectcalicoV3().GlobalReports().Watch(context.TODO(), options)
+				return client.ProjectcalicoV3().GlobalReports().Watch(options)
 			},
 		},
 		&projectcalicov3.GlobalReport{},

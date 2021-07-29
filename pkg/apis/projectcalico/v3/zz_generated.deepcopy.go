@@ -1448,6 +1448,11 @@ func (in *FelixConfigurationSpec) DeepCopyInto(out *FelixConfigurationSpec) {
 		*out = new(metav1.Duration)
 		**out = **in
 	}
+	if in.DNSPolicyNfqueueID != nil {
+		in, out := &in.DNSPolicyNfqueueID, &out.DNSPolicyNfqueueID
+		*out = new(int)
+		**out = **in
+	}
 	if in.SidecarAccelerationEnabled != nil {
 		in, out := &in.SidecarAccelerationEnabled, &out.SidecarAccelerationEnabled
 		*out = new(bool)

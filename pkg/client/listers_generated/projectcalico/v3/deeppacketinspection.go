@@ -12,10 +12,8 @@ import (
 )
 
 // DeepPacketInspectionLister helps list DeepPacketInspections.
-// All objects returned here must be treated as read-only.
 type DeepPacketInspectionLister interface {
 	// List lists all DeepPacketInspections in the indexer.
-	// Objects returned here must be treated as read-only.
 	List(selector labels.Selector) (ret []*v3.DeepPacketInspection, err error)
 	// DeepPacketInspections returns an object that can list and get DeepPacketInspections.
 	DeepPacketInspections(namespace string) DeepPacketInspectionNamespaceLister
@@ -46,13 +44,10 @@ func (s *deepPacketInspectionLister) DeepPacketInspections(namespace string) Dee
 }
 
 // DeepPacketInspectionNamespaceLister helps list and get DeepPacketInspections.
-// All objects returned here must be treated as read-only.
 type DeepPacketInspectionNamespaceLister interface {
 	// List lists all DeepPacketInspections in the indexer for a given namespace.
-	// Objects returned here must be treated as read-only.
 	List(selector labels.Selector) (ret []*v3.DeepPacketInspection, err error)
 	// Get retrieves the DeepPacketInspection from the indexer for a given namespace and name.
-	// Objects returned here must be treated as read-only.
 	Get(name string) (*v3.DeepPacketInspection, error)
 	DeepPacketInspectionNamespaceListerExpansion
 }

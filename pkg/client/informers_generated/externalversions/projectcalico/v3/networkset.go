@@ -5,7 +5,6 @@
 package v3
 
 import (
-	"context"
 	time "time"
 
 	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
@@ -48,13 +47,13 @@ func NewFilteredNetworkSetInformer(client clientset.Interface, namespace string,
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ProjectcalicoV3().NetworkSets(namespace).List(context.TODO(), options)
+				return client.ProjectcalicoV3().NetworkSets(namespace).List(options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ProjectcalicoV3().NetworkSets(namespace).Watch(context.TODO(), options)
+				return client.ProjectcalicoV3().NetworkSets(namespace).Watch(options)
 			},
 		},
 		&projectcalicov3.NetworkSet{},

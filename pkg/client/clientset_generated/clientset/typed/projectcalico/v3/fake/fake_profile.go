@@ -5,8 +5,6 @@
 package fake
 
 import (
-	"context"
-
 	v3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
@@ -26,7 +24,7 @@ var profilesResource = schema.GroupVersionResource{Group: "projectcalico.org", V
 var profilesKind = schema.GroupVersionKind{Group: "projectcalico.org", Version: "v3", Kind: "Profile"}
 
 // Get takes name of the profile, and returns the corresponding profile object, and an error if there is any.
-func (c *FakeProfiles) Get(ctx context.Context, name string, options v1.GetOptions) (result *v3.Profile, err error) {
+func (c *FakeProfiles) Get(name string, options v1.GetOptions) (result *v3.Profile, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewRootGetAction(profilesResource, name), &v3.Profile{})
 	if obj == nil {
@@ -36,7 +34,7 @@ func (c *FakeProfiles) Get(ctx context.Context, name string, options v1.GetOptio
 }
 
 // List takes label and field selectors, and returns the list of Profiles that match those selectors.
-func (c *FakeProfiles) List(ctx context.Context, opts v1.ListOptions) (result *v3.ProfileList, err error) {
+func (c *FakeProfiles) List(opts v1.ListOptions) (result *v3.ProfileList, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewRootListAction(profilesResource, profilesKind, opts), &v3.ProfileList{})
 	if obj == nil {
@@ -57,13 +55,13 @@ func (c *FakeProfiles) List(ctx context.Context, opts v1.ListOptions) (result *v
 }
 
 // Watch returns a watch.Interface that watches the requested profiles.
-func (c *FakeProfiles) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
+func (c *FakeProfiles) Watch(opts v1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
 		InvokesWatch(testing.NewRootWatchAction(profilesResource, opts))
 }
 
 // Create takes the representation of a profile and creates it.  Returns the server's representation of the profile, and an error, if there is any.
-func (c *FakeProfiles) Create(ctx context.Context, profile *v3.Profile, opts v1.CreateOptions) (result *v3.Profile, err error) {
+func (c *FakeProfiles) Create(profile *v3.Profile) (result *v3.Profile, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewRootCreateAction(profilesResource, profile), &v3.Profile{})
 	if obj == nil {
@@ -73,7 +71,7 @@ func (c *FakeProfiles) Create(ctx context.Context, profile *v3.Profile, opts v1.
 }
 
 // Update takes the representation of a profile and updates it. Returns the server's representation of the profile, and an error, if there is any.
-func (c *FakeProfiles) Update(ctx context.Context, profile *v3.Profile, opts v1.UpdateOptions) (result *v3.Profile, err error) {
+func (c *FakeProfiles) Update(profile *v3.Profile) (result *v3.Profile, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewRootUpdateAction(profilesResource, profile), &v3.Profile{})
 	if obj == nil {
@@ -83,22 +81,22 @@ func (c *FakeProfiles) Update(ctx context.Context, profile *v3.Profile, opts v1.
 }
 
 // Delete takes name of the profile and deletes it. Returns an error if one occurs.
-func (c *FakeProfiles) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
+func (c *FakeProfiles) Delete(name string, options *v1.DeleteOptions) error {
 	_, err := c.Fake.
 		Invokes(testing.NewRootDeleteAction(profilesResource, name), &v3.Profile{})
 	return err
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *FakeProfiles) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(profilesResource, listOpts)
+func (c *FakeProfiles) DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error {
+	action := testing.NewRootDeleteCollectionAction(profilesResource, listOptions)
 
 	_, err := c.Fake.Invokes(action, &v3.ProfileList{})
 	return err
 }
 
 // Patch applies the patch and returns the patched profile.
-func (c *FakeProfiles) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v3.Profile, err error) {
+func (c *FakeProfiles) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v3.Profile, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewRootPatchSubresourceAction(profilesResource, name, pt, data, subresources...), &v3.Profile{})
 	if obj == nil {

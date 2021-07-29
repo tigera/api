@@ -12,13 +12,10 @@ import (
 )
 
 // FelixConfigurationLister helps list FelixConfigurations.
-// All objects returned here must be treated as read-only.
 type FelixConfigurationLister interface {
 	// List lists all FelixConfigurations in the indexer.
-	// Objects returned here must be treated as read-only.
 	List(selector labels.Selector) (ret []*v3.FelixConfiguration, err error)
 	// Get retrieves the FelixConfiguration from the index for a given name.
-	// Objects returned here must be treated as read-only.
 	Get(name string) (*v3.FelixConfiguration, error)
 	FelixConfigurationListerExpansion
 }

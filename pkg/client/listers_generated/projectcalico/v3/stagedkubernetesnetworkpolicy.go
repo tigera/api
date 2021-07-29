@@ -12,13 +12,10 @@ import (
 )
 
 // StagedKubernetesNetworkPolicyLister helps list StagedKubernetesNetworkPolicies.
-// All objects returned here must be treated as read-only.
 type StagedKubernetesNetworkPolicyLister interface {
 	// List lists all StagedKubernetesNetworkPolicies in the indexer.
-	// Objects returned here must be treated as read-only.
 	List(selector labels.Selector) (ret []*v3.StagedKubernetesNetworkPolicy, err error)
 	// Get retrieves the StagedKubernetesNetworkPolicy from the index for a given name.
-	// Objects returned here must be treated as read-only.
 	Get(name string) (*v3.StagedKubernetesNetworkPolicy, error)
 	StagedKubernetesNetworkPolicyListerExpansion
 }

@@ -5,7 +5,6 @@
 package v3
 
 import (
-	"context"
 	"time"
 
 	v3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
@@ -24,15 +23,15 @@ type GlobalReportsGetter interface {
 
 // GlobalReportInterface has methods to work with GlobalReport resources.
 type GlobalReportInterface interface {
-	Create(ctx context.Context, globalReport *v3.GlobalReport, opts v1.CreateOptions) (*v3.GlobalReport, error)
-	Update(ctx context.Context, globalReport *v3.GlobalReport, opts v1.UpdateOptions) (*v3.GlobalReport, error)
-	UpdateStatus(ctx context.Context, globalReport *v3.GlobalReport, opts v1.UpdateOptions) (*v3.GlobalReport, error)
-	Delete(ctx context.Context, name string, opts v1.DeleteOptions) error
-	DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error
-	Get(ctx context.Context, name string, opts v1.GetOptions) (*v3.GlobalReport, error)
-	List(ctx context.Context, opts v1.ListOptions) (*v3.GlobalReportList, error)
-	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
-	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v3.GlobalReport, err error)
+	Create(*v3.GlobalReport) (*v3.GlobalReport, error)
+	Update(*v3.GlobalReport) (*v3.GlobalReport, error)
+	UpdateStatus(*v3.GlobalReport) (*v3.GlobalReport, error)
+	Delete(name string, options *v1.DeleteOptions) error
+	DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error
+	Get(name string, options v1.GetOptions) (*v3.GlobalReport, error)
+	List(opts v1.ListOptions) (*v3.GlobalReportList, error)
+	Watch(opts v1.ListOptions) (watch.Interface, error)
+	Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v3.GlobalReport, err error)
 	GlobalReportExpansion
 }
 
@@ -49,19 +48,19 @@ func newGlobalReports(c *ProjectcalicoV3Client) *globalReports {
 }
 
 // Get takes name of the globalReport, and returns the corresponding globalReport object, and an error if there is any.
-func (c *globalReports) Get(ctx context.Context, name string, options v1.GetOptions) (result *v3.GlobalReport, err error) {
+func (c *globalReports) Get(name string, options v1.GetOptions) (result *v3.GlobalReport, err error) {
 	result = &v3.GlobalReport{}
 	err = c.client.Get().
 		Resource("globalreports").
 		Name(name).
 		VersionedParams(&options, scheme.ParameterCodec).
-		Do(ctx).
+		Do().
 		Into(result)
 	return
 }
 
 // List takes label and field selectors, and returns the list of GlobalReports that match those selectors.
-func (c *globalReports) List(ctx context.Context, opts v1.ListOptions) (result *v3.GlobalReportList, err error) {
+func (c *globalReports) List(opts v1.ListOptions) (result *v3.GlobalReportList, err error) {
 	var timeout time.Duration
 	if opts.TimeoutSeconds != nil {
 		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
@@ -71,13 +70,13 @@ func (c *globalReports) List(ctx context.Context, opts v1.ListOptions) (result *
 		Resource("globalreports").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
-		Do(ctx).
+		Do().
 		Into(result)
 	return
 }
 
 // Watch returns a watch.Interface that watches the requested globalReports.
-func (c *globalReports) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
+func (c *globalReports) Watch(opts v1.ListOptions) (watch.Interface, error) {
 	var timeout time.Duration
 	if opts.TimeoutSeconds != nil {
 		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
@@ -87,84 +86,81 @@ func (c *globalReports) Watch(ctx context.Context, opts v1.ListOptions) (watch.I
 		Resource("globalreports").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
-		Watch(ctx)
+		Watch()
 }
 
 // Create takes the representation of a globalReport and creates it.  Returns the server's representation of the globalReport, and an error, if there is any.
-func (c *globalReports) Create(ctx context.Context, globalReport *v3.GlobalReport, opts v1.CreateOptions) (result *v3.GlobalReport, err error) {
+func (c *globalReports) Create(globalReport *v3.GlobalReport) (result *v3.GlobalReport, err error) {
 	result = &v3.GlobalReport{}
 	err = c.client.Post().
 		Resource("globalreports").
-		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(globalReport).
-		Do(ctx).
+		Do().
 		Into(result)
 	return
 }
 
 // Update takes the representation of a globalReport and updates it. Returns the server's representation of the globalReport, and an error, if there is any.
-func (c *globalReports) Update(ctx context.Context, globalReport *v3.GlobalReport, opts v1.UpdateOptions) (result *v3.GlobalReport, err error) {
+func (c *globalReports) Update(globalReport *v3.GlobalReport) (result *v3.GlobalReport, err error) {
 	result = &v3.GlobalReport{}
 	err = c.client.Put().
 		Resource("globalreports").
 		Name(globalReport.Name).
-		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(globalReport).
-		Do(ctx).
+		Do().
 		Into(result)
 	return
 }
 
 // UpdateStatus was generated because the type contains a Status member.
 // Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *globalReports) UpdateStatus(ctx context.Context, globalReport *v3.GlobalReport, opts v1.UpdateOptions) (result *v3.GlobalReport, err error) {
+
+func (c *globalReports) UpdateStatus(globalReport *v3.GlobalReport) (result *v3.GlobalReport, err error) {
 	result = &v3.GlobalReport{}
 	err = c.client.Put().
 		Resource("globalreports").
 		Name(globalReport.Name).
 		SubResource("status").
-		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(globalReport).
-		Do(ctx).
+		Do().
 		Into(result)
 	return
 }
 
 // Delete takes name of the globalReport and deletes it. Returns an error if one occurs.
-func (c *globalReports) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
+func (c *globalReports) Delete(name string, options *v1.DeleteOptions) error {
 	return c.client.Delete().
 		Resource("globalreports").
 		Name(name).
-		Body(&opts).
-		Do(ctx).
+		Body(options).
+		Do().
 		Error()
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *globalReports) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+func (c *globalReports) DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error {
 	var timeout time.Duration
-	if listOpts.TimeoutSeconds != nil {
-		timeout = time.Duration(*listOpts.TimeoutSeconds) * time.Second
+	if listOptions.TimeoutSeconds != nil {
+		timeout = time.Duration(*listOptions.TimeoutSeconds) * time.Second
 	}
 	return c.client.Delete().
 		Resource("globalreports").
-		VersionedParams(&listOpts, scheme.ParameterCodec).
+		VersionedParams(&listOptions, scheme.ParameterCodec).
 		Timeout(timeout).
-		Body(&opts).
-		Do(ctx).
+		Body(options).
+		Do().
 		Error()
 }
 
 // Patch applies the patch and returns the patched globalReport.
-func (c *globalReports) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v3.GlobalReport, err error) {
+func (c *globalReports) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v3.GlobalReport, err error) {
 	result = &v3.GlobalReport{}
 	err = c.client.Patch(pt).
 		Resource("globalreports").
-		Name(name).
 		SubResource(subresources...).
-		VersionedParams(&opts, scheme.ParameterCodec).
+		Name(name).
 		Body(data).
-		Do(ctx).
+		Do().
 		Into(result)
 	return
 }

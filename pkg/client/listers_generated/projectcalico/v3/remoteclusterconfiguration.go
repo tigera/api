@@ -12,13 +12,10 @@ import (
 )
 
 // RemoteClusterConfigurationLister helps list RemoteClusterConfigurations.
-// All objects returned here must be treated as read-only.
 type RemoteClusterConfigurationLister interface {
 	// List lists all RemoteClusterConfigurations in the indexer.
-	// Objects returned here must be treated as read-only.
 	List(selector labels.Selector) (ret []*v3.RemoteClusterConfiguration, err error)
 	// Get retrieves the RemoteClusterConfiguration from the index for a given name.
-	// Objects returned here must be treated as read-only.
 	Get(name string) (*v3.RemoteClusterConfiguration, error)
 	RemoteClusterConfigurationListerExpansion
 }

@@ -5,7 +5,6 @@
 package v3
 
 import (
-	"context"
 	"time"
 
 	v3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
@@ -24,14 +23,14 @@ type ClusterInformationsGetter interface {
 
 // ClusterInformationInterface has methods to work with ClusterInformation resources.
 type ClusterInformationInterface interface {
-	Create(ctx context.Context, clusterInformation *v3.ClusterInformation, opts v1.CreateOptions) (*v3.ClusterInformation, error)
-	Update(ctx context.Context, clusterInformation *v3.ClusterInformation, opts v1.UpdateOptions) (*v3.ClusterInformation, error)
-	Delete(ctx context.Context, name string, opts v1.DeleteOptions) error
-	DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error
-	Get(ctx context.Context, name string, opts v1.GetOptions) (*v3.ClusterInformation, error)
-	List(ctx context.Context, opts v1.ListOptions) (*v3.ClusterInformationList, error)
-	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
-	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v3.ClusterInformation, err error)
+	Create(*v3.ClusterInformation) (*v3.ClusterInformation, error)
+	Update(*v3.ClusterInformation) (*v3.ClusterInformation, error)
+	Delete(name string, options *v1.DeleteOptions) error
+	DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error
+	Get(name string, options v1.GetOptions) (*v3.ClusterInformation, error)
+	List(opts v1.ListOptions) (*v3.ClusterInformationList, error)
+	Watch(opts v1.ListOptions) (watch.Interface, error)
+	Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v3.ClusterInformation, err error)
 	ClusterInformationExpansion
 }
 
@@ -48,19 +47,19 @@ func newClusterInformations(c *ProjectcalicoV3Client) *clusterInformations {
 }
 
 // Get takes name of the clusterInformation, and returns the corresponding clusterInformation object, and an error if there is any.
-func (c *clusterInformations) Get(ctx context.Context, name string, options v1.GetOptions) (result *v3.ClusterInformation, err error) {
+func (c *clusterInformations) Get(name string, options v1.GetOptions) (result *v3.ClusterInformation, err error) {
 	result = &v3.ClusterInformation{}
 	err = c.client.Get().
 		Resource("clusterinformations").
 		Name(name).
 		VersionedParams(&options, scheme.ParameterCodec).
-		Do(ctx).
+		Do().
 		Into(result)
 	return
 }
 
 // List takes label and field selectors, and returns the list of ClusterInformations that match those selectors.
-func (c *clusterInformations) List(ctx context.Context, opts v1.ListOptions) (result *v3.ClusterInformationList, err error) {
+func (c *clusterInformations) List(opts v1.ListOptions) (result *v3.ClusterInformationList, err error) {
 	var timeout time.Duration
 	if opts.TimeoutSeconds != nil {
 		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
@@ -70,13 +69,13 @@ func (c *clusterInformations) List(ctx context.Context, opts v1.ListOptions) (re
 		Resource("clusterinformations").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
-		Do(ctx).
+		Do().
 		Into(result)
 	return
 }
 
 // Watch returns a watch.Interface that watches the requested clusterInformations.
-func (c *clusterInformations) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
+func (c *clusterInformations) Watch(opts v1.ListOptions) (watch.Interface, error) {
 	var timeout time.Duration
 	if opts.TimeoutSeconds != nil {
 		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
@@ -86,69 +85,66 @@ func (c *clusterInformations) Watch(ctx context.Context, opts v1.ListOptions) (w
 		Resource("clusterinformations").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
-		Watch(ctx)
+		Watch()
 }
 
 // Create takes the representation of a clusterInformation and creates it.  Returns the server's representation of the clusterInformation, and an error, if there is any.
-func (c *clusterInformations) Create(ctx context.Context, clusterInformation *v3.ClusterInformation, opts v1.CreateOptions) (result *v3.ClusterInformation, err error) {
+func (c *clusterInformations) Create(clusterInformation *v3.ClusterInformation) (result *v3.ClusterInformation, err error) {
 	result = &v3.ClusterInformation{}
 	err = c.client.Post().
 		Resource("clusterinformations").
-		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(clusterInformation).
-		Do(ctx).
+		Do().
 		Into(result)
 	return
 }
 
 // Update takes the representation of a clusterInformation and updates it. Returns the server's representation of the clusterInformation, and an error, if there is any.
-func (c *clusterInformations) Update(ctx context.Context, clusterInformation *v3.ClusterInformation, opts v1.UpdateOptions) (result *v3.ClusterInformation, err error) {
+func (c *clusterInformations) Update(clusterInformation *v3.ClusterInformation) (result *v3.ClusterInformation, err error) {
 	result = &v3.ClusterInformation{}
 	err = c.client.Put().
 		Resource("clusterinformations").
 		Name(clusterInformation.Name).
-		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(clusterInformation).
-		Do(ctx).
+		Do().
 		Into(result)
 	return
 }
 
 // Delete takes name of the clusterInformation and deletes it. Returns an error if one occurs.
-func (c *clusterInformations) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
+func (c *clusterInformations) Delete(name string, options *v1.DeleteOptions) error {
 	return c.client.Delete().
 		Resource("clusterinformations").
 		Name(name).
-		Body(&opts).
-		Do(ctx).
+		Body(options).
+		Do().
 		Error()
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *clusterInformations) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+func (c *clusterInformations) DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error {
 	var timeout time.Duration
-	if listOpts.TimeoutSeconds != nil {
-		timeout = time.Duration(*listOpts.TimeoutSeconds) * time.Second
+	if listOptions.TimeoutSeconds != nil {
+		timeout = time.Duration(*listOptions.TimeoutSeconds) * time.Second
 	}
 	return c.client.Delete().
 		Resource("clusterinformations").
-		VersionedParams(&listOpts, scheme.ParameterCodec).
+		VersionedParams(&listOptions, scheme.ParameterCodec).
 		Timeout(timeout).
-		Body(&opts).
-		Do(ctx).
+		Body(options).
+		Do().
 		Error()
 }
 
 // Patch applies the patch and returns the patched clusterInformation.
-func (c *clusterInformations) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v3.ClusterInformation, err error) {
+func (c *clusterInformations) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v3.ClusterInformation, err error) {
 	result = &v3.ClusterInformation{}
 	err = c.client.Patch(pt).
 		Resource("clusterinformations").
-		Name(name).
 		SubResource(subresources...).
-		VersionedParams(&opts, scheme.ParameterCodec).
+		Name(name).
 		Body(data).
-		Do(ctx).
+		Do().
 		Into(result)
 	return
 }

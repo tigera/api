@@ -12,13 +12,10 @@ import (
 )
 
 // GlobalNetworkPolicyLister helps list GlobalNetworkPolicies.
-// All objects returned here must be treated as read-only.
 type GlobalNetworkPolicyLister interface {
 	// List lists all GlobalNetworkPolicies in the indexer.
-	// Objects returned here must be treated as read-only.
 	List(selector labels.Selector) (ret []*v3.GlobalNetworkPolicy, err error)
 	// Get retrieves the GlobalNetworkPolicy from the index for a given name.
-	// Objects returned here must be treated as read-only.
 	Get(name string) (*v3.GlobalNetworkPolicy, error)
 	GlobalNetworkPolicyListerExpansion
 }

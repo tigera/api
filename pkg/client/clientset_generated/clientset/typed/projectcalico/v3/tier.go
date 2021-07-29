@@ -5,7 +5,6 @@
 package v3
 
 import (
-	"context"
 	"time"
 
 	v3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
@@ -24,14 +23,14 @@ type TiersGetter interface {
 
 // TierInterface has methods to work with Tier resources.
 type TierInterface interface {
-	Create(ctx context.Context, tier *v3.Tier, opts v1.CreateOptions) (*v3.Tier, error)
-	Update(ctx context.Context, tier *v3.Tier, opts v1.UpdateOptions) (*v3.Tier, error)
-	Delete(ctx context.Context, name string, opts v1.DeleteOptions) error
-	DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error
-	Get(ctx context.Context, name string, opts v1.GetOptions) (*v3.Tier, error)
-	List(ctx context.Context, opts v1.ListOptions) (*v3.TierList, error)
-	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
-	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v3.Tier, err error)
+	Create(*v3.Tier) (*v3.Tier, error)
+	Update(*v3.Tier) (*v3.Tier, error)
+	Delete(name string, options *v1.DeleteOptions) error
+	DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error
+	Get(name string, options v1.GetOptions) (*v3.Tier, error)
+	List(opts v1.ListOptions) (*v3.TierList, error)
+	Watch(opts v1.ListOptions) (watch.Interface, error)
+	Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v3.Tier, err error)
 	TierExpansion
 }
 
@@ -48,19 +47,19 @@ func newTiers(c *ProjectcalicoV3Client) *tiers {
 }
 
 // Get takes name of the tier, and returns the corresponding tier object, and an error if there is any.
-func (c *tiers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v3.Tier, err error) {
+func (c *tiers) Get(name string, options v1.GetOptions) (result *v3.Tier, err error) {
 	result = &v3.Tier{}
 	err = c.client.Get().
 		Resource("tiers").
 		Name(name).
 		VersionedParams(&options, scheme.ParameterCodec).
-		Do(ctx).
+		Do().
 		Into(result)
 	return
 }
 
 // List takes label and field selectors, and returns the list of Tiers that match those selectors.
-func (c *tiers) List(ctx context.Context, opts v1.ListOptions) (result *v3.TierList, err error) {
+func (c *tiers) List(opts v1.ListOptions) (result *v3.TierList, err error) {
 	var timeout time.Duration
 	if opts.TimeoutSeconds != nil {
 		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
@@ -70,13 +69,13 @@ func (c *tiers) List(ctx context.Context, opts v1.ListOptions) (result *v3.TierL
 		Resource("tiers").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
-		Do(ctx).
+		Do().
 		Into(result)
 	return
 }
 
 // Watch returns a watch.Interface that watches the requested tiers.
-func (c *tiers) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
+func (c *tiers) Watch(opts v1.ListOptions) (watch.Interface, error) {
 	var timeout time.Duration
 	if opts.TimeoutSeconds != nil {
 		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
@@ -86,69 +85,66 @@ func (c *tiers) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface
 		Resource("tiers").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
-		Watch(ctx)
+		Watch()
 }
 
 // Create takes the representation of a tier and creates it.  Returns the server's representation of the tier, and an error, if there is any.
-func (c *tiers) Create(ctx context.Context, tier *v3.Tier, opts v1.CreateOptions) (result *v3.Tier, err error) {
+func (c *tiers) Create(tier *v3.Tier) (result *v3.Tier, err error) {
 	result = &v3.Tier{}
 	err = c.client.Post().
 		Resource("tiers").
-		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(tier).
-		Do(ctx).
+		Do().
 		Into(result)
 	return
 }
 
 // Update takes the representation of a tier and updates it. Returns the server's representation of the tier, and an error, if there is any.
-func (c *tiers) Update(ctx context.Context, tier *v3.Tier, opts v1.UpdateOptions) (result *v3.Tier, err error) {
+func (c *tiers) Update(tier *v3.Tier) (result *v3.Tier, err error) {
 	result = &v3.Tier{}
 	err = c.client.Put().
 		Resource("tiers").
 		Name(tier.Name).
-		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(tier).
-		Do(ctx).
+		Do().
 		Into(result)
 	return
 }
 
 // Delete takes name of the tier and deletes it. Returns an error if one occurs.
-func (c *tiers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
+func (c *tiers) Delete(name string, options *v1.DeleteOptions) error {
 	return c.client.Delete().
 		Resource("tiers").
 		Name(name).
-		Body(&opts).
-		Do(ctx).
+		Body(options).
+		Do().
 		Error()
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *tiers) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+func (c *tiers) DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error {
 	var timeout time.Duration
-	if listOpts.TimeoutSeconds != nil {
-		timeout = time.Duration(*listOpts.TimeoutSeconds) * time.Second
+	if listOptions.TimeoutSeconds != nil {
+		timeout = time.Duration(*listOptions.TimeoutSeconds) * time.Second
 	}
 	return c.client.Delete().
 		Resource("tiers").
-		VersionedParams(&listOpts, scheme.ParameterCodec).
+		VersionedParams(&listOptions, scheme.ParameterCodec).
 		Timeout(timeout).
-		Body(&opts).
-		Do(ctx).
+		Body(options).
+		Do().
 		Error()
 }
 
 // Patch applies the patch and returns the patched tier.
-func (c *tiers) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v3.Tier, err error) {
+func (c *tiers) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v3.Tier, err error) {
 	result = &v3.Tier{}
 	err = c.client.Patch(pt).
 		Resource("tiers").
-		Name(name).
 		SubResource(subresources...).
-		VersionedParams(&opts, scheme.ParameterCodec).
+		Name(name).
 		Body(data).
-		Do(ctx).
+		Do().
 		Into(result)
 	return
 }

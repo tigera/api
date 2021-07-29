@@ -12,13 +12,10 @@ import (
 )
 
 // HostEndpointLister helps list HostEndpoints.
-// All objects returned here must be treated as read-only.
 type HostEndpointLister interface {
 	// List lists all HostEndpoints in the indexer.
-	// Objects returned here must be treated as read-only.
 	List(selector labels.Selector) (ret []*v3.HostEndpoint, err error)
 	// Get retrieves the HostEndpoint from the index for a given name.
-	// Objects returned here must be treated as read-only.
 	Get(name string) (*v3.HostEndpoint, error)
 	HostEndpointListerExpansion
 }
