@@ -345,6 +345,7 @@ type FelixConfigurationSpec struct {
 	// BPFLogLevel controls the log level of the BPF programs when in BPF dataplane mode.  One of "Off", "Info", or
 	// "Debug".  The logs are emitted to the BPF trace pipe, accessible with the command `tc exec bpf debug`.
 	// [Default: Off].
+	// +optional
 	BPFLogLevel string `json:"bpfLogLevel,omitempty" validate:"omitempty,bpfLogLevel"`
 	// BPFDataIfacePattern is a regular expression that controls which interfaces Felix should attach BPF programs to
 	// in order to catch traffic to/from the network.  This needs to match the interfaces that Calico workload traffic
@@ -467,6 +468,9 @@ type FelixConfigurationSpec struct {
 	// FlowLogsFilePerFlowProcessLimit, is used to specify the maximum number of flow log entries with distinct process information
 	// beyond which process information will be aggregated. [Default: 2]
 	FlowLogsFilePerFlowProcessLimit *int `json:"flowLogsFilePerFlowProcessLimit,omitempty" validate:"omitempty"`
+	// FlowLogsFilePerFlowProcessArgsLimit is used to specify the maximum number of distinct process args that will appear in the flowLogs.
+	// Default value is 5
+	FlowLogsFilePerFlowProcessArgsLimit *int `json:"flowLogsFilePerFlowProcessArgsLimit,omitempty" validate:"omitempty"`
 
 	// WindowsFlowLogsFileDirectory sets the directory where flow logs files are stored on Windows nodes. [Default: "c:\\TigeraCalico\\flowlogs"].
 	WindowsFlowLogsFileDirectory string `json:"windowsFlowLogsFileDirectory,omitempty"`
