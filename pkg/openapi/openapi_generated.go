@@ -6841,7 +6841,7 @@ func schema_pkg_apis_projectcalico_v3_PacketCaptureRule(ref common.ReferenceCall
 				Properties: map[string]spec.Schema{
 					"protocol": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Protocol is an optional field that defines a filter for all traffic for a specific IP protocol.\n\nMust be one of these string values: \"TCP\", \"UDP\", \"ICMP\", \"ICMPv6\", \"SCTP\", \"UDPLite\" or an integer in the range 1-255.",
+							Description: "Protocol is an optional field that defines a filter for all traffic for a specific IP protocol.\n\nMust be one of these string values: \"TCP\", \"UDP\", \"ICMP\", \"ICMPv6\", \"SCTP\", \"UDPLite\"",
 							Ref:         ref("github.com/tigera/api/pkg/lib/numorstring.Protocol"),
 						},
 					},

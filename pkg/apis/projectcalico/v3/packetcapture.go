@@ -69,7 +69,6 @@ type PacketCaptureRule struct {
 	// a specific IP protocol.
 	//
 	// Must be one of these string values: "TCP", "UDP", "ICMP", "ICMPv6", "SCTP", "UDPLite"
-	// or an integer in the range 1-255.
 	Protocol *numorstring.Protocol `json:"protocol,omitempty" validate:"omitempty"`
 
 	// Ports is an optional field that defines a filter for all traffic that has a
