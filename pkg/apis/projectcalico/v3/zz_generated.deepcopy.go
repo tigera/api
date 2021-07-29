@@ -3531,7 +3531,7 @@ func (in *PacketCaptureRule) DeepCopyInto(out *PacketCaptureRule) {
 	}
 	if in.Ports != nil {
 		in, out := &in.Ports, &out.Ports
-		*out = make([]numorstring.Port, len(*in))
+		*out = make([]numorstring.NumPort, len(*in))
 		copy(*out, *in)
 	}
 	return

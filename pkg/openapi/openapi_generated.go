@@ -173,6 +173,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.TierList":                           schema_pkg_apis_projectcalico_v3_TierList(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.TierSpec":                           schema_pkg_apis_projectcalico_v3_TierSpec(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.WorkloadEndpointControllerConfig":   schema_pkg_apis_projectcalico_v3_WorkloadEndpointControllerConfig(ref),
+		"github.com/tigera/api/pkg/lib/numorstring.NumPort":                                  numorstring.NumPort{}.OpenAPIDefinition(),
 		"github.com/tigera/api/pkg/lib/numorstring.Port":                                     schema_api_pkg_lib_numorstring_Port(ref),
 		"github.com/tigera/api/pkg/lib/numorstring.Protocol":                                 schema_api_pkg_lib_numorstring_Protocol(ref),
 		"github.com/tigera/api/pkg/lib/numorstring.Uint8OrString":                            schema_api_pkg_lib_numorstring_Uint8OrString(ref),
@@ -6841,7 +6842,7 @@ func schema_pkg_apis_projectcalico_v3_PacketCaptureRule(ref common.ReferenceCall
 				Properties: map[string]spec.Schema{
 					"protocol": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Protocol is an optional field that defines a filter for all traffic for a specific IP protocol.\n\nMust be one of these string values: \"TCP\", \"UDP\", \"ICMP\", \"ICMPv6\", \"SCTP\", \"UDPLite\" or an integer in the range 1-255.",
+							Description: "Protocol is an optional field that defines a filter for all traffic for a specific IP protocol.\n\nMust be one of these string values: \"TCP\", \"UDP\", \"ICMP\", \"ICMPv6\", \"SCTP\", \"UDPLite\"",
 							Ref:         ref("github.com/tigera/api/pkg/lib/numorstring.Protocol"),
 						},
 					},
@@ -6853,7 +6854,7 @@ func schema_pkg_apis_projectcalico_v3_PacketCaptureRule(ref common.ReferenceCall
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/lib/numorstring.Port"),
+										Ref:     ref("github.com/tigera/api/pkg/lib/numorstring.NumPort"),
 									},
 								},
 							},
@@ -6863,7 +6864,7 @@ func schema_pkg_apis_projectcalico_v3_PacketCaptureRule(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/lib/numorstring.Port", "github.com/tigera/api/pkg/lib/numorstring.Protocol"},
+			"github.com/tigera/api/pkg/lib/numorstring.NumPort", "github.com/tigera/api/pkg/lib/numorstring.Protocol"},
 	}
 }
 

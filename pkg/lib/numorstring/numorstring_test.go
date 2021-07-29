@@ -30,6 +30,7 @@ func init() {
 	asNumberType := reflect.TypeOf(numorstring.ASNumber(0))
 	protocolType := reflect.TypeOf(numorstring.Protocol{})
 	portType := reflect.TypeOf(numorstring.Port{})
+	numPortType := reflect.TypeOf(numorstring.NumPort{})
 
 	// Perform tests of JSON unmarshaling of the various field types.
 	DescribeTable("NumOrStringJSONUnmarshaling",
@@ -91,6 +92,21 @@ func init() {
 		Entry("should accept 0 protocol as string", "\"255\"", protocolType, numorstring.ProtocolFromInt(255)),
 		Entry("should accept 256 protocol as string", "\"256\"", protocolType, numorstring.ProtocolFromString("256")),
 		Entry("should reject bad protocol string", "\"25", protocolType, nil),
+
+		// NumPort tests.
+		Entry("should accept 0 num port as int", "0", numPortType, numorstring.SingleNumPort(0)),
+		Entry("should accept 65535 num port as int", "65535", numPortType, numorstring.SingleNumPort(65535)),
+		Entry("should accept 0:65535 num port range as string", "\"0:65535\"", numPortType, numPortFromRange(0, 65535)),
+		Entry("should accept 1:10 num port range as string", "\"1:10\"", numPortType, numPortFromRange(1, 10)),
+		Entry("should reject foo-bar as named numport", "\"foo-bar\"", numPortType, nil),
+		Entry("should reject -1 num port as int", "-1", numPortType, nil),
+		Entry("should reject 65536 num port as int", "65536", numPortType, nil),
+		Entry("should reject 0:65536 num port range as string", "\"0:65536\"", numPortType, nil),
+		Entry("should reject -1:65535 num port range as string", "\"-1:65535\"", numPortType, nil),
+		Entry("should reject 10:1 num port range as string", "\"10:1\"", numPortType, nil),
+		Entry("should reject 1:2:3 num port range as string", "\"1:2:3\"", numPortType, nil),
+		Entry("should reject bad named num port string", "\"*\"", numPortType, nil),
+		Entry("should reject bad num port string", "\"1:2", numPortType, nil),
 	)
 
 	// Perform tests of JSON marshaling of the various field types.
@@ -122,6 +138,13 @@ func init() {
 		// Protocol tests.
 		Entry("should marshal protocol of 0", numorstring.ProtocolFromInt(0), "0"),
 		Entry("should marshal protocol of udp", numorstring.ProtocolFromString("UDP"), "\"UDP\""),
+
+		// Num Port tests.
+		Entry("should marshal num port of 0", numorstring.SingleNumPort(0), "0"),
+		Entry("should marshal num port of 65535", numPortFromRange(65535, 65535), "65535"),
+		Entry("should marshal port of 10", numPortFromString("10"), "10"),
+		Entry("should marshal num port range of 10:20", numPortFromRange(10, 20), "\"10:20\""),
+		Entry("should marshal num port range of 20:30", numPortFromRange(20, 30), "\"20:30\""),
 	)
 
 	// Perform tests of Stringer interface various field types.
@@ -142,6 +165,10 @@ func init() {
 		// Protocol tests.
 		Entry("should stringify protocol of 0", numorstring.ProtocolFromInt(0), "0"),
 		Entry("should stringify protocol of udp", numorstring.ProtocolFromString("UDP"), "UDP"),
+
+		// NumPort tests.
+		Entry("should stringify num port of 20", numorstring.SinglePort(20), "20"),
+		Entry("should stringify num port range of 10:20", portFromRange(10, 20), "10:20"),
 	)
 
 	// Perform tests of Protocols supporting ports.
@@ -199,7 +226,17 @@ func portFromRange(minPort, maxPort uint16) numorstring.Port {
 	return p
 }
 
+func numPortFromRange(minPort, maxPort uint16) numorstring.NumPort {
+	p, _ := numorstring.NumPortFromRange(minPort, maxPort)
+	return p
+}
+
 func portFromString(s string) numorstring.Port {
 	p, _ := numorstring.PortFromString(s)
+	return p
+}
+
+func numPortFromString(s string) numorstring.NumPort {
+	p, _ := numorstring.NumPortFromString(s)
 	return p
 }
