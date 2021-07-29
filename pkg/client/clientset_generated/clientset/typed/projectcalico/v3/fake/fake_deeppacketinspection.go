@@ -5,8 +5,6 @@
 package fake
 
 import (
-	"context"
-
 	v3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
@@ -27,7 +25,7 @@ var deeppacketinspectionsResource = schema.GroupVersionResource{Group: "projectc
 var deeppacketinspectionsKind = schema.GroupVersionKind{Group: "projectcalico.org", Version: "v3", Kind: "DeepPacketInspection"}
 
 // Get takes name of the deepPacketInspection, and returns the corresponding deepPacketInspection object, and an error if there is any.
-func (c *FakeDeepPacketInspections) Get(ctx context.Context, name string, options v1.GetOptions) (result *v3.DeepPacketInspection, err error) {
+func (c *FakeDeepPacketInspections) Get(name string, options v1.GetOptions) (result *v3.DeepPacketInspection, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewGetAction(deeppacketinspectionsResource, c.ns, name), &v3.DeepPacketInspection{})
 
@@ -38,7 +36,7 @@ func (c *FakeDeepPacketInspections) Get(ctx context.Context, name string, option
 }
 
 // List takes label and field selectors, and returns the list of DeepPacketInspections that match those selectors.
-func (c *FakeDeepPacketInspections) List(ctx context.Context, opts v1.ListOptions) (result *v3.DeepPacketInspectionList, err error) {
+func (c *FakeDeepPacketInspections) List(opts v1.ListOptions) (result *v3.DeepPacketInspectionList, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewListAction(deeppacketinspectionsResource, deeppacketinspectionsKind, c.ns, opts), &v3.DeepPacketInspectionList{})
 
@@ -60,14 +58,14 @@ func (c *FakeDeepPacketInspections) List(ctx context.Context, opts v1.ListOption
 }
 
 // Watch returns a watch.Interface that watches the requested deepPacketInspections.
-func (c *FakeDeepPacketInspections) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
+func (c *FakeDeepPacketInspections) Watch(opts v1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
 		InvokesWatch(testing.NewWatchAction(deeppacketinspectionsResource, c.ns, opts))
 
 }
 
 // Create takes the representation of a deepPacketInspection and creates it.  Returns the server's representation of the deepPacketInspection, and an error, if there is any.
-func (c *FakeDeepPacketInspections) Create(ctx context.Context, deepPacketInspection *v3.DeepPacketInspection, opts v1.CreateOptions) (result *v3.DeepPacketInspection, err error) {
+func (c *FakeDeepPacketInspections) Create(deepPacketInspection *v3.DeepPacketInspection) (result *v3.DeepPacketInspection, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewCreateAction(deeppacketinspectionsResource, c.ns, deepPacketInspection), &v3.DeepPacketInspection{})
 
@@ -78,7 +76,7 @@ func (c *FakeDeepPacketInspections) Create(ctx context.Context, deepPacketInspec
 }
 
 // Update takes the representation of a deepPacketInspection and updates it. Returns the server's representation of the deepPacketInspection, and an error, if there is any.
-func (c *FakeDeepPacketInspections) Update(ctx context.Context, deepPacketInspection *v3.DeepPacketInspection, opts v1.UpdateOptions) (result *v3.DeepPacketInspection, err error) {
+func (c *FakeDeepPacketInspections) Update(deepPacketInspection *v3.DeepPacketInspection) (result *v3.DeepPacketInspection, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewUpdateAction(deeppacketinspectionsResource, c.ns, deepPacketInspection), &v3.DeepPacketInspection{})
 
@@ -90,7 +88,7 @@ func (c *FakeDeepPacketInspections) Update(ctx context.Context, deepPacketInspec
 
 // UpdateStatus was generated because the type contains a Status member.
 // Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeDeepPacketInspections) UpdateStatus(ctx context.Context, deepPacketInspection *v3.DeepPacketInspection, opts v1.UpdateOptions) (*v3.DeepPacketInspection, error) {
+func (c *FakeDeepPacketInspections) UpdateStatus(deepPacketInspection *v3.DeepPacketInspection) (*v3.DeepPacketInspection, error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewUpdateSubresourceAction(deeppacketinspectionsResource, "status", c.ns, deepPacketInspection), &v3.DeepPacketInspection{})
 
@@ -101,7 +99,7 @@ func (c *FakeDeepPacketInspections) UpdateStatus(ctx context.Context, deepPacket
 }
 
 // Delete takes name of the deepPacketInspection and deletes it. Returns an error if one occurs.
-func (c *FakeDeepPacketInspections) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
+func (c *FakeDeepPacketInspections) Delete(name string, options *v1.DeleteOptions) error {
 	_, err := c.Fake.
 		Invokes(testing.NewDeleteAction(deeppacketinspectionsResource, c.ns, name), &v3.DeepPacketInspection{})
 
@@ -109,15 +107,15 @@ func (c *FakeDeepPacketInspections) Delete(ctx context.Context, name string, opt
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *FakeDeepPacketInspections) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(deeppacketinspectionsResource, c.ns, listOpts)
+func (c *FakeDeepPacketInspections) DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error {
+	action := testing.NewDeleteCollectionAction(deeppacketinspectionsResource, c.ns, listOptions)
 
 	_, err := c.Fake.Invokes(action, &v3.DeepPacketInspectionList{})
 	return err
 }
 
 // Patch applies the patch and returns the patched deepPacketInspection.
-func (c *FakeDeepPacketInspections) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v3.DeepPacketInspection, err error) {
+func (c *FakeDeepPacketInspections) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v3.DeepPacketInspection, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewPatchSubresourceAction(deeppacketinspectionsResource, c.ns, name, pt, data, subresources...), &v3.DeepPacketInspection{})
 

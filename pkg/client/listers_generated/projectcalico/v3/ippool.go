@@ -12,13 +12,10 @@ import (
 )
 
 // IPPoolLister helps list IPPools.
-// All objects returned here must be treated as read-only.
 type IPPoolLister interface {
 	// List lists all IPPools in the indexer.
-	// Objects returned here must be treated as read-only.
 	List(selector labels.Selector) (ret []*v3.IPPool, err error)
 	// Get retrieves the IPPool from the index for a given name.
-	// Objects returned here must be treated as read-only.
 	Get(name string) (*v3.IPPool, error)
 	IPPoolListerExpansion
 }

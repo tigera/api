@@ -12,13 +12,10 @@ import (
 )
 
 // PacketCaptureLister helps list PacketCaptures.
-// All objects returned here must be treated as read-only.
 type PacketCaptureLister interface {
 	// List lists all PacketCaptures in the indexer.
-	// Objects returned here must be treated as read-only.
 	List(selector labels.Selector) (ret []*v3.PacketCapture, err error)
 	// Get retrieves the PacketCapture from the index for a given name.
-	// Objects returned here must be treated as read-only.
 	Get(name string) (*v3.PacketCapture, error)
 	PacketCaptureListerExpansion
 }

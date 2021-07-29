@@ -5,7 +5,6 @@
 package v3
 
 import (
-	"context"
 	time "time"
 
 	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
@@ -47,13 +46,13 @@ func NewFilteredHostEndpointInformer(client clientset.Interface, resyncPeriod ti
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ProjectcalicoV3().HostEndpoints().List(context.TODO(), options)
+				return client.ProjectcalicoV3().HostEndpoints().List(options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ProjectcalicoV3().HostEndpoints().Watch(context.TODO(), options)
+				return client.ProjectcalicoV3().HostEndpoints().Watch(options)
 			},
 		},
 		&projectcalicov3.HostEndpoint{},

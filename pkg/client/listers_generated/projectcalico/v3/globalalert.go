@@ -12,13 +12,10 @@ import (
 )
 
 // GlobalAlertLister helps list GlobalAlerts.
-// All objects returned here must be treated as read-only.
 type GlobalAlertLister interface {
 	// List lists all GlobalAlerts in the indexer.
-	// Objects returned here must be treated as read-only.
 	List(selector labels.Selector) (ret []*v3.GlobalAlert, err error)
 	// Get retrieves the GlobalAlert from the index for a given name.
-	// Objects returned here must be treated as read-only.
 	Get(name string) (*v3.GlobalAlert, error)
 	GlobalAlertListerExpansion
 }

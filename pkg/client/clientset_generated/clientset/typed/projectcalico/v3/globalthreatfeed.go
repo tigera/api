@@ -5,7 +5,6 @@
 package v3
 
 import (
-	"context"
 	"time"
 
 	v3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
@@ -24,15 +23,15 @@ type GlobalThreatFeedsGetter interface {
 
 // GlobalThreatFeedInterface has methods to work with GlobalThreatFeed resources.
 type GlobalThreatFeedInterface interface {
-	Create(ctx context.Context, globalThreatFeed *v3.GlobalThreatFeed, opts v1.CreateOptions) (*v3.GlobalThreatFeed, error)
-	Update(ctx context.Context, globalThreatFeed *v3.GlobalThreatFeed, opts v1.UpdateOptions) (*v3.GlobalThreatFeed, error)
-	UpdateStatus(ctx context.Context, globalThreatFeed *v3.GlobalThreatFeed, opts v1.UpdateOptions) (*v3.GlobalThreatFeed, error)
-	Delete(ctx context.Context, name string, opts v1.DeleteOptions) error
-	DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error
-	Get(ctx context.Context, name string, opts v1.GetOptions) (*v3.GlobalThreatFeed, error)
-	List(ctx context.Context, opts v1.ListOptions) (*v3.GlobalThreatFeedList, error)
-	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
-	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v3.GlobalThreatFeed, err error)
+	Create(*v3.GlobalThreatFeed) (*v3.GlobalThreatFeed, error)
+	Update(*v3.GlobalThreatFeed) (*v3.GlobalThreatFeed, error)
+	UpdateStatus(*v3.GlobalThreatFeed) (*v3.GlobalThreatFeed, error)
+	Delete(name string, options *v1.DeleteOptions) error
+	DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error
+	Get(name string, options v1.GetOptions) (*v3.GlobalThreatFeed, error)
+	List(opts v1.ListOptions) (*v3.GlobalThreatFeedList, error)
+	Watch(opts v1.ListOptions) (watch.Interface, error)
+	Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v3.GlobalThreatFeed, err error)
 	GlobalThreatFeedExpansion
 }
 
@@ -49,19 +48,19 @@ func newGlobalThreatFeeds(c *ProjectcalicoV3Client) *globalThreatFeeds {
 }
 
 // Get takes name of the globalThreatFeed, and returns the corresponding globalThreatFeed object, and an error if there is any.
-func (c *globalThreatFeeds) Get(ctx context.Context, name string, options v1.GetOptions) (result *v3.GlobalThreatFeed, err error) {
+func (c *globalThreatFeeds) Get(name string, options v1.GetOptions) (result *v3.GlobalThreatFeed, err error) {
 	result = &v3.GlobalThreatFeed{}
 	err = c.client.Get().
 		Resource("globalthreatfeeds").
 		Name(name).
 		VersionedParams(&options, scheme.ParameterCodec).
-		Do(ctx).
+		Do().
 		Into(result)
 	return
 }
 
 // List takes label and field selectors, and returns the list of GlobalThreatFeeds that match those selectors.
-func (c *globalThreatFeeds) List(ctx context.Context, opts v1.ListOptions) (result *v3.GlobalThreatFeedList, err error) {
+func (c *globalThreatFeeds) List(opts v1.ListOptions) (result *v3.GlobalThreatFeedList, err error) {
 	var timeout time.Duration
 	if opts.TimeoutSeconds != nil {
 		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
@@ -71,13 +70,13 @@ func (c *globalThreatFeeds) List(ctx context.Context, opts v1.ListOptions) (resu
 		Resource("globalthreatfeeds").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
-		Do(ctx).
+		Do().
 		Into(result)
 	return
 }
 
 // Watch returns a watch.Interface that watches the requested globalThreatFeeds.
-func (c *globalThreatFeeds) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
+func (c *globalThreatFeeds) Watch(opts v1.ListOptions) (watch.Interface, error) {
 	var timeout time.Duration
 	if opts.TimeoutSeconds != nil {
 		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
@@ -87,84 +86,81 @@ func (c *globalThreatFeeds) Watch(ctx context.Context, opts v1.ListOptions) (wat
 		Resource("globalthreatfeeds").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
-		Watch(ctx)
+		Watch()
 }
 
 // Create takes the representation of a globalThreatFeed and creates it.  Returns the server's representation of the globalThreatFeed, and an error, if there is any.
-func (c *globalThreatFeeds) Create(ctx context.Context, globalThreatFeed *v3.GlobalThreatFeed, opts v1.CreateOptions) (result *v3.GlobalThreatFeed, err error) {
+func (c *globalThreatFeeds) Create(globalThreatFeed *v3.GlobalThreatFeed) (result *v3.GlobalThreatFeed, err error) {
 	result = &v3.GlobalThreatFeed{}
 	err = c.client.Post().
 		Resource("globalthreatfeeds").
-		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(globalThreatFeed).
-		Do(ctx).
+		Do().
 		Into(result)
 	return
 }
 
 // Update takes the representation of a globalThreatFeed and updates it. Returns the server's representation of the globalThreatFeed, and an error, if there is any.
-func (c *globalThreatFeeds) Update(ctx context.Context, globalThreatFeed *v3.GlobalThreatFeed, opts v1.UpdateOptions) (result *v3.GlobalThreatFeed, err error) {
+func (c *globalThreatFeeds) Update(globalThreatFeed *v3.GlobalThreatFeed) (result *v3.GlobalThreatFeed, err error) {
 	result = &v3.GlobalThreatFeed{}
 	err = c.client.Put().
 		Resource("globalthreatfeeds").
 		Name(globalThreatFeed.Name).
-		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(globalThreatFeed).
-		Do(ctx).
+		Do().
 		Into(result)
 	return
 }
 
 // UpdateStatus was generated because the type contains a Status member.
 // Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *globalThreatFeeds) UpdateStatus(ctx context.Context, globalThreatFeed *v3.GlobalThreatFeed, opts v1.UpdateOptions) (result *v3.GlobalThreatFeed, err error) {
+
+func (c *globalThreatFeeds) UpdateStatus(globalThreatFeed *v3.GlobalThreatFeed) (result *v3.GlobalThreatFeed, err error) {
 	result = &v3.GlobalThreatFeed{}
 	err = c.client.Put().
 		Resource("globalthreatfeeds").
 		Name(globalThreatFeed.Name).
 		SubResource("status").
-		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(globalThreatFeed).
-		Do(ctx).
+		Do().
 		Into(result)
 	return
 }
 
 // Delete takes name of the globalThreatFeed and deletes it. Returns an error if one occurs.
-func (c *globalThreatFeeds) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
+func (c *globalThreatFeeds) Delete(name string, options *v1.DeleteOptions) error {
 	return c.client.Delete().
 		Resource("globalthreatfeeds").
 		Name(name).
-		Body(&opts).
-		Do(ctx).
+		Body(options).
+		Do().
 		Error()
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *globalThreatFeeds) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+func (c *globalThreatFeeds) DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error {
 	var timeout time.Duration
-	if listOpts.TimeoutSeconds != nil {
-		timeout = time.Duration(*listOpts.TimeoutSeconds) * time.Second
+	if listOptions.TimeoutSeconds != nil {
+		timeout = time.Duration(*listOptions.TimeoutSeconds) * time.Second
 	}
 	return c.client.Delete().
 		Resource("globalthreatfeeds").
-		VersionedParams(&listOpts, scheme.ParameterCodec).
+		VersionedParams(&listOptions, scheme.ParameterCodec).
 		Timeout(timeout).
-		Body(&opts).
-		Do(ctx).
+		Body(options).
+		Do().
 		Error()
 }
 
 // Patch applies the patch and returns the patched globalThreatFeed.
-func (c *globalThreatFeeds) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v3.GlobalThreatFeed, err error) {
+func (c *globalThreatFeeds) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v3.GlobalThreatFeed, err error) {
 	result = &v3.GlobalThreatFeed{}
 	err = c.client.Patch(pt).
 		Resource("globalthreatfeeds").
-		Name(name).
 		SubResource(subresources...).
-		VersionedParams(&opts, scheme.ParameterCodec).
+		Name(name).
 		Body(data).
-		Do(ctx).
+		Do().
 		Into(result)
 	return
 }
