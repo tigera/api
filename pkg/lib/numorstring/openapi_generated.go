@@ -15,7 +15,6 @@ import (
 
 func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenAPIDefinition {
 	return map[string]common.OpenAPIDefinition{
-		"github.com/tigera/api/pkg/lib/numorstring.NumPort":       NumPort{}.OpenAPIDefinition(),
 		"github.com/tigera/api/pkg/lib/numorstring.Port":          schema_api_pkg_lib_numorstring_Port(ref),
 		"github.com/tigera/api/pkg/lib/numorstring.Protocol":      schema_api_pkg_lib_numorstring_Protocol(ref),
 		"github.com/tigera/api/pkg/lib/numorstring.Uint8OrString": schema_api_pkg_lib_numorstring_Uint8OrString(ref),
