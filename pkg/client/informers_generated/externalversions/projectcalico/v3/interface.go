@@ -10,6 +10,10 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
+	// AuthenticationReviews returns a AuthenticationReviewInformer.
+	AuthenticationReviews() AuthenticationReviewInformer
+	// AuthorizationReviews returns a AuthorizationReviewInformer.
+	AuthorizationReviews() AuthorizationReviewInformer
 	// BGPConfigurations returns a BGPConfigurationInformer.
 	BGPConfigurations() BGPConfigurationInformer
 	// BGPPeers returns a BGPPeerInformer.
@@ -73,6 +77,16 @@ type version struct {
 // New returns a new Interface.
 func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakListOptions internalinterfaces.TweakListOptionsFunc) Interface {
 	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
+}
+
+// AuthenticationReviews returns a AuthenticationReviewInformer.
+func (v *version) AuthenticationReviews() AuthenticationReviewInformer {
+	return &authenticationReviewInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// AuthorizationReviews returns a AuthorizationReviewInformer.
+func (v *version) AuthorizationReviews() AuthorizationReviewInformer {
+	return &authorizationReviewInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // BGPConfigurations returns a BGPConfigurationInformer.
