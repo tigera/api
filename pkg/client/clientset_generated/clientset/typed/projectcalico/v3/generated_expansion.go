@@ -4,6 +4,10 @@
 
 package v3
 
+type AuthenticationReviewExpansion interface{}
+
+type AuthorizationReviewExpansion interface{}
+
 type BGPConfigurationExpansion interface{}
 
 type BGPPeerExpansion interface{}
