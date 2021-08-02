@@ -56,6 +56,12 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&NetworkSetList{},
 
 		// Enterprise-only types.
+		&AuthenticationReview{},
+		&AuthenticationReviewList{},
+		&AuthorizationReview{},
+		&AuthorizationReviewList{},
+		&DeepPacketInspection{},
+		&DeepPacketInspectionList{},
 		&GlobalAlert{},
 		&GlobalAlertList{},
 		&GlobalAlertTemplate{},
