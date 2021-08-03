@@ -4666,7 +4666,8 @@ func schema_pkg_apis_projectcalico_v3_GlobalAlertSpec(ref common.ReferenceCallba
 					},
 					"trainingLookback": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+							Type:   []string{"integer"},
+							Format: "int32",
 						},
 					},
 					"severity": {

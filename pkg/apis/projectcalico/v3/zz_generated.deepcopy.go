@@ -2239,11 +2239,6 @@ func (in *GlobalAlertSpec) DeepCopyInto(out *GlobalAlertSpec) {
 		*out = new(metav1.Duration)
 		**out = **in
 	}
-	if in.TrainingLookback != nil {
-		in, out := &in.TrainingLookback, &out.TrainingLookback
-		*out = new(metav1.Duration)
-		**out = **in
-	}
 	if in.Period != nil {
 		in, out := &in.Period, &out.Period
 		*out = new(metav1.Duration)
