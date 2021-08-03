@@ -19,7 +19,7 @@ import (
 // PacketCapturesGetter has a method to return a PacketCaptureInterface.
 // A group's client should implement this interface.
 type PacketCapturesGetter interface {
-	PacketCaptures() PacketCaptureInterface
+	PacketCaptures(namespace string) PacketCaptureInterface
 }
 
 // PacketCaptureInterface has methods to work with PacketCapture resources.
@@ -39,12 +39,14 @@ type PacketCaptureInterface interface {
 // packetCaptures implements PacketCaptureInterface
 type packetCaptures struct {
 	client rest.Interface
+	ns     string
 }
 
 // newPacketCaptures returns a PacketCaptures
-func newPacketCaptures(c *ProjectcalicoV3Client) *packetCaptures {
+func newPacketCaptures(c *ProjectcalicoV3Client, namespace string) *packetCaptures {
 	return &packetCaptures{
 		client: c.RESTClient(),
+		ns:     namespace,
 	}
 }
 
@@ -52,6 +54,7 @@ func newPacketCaptures(c *ProjectcalicoV3Client) *packetCaptures {
 func (c *packetCaptures) Get(ctx context.Context, name string, options v1.GetOptions) (result *v3.PacketCapture, err error) {
 	result = &v3.PacketCapture{}
 	err = c.client.Get().
+		Namespace(c.ns).
 		Resource("packetcaptures").
 		Name(name).
 		VersionedParams(&options, scheme.ParameterCodec).
@@ -68,6 +71,7 @@ func (c *packetCaptures) List(ctx context.Context, opts v1.ListOptions) (result 
 	}
 	result = &v3.PacketCaptureList{}
 	err = c.client.Get().
+		Namespace(c.ns).
 		Resource("packetcaptures").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -84,6 +88,7 @@ func (c *packetCaptures) Watch(ctx context.Context, opts v1.ListOptions) (watch.
 	}
 	opts.Watch = true
 	return c.client.Get().
+		Namespace(c.ns).
 		Resource("packetcaptures").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -94,6 +99,7 @@ func (c *packetCaptures) Watch(ctx context.Context, opts v1.ListOptions) (watch.
 func (c *packetCaptures) Create(ctx context.Context, packetCapture *v3.PacketCapture, opts v1.CreateOptions) (result *v3.PacketCapture, err error) {
 	result = &v3.PacketCapture{}
 	err = c.client.Post().
+		Namespace(c.ns).
 		Resource("packetcaptures").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(packetCapture).
@@ -106,6 +112,7 @@ func (c *packetCaptures) Create(ctx context.Context, packetCapture *v3.PacketCap
 func (c *packetCaptures) Update(ctx context.Context, packetCapture *v3.PacketCapture, opts v1.UpdateOptions) (result *v3.PacketCapture, err error) {
 	result = &v3.PacketCapture{}
 	err = c.client.Put().
+		Namespace(c.ns).
 		Resource("packetcaptures").
 		Name(packetCapture.Name).
 		VersionedParams(&opts, scheme.ParameterCodec).
@@ -120,6 +127,7 @@ func (c *packetCaptures) Update(ctx context.Context, packetCapture *v3.PacketCap
 func (c *packetCaptures) UpdateStatus(ctx context.Context, packetCapture *v3.PacketCapture, opts v1.UpdateOptions) (result *v3.PacketCapture, err error) {
 	result = &v3.PacketCapture{}
 	err = c.client.Put().
+		Namespace(c.ns).
 		Resource("packetcaptures").
 		Name(packetCapture.Name).
 		SubResource("status").
@@ -133,6 +141,7 @@ func (c *packetCaptures) UpdateStatus(ctx context.Context, packetCapture *v3.Pac
 // Delete takes name of the packetCapture and deletes it. Returns an error if one occurs.
 func (c *packetCaptures) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	return c.client.Delete().
+		Namespace(c.ns).
 		Resource("packetcaptures").
 		Name(name).
 		Body(&opts).
@@ -147,6 +156,7 @@ func (c *packetCaptures) DeleteCollection(ctx context.Context, opts v1.DeleteOpt
 		timeout = time.Duration(*listOpts.TimeoutSeconds) * time.Second
 	}
 	return c.client.Delete().
+		Namespace(c.ns).
 		Resource("packetcaptures").
 		VersionedParams(&listOpts, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -159,6 +169,7 @@ func (c *packetCaptures) DeleteCollection(ctx context.Context, opts v1.DeleteOpt
 func (c *packetCaptures) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v3.PacketCapture, err error) {
 	result = &v3.PacketCapture{}
 	err = c.client.Patch(pt).
+		Namespace(c.ns).
 		Resource("packetcaptures").
 		Name(name).
 		SubResource(subresources...).
