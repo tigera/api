@@ -19,7 +19,7 @@ import (
 // StagedKubernetesNetworkPoliciesGetter has a method to return a StagedKubernetesNetworkPolicyInterface.
 // A group's client should implement this interface.
 type StagedKubernetesNetworkPoliciesGetter interface {
-	StagedKubernetesNetworkPolicies() StagedKubernetesNetworkPolicyInterface
+	StagedKubernetesNetworkPolicies(namespace string) StagedKubernetesNetworkPolicyInterface
 }
 
 // StagedKubernetesNetworkPolicyInterface has methods to work with StagedKubernetesNetworkPolicy resources.
@@ -38,12 +38,14 @@ type StagedKubernetesNetworkPolicyInterface interface {
 // stagedKubernetesNetworkPolicies implements StagedKubernetesNetworkPolicyInterface
 type stagedKubernetesNetworkPolicies struct {
 	client rest.Interface
+	ns     string
 }
 
 // newStagedKubernetesNetworkPolicies returns a StagedKubernetesNetworkPolicies
-func newStagedKubernetesNetworkPolicies(c *ProjectcalicoV3Client) *stagedKubernetesNetworkPolicies {
+func newStagedKubernetesNetworkPolicies(c *ProjectcalicoV3Client, namespace string) *stagedKubernetesNetworkPolicies {
 	return &stagedKubernetesNetworkPolicies{
 		client: c.RESTClient(),
+		ns:     namespace,
 	}
 }
 
@@ -51,6 +53,7 @@ func newStagedKubernetesNetworkPolicies(c *ProjectcalicoV3Client) *stagedKuberne
 func (c *stagedKubernetesNetworkPolicies) Get(ctx context.Context, name string, options v1.GetOptions) (result *v3.StagedKubernetesNetworkPolicy, err error) {
 	result = &v3.StagedKubernetesNetworkPolicy{}
 	err = c.client.Get().
+		Namespace(c.ns).
 		Resource("stagedkubernetesnetworkpolicies").
 		Name(name).
 		VersionedParams(&options, scheme.ParameterCodec).
@@ -67,6 +70,7 @@ func (c *stagedKubernetesNetworkPolicies) List(ctx context.Context, opts v1.List
 	}
 	result = &v3.StagedKubernetesNetworkPolicyList{}
 	err = c.client.Get().
+		Namespace(c.ns).
 		Resource("stagedkubernetesnetworkpolicies").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -83,6 +87,7 @@ func (c *stagedKubernetesNetworkPolicies) Watch(ctx context.Context, opts v1.Lis
 	}
 	opts.Watch = true
 	return c.client.Get().
+		Namespace(c.ns).
 		Resource("stagedkubernetesnetworkpolicies").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -93,6 +98,7 @@ func (c *stagedKubernetesNetworkPolicies) Watch(ctx context.Context, opts v1.Lis
 func (c *stagedKubernetesNetworkPolicies) Create(ctx context.Context, stagedKubernetesNetworkPolicy *v3.StagedKubernetesNetworkPolicy, opts v1.CreateOptions) (result *v3.StagedKubernetesNetworkPolicy, err error) {
 	result = &v3.StagedKubernetesNetworkPolicy{}
 	err = c.client.Post().
+		Namespace(c.ns).
 		Resource("stagedkubernetesnetworkpolicies").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(stagedKubernetesNetworkPolicy).
@@ -105,6 +111,7 @@ func (c *stagedKubernetesNetworkPolicies) Create(ctx context.Context, stagedKube
 func (c *stagedKubernetesNetworkPolicies) Update(ctx context.Context, stagedKubernetesNetworkPolicy *v3.StagedKubernetesNetworkPolicy, opts v1.UpdateOptions) (result *v3.StagedKubernetesNetworkPolicy, err error) {
 	result = &v3.StagedKubernetesNetworkPolicy{}
 	err = c.client.Put().
+		Namespace(c.ns).
 		Resource("stagedkubernetesnetworkpolicies").
 		Name(stagedKubernetesNetworkPolicy.Name).
 		VersionedParams(&opts, scheme.ParameterCodec).
@@ -117,6 +124,7 @@ func (c *stagedKubernetesNetworkPolicies) Update(ctx context.Context, stagedKube
 // Delete takes name of the stagedKubernetesNetworkPolicy and deletes it. Returns an error if one occurs.
 func (c *stagedKubernetesNetworkPolicies) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	return c.client.Delete().
+		Namespace(c.ns).
 		Resource("stagedkubernetesnetworkpolicies").
 		Name(name).
 		Body(&opts).
@@ -131,6 +139,7 @@ func (c *stagedKubernetesNetworkPolicies) DeleteCollection(ctx context.Context, 
 		timeout = time.Duration(*listOpts.TimeoutSeconds) * time.Second
 	}
 	return c.client.Delete().
+		Namespace(c.ns).
 		Resource("stagedkubernetesnetworkpolicies").
 		VersionedParams(&listOpts, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -143,6 +152,7 @@ func (c *stagedKubernetesNetworkPolicies) DeleteCollection(ctx context.Context, 
 func (c *stagedKubernetesNetworkPolicies) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v3.StagedKubernetesNetworkPolicy, err error) {
 	result = &v3.StagedKubernetesNetworkPolicy{}
 	err = c.client.Patch(pt).
+		Namespace(c.ns).
 		Resource("stagedkubernetesnetworkpolicies").
 		Name(name).
 		SubResource(subresources...).

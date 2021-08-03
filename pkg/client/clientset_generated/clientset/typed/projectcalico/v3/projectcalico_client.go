@@ -147,8 +147,8 @@ func (c *ProjectcalicoV3Client) StagedGlobalNetworkPolicies() StagedGlobalNetwor
 	return newStagedGlobalNetworkPolicies(c)
 }
 
-func (c *ProjectcalicoV3Client) StagedKubernetesNetworkPolicies() StagedKubernetesNetworkPolicyInterface {
-	return newStagedKubernetesNetworkPolicies(c)
+func (c *ProjectcalicoV3Client) StagedKubernetesNetworkPolicies(namespace string) StagedKubernetesNetworkPolicyInterface {
+	return newStagedKubernetesNetworkPolicies(c, namespace)
 }
 
 func (c *ProjectcalicoV3Client) StagedNetworkPolicies(namespace string) StagedNetworkPolicyInterface {

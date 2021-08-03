@@ -26,7 +26,6 @@ const (
 )
 
 // +genclient
-// +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // StagedKubernetesNetworkPolicy is a staged GlobalNetworkPolicy.
@@ -84,7 +83,6 @@ type StagedKubernetesNetworkPolicySpec struct {
 	PolicyTypes []networkingv1.PolicyType `json:"policyTypes,omitempty" protobuf:"bytes,4,rep,name=policyTypes,casttype=PolicyType"`
 }
 
-// +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // StagedKubernetesNetworkPolicyList contains a list of StagedKubernetesNetworkPolicy resources.

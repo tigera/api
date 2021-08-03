@@ -114,8 +114,8 @@ func (c *FakeProjectcalicoV3) StagedGlobalNetworkPolicies() v3.StagedGlobalNetwo
 	return &FakeStagedGlobalNetworkPolicies{c}
 }
 
-func (c *FakeProjectcalicoV3) StagedKubernetesNetworkPolicies() v3.StagedKubernetesNetworkPolicyInterface {
-	return &FakeStagedKubernetesNetworkPolicies{c}
+func (c *FakeProjectcalicoV3) StagedKubernetesNetworkPolicies(namespace string) v3.StagedKubernetesNetworkPolicyInterface {
+	return &FakeStagedKubernetesNetworkPolicies{c, namespace}
 }
 
 func (c *FakeProjectcalicoV3) StagedNetworkPolicies(namespace string) v3.StagedNetworkPolicyInterface {
