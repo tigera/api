@@ -206,7 +206,7 @@ func (v *version) StagedGlobalNetworkPolicies() StagedGlobalNetworkPolicyInforme
 
 // StagedKubernetesNetworkPolicies returns a StagedKubernetesNetworkPolicyInformer.
 func (v *version) StagedKubernetesNetworkPolicies() StagedKubernetesNetworkPolicyInformer {
-	return &stagedKubernetesNetworkPolicyInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+	return &stagedKubernetesNetworkPolicyInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // StagedNetworkPolicies returns a StagedNetworkPolicyInformer.
