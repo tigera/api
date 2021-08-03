@@ -104,6 +104,10 @@ type NetworkSetNamespaceListerExpansion interface{}
 // PacketCaptureLister.
 type PacketCaptureListerExpansion interface{}
 
+// PacketCaptureNamespaceListerExpansion allows custom methods to be added to
+// PacketCaptureNamespaceLister.
+type PacketCaptureNamespaceListerExpansion interface{}
+
 // ProfileListerExpansion allows custom methods to be added to
 // ProfileLister.
 type ProfileListerExpansion interface{}

@@ -186,7 +186,7 @@ func (v *version) NetworkSets() NetworkSetInformer {
 
 // PacketCaptures returns a PacketCaptureInformer.
 func (v *version) PacketCaptures() PacketCaptureInformer {
-	return &packetCaptureInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+	return &packetCaptureInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // Profiles returns a ProfileInformer.
