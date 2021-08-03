@@ -14,6 +14,14 @@ type FakeProjectcalicoV3 struct {
 	*testing.Fake
 }
 
+func (c *FakeProjectcalicoV3) AuthenticationReviews() v3.AuthenticationReviewInterface {
+	return &FakeAuthenticationReviews{c}
+}
+
+func (c *FakeProjectcalicoV3) AuthorizationReviews() v3.AuthorizationReviewInterface {
+	return &FakeAuthorizationReviews{c}
+}
+
 func (c *FakeProjectcalicoV3) BGPConfigurations() v3.BGPConfigurationInterface {
 	return &FakeBGPConfigurations{c}
 }
@@ -90,8 +98,8 @@ func (c *FakeProjectcalicoV3) NetworkSets(namespace string) v3.NetworkSetInterfa
 	return &FakeNetworkSets{c, namespace}
 }
 
-func (c *FakeProjectcalicoV3) PacketCaptures() v3.PacketCaptureInterface {
-	return &FakePacketCaptures{c}
+func (c *FakeProjectcalicoV3) PacketCaptures(namespace string) v3.PacketCaptureInterface {
+	return &FakePacketCaptures{c, namespace}
 }
 
 func (c *FakeProjectcalicoV3) Profiles() v3.ProfileInterface {
