@@ -50,7 +50,7 @@ type GlobalAlertSpec struct {
 	// required if Type is of AnomalyDetection
 	Job              string           `json:"job,omitempty" validate:"omitempty"`
 	TrainingInterval *metav1.Duration `json:"trainingInterval,omitempty" validate:"omitempty"`
-	TrainingLookback *metav1.Duration `json:"trainingLookback,omitempty" validate:"omitempty"`
+	TrainingLookback int              `json:"trainingLookback,omitempty" validate:"omitempty"`
 	Severity         int              `json:"severity" validate:"required,min=1,max=100"`
 	Period           *metav1.Duration `json:"period,omitempty" validate:"omitempty"`
 	Lookback         *metav1.Duration `json:"lookback,omitempty" validate:"omitempty"`
