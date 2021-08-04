@@ -14,7 +14,6 @@ const (
 )
 
 // +genclient
-// +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // PacketCapture contains the configuration for any packet capture.
@@ -98,7 +97,6 @@ type PacketCaptureFile struct {
 	FileNames []string `json:"fileNames,omitempty"`
 }
 
-// +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // PacketCaptureList contains a list of PacketCapture resources.

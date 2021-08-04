@@ -4,6 +4,14 @@
 
 package v3
 
+// AuthenticationReviewListerExpansion allows custom methods to be added to
+// AuthenticationReviewLister.
+type AuthenticationReviewListerExpansion interface{}
+
+// AuthorizationReviewListerExpansion allows custom methods to be added to
+// AuthorizationReviewLister.
+type AuthorizationReviewListerExpansion interface{}
+
 // BGPConfigurationListerExpansion allows custom methods to be added to
 // BGPConfigurationLister.
 type BGPConfigurationListerExpansion interface{}
@@ -96,6 +104,10 @@ type NetworkSetNamespaceListerExpansion interface{}
 // PacketCaptureLister.
 type PacketCaptureListerExpansion interface{}
 
+// PacketCaptureNamespaceListerExpansion allows custom methods to be added to
+// PacketCaptureNamespaceLister.
+type PacketCaptureNamespaceListerExpansion interface{}
+
 // ProfileListerExpansion allows custom methods to be added to
 // ProfileLister.
 type ProfileListerExpansion interface{}
@@ -111,6 +123,10 @@ type StagedGlobalNetworkPolicyListerExpansion interface{}
 // StagedKubernetesNetworkPolicyListerExpansion allows custom methods to be added to
 // StagedKubernetesNetworkPolicyLister.
 type StagedKubernetesNetworkPolicyListerExpansion interface{}
+
+// StagedKubernetesNetworkPolicyNamespaceListerExpansion allows custom methods to be added to
+// StagedKubernetesNetworkPolicyNamespaceLister.
+type StagedKubernetesNetworkPolicyNamespaceListerExpansion interface{}
 
 // StagedNetworkPolicyListerExpansion allows custom methods to be added to
 // StagedNetworkPolicyLister.

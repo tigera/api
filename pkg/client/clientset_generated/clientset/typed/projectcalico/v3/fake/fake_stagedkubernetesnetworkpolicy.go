@@ -19,6 +19,7 @@ import (
 // FakeStagedKubernetesNetworkPolicies implements StagedKubernetesNetworkPolicyInterface
 type FakeStagedKubernetesNetworkPolicies struct {
 	Fake *FakeProjectcalicoV3
+	ns   string
 }
 
 var stagedkubernetesnetworkpoliciesResource = schema.GroupVersionResource{Group: "projectcalico.org", Version: "v3", Resource: "stagedkubernetesnetworkpolicies"}
@@ -28,7 +29,8 @@ var stagedkubernetesnetworkpoliciesKind = schema.GroupVersionKind{Group: "projec
 // Get takes name of the stagedKubernetesNetworkPolicy, and returns the corresponding stagedKubernetesNetworkPolicy object, and an error if there is any.
 func (c *FakeStagedKubernetesNetworkPolicies) Get(ctx context.Context, name string, options v1.GetOptions) (result *v3.StagedKubernetesNetworkPolicy, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(stagedkubernetesnetworkpoliciesResource, name), &v3.StagedKubernetesNetworkPolicy{})
+		Invokes(testing.NewGetAction(stagedkubernetesnetworkpoliciesResource, c.ns, name), &v3.StagedKubernetesNetworkPolicy{})
+
 	if obj == nil {
 		return nil, err
 	}
@@ -38,7 +40,8 @@ func (c *FakeStagedKubernetesNetworkPolicies) Get(ctx context.Context, name stri
 // List takes label and field selectors, and returns the list of StagedKubernetesNetworkPolicies that match those selectors.
 func (c *FakeStagedKubernetesNetworkPolicies) List(ctx context.Context, opts v1.ListOptions) (result *v3.StagedKubernetesNetworkPolicyList, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(stagedkubernetesnetworkpoliciesResource, stagedkubernetesnetworkpoliciesKind, opts), &v3.StagedKubernetesNetworkPolicyList{})
+		Invokes(testing.NewListAction(stagedkubernetesnetworkpoliciesResource, stagedkubernetesnetworkpoliciesKind, c.ns, opts), &v3.StagedKubernetesNetworkPolicyList{})
+
 	if obj == nil {
 		return nil, err
 	}
@@ -59,13 +62,15 @@ func (c *FakeStagedKubernetesNetworkPolicies) List(ctx context.Context, opts v1.
 // Watch returns a watch.Interface that watches the requested stagedKubernetesNetworkPolicies.
 func (c *FakeStagedKubernetesNetworkPolicies) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
-		InvokesWatch(testing.NewRootWatchAction(stagedkubernetesnetworkpoliciesResource, opts))
+		InvokesWatch(testing.NewWatchAction(stagedkubernetesnetworkpoliciesResource, c.ns, opts))
+
 }
 
 // Create takes the representation of a stagedKubernetesNetworkPolicy and creates it.  Returns the server's representation of the stagedKubernetesNetworkPolicy, and an error, if there is any.
 func (c *FakeStagedKubernetesNetworkPolicies) Create(ctx context.Context, stagedKubernetesNetworkPolicy *v3.StagedKubernetesNetworkPolicy, opts v1.CreateOptions) (result *v3.StagedKubernetesNetworkPolicy, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(stagedkubernetesnetworkpoliciesResource, stagedKubernetesNetworkPolicy), &v3.StagedKubernetesNetworkPolicy{})
+		Invokes(testing.NewCreateAction(stagedkubernetesnetworkpoliciesResource, c.ns, stagedKubernetesNetworkPolicy), &v3.StagedKubernetesNetworkPolicy{})
+
 	if obj == nil {
 		return nil, err
 	}
@@ -75,7 +80,8 @@ func (c *FakeStagedKubernetesNetworkPolicies) Create(ctx context.Context, staged
 // Update takes the representation of a stagedKubernetesNetworkPolicy and updates it. Returns the server's representation of the stagedKubernetesNetworkPolicy, and an error, if there is any.
 func (c *FakeStagedKubernetesNetworkPolicies) Update(ctx context.Context, stagedKubernetesNetworkPolicy *v3.StagedKubernetesNetworkPolicy, opts v1.UpdateOptions) (result *v3.StagedKubernetesNetworkPolicy, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(stagedkubernetesnetworkpoliciesResource, stagedKubernetesNetworkPolicy), &v3.StagedKubernetesNetworkPolicy{})
+		Invokes(testing.NewUpdateAction(stagedkubernetesnetworkpoliciesResource, c.ns, stagedKubernetesNetworkPolicy), &v3.StagedKubernetesNetworkPolicy{})
+
 	if obj == nil {
 		return nil, err
 	}
@@ -85,13 +91,14 @@ func (c *FakeStagedKubernetesNetworkPolicies) Update(ctx context.Context, staged
 // Delete takes name of the stagedKubernetesNetworkPolicy and deletes it. Returns an error if one occurs.
 func (c *FakeStagedKubernetesNetworkPolicies) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteAction(stagedkubernetesnetworkpoliciesResource, name), &v3.StagedKubernetesNetworkPolicy{})
+		Invokes(testing.NewDeleteAction(stagedkubernetesnetworkpoliciesResource, c.ns, name), &v3.StagedKubernetesNetworkPolicy{})
+
 	return err
 }
 
 // DeleteCollection deletes a collection of objects.
 func (c *FakeStagedKubernetesNetworkPolicies) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(stagedkubernetesnetworkpoliciesResource, listOpts)
+	action := testing.NewDeleteCollectionAction(stagedkubernetesnetworkpoliciesResource, c.ns, listOpts)
 
 	_, err := c.Fake.Invokes(action, &v3.StagedKubernetesNetworkPolicyList{})
 	return err
@@ -100,7 +107,8 @@ func (c *FakeStagedKubernetesNetworkPolicies) DeleteCollection(ctx context.Conte
 // Patch applies the patch and returns the patched stagedKubernetesNetworkPolicy.
 func (c *FakeStagedKubernetesNetworkPolicies) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v3.StagedKubernetesNetworkPolicy, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(stagedkubernetesnetworkpoliciesResource, name, pt, data, subresources...), &v3.StagedKubernetesNetworkPolicy{})
+		Invokes(testing.NewPatchSubresourceAction(stagedkubernetesnetworkpoliciesResource, c.ns, name, pt, data, subresources...), &v3.StagedKubernetesNetworkPolicy{})
+
 	if obj == nil {
 		return nil, err
 	}

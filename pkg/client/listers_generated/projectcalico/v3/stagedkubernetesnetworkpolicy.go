@@ -17,9 +17,8 @@ type StagedKubernetesNetworkPolicyLister interface {
 	// List lists all StagedKubernetesNetworkPolicies in the indexer.
 	// Objects returned here must be treated as read-only.
 	List(selector labels.Selector) (ret []*v3.StagedKubernetesNetworkPolicy, err error)
-	// Get retrieves the StagedKubernetesNetworkPolicy from the index for a given name.
-	// Objects returned here must be treated as read-only.
-	Get(name string) (*v3.StagedKubernetesNetworkPolicy, error)
+	// StagedKubernetesNetworkPolicies returns an object that can list and get StagedKubernetesNetworkPolicies.
+	StagedKubernetesNetworkPolicies(namespace string) StagedKubernetesNetworkPolicyNamespaceLister
 	StagedKubernetesNetworkPolicyListerExpansion
 }
 
@@ -41,9 +40,41 @@ func (s *stagedKubernetesNetworkPolicyLister) List(selector labels.Selector) (re
 	return ret, err
 }
 
-// Get retrieves the StagedKubernetesNetworkPolicy from the index for a given name.
-func (s *stagedKubernetesNetworkPolicyLister) Get(name string) (*v3.StagedKubernetesNetworkPolicy, error) {
-	obj, exists, err := s.indexer.GetByKey(name)
+// StagedKubernetesNetworkPolicies returns an object that can list and get StagedKubernetesNetworkPolicies.
+func (s *stagedKubernetesNetworkPolicyLister) StagedKubernetesNetworkPolicies(namespace string) StagedKubernetesNetworkPolicyNamespaceLister {
+	return stagedKubernetesNetworkPolicyNamespaceLister{indexer: s.indexer, namespace: namespace}
+}
+
+// StagedKubernetesNetworkPolicyNamespaceLister helps list and get StagedKubernetesNetworkPolicies.
+// All objects returned here must be treated as read-only.
+type StagedKubernetesNetworkPolicyNamespaceLister interface {
+	// List lists all StagedKubernetesNetworkPolicies in the indexer for a given namespace.
+	// Objects returned here must be treated as read-only.
+	List(selector labels.Selector) (ret []*v3.StagedKubernetesNetworkPolicy, err error)
+	// Get retrieves the StagedKubernetesNetworkPolicy from the indexer for a given namespace and name.
+	// Objects returned here must be treated as read-only.
+	Get(name string) (*v3.StagedKubernetesNetworkPolicy, error)
+	StagedKubernetesNetworkPolicyNamespaceListerExpansion
+}
+
+// stagedKubernetesNetworkPolicyNamespaceLister implements the StagedKubernetesNetworkPolicyNamespaceLister
+// interface.
+type stagedKubernetesNetworkPolicyNamespaceLister struct {
+	indexer   cache.Indexer
+	namespace string
+}
+
+// List lists all StagedKubernetesNetworkPolicies in the indexer for a given namespace.
+func (s stagedKubernetesNetworkPolicyNamespaceLister) List(selector labels.Selector) (ret []*v3.StagedKubernetesNetworkPolicy, err error) {
+	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
+		ret = append(ret, m.(*v3.StagedKubernetesNetworkPolicy))
+	})
+	return ret, err
+}
+
+// Get retrieves the StagedKubernetesNetworkPolicy from the indexer for a given namespace and name.
+func (s stagedKubernetesNetworkPolicyNamespaceLister) Get(name string) (*v3.StagedKubernetesNetworkPolicy, error) {
+	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
 	if err != nil {
 		return nil, err
 	}

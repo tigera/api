@@ -28,32 +28,33 @@ type PacketCaptureInformer interface {
 type packetCaptureInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
 	tweakListOptions internalinterfaces.TweakListOptionsFunc
+	namespace        string
 }
 
 // NewPacketCaptureInformer constructs a new informer for PacketCapture type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewPacketCaptureInformer(client clientset.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
-	return NewFilteredPacketCaptureInformer(client, resyncPeriod, indexers, nil)
+func NewPacketCaptureInformer(client clientset.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
+	return NewFilteredPacketCaptureInformer(client, namespace, resyncPeriod, indexers, nil)
 }
 
 // NewFilteredPacketCaptureInformer constructs a new informer for PacketCapture type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewFilteredPacketCaptureInformer(client clientset.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
+func NewFilteredPacketCaptureInformer(client clientset.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
 	return cache.NewSharedIndexInformer(
 		&cache.ListWatch{
 			ListFunc: func(options v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ProjectcalicoV3().PacketCaptures().List(context.TODO(), options)
+				return client.ProjectcalicoV3().PacketCaptures(namespace).List(context.TODO(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ProjectcalicoV3().PacketCaptures().Watch(context.TODO(), options)
+				return client.ProjectcalicoV3().PacketCaptures(namespace).Watch(context.TODO(), options)
 			},
 		},
 		&projectcalicov3.PacketCapture{},
@@ -63,7 +64,7 @@ func NewFilteredPacketCaptureInformer(client clientset.Interface, resyncPeriod t
 }
 
 func (f *packetCaptureInformer) defaultInformer(client clientset.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewFilteredPacketCaptureInformer(client, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
+	return NewFilteredPacketCaptureInformer(client, f.namespace, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
 }
 
 func (f *packetCaptureInformer) Informer() cache.SharedIndexInformer {
