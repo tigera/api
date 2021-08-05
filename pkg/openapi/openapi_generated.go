@@ -3775,6 +3775,13 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
+					"dnsPolicyNfqueueID": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DNSPolicyNfqueueID is the NFQUEUE ID to use for DNS Policy re-evaluation when the domains IP hasn't been programmed to ipsets yet. [Default: 100]",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
 					"iptablesNATOutgoingInterfaceFilter": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
@@ -4479,6 +4486,7 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 						},
 					},
 				},
+				Required: []string{"dnsPolicyNfqueueID"},
 			},
 		},
 		Dependencies: []string{
