@@ -4486,7 +4486,6 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 						},
 					},
 				},
-				Required: []string{"dnsPolicyNfqueueID"},
 			},
 		},
 		Dependencies: []string{
