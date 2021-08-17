@@ -19,6 +19,7 @@ var (
 	SchemeBuilder      runtime.SchemeBuilder
 	localSchemeBuilder = &SchemeBuilder
 	AddToScheme        = localSchemeBuilder.AddToScheme
+	AllKnownTypes      []runtime.Object
 )
 
 func init() {
@@ -30,7 +31,7 @@ func init() {
 
 // Adds the list of known types to api.Scheme.
 func addKnownTypes(scheme *runtime.Scheme) error {
-	all := []runtime.Object{
+	AllKnownTypes = []runtime.Object{
 		&NetworkPolicy{},
 		&NetworkPolicyList{},
 		&GlobalNetworkPolicy{},
@@ -90,12 +91,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&Tier{},
 		&TierList{},
 	}
-	scheme.AddKnownTypes(SchemeGroupVersion, all...)
+	scheme.AddKnownTypes(SchemeGroupVersion, AllKnownTypes...)
 	metav1.AddToGroupVersion(scheme, SchemeGroupVersion)
-
-	// At the moment the v3 API is identical to the internal API. Register the same set of definitions as the
-	// internal set, no conversions are required since they are identical.
-	scheme.AddKnownTypes(SchemeGroupVersionInternal, all...)
 	return nil
 }
 
