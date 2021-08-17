@@ -124,6 +124,10 @@ type StagedGlobalNetworkPolicyListerExpansion interface{}
 // StagedKubernetesNetworkPolicyLister.
 type StagedKubernetesNetworkPolicyListerExpansion interface{}
 
+// StagedKubernetesNetworkPolicyNamespaceListerExpansion allows custom methods to be added to
+// StagedKubernetesNetworkPolicyNamespaceLister.
+type StagedKubernetesNetworkPolicyNamespaceListerExpansion interface{}
+
 // StagedNetworkPolicyListerExpansion allows custom methods to be added to
 // StagedNetworkPolicyLister.
 type StagedNetworkPolicyListerExpansion interface{}
