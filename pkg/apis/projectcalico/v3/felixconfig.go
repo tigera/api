@@ -698,6 +698,9 @@ type FelixConfigurationSpec struct {
 	// TPROXYPort sets to which port proxied traffic should be redirected.
 	// [Default: 16001]
 	TPROXYPort *int `json:"tproxyPort,omitempty" validate:"omitempty,gt=0,lte=65535"`
+	// TPROXYUpstreamConnMark tell Felix which mark is used by the proxy for its upstream
+	// connections so that Felix can program the dataplane correctly.  [Default: 0x17]
+	TPROXYUpstreamConnMark *int `json:"tproxyPort,omitempty" validate:"omitempty,gt=0`
 }
 
 type RouteTableRange struct {
