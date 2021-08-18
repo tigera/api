@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  <testsuite name="Numorstring Suite" tests="67" failures="0" errors="0" time="0.005">
+      <testcase name="NumOrStringJSONMarshaling should marshal ASN of 0" classname="Numorstring Suite" time="7.8201e-05"></testcase>
+      <testcase name="NumOrStringJSONMarshaling should marshal ASN of 4294967295" classname="Numorstring Suite" time="1.4114e-05"></testcase>
+      <testcase name="NumOrStringJSONMarshaling should marshal port of 0" classname="Numorstring Suite" time="0.000183501"></testcase>
+      <testcase name="NumOrStringJSONMarshaling should marshal port of 65535" classname="Numorstring Suite" time="1.6937e-05"></testcase>
+      <testcase name="NumOrStringJSONMarshaling should marshal port of 10" classname="Numorstring Suite" time="1.2257e-05"></testcase>
+      <testcase name="NumOrStringJSONMarshaling should marshal port range of 10:20" classname="Numorstring Suite" time="1.6923e-05"></testcase>
+      <testcase name="NumOrStringJSONMarshaling should marshal port range of 20:30" classname="Numorstring Suite" time="1.2926e-05"></testcase>
+      <testcase name="NumOrStringJSONMarshaling should marshal named port" classname="Numorstring Suite" time="1.273e-05"></testcase>
+      <testcase name="NumOrStringJSONMarshaling should marshal protocol of 0" classname="Numorstring Suite" time="8.0105e-05"></testcase>
+      <testcase name="NumOrStringJSONMarshaling should marshal protocol of udp" classname="Numorstring Suite" time="1.6424e-05"></testcase>
+      <testcase name="NumOrStringProtocols FromString is not case sensitive protocol udp -&gt; UDP" classname="Numorstring Suite" time="2.4213e-05"></testcase>
+      <testcase name="NumOrStringProtocols FromString is not case sensitive protocol tcp -&gt; TCP" classname="Numorstring Suite" time="7.9e-06"></testcase>
+      <testcase name="NumOrStringProtocols FromString is not case sensitive protocol updlite -&gt; UDPLite" classname="Numorstring Suite" time="8.803e-06"></testcase>
+      <testcase name="NumOrStringProtocols FromString is not case sensitive unknown protocol xxxXXX" classname="Numorstring Suite" time="6.249e-06"></testcase>
+      <testcase name="NumOrStringJSONUnmarshaling should accept 0 AS number as int" classname="Numorstring Suite" time="5.1923e-05"></testcase>
+      <testcase name="NumOrStringJSONUnmarshaling should accept 4294967295 AS number as int" classname="Numorstring Suite" time="2.9088e-05"></testcase>
+      <testcase name="NumOrStringJSONUnmarshaling should accept 0 AS number as string" classname="Numorstring Suite" time="3.0666e-05"></testcase>
+      <testcase name="NumOrStringJSONUnmarshaling should accept 4294967295 AS number as string" classname="Numorstring Suite" time="3.1951e-05"></testcase>
+      <testcase name="NumOrStringJSONUnmarshaling should accept 1.10 AS number as string" classname="Numorstring Suite" time="2.7816e-05"></testcase>
+      <testcase name="NumOrStringJSONUnmarshaling should accept 00.00 AS number as string" classname="Numorstring Suite" time="3.0073e-05"></testcase>
+      <testcase name="NumOrStringJSONUnmarshaling should accept 00.01 AS number as string" classname="Numorstring Suite" time="2.5379e-05"></testcase>
+      <testcase name="NumOrStringJSONUnmarshaling should accept 65535.65535 AS number as string" classname="Numorstring Suite" time="2.55e-05"></testcase>
+      <testcase name="NumOrStringJSONUnmarshaling should reject 1.1.1 AS number as string" classname="Numorstring Suite" time="2.8744e-05"></testcase>
+      <testcase name="NumOrStringJSONUnmarshaling should reject 65536.65535 AS number as string" classname="Numorstring Suite" time="2.9235e-05"></testcase>
+      <testcase name="NumOrStringJSONUnmarshaling should reject 65535.65536 AS number as string" classname="Numorstring Suite" time="2.8251e-05"></testcase>
+      <testcase name="NumOrStringJSONUnmarshaling should reject 0.-1 AS number as string" classname="Numorstring Suite" time="6.2572e-05"></testcase>
+      <testcase name="NumOrStringJSONUnmarshaling should reject -1 AS number as int" classname="Numorstring Suite" time="2.0229e-05"></testcase>
+      <testcase name="NumOrStringJSONUnmarshaling should reject 4294967296 AS number as int" classname="Numorstring Suite" time="1.4891e-05"></testcase>
+      <testcase name="NumOrStringJSONUnmarshaling should accept 0 port as int" classname="Numorstring Suite" time="4.9327e-05"></testcase>
+      <testcase name="NumOrStringJSONUnmarshaling should accept 65535 port as int" classname="Numorstring Suite" time="2.841e-05"></testcase>
+      <testcase name="NumOrStringJSONUnmarshaling should accept 0:65535 port range as string" classname="Numorstring Suite" time="3.7693e-05"></testcase>
+      <testcase name="NumOrStringJSONUnmarshaling should accept 1:10 port range as string" classname="Numorstring Suite" time="4.5376e-05"></testcase>
+      <testcase name="NumOrStringJSONUnmarshaling should accept foo-bar as named port" classname="Numorstring Suite" time="3.6785e-05"></testcase>
+      <testcase name="NumOrStringJSONUnmarshaling should reject -1 port as int" classname="Numorstring Suite" time="2.5501e-05"></testcase>
+      <testcase name="NumOrStringJSONUnmarshaling should reject 65536 port as int" classname="Numorstring Suite" time="2.4829e-05"></testcase>
+      <testcase name="NumOrStringJSONUnmarshaling should reject 0:65536 port range as string" classname="Numorstring Suite" time="2.7927e-05"></testcase>
+      <testcase name="NumOrStringJSONUnmarshaling should reject -1:65535 port range as string" classname="Numorstring Suite" time="2.6536e-05"></testcase>
+      <testcase name="NumOrStringJSONUnmarshaling should reject 10:1 port range as string" classname="Numorstring Suite" time="3.1599e-05"></testcase>
+      <testcase name="NumOrStringJSONUnmarshaling should reject 1:2:3 port range as string" classname="Numorstring Suite" time="2.8582e-05"></testcase>
+      <testcase name="NumOrStringJSONUnmarshaling should reject bad named port string" classname="Numorstring Suite" time="2.607e-05"></testcase>
+      <testcase name="NumOrStringJSONUnmarshaling should reject bad port string" classname="Numorstring Suite" time="2.0959e-05"></testcase>
+      <testcase name="NumOrStringJSONUnmarshaling should accept 0 protocol as int" classname="Numorstring Suite" time="3.2787e-05"></testcase>
+      <testcase name="NumOrStringJSONUnmarshaling should accept 255 protocol as int" classname="Numorstring Suite" time="2.8109e-05"></testcase>
+      <testcase name="NumOrStringJSONUnmarshaling should accept tcp protocol as string" classname="Numorstring Suite" time="2.7327e-05"></testcase>
+      <testcase name="NumOrStringJSONUnmarshaling should accept tcp protocol as string" classname="Numorstring Suite" time="2.4658e-05"></testcase>
+      <testcase name="NumOrStringJSONUnmarshaling should accept 0 protocol as string" classname="Numorstring Suite" time="2.4775e-05"></testcase>
+      <testcase name="NumOrStringJSONUnmarshaling should accept 0 protocol as string" classname="Numorstring Suite" time="2.6792e-05"></testcase>
+      <testcase name="NumOrStringJSONUnmarshaling should accept 256 protocol as string" classname="Numorstring Suite" time="4.1949e-05"></testcase>
+      <testcase name="NumOrStringJSONUnmarshaling should reject bad protocol string" classname="Numorstring Suite" time="7.6178e-05"></testcase>
+      <testcase name="NumOrStringProtocols FromStringV1 is lowercase protocol udp -&gt; UDP" classname="Numorstring Suite" time="3.9935e-05"></testcase>
+      <testcase name="NumOrStringProtocols FromStringV1 is lowercase protocol tcp -&gt; TCP" classname="Numorstring Suite" time="1.4304e-05"></testcase>
+      <testcase name="NumOrStringProtocolsSupportingPorts protocol 6 supports ports" classname="Numorstring Suite" time="2.5387e-05"></testcase>
+      <testcase name="NumOrStringProtocolsSupportingPorts protocol 17 supports ports" classname="Numorstring Suite" time="9.191e-06"></testcase>
+      <testcase name="NumOrStringProtocolsSupportingPorts protocol udp supports ports" classname="Numorstring Suite" time="1.6458e-05"></testcase>
+      <testcase name="NumOrStringProtocolsSupportingPorts protocol udp supports ports" classname="Numorstring Suite" time="1.1957e-05"></testcase>
+      <testcase name="NumOrStringProtocolsSupportingPorts protocol foo does not support ports" classname="Numorstring Suite" time="9.248e-06"></testcase>
+      <testcase name="NumOrStringProtocolsSupportingPorts protocol 2 does not support ports" classname="Numorstring Suite" time="1.3853e-05"></testcase>
+      <testcase name="NumOrStringStringify should stringify ASN of 0" classname="Numorstring Suite" time="4.8706e-05"></testcase>
+      <testcase name="NumOrStringStringify should stringify ASN of 4294967295" classname="Numorstring Suite" time="2.0614e-05"></testcase>
+      <testcase name="NumOrStringStringify should stringify port of 20" classname="Numorstring Suite" time="1.9096e-05"></testcase>
+      <testcase name="NumOrStringStringify should stringify port range of 10:20" classname="Numorstring Suite" time="2.2833e-05"></testcase>
+      <testcase name="NumOrStringStringify should stringify protocol of 0" classname="Numorstring Suite" time="1.6369e-05"></testcase>
+      <testcase name="NumOrStringStringify should stringify protocol of udp" classname="Numorstring Suite" time="0.000406527"></testcase>
+      <testcase name="NumOrStringProtocols FromStringV1 is lowercase protocol udp -&gt; UDP" classname="Numorstring Suite" time="6.0405e-05"></testcase>
+      <testcase name="NumOrStringProtocols FromStringV1 is lowercase protocol tcp -&gt; TCP" classname="Numorstring Suite" time="2.0613e-05"></testcase>
+      <testcase name="NumOrStringProtocols FromStringV1 is lowercase protocol updlite -&gt; UDPLite" classname="Numorstring Suite" time="7.962e-06"></testcase>
+      <testcase name="NumOrStringProtocols FromStringV1 is lowercase unknown protocol xxxXXX" classname="Numorstring Suite" time="4.661e-06"></testcase>
+  </testsuite>

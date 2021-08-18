@@ -176,6 +176,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.StagedNetworkPolicy":                   schema_pkg_apis_projectcalico_v3_StagedNetworkPolicy(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.StagedNetworkPolicyList":               schema_pkg_apis_projectcalico_v3_StagedNetworkPolicyList(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.StagedNetworkPolicySpec":               schema_pkg_apis_projectcalico_v3_StagedNetworkPolicySpec(ref),
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.Statistics":                            schema_pkg_apis_projectcalico_v3_Statistics(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.ThreatFeedFormat":                      schema_pkg_apis_projectcalico_v3_ThreatFeedFormat(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.ThreatFeedFormatCSV":                   schema_pkg_apis_projectcalico_v3_ThreatFeedFormatCSV(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.ThreatFeedFormatJSON":                  schema_pkg_apis_projectcalico_v3_ThreatFeedFormatJSON(ref),
@@ -4639,6 +4640,13 @@ func schema_pkg_apis_projectcalico_v3_GlobalAlertSpec(ref common.ReferenceCallba
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "if Type is not provided assume UserDefined to  avoid breaking changes",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"summary": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
@@ -4650,6 +4658,24 @@ func schema_pkg_apis_projectcalico_v3_GlobalAlertSpec(ref common.ReferenceCallba
 							Default: "",
 							Type:    []string{"string"},
 							Format:  "",
+						},
+					},
+					"job": {
+						SchemaProps: spec.SchemaProps{
+							Description: "required if Type is of AnomalyDetection",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"trainingInterval": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"trainingLookback": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
 						},
 					},
 					"severity": {
@@ -4777,12 +4803,18 @@ func schema_pkg_apis_projectcalico_v3_GlobalAlertStatus(ref common.ReferenceCall
 							},
 						},
 					},
+					"statistics": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.Statistics"),
+						},
+					},
 				},
 				Required: []string{"active", "healthy"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.ErrorCondition", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+			"github.com/tigera/api/pkg/apis/projectcalico/v3.ErrorCondition", "github.com/tigera/api/pkg/apis/projectcalico/v3.Statistics", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -9227,6 +9259,24 @@ func schema_pkg_apis_projectcalico_v3_StagedNetworkPolicySpec(ref common.Referen
 		},
 		Dependencies: []string{
 			"github.com/tigera/api/pkg/apis/projectcalico/v3.Rule"},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_Statistics(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"recordsProcessed": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+				},
+			},
+		},
 	}
 }
 
