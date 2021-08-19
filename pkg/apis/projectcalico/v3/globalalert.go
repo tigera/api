@@ -70,11 +70,6 @@ type GlobalAlertStatus struct {
 	LastExecuted    *metav1.Time     `json:"lastExecuted,omitempty"`
 	LastEvent       *metav1.Time     `json:"lastEvent,omitempty"`
 	ErrorConditions []ErrorCondition `json:"errorConditions,omitempty"`
-	Statistics      Statistics       `json:"statistics,omitempty"`
-}
-
-type Statistics struct {
-	RecordsProcessed int `json:"recordsProcessed,omitempty"`
 }
 
 // +genclient:nonNamespaced
