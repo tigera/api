@@ -136,6 +136,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.NetworkSetSpec":                        schema_pkg_apis_projectcalico_v3_NetworkSetSpec(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.NodeControllerConfig":                  schema_pkg_apis_projectcalico_v3_NodeControllerConfig(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCapture":                         schema_pkg_apis_projectcalico_v3_PacketCapture(ref),
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCaptureAutoTermination":          schema_pkg_apis_projectcalico_v3_PacketCaptureAutoTermination(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCaptureFile":                     schema_pkg_apis_projectcalico_v3_PacketCaptureFile(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCaptureList":                     schema_pkg_apis_projectcalico_v3_PacketCaptureList(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCaptureRule":                     schema_pkg_apis_projectcalico_v3_PacketCaptureRule(ref),
@@ -7222,6 +7223,33 @@ func schema_pkg_apis_projectcalico_v3_PacketCapture(ref common.ReferenceCallback
 	}
 }
 
+func schema_pkg_apis_projectcalico_v3_PacketCaptureAutoTermination(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PacketCaptureAutoTermination contains instructions when to start or stop capturing traffic",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"startTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the start time of a PacketCapture",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"endTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the end time of a PacketCapture",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
 func schema_pkg_apis_projectcalico_v3_PacketCaptureFile(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -7376,11 +7404,18 @@ func schema_pkg_apis_projectcalico_v3_PacketCaptureSpec(ref common.ReferenceCall
 							},
 						},
 					},
+					"AutoTermination": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Coordinates the scheduled start/stop capturing traffic for a PacketCapture",
+							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCaptureAutoTermination"),
+						},
+					},
 				},
+				Required: []string{"AutoTermination"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCaptureRule"},
+			"github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCaptureAutoTermination", "github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCaptureRule"},
 	}
 }
 

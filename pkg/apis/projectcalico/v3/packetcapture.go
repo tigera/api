@@ -60,6 +60,22 @@ type PacketCaptureSpec struct {
 	// The ordered set of filters applied to traffic captured from an interface.  Each rule contains a set of
 	// packet match criteria.
 	Filters []PacketCaptureRule `json:"filters,omitempty" validate:"omitempty,dive"`
+
+	// Coordinates the scheduled start/stop capturing traffic for a PacketCapture
+	AutoTermination *PacketCaptureAutoTermination
+}
+
+// PacketCaptureAutoTermination contains instructions when to start or stop
+// capturing traffic
+type PacketCaptureAutoTermination struct {
+
+	// Defines the start time of a PacketCapture
+	// +kubebuilder:validation:Format="date-time"
+	StartTime *metav1.Time `json:"startTime,omitempty"`
+
+	// Defines the end time of a PacketCapture
+	//+kubebuilder:validation:Format="date-time"
+	EndTime *metav1.Time `json:"endTime,omitempty"`
 }
 
 // A PacketCaptureRule encapsulates a set of match criteria for traffic captured from an interface.
@@ -94,7 +110,7 @@ type PacketCaptureFile struct {
 	// The active packet capture file will be identified using the following schema:
 	// "{workload endpoint name}_{host network interface}.pcap" .
 	// Rotated capture files name will contain an index matching the rotation timestamp.
-	FileNames []string `json:"fileNames,omitempty"`
+	FileNames []string `json:"fileNames,omitempty" validate:"omitempty,dive"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
