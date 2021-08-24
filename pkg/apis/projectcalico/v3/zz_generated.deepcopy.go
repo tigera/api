@@ -2146,6 +2146,11 @@ func (in *FelixConfigurationSpec) DeepCopyInto(out *FelixConfigurationSpec) {
 		*out = new(int)
 		**out = **in
 	}
+	if in.TPROXYUpstreamConnMark != nil {
+		in, out := &in.TPROXYUpstreamConnMark, &out.TPROXYUpstreamConnMark
+		*out = new(uint32)
+		**out = **in
+	}
 	return
 }
 
