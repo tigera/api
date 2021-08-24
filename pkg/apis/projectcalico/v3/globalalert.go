@@ -43,7 +43,7 @@ type GlobalAlert struct {
 }
 
 type GlobalAlertSpec struct {
-	// if Type is not provided assume UserDefined to  avoid breaking changes
+	// if type is omitted, assume UserDefined
 	Type        string `json:"type,omitempty" validate:"omitempty,oneof=UserDefined AnomalyDetection"`
 	Summary     string `json:"summary,omitempty" validate:"omitempty"`
 	Description string `json:"description" validate:"required"`
