@@ -7231,7 +7231,7 @@ func schema_pkg_apis_projectcalico_v3_PacketCaptureFile(ref common.ReferenceCall
 				Properties: map[string]spec.Schema{
 					"node": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Node identifies with a a physical node from the cluster via its hostname",
+							Description: "Node identifies with a physical node from the cluster via its hostname",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -7256,6 +7256,13 @@ func schema_pkg_apis_projectcalico_v3_PacketCaptureFile(ref common.ReferenceCall
 									},
 								},
 							},
+						},
+					},
+					"active": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Determines whether a PacketCapture is capturing traffic or not from any interface attached to the current node. In addition, the value will be set to true if the current time of capture is bounded by the interval defined by startTime and endTime",
+							Type:        []string{"boolean"},
+							Format:      "",
 						},
 					},
 				},
@@ -7376,11 +7383,23 @@ func schema_pkg_apis_projectcalico_v3_PacketCaptureSpec(ref common.ReferenceCall
 							},
 						},
 					},
+					"startTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the start time from which this PacketCapture will capture packets. If omitted or the value is in the past, the capture will start immediately. If the value is changed to a future time, capture will stop immediately and restart at that time",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"endTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the end time at which this PacketCapture will stop capturing packets. If omitted the capture will continue indefinitely. If the value is changed to the past, capture will stop immediately.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCaptureRule"},
+			"github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCaptureRule", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
