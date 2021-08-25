@@ -13,6 +13,16 @@ const (
 	KindPacketCaptureList = "PacketCaptureList"
 )
 
+// PacketCaptureState represents the state of the PacketCapture
+type PacketCaptureState string
+
+const (
+	// PacketCaptureStateCapturing represents the active state of a PacketCapture of capturing traffic
+	PacketCaptureStateCapturing PacketCaptureState = "Capturing"
+	// PacketCaptureStateInactive represents the inactive state of a PacketCapture of not capturing traffic
+	PacketCaptureStateInactive = "Inactive"
+)
+
 // +genclient
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
@@ -110,10 +120,11 @@ type PacketCaptureFile struct {
 	// Rotated capture files name will contain an index matching the rotation timestamp.
 	FileNames []string `json:"fileNames,omitempty" validate:"omitempty,dive"`
 
-	// Determines whether a PacketCapture is capturing traffic or not from any interface
-	// attached to the current node. In addition, the value will be set to true if the current time
-	// of capture is bounded by the interval defined by startTime and endTime
-	Active bool `json:"active,omitempty" validate:"omitempty"`
+	// Determines whether a PacketCapture is capturing traffic from any interface
+	// attached to the current node
+
+	// +kubebuilder:validation:Enum=Capturing;Inactive
+	State *PacketCaptureState `json:"state,omitempty" validate:"omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

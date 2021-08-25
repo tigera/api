@@ -3774,6 +3774,11 @@ func (in *PacketCaptureFile) DeepCopyInto(out *PacketCaptureFile) {
 		*out = make([]string, len(*in))
 		copy(*out, *in)
 	}
+	if in.State != nil {
+		in, out := &in.State, &out.State
+		*out = new(PacketCaptureState)
+		**out = **in
+	}
 	return
 }
 
