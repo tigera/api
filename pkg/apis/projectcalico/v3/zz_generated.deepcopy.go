@@ -3856,6 +3856,14 @@ func (in *PacketCaptureSpec) DeepCopyInto(out *PacketCaptureSpec) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
+	if in.StartTime != nil {
+		in, out := &in.StartTime, &out.StartTime
+		*out = (*in).DeepCopy()
+	}
+	if in.EndTime != nil {
+		in, out := &in.EndTime, &out.EndTime
+		*out = (*in).DeepCopy()
+	}
 	return
 }
 
