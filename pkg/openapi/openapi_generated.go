@@ -7258,10 +7258,10 @@ func schema_pkg_apis_projectcalico_v3_PacketCaptureFile(ref common.ReferenceCall
 							},
 						},
 					},
-					"active": {
+					"state": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Determines whether a PacketCapture is capturing traffic or not from any interface attached to the current node. In addition, the value will be set to true if the current time of capture is bounded by the interval defined by startTime and endTime",
-							Type:        []string{"boolean"},
+							Description: "Determines whether a PacketCapture is capturing traffic from any interface attached to the current node",
+							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
