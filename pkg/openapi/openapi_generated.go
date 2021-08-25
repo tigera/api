@@ -7258,6 +7258,13 @@ func schema_pkg_apis_projectcalico_v3_PacketCaptureFile(ref common.ReferenceCall
 							},
 						},
 					},
+					"active": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Determines whether a PacketCapture is capturing traffic or not",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 				},
 			},
 		},
@@ -7376,11 +7383,23 @@ func schema_pkg_apis_projectcalico_v3_PacketCaptureSpec(ref common.ReferenceCall
 							},
 						},
 					},
+					"startTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the start time from which this PacketCapture will capture packets. If omitted or the value is in the past, the capture will start immediately.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"endTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the end time at which this PacketCapture will stop capturing packets. If omitted the capture will continue indefinitely. If the value is changed to the past, capture will stop immediately.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCaptureRule"},
+			"github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCaptureRule", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
