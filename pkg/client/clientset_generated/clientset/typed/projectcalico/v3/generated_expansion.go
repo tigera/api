@@ -46,7 +46,7 @@ type NetworkPolicyExpansion interface{}
 
 type NetworkSetExpansion interface{}
 
-type PacketCaptureExpansion interface{}
+type PacketCaptureStateExpansion interface{}
 
 type ProfileExpansion interface{}
 
