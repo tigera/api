@@ -52,8 +52,8 @@ type Interface interface {
 	NetworkPolicies() NetworkPolicyInformer
 	// NetworkSets returns a NetworkSetInformer.
 	NetworkSets() NetworkSetInformer
-	// PacketCaptures returns a PacketCaptureInformer.
-	PacketCaptures() PacketCaptureInformer
+	// PacketCaptureStates returns a PacketCaptureStateInformer.
+	PacketCaptureStates() PacketCaptureStateInformer
 	// Profiles returns a ProfileInformer.
 	Profiles() ProfileInformer
 	// RemoteClusterConfigurations returns a RemoteClusterConfigurationInformer.
@@ -184,9 +184,9 @@ func (v *version) NetworkSets() NetworkSetInformer {
 	return &networkSetInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
-// PacketCaptures returns a PacketCaptureInformer.
-func (v *version) PacketCaptures() PacketCaptureInformer {
-	return &packetCaptureInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+// PacketCaptureStates returns a PacketCaptureStateInformer.
+func (v *version) PacketCaptureStates() PacketCaptureStateInformer {
+	return &packetCaptureStateInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // Profiles returns a ProfileInformer.
