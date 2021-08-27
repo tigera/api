@@ -94,8 +94,8 @@ type IPPoolSpec struct {
 type IPPoolAllowedUse string
 
 const (
-	IPPoolAllowedUseTunnel        IPPoolAllowedUse = "Workload"
-	IPPoolAllowedUseWorkload                       = "Tunnel"
+	IPPoolAllowedUseWorkload      IPPoolAllowedUse = "Workload"
+	IPPoolAllowedUseTunnel                         = "Tunnel"
 	IPPoolAllowedUseHostSecondary                  = "HostSecondaryInterface"
 )
 
