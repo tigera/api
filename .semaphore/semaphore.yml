@@ -58,7 +58,7 @@ blocks:
       minutes: 5
     dependencies: [ ]
     skip:
-      when: "(branch != 'master') and (branch !~ '^release-v\d*\.\d*')"
+      when: "(branch != 'master') and (branch !~ '^release-calient-v\d*\.\d*')"
     task:
       secrets:
         - name: semaphore-api

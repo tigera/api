@@ -1737,6 +1737,11 @@ func (in *FelixConfigurationSpec) DeepCopyInto(out *FelixConfigurationSpec) {
 		*out = new(metav1.Duration)
 		**out = **in
 	}
+	if in.DNSPolicyNfqueueID != nil {
+		in, out := &in.DNSPolicyNfqueueID, &out.DNSPolicyNfqueueID
+		*out = new(int)
+		**out = **in
+	}
 	if in.SidecarAccelerationEnabled != nil {
 		in, out := &in.SidecarAccelerationEnabled, &out.SidecarAccelerationEnabled
 		*out = new(bool)
@@ -2139,6 +2144,11 @@ func (in *FelixConfigurationSpec) DeepCopyInto(out *FelixConfigurationSpec) {
 	if in.TPROXYPort != nil {
 		in, out := &in.TPROXYPort, &out.TPROXYPort
 		*out = new(int)
+		**out = **in
+	}
+	if in.TPROXYUpstreamConnMark != nil {
+		in, out := &in.TPROXYUpstreamConnMark, &out.TPROXYUpstreamConnMark
+		*out = new(uint32)
 		**out = **in
 	}
 	return
@@ -3769,6 +3779,11 @@ func (in *PacketCaptureFile) DeepCopyInto(out *PacketCaptureFile) {
 		*out = make([]string, len(*in))
 		copy(*out, *in)
 	}
+	if in.State != nil {
+		in, out := &in.State, &out.State
+		*out = new(PacketCaptureState)
+		**out = **in
+	}
 	return
 }
 
@@ -3850,6 +3865,14 @@ func (in *PacketCaptureSpec) DeepCopyInto(out *PacketCaptureSpec) {
 		for i := range *in {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
+	}
+	if in.StartTime != nil {
+		in, out := &in.StartTime, &out.StartTime
+		*out = (*in).DeepCopy()
+	}
+	if in.EndTime != nil {
+		in, out := &in.EndTime, &out.EndTime
+		*out = (*in).DeepCopy()
 	}
 	return
 }

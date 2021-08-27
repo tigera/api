@@ -3775,6 +3775,13 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
+					"dnsPolicyNfqueueID": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DNSPolicyNfqueueID is the NFQUEUE ID to use for DNS Policy re-evaluation when the domains IP hasn't been programmed to ipsets yet. [Default: 100]",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
 					"iptablesNATOutgoingInterfaceFilter": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
@@ -4476,6 +4483,13 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 							Description: "TPROXYPort sets to which port proxied traffic should be redirected. [Default: 16001]",
 							Type:        []string{"integer"},
 							Format:      "int32",
+						},
+					},
+					"tproxyUpstreamConnMark": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TPROXYUpstreamConnMark tells Felix which mark is used by the proxy for its upstream connections so that Felix can program the dataplane correctly.  [Default: 0x17]",
+							Type:        []string{"integer"},
+							Format:      "int64",
 						},
 					},
 				},
@@ -7239,7 +7253,7 @@ func schema_pkg_apis_projectcalico_v3_PacketCaptureFile(ref common.ReferenceCall
 				Properties: map[string]spec.Schema{
 					"node": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Node identifies with a a physical node from the cluster via its hostname",
+							Description: "Node identifies with a physical node from the cluster via its hostname",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -7264,6 +7278,12 @@ func schema_pkg_apis_projectcalico_v3_PacketCaptureFile(ref common.ReferenceCall
 									},
 								},
 							},
+						},
+					},
+					"state": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
 						},
 					},
 				},
@@ -7384,11 +7404,23 @@ func schema_pkg_apis_projectcalico_v3_PacketCaptureSpec(ref common.ReferenceCall
 							},
 						},
 					},
+					"startTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the start time from which this PacketCapture will capture packets. If omitted or the value is in the past, the capture will start immediately. If the value is changed to a future time, capture will stop immediately and restart at that time",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"endTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the end time at which this PacketCapture will stop capturing packets. If omitted the capture will continue indefinitely. If the value is changed to the past, capture will stop immediately.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCaptureRule"},
+			"github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCaptureRule", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 

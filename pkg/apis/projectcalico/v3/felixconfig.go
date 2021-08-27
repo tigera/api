@@ -323,6 +323,10 @@ type FelixConfigurationSpec struct {
 	DebugSimulateCalcGraphHangAfter *metav1.Duration `json:"debugSimulateCalcGraphHangAfter,omitempty" configv1timescale:"seconds"`
 	DebugSimulateDataplaneHangAfter *metav1.Duration `json:"debugSimulateDataplaneHangAfter,omitempty" configv1timescale:"seconds"`
 
+	// DNSPolicyNfqueueID is the NFQUEUE ID to use for DNS Policy re-evaluation when the domains IP hasn't been programmed
+	// to ipsets yet. [Default: 100]
+	DNSPolicyNfqueueID *int `json:"dnsPolicyNfqueueID,omitempty" validate:"omitempty,gte=0,lte=65535"`
+
 	IptablesNATOutgoingInterfaceFilter string `json:"iptablesNATOutgoingInterfaceFilter,omitempty" validate:"omitempty,ifaceFilter"`
 
 	// SidecarAccelerationEnabled enables experimental sidecar acceleration [Default: false]
@@ -694,6 +698,9 @@ type FelixConfigurationSpec struct {
 	// TPROXYPort sets to which port proxied traffic should be redirected.
 	// [Default: 16001]
 	TPROXYPort *int `json:"tproxyPort,omitempty" validate:"omitempty,gt=0,lte=65535"`
+	// TPROXYUpstreamConnMark tells Felix which mark is used by the proxy for its upstream
+	// connections so that Felix can program the dataplane correctly.  [Default: 0x17]
+	TPROXYUpstreamConnMark *uint32 `json:"tproxyUpstreamConnMark,omitempty" validate:"omitempty,gt=0`
 }
 
 type RouteTableRange struct {
