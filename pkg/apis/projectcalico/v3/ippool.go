@@ -82,13 +82,21 @@ type IPPoolSpec struct {
 	// AllowedUse controls what the IP pool will be used for.  If not specified or empty, defaults to
 	// ["Tunnel", "Workload"] for back-compatibility
 	AllowedUses []IPPoolAllowedUse `json:"allowedUses,omitempty" validate:"omitempty"`
+
+	// AWSSubnetID if specified Calico will attempt to ensure that IPs chosen from this IP pool are routed
+	// to the corresponding node by adding one or more secondary ENIs to the node and explicitly assigning
+	// the IP to one of the secondary ENIs.  Important: since subnets cannot cross availability zones,
+	// it's important to use Kubernetes node selectors to avoid scheduling pods to one availability zone
+	// with IP pool that is backed by a subnet that belongs to another availability zone.
+	AWSSubnetID string `json:"awsSubnetID,omitempty" validate:"omitempty"`
 }
 
 type IPPoolAllowedUse string
 
 const (
-	IPPoolAllowedUseTunnel   IPPoolAllowedUse = "Workload"
-	IPPoolAllowedUseWorkload                  = "Tunnel"
+	IPPoolAllowedUseTunnel        IPPoolAllowedUse = "Workload"
+	IPPoolAllowedUseWorkload                       = "Tunnel"
+	IPPoolAllowedUseHostSecondary                  = "HostSecondaryInterface"
 )
 
 type VXLANMode string
