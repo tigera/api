@@ -3981,7 +3981,7 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 					},
 					"flowLogsCollectorDebugTrace": {
 						SchemaProps: spec.SchemaProps{
-							Description: "When FlowLogsCollectorDebugTrace is set to true, enables the logs in the collector to be\n printed in their entirety.",
+							Description: "When FlowLogsCollectorDebugTrace is set to true, enables the logs in the collector to be printed in their entirety.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
