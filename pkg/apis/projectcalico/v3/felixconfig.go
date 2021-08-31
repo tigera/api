@@ -424,9 +424,8 @@ type FelixConfigurationSpec struct {
 	// reported for connections which use raw sockets.
 	FlowLogsCollectProcessPath *bool `json:"flowLogsCollectProcessPath,omitempty" validate:"omitempty"`
 	// When FlowLogsCollectorDebugTrace is set to true, enables the logs in the collector to be
-	//  printed in their entirety.
+	// printed in their entirety.
 	FlowLogsCollectorDebugTrace *bool `json:"flowLogsCollectorDebugTrace,omitempty"`
-
 	// FlowLogsFileEnabled when set to true, enables logging flow logs to a file. If false no flow logging to file will occur.
 	FlowLogsFileEnabled *bool `json:"flowLogsFileEnabled,omitempty"`
 	// FlowLogsFileMaxFiles sets the number of log files to keep.
