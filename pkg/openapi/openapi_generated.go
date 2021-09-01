@@ -9582,29 +9582,14 @@ func schema_pkg_apis_projectcalico_v3_UISettingsGroupSpec(ref common.ReferenceCa
 				Properties: map[string]spec.Schema{
 					"description": {
 						SchemaProps: spec.SchemaProps{
-							Description: "This description is displayed by the UI when asking where to store any UI-specific settings such as views, layers, dashboards etc.  This name should be a short description that relates the settings to the set of clusters defined below, the set of users or groups that are able to access to these settings (defined via RBAC) or the set of applications common to the set of users or groups that can access these settings. Examples might be: - \"cluster\" when these settings apply to the whole cluster - \"global\" when these settings apply to all clusters (in an Multi-Cluster environment) - \"security team\" if these settings are accessible only to the security group and therefore applicable to the\n  applications accessible by that team.\n- \"storefront\" if these settings are accessible to all users and groups that can access the storefront set of\n  applications.\n- \"user\" if these settings are accessible to only a single user.",
+							Description: "This description is displayed by the UI when asking where to store any UI-specific settings such as views, layers, dashboards etc. This name should be a short description that relates the settings to the set of clusters defined below, the set of users or groups that are able to access to these settings (defined via RBAC) or the set of applications common to the set of users or groups that can access these settings. Examples might be: - \"cluster\" when these settings apply to the whole cluster - \"global\" when these settings apply to all clusters (in an Multi-Cluster environment) - \"security team\" if these settings are accessible only to the security group and therefore\n  applicable to the applications accessible by that team\n- \"storefront\" if these settings are accessible to all users and groups that can access the\n  storefront set of applications\n- \"user\" if these settings are accessible to only a single user",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
-					"clusters": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The set of clusters that these settings are valid for. This is only used in the management cluster of a multi cluster deployment. A value of \"*\" means all clusters. No value, or a value of \"cluster\" indicates local cluster only.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
-						},
-					},
 				},
-				Required: []string{"description", "clusters"},
+				Required: []string{"description"},
 			},
 		},
 	}

@@ -19,7 +19,7 @@ import (
 // UISettingsGroupsGetter has a method to return a UISettingsGroupInterface.
 // A group's client should implement this interface.
 type UISettingsGroupsGetter interface {
-	UISettingsGroups(namespace string) UISettingsGroupInterface
+	UISettingsGroups() UISettingsGroupInterface
 }
 
 // UISettingsGroupInterface has methods to work with UISettingsGroup resources.
@@ -38,14 +38,12 @@ type UISettingsGroupInterface interface {
 // uISettingsGroups implements UISettingsGroupInterface
 type uISettingsGroups struct {
 	client rest.Interface
-	ns     string
 }
 
 // newUISettingsGroups returns a UISettingsGroups
-func newUISettingsGroups(c *ProjectcalicoV3Client, namespace string) *uISettingsGroups {
+func newUISettingsGroups(c *ProjectcalicoV3Client) *uISettingsGroups {
 	return &uISettingsGroups{
 		client: c.RESTClient(),
-		ns:     namespace,
 	}
 }
 
@@ -53,7 +51,6 @@ func newUISettingsGroups(c *ProjectcalicoV3Client, namespace string) *uISettings
 func (c *uISettingsGroups) Get(ctx context.Context, name string, options v1.GetOptions) (result *v3.UISettingsGroup, err error) {
 	result = &v3.UISettingsGroup{}
 	err = c.client.Get().
-		Namespace(c.ns).
 		Resource("uisettingsgroups").
 		Name(name).
 		VersionedParams(&options, scheme.ParameterCodec).
@@ -70,7 +67,6 @@ func (c *uISettingsGroups) List(ctx context.Context, opts v1.ListOptions) (resul
 	}
 	result = &v3.UISettingsGroupList{}
 	err = c.client.Get().
-		Namespace(c.ns).
 		Resource("uisettingsgroups").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -87,7 +83,6 @@ func (c *uISettingsGroups) Watch(ctx context.Context, opts v1.ListOptions) (watc
 	}
 	opts.Watch = true
 	return c.client.Get().
-		Namespace(c.ns).
 		Resource("uisettingsgroups").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -98,7 +93,6 @@ func (c *uISettingsGroups) Watch(ctx context.Context, opts v1.ListOptions) (watc
 func (c *uISettingsGroups) Create(ctx context.Context, uISettingsGroup *v3.UISettingsGroup, opts v1.CreateOptions) (result *v3.UISettingsGroup, err error) {
 	result = &v3.UISettingsGroup{}
 	err = c.client.Post().
-		Namespace(c.ns).
 		Resource("uisettingsgroups").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(uISettingsGroup).
@@ -111,7 +105,6 @@ func (c *uISettingsGroups) Create(ctx context.Context, uISettingsGroup *v3.UISet
 func (c *uISettingsGroups) Update(ctx context.Context, uISettingsGroup *v3.UISettingsGroup, opts v1.UpdateOptions) (result *v3.UISettingsGroup, err error) {
 	result = &v3.UISettingsGroup{}
 	err = c.client.Put().
-		Namespace(c.ns).
 		Resource("uisettingsgroups").
 		Name(uISettingsGroup.Name).
 		VersionedParams(&opts, scheme.ParameterCodec).
@@ -124,7 +117,6 @@ func (c *uISettingsGroups) Update(ctx context.Context, uISettingsGroup *v3.UISet
 // Delete takes name of the uISettingsGroup and deletes it. Returns an error if one occurs.
 func (c *uISettingsGroups) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	return c.client.Delete().
-		Namespace(c.ns).
 		Resource("uisettingsgroups").
 		Name(name).
 		Body(&opts).
@@ -139,7 +131,6 @@ func (c *uISettingsGroups) DeleteCollection(ctx context.Context, opts v1.DeleteO
 		timeout = time.Duration(*listOpts.TimeoutSeconds) * time.Second
 	}
 	return c.client.Delete().
-		Namespace(c.ns).
 		Resource("uisettingsgroups").
 		VersionedParams(&listOpts, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -152,7 +143,6 @@ func (c *uISettingsGroups) DeleteCollection(ctx context.Context, opts v1.DeleteO
 func (c *uISettingsGroups) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v3.UISettingsGroup, err error) {
 	result = &v3.UISettingsGroup{}
 	err = c.client.Patch(pt).
-		Namespace(c.ns).
 		Resource("uisettingsgroups").
 		Name(name).
 		SubResource(subresources...).
