@@ -40,11 +40,6 @@ type UISettingsGroupSpec struct {
 	//   storefront set of applications
 	// - "user" if these settings are accessible to only a single user
 	Description string `json:"description"`
-
-	// The set of clusters that these settings are valid for. This is only used in the management
-	// cluster of a multi cluster deployment. A value of "*" means all clusters. No value, or a value
-	// of "cluster" indicates local cluster only.
-	Clusters []string `json:"clusters"`
 }
 
 // +genclient:nonNamespaced

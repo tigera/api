@@ -223,5 +223,5 @@ func (v *version) Tiers() TierInformer {
 
 // UISettingsGroups returns a UISettingsGroupInformer.
 func (v *version) UISettingsGroups() UISettingsGroupInformer {
-	return &uISettingsGroupInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+	return &uISettingsGroupInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
