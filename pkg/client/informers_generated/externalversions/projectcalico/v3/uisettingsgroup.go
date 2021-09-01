@@ -28,33 +28,32 @@ type UISettingsGroupInformer interface {
 type uISettingsGroupInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
 	tweakListOptions internalinterfaces.TweakListOptionsFunc
-	namespace        string
 }
 
 // NewUISettingsGroupInformer constructs a new informer for UISettingsGroup type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewUISettingsGroupInformer(client clientset.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
-	return NewFilteredUISettingsGroupInformer(client, namespace, resyncPeriod, indexers, nil)
+func NewUISettingsGroupInformer(client clientset.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
+	return NewFilteredUISettingsGroupInformer(client, resyncPeriod, indexers, nil)
 }
 
 // NewFilteredUISettingsGroupInformer constructs a new informer for UISettingsGroup type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewFilteredUISettingsGroupInformer(client clientset.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
+func NewFilteredUISettingsGroupInformer(client clientset.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
 	return cache.NewSharedIndexInformer(
 		&cache.ListWatch{
 			ListFunc: func(options v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ProjectcalicoV3().UISettingsGroups(namespace).List(context.TODO(), options)
+				return client.ProjectcalicoV3().UISettingsGroups().List(context.TODO(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ProjectcalicoV3().UISettingsGroups(namespace).Watch(context.TODO(), options)
+				return client.ProjectcalicoV3().UISettingsGroups().Watch(context.TODO(), options)
 			},
 		},
 		&projectcalicov3.UISettingsGroup{},
@@ -64,7 +63,7 @@ func NewFilteredUISettingsGroupInformer(client clientset.Interface, namespace st
 }
 
 func (f *uISettingsGroupInformer) defaultInformer(client clientset.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewFilteredUISettingsGroupInformer(client, f.namespace, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
+	return NewFilteredUISettingsGroupInformer(client, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
 }
 
 func (f *uISettingsGroupInformer) Informer() cache.SharedIndexInformer {

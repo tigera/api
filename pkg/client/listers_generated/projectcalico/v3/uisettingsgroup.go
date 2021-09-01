@@ -17,8 +17,9 @@ type UISettingsGroupLister interface {
 	// List lists all UISettingsGroups in the indexer.
 	// Objects returned here must be treated as read-only.
 	List(selector labels.Selector) (ret []*v3.UISettingsGroup, err error)
-	// UISettingsGroups returns an object that can list and get UISettingsGroups.
-	UISettingsGroups(namespace string) UISettingsGroupNamespaceLister
+	// Get retrieves the UISettingsGroup from the index for a given name.
+	// Objects returned here must be treated as read-only.
+	Get(name string) (*v3.UISettingsGroup, error)
 	UISettingsGroupListerExpansion
 }
 
@@ -40,41 +41,9 @@ func (s *uISettingsGroupLister) List(selector labels.Selector) (ret []*v3.UISett
 	return ret, err
 }
 
-// UISettingsGroups returns an object that can list and get UISettingsGroups.
-func (s *uISettingsGroupLister) UISettingsGroups(namespace string) UISettingsGroupNamespaceLister {
-	return uISettingsGroupNamespaceLister{indexer: s.indexer, namespace: namespace}
-}
-
-// UISettingsGroupNamespaceLister helps list and get UISettingsGroups.
-// All objects returned here must be treated as read-only.
-type UISettingsGroupNamespaceLister interface {
-	// List lists all UISettingsGroups in the indexer for a given namespace.
-	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v3.UISettingsGroup, err error)
-	// Get retrieves the UISettingsGroup from the indexer for a given namespace and name.
-	// Objects returned here must be treated as read-only.
-	Get(name string) (*v3.UISettingsGroup, error)
-	UISettingsGroupNamespaceListerExpansion
-}
-
-// uISettingsGroupNamespaceLister implements the UISettingsGroupNamespaceLister
-// interface.
-type uISettingsGroupNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all UISettingsGroups in the indexer for a given namespace.
-func (s uISettingsGroupNamespaceLister) List(selector labels.Selector) (ret []*v3.UISettingsGroup, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v3.UISettingsGroup))
-	})
-	return ret, err
-}
-
-// Get retrieves the UISettingsGroup from the indexer for a given namespace and name.
-func (s uISettingsGroupNamespaceLister) Get(name string) (*v3.UISettingsGroup, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
+// Get retrieves the UISettingsGroup from the index for a given name.
+func (s *uISettingsGroupLister) Get(name string) (*v3.UISettingsGroup, error) {
+	obj, exists, err := s.indexer.GetByKey(name)
 	if err != nil {
 		return nil, err
 	}
