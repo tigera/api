@@ -964,8 +964,16 @@ func schema_pkg_apis_projectcalico_v3_AuthorizedResourceGroup(ref common.Referen
 							Format:      "",
 						},
 					},
+					"uiSettingsGroup": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The UISettingsGroup name. This is only valid for uisettingsgroup/data sub resources.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
-				Required: []string{"namespace"},
+				Required: []string{"namespace", "uiSettingsGroup"},
 			},
 		},
 	}
