@@ -59,3 +59,5 @@ type StagedKubernetesNetworkPolicyExpansion interface{}
 type StagedNetworkPolicyExpansion interface{}
 
 type TierExpansion interface{}
+
+type UISettingsGroupExpansion interface{}
