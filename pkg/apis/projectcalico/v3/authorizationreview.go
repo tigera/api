@@ -90,6 +90,8 @@ type AuthorizedResourceGroup struct {
 	// The namespace. If this is empty then the user is authorized cluster-wide (i.e. across all namespaces). This will
 	// always be empty for cluster-scoped resources when the user is authorized.
 	Namespace string `json:"namespace" validate:"omitempty"`
+	// The UISettingsGroup name. This is only valid for uisettingsgroup/data sub resources.
+	UISettingsGroup string `json:"uiSettingsGroup" validate:"omitempty"`
 }
 
 // New AuthorizationReview creates a new (zeroed) AuthorizationReview struct with the TypeMetadata
