@@ -675,7 +675,7 @@ type FelixConfigurationSpec struct {
 	// CaptureMaxFiles controls number of rotated capture file to keep. [Default: 2]
 	CaptureMaxFiles *int `json:"captureMaxFiles,omitempty" validate:"omitempty,gt=0"`
 
-	// Set source-destination-check on AWS EC2 instances. Accepted value must be one of "DoNothing", "Enabled" or "Disabled".
+	// Set source-destination-check on AWS EC2 instances. Accepted value must be one of "DoNothing", "Enable" or "Disable".
 	// [Default: DoNothing]
 	AWSSrcDstCheck *AWSSrcDstCheckOption `json:"awsSrcDstCheck,omitempty" validate:"omitempty,oneof=DoNothing Enable Disable"`
 
