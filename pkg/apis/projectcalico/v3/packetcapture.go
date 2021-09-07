@@ -21,6 +21,8 @@ const (
 	PacketCaptureStateCapturing PacketCaptureState = "Capturing"
 	// PacketCaptureStateInactive represents the inactive state of a PacketCapture of not capturing traffic
 	PacketCaptureStateInactive = "Inactive"
+	// PacketCaptureStateInactive represents the error state of a PacketCapture
+	PacketCaptureStateError = "Error"
 )
 
 // +genclient
