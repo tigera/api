@@ -3,6 +3,7 @@ module github.com/tigera/api
 go 1.15
 
 require (
+	github.com/go-openapi/spec v0.19.5
 	github.com/google/go-cmp v0.5.4 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
 	github.com/google/uuid v1.2.0 // indirect
@@ -16,6 +17,7 @@ require (
 	k8s.io/apimachinery v0.21.0-rc.0
 	k8s.io/apiserver v0.19.6
 	k8s.io/client-go v0.21.0-rc.0
+	k8s.io/kube-openapi v0.0.0-20210305001622-591a79e4bda7
 )
 
 replace (
