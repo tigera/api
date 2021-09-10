@@ -19,8 +19,13 @@ type PacketCaptureState string
 const (
 	// PacketCaptureStateCapturing represents the active state of a PacketCapture of capturing traffic
 	PacketCaptureStateCapturing PacketCaptureState = "Capturing"
-	// PacketCaptureStateInactive represents the inactive state of a PacketCapture of not capturing traffic
-	PacketCaptureStateInactive = "Inactive"
+	// PacketCaptureStateFinished represents the inactive state of a PacketCapture of not capturing traffic
+	PacketCaptureStateFinished = "Finished"
+	// PacketCaptureStateScheduled represents the inactive state of a PacketCapture of being
+	// scheduled, but not capturing traffic
+	PacketCaptureStateScheduled = "Scheduled"
+	// PacketCaptureStateError represents the error state of a PacketCapture
+	PacketCaptureStateError = "Error"
 )
 
 // +genclient
@@ -125,7 +130,7 @@ type PacketCaptureFile struct {
 	// Determines whether a PacketCapture is capturing traffic from any interface
 	// attached to the current node
 
-	// +kubebuilder:validation:Enum=Capturing;Inactive
+	// +kubebuilder:validation:Enum=Capturing;Finished;Scheduled;Error
 	State *PacketCaptureState `json:"state,omitempty" validate:"omitempty"`
 }
 
