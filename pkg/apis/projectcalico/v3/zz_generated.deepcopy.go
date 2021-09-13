@@ -1837,6 +1837,11 @@ func (in *FelixConfigurationSpec) DeepCopyInto(out *FelixConfigurationSpec) {
 		*out = new(bool)
 		**out = **in
 	}
+	if in.FlowLogsCollectorDebugTrace != nil {
+		in, out := &in.FlowLogsCollectorDebugTrace, &out.FlowLogsCollectorDebugTrace
+		*out = new(bool)
+		**out = **in
+	}
 	if in.FlowLogsFileEnabled != nil {
 		in, out := &in.FlowLogsFileEnabled, &out.FlowLogsFileEnabled
 		*out = new(bool)
