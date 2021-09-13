@@ -80,6 +80,8 @@ var (
 		&TierList{},
 		&UISettingsGroup{},
 		&UISettingsGroupList{},
+		&UISettings{},
+		&UISettingsList{},
 	}
 )
 
