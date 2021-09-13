@@ -78,6 +78,10 @@ var (
 		&StagedNetworkPolicyList{},
 		&Tier{},
 		&TierList{},
+		&UISettingsGroup{},
+		&UISettingsGroupList{},
+		&UISettings{},
+		&UISettingsList{},
 	}
 )
 
