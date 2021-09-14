@@ -39,7 +39,7 @@ type UISettingsGroupSpec struct {
 	// - "storefront" if these settings are accessible to all users and groups that can access the
 	//   storefront set of applications
 	// - "user" if these settings are accessible to only a single user
-	Description string `json:"description"`
+	Description string `json:"description" validate:"uiDescription"`
 }
 
 // +genclient:nonNamespaced
