@@ -680,6 +680,12 @@ type FelixConfigurationSpec struct {
 	// Set source-destination-check on AWS EC2 instances. Accepted value must be one of "DoNothing", "Enable" or "Disable".
 	// [Default: DoNothing]
 	AWSSrcDstCheck *AWSSrcDstCheckOption `json:"awsSrcDstCheck,omitempty" validate:"omitempty,oneof=DoNothing Enable Disable"`
+	// AWSSecondaryIPSupport controls whether Felix will try to provision AWS secondary ENIs and secondary IPs for
+	// workloads that have IPs from IP pools that are configured with an AWS subnet ID. [Default: Disabled]
+	AWSSecondaryIPSupport string `json:"awsSecondaryIPSupport,omitempty" validate:"omitempty,oneof=Enabled Disabled"`
+	// AWSSecondaryIPRoutingRulePriority controls the priority that Felix will use for routing rules when programming
+	// them for AWS Secondary IP support. [Default: 101]
+	AWSSecondaryIPRoutingRulePriority *int `json:"awsSecondaryIPRoutingRulePriority,omitempty" validate:"omitempty,gte=0,lte=4294967295"`
 
 	// When service IP advertisement is enabled, prevent routing loops to service IPs that are
 	// not in use, by dropping or rejecting packets that do not get DNAT'd by kube-proxy.
