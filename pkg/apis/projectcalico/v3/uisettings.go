@@ -23,19 +23,19 @@ type UISettings struct {
 
 // UISettingsSpec contains the specification for a UISettings resource.
 type UISettingsSpec struct {
-	// The settings group. Once configured this cannot be modified.
-	Group string `json:"group"`
+	// The settings group. Once configured this cannot be modified. The group must exist.
+	Group string `json:"group" validate:"name"`
 
 	// This description is displayed by the UI.
-	Description string `json:"description"`
+	Description string `json:"description" validate:"uiDescription"`
 
-	// View data.
+	// View data. One of View, Layer or Dashboard should be specified.
 	View *UIGraphView `json:"view,omitempty"`
 
-	// Layer data.
+	// Layer data. One of View, Layer or Dashboard should be specified.
 	Layer *UIGraphLayer `json:"layer,omitempty"`
 
-	// Dashboard data.
+	// Dashboard data. One of View, Layer or Dashboard should be specified.
 	Dashboard *UIDashboard `json:"dashboard,omitempty"`
 }
 
@@ -43,35 +43,35 @@ type UISettingsSpec struct {
 type UIGraphView struct {
 	// The set of nodes that are the focus of the graph. All nodes returned by the graph query will be connected to at
 	// least one of these nodes. If this is empty, then all nodes will be returned.
-	Focus []UIGraphNode `json:"focus,omitempty" validate:"omitempty"`
+	Focus []UIGraphNode `json:"focus,omitempty" validate:"omitempty,dive"`
 
 	// The set of nodes that are expanded to the next level of expansion.
-	Expanded []UIGraphNode `json:"expanded,omitempty" validate:"omitempty"`
+	Expanded []UIGraphNode `json:"expanded,omitempty" validate:"omitempty,dive"`
 
 	// Whether ports are expanded. If false, port information is aggregated.
-	ExpandPorts bool `json:"expandPorts" validate:"omitempty"`
+	ExpandPorts bool `json:"expandPorts"`
 
 	// Whether or not to automatically follow directly connected nodes.
-	FollowConnectionDirection bool `json:"followConnectionDirection" validate:"omitempty"`
+	FollowConnectionDirection bool `json:"followConnectionDirection"`
 
 	// Whether to split HostEndpoints, NetworkSets and Networks into separate ingress and egress nodes or to combine
 	// them. In a service-centric view, splitting these makes the graph clearer. This never splits pods which represent
 	// a true microservice which has ingress and egress connections.
-	SplitIngressEgress bool `json:"splitIngressEgress" validate:"omitempty"`
+	SplitIngressEgress bool `json:"splitIngressEgress"`
 
 	// The set of selectors used to aggregate hosts (Kubernetes nodes). Nodes are aggregated based on the supplied set
 	// of selectors. In the case of overlapping selectors, the order specified in the slice is the order checked and so
 	// the first selector to match is used.  The nodes will be aggregated into a graph node with the name specified in
 	// the NamedSelector.
-	HostAggregationSelectors []NamedSelector `json:"hostAggregationSelectors,omitempty" validate:"omitempty"`
+	HostAggregationSelectors []NamedSelector `json:"hostAggregationSelectors,omitempty" validate:"omitempty,dive"`
 
 	// Followed nodes. These are nodes on the periphery of the graph that we follow further out of the scope of the
 	// graph focus. For example a Node N may have egress connections to X and Y, but neither X nor Y are displayed in
 	// the graph because they are not explicitly in focus. The service graph response will indicate that Node N has
 	// egress connections that may be followed.  If Node N is added to this "FollowedEgress" then the response will
 	// include the egress connections to X and Y.
-	FollowedEgress  []UIGraphNode `json:"followedEgress,omitempty" validate:"omitempty"`
-	FollowedIngress []UIGraphNode `json:"followedIngress,omitempty" validate:"omitempty"`
+	FollowedEgress  []UIGraphNode `json:"followedEgress,omitempty" validate:"omitempty,dive"`
+	FollowedIngress []UIGraphNode `json:"followedIngress,omitempty" validate:"omitempty,dive"`
 
 	// Layout type. Semi-arbitrary value used to specify the layout-type/algorithm. For example could specify
 	// different layout algorithms, or click-to-grid.  Mostly here for future use.
@@ -81,21 +81,21 @@ type UIGraphView struct {
 	Positions []Position `json:"position"`
 
 	// The set of layer names. This references other UISettings resources.
-	Layers []string `json:"layers"`
+	Layers []string `json:"layers" validate:"omitempty,dive,name"`
 }
 
 // UI screen position.
 type Position struct {
-	Name string `json:"name"`
-	X    int    `json:"x"`
-	Y    int    `json:"y"`
-	Z    int    `json:"z"`
+	ID string `json:"id" validate:"servicegraphid"`
+	X  int    `json:"x"`
+	Y  int    `json:"y"`
+	Z  int    `json:"z"`
 }
 
 // A Calico format label selector with an associated name.
 type NamedSelector struct {
-	Name     string `json:"name"`
-	Selector string `json:"selector"`
+	Name     string `json:"name" validate:"uiDescription"`
+	Selector string `json:"selector" validate:"selector"`
 }
 
 // UIGraphLayer contains the data for a UI graph layer.
@@ -110,16 +110,16 @@ type UIGraphLayer struct {
 // UIGraphNode contains details about a graph node.
 type UIGraphNode struct {
 	// The node ID.
-	ID string `json:"id"`
+	ID string `json:"id" validate:"servicegraphId"`
 
 	// The node type.
-	Type string `json:"type"`
+	Type string `json:"type" validate:"servicegraphNodeType"`
 
 	// The node name.
-	Name string `json:"name"`
+	Name string `json:"name" validate:"name"`
 
 	// The node namespace.
-	Namespace string `json:"namespace,omitempty"`
+	Namespace string `json:"namespace,omitempty" validate:"omitempty,name"`
 }
 
 // UIDashboard contains the data for a UI dashboard.
