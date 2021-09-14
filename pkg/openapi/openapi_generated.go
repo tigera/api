@@ -4484,6 +4484,20 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 							Format:      "",
 						},
 					},
+					"awsSecondaryIPSupport": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AWSSecondaryIPSupport controls whether Felix will try to provision AWS secondary ENIs and secondary IPs for workloads that have IPs from IP pools that are configured with an AWS subnet ID. [Default: Disabled]",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"awsSecondaryIPRoutingRulePriority": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AWSSecondaryIPRoutingRulePriority controls the priority that Felix will use for routing rules when programming them for AWS Secondary IP support. [Default: 101]",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
 					"serviceLoopPrevention": {
 						SchemaProps: spec.SchemaProps{
 							Description: "When service IP advertisement is enabled, prevent routing loops to service IPs that are not in use, by dropping or rejecting packets that do not get DNAT'd by kube-proxy. Unless set to \"Disabled\", in which case such routing loops continue to be allowed. [Default: Drop]",
