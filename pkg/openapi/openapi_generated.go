@@ -7535,7 +7535,7 @@ func schema_pkg_apis_projectcalico_v3_Position(ref common.ReferenceCallback) com
 				Description: "UI screen position.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"name": {
+					"id": {
 						SchemaProps: spec.SchemaProps{
 							Default: "",
 							Type:    []string{"string"},
@@ -7564,7 +7564,7 @@ func schema_pkg_apis_projectcalico_v3_Position(ref common.ReferenceCallback) com
 						},
 					},
 				},
-				Required: []string{"name", "x", "y", "z"},
+				Required: []string{"id", "x", "y", "z"},
 			},
 		},
 	}
@@ -10052,7 +10052,7 @@ func schema_pkg_apis_projectcalico_v3_UISettingsSpec(ref common.ReferenceCallbac
 				Properties: map[string]spec.Schema{
 					"group": {
 						SchemaProps: spec.SchemaProps{
-							Description: "The settings group. Once configured this cannot be modified.",
+							Description: "The settings group. Once configured this cannot be modified. The group must exist.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -10068,19 +10068,19 @@ func schema_pkg_apis_projectcalico_v3_UISettingsSpec(ref common.ReferenceCallbac
 					},
 					"view": {
 						SchemaProps: spec.SchemaProps{
-							Description: "View data.",
+							Description: "View data. One of View, Layer or Dashboard should be specified.",
 							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.UIGraphView"),
 						},
 					},
 					"layer": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Layer data.",
+							Description: "Layer data. One of View, Layer or Dashboard should be specified.",
 							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.UIGraphLayer"),
 						},
 					},
 					"dashboard": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Dashboard data.",
+							Description: "Dashboard data. One of View, Layer or Dashboard should be specified.",
 							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.UIDashboard"),
 						},
 					},
