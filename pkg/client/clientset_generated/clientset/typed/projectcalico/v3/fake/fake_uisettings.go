@@ -16,32 +16,29 @@ import (
 	testing "k8s.io/client-go/testing"
 )
 
-// FakeUISettingses implements UISettingsInterface
-type FakeUISettingses struct {
+// FakeUISettings implements UISettingsInterface
+type FakeUISettings struct {
 	Fake *FakeProjectcalicoV3
-	ns   string
 }
 
-var uisettingsesResource = schema.GroupVersionResource{Group: "projectcalico.org", Version: "v3", Resource: "uisettingses"}
+var uisettingsResource = schema.GroupVersionResource{Group: "projectcalico.org", Version: "v3", Resource: "uisettings"}
 
-var uisettingsesKind = schema.GroupVersionKind{Group: "projectcalico.org", Version: "v3", Kind: "UISettings"}
+var uisettingsKind = schema.GroupVersionKind{Group: "projectcalico.org", Version: "v3", Kind: "UISettings"}
 
 // Get takes name of the uISettings, and returns the corresponding uISettings object, and an error if there is any.
-func (c *FakeUISettingses) Get(ctx context.Context, name string, options v1.GetOptions) (result *v3.UISettings, err error) {
+func (c *FakeUISettings) Get(ctx context.Context, name string, options v1.GetOptions) (result *v3.UISettings, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(uisettingsesResource, c.ns, name), &v3.UISettings{})
-
+		Invokes(testing.NewRootGetAction(uisettingsResource, name), &v3.UISettings{})
 	if obj == nil {
 		return nil, err
 	}
 	return obj.(*v3.UISettings), err
 }
 
-// List takes label and field selectors, and returns the list of UISettingses that match those selectors.
-func (c *FakeUISettingses) List(ctx context.Context, opts v1.ListOptions) (result *v3.UISettingsList, err error) {
+// List takes label and field selectors, and returns the list of UISettings that match those selectors.
+func (c *FakeUISettings) List(ctx context.Context, opts v1.ListOptions) (result *v3.UISettingsList, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewListAction(uisettingsesResource, uisettingsesKind, c.ns, opts), &v3.UISettingsList{})
-
+		Invokes(testing.NewRootListAction(uisettingsResource, uisettingsKind, opts), &v3.UISettingsList{})
 	if obj == nil {
 		return nil, err
 	}
@@ -59,18 +56,16 @@ func (c *FakeUISettingses) List(ctx context.Context, opts v1.ListOptions) (resul
 	return list, err
 }
 
-// Watch returns a watch.Interface that watches the requested uISettingses.
-func (c *FakeUISettingses) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
+// Watch returns a watch.Interface that watches the requested uISettings.
+func (c *FakeUISettings) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(uisettingsesResource, c.ns, opts))
-
+		InvokesWatch(testing.NewRootWatchAction(uisettingsResource, opts))
 }
 
 // Create takes the representation of a uISettings and creates it.  Returns the server's representation of the uISettings, and an error, if there is any.
-func (c *FakeUISettingses) Create(ctx context.Context, uISettings *v3.UISettings, opts v1.CreateOptions) (result *v3.UISettings, err error) {
+func (c *FakeUISettings) Create(ctx context.Context, uISettings *v3.UISettings, opts v1.CreateOptions) (result *v3.UISettings, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(uisettingsesResource, c.ns, uISettings), &v3.UISettings{})
-
+		Invokes(testing.NewRootCreateAction(uisettingsResource, uISettings), &v3.UISettings{})
 	if obj == nil {
 		return nil, err
 	}
@@ -78,10 +73,9 @@ func (c *FakeUISettingses) Create(ctx context.Context, uISettings *v3.UISettings
 }
 
 // Update takes the representation of a uISettings and updates it. Returns the server's representation of the uISettings, and an error, if there is any.
-func (c *FakeUISettingses) Update(ctx context.Context, uISettings *v3.UISettings, opts v1.UpdateOptions) (result *v3.UISettings, err error) {
+func (c *FakeUISettings) Update(ctx context.Context, uISettings *v3.UISettings, opts v1.UpdateOptions) (result *v3.UISettings, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(uisettingsesResource, c.ns, uISettings), &v3.UISettings{})
-
+		Invokes(testing.NewRootUpdateAction(uisettingsResource, uISettings), &v3.UISettings{})
 	if obj == nil {
 		return nil, err
 	}
@@ -89,26 +83,24 @@ func (c *FakeUISettingses) Update(ctx context.Context, uISettings *v3.UISettings
 }
 
 // Delete takes name of the uISettings and deletes it. Returns an error if one occurs.
-func (c *FakeUISettingses) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
+func (c *FakeUISettings) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(uisettingsesResource, c.ns, name), &v3.UISettings{})
-
+		Invokes(testing.NewRootDeleteAction(uisettingsResource, name), &v3.UISettings{})
 	return err
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *FakeUISettingses) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(uisettingsesResource, c.ns, listOpts)
+func (c *FakeUISettings) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+	action := testing.NewRootDeleteCollectionAction(uisettingsResource, listOpts)
 
 	_, err := c.Fake.Invokes(action, &v3.UISettingsList{})
 	return err
 }
 
 // Patch applies the patch and returns the patched uISettings.
-func (c *FakeUISettingses) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v3.UISettings, err error) {
+func (c *FakeUISettings) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v3.UISettings, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(uisettingsesResource, c.ns, name, pt, data, subresources...), &v3.UISettings{})
-
+		Invokes(testing.NewRootPatchSubresourceAction(uisettingsResource, name, pt, data, subresources...), &v3.UISettings{})
 	if obj == nil {
 		return nil, err
 	}

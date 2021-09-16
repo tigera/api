@@ -40,7 +40,7 @@ type ProjectcalicoV3Interface interface {
 	StagedKubernetesNetworkPoliciesGetter
 	StagedNetworkPoliciesGetter
 	TiersGetter
-	UISettingsesGetter
+	UISettingsGetter
 	UISettingsGroupsGetter
 }
 
@@ -161,8 +161,8 @@ func (c *ProjectcalicoV3Client) Tiers() TierInterface {
 	return newTiers(c)
 }
 
-func (c *ProjectcalicoV3Client) UISettingses(namespace string) UISettingsInterface {
-	return newUISettingses(c, namespace)
+func (c *ProjectcalicoV3Client) UISettings() UISettingsInterface {
+	return newUISettings(c)
 }
 
 func (c *ProjectcalicoV3Client) UISettingsGroups() UISettingsGroupInterface {

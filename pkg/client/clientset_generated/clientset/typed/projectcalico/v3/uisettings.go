@@ -16,10 +16,10 @@ import (
 	rest "k8s.io/client-go/rest"
 )
 
-// UISettingsesGetter has a method to return a UISettingsInterface.
+// UISettingsGetter has a method to return a UISettingsInterface.
 // A group's client should implement this interface.
-type UISettingsesGetter interface {
-	UISettingses(namespace string) UISettingsInterface
+type UISettingsGetter interface {
+	UISettings() UISettingsInterface
 }
 
 // UISettingsInterface has methods to work with UISettings resources.
@@ -35,26 +35,23 @@ type UISettingsInterface interface {
 	UISettingsExpansion
 }
 
-// uISettingses implements UISettingsInterface
-type uISettingses struct {
+// uISettings implements UISettingsInterface
+type uISettings struct {
 	client rest.Interface
-	ns     string
 }
 
-// newUISettingses returns a UISettingses
-func newUISettingses(c *ProjectcalicoV3Client, namespace string) *uISettingses {
-	return &uISettingses{
+// newUISettings returns a UISettings
+func newUISettings(c *ProjectcalicoV3Client) *uISettings {
+	return &uISettings{
 		client: c.RESTClient(),
-		ns:     namespace,
 	}
 }
 
 // Get takes name of the uISettings, and returns the corresponding uISettings object, and an error if there is any.
-func (c *uISettingses) Get(ctx context.Context, name string, options v1.GetOptions) (result *v3.UISettings, err error) {
+func (c *uISettings) Get(ctx context.Context, name string, options v1.GetOptions) (result *v3.UISettings, err error) {
 	result = &v3.UISettings{}
 	err = c.client.Get().
-		Namespace(c.ns).
-		Resource("uisettingses").
+		Resource("uisettings").
 		Name(name).
 		VersionedParams(&options, scheme.ParameterCodec).
 		Do(ctx).
@@ -62,16 +59,15 @@ func (c *uISettingses) Get(ctx context.Context, name string, options v1.GetOptio
 	return
 }
 
-// List takes label and field selectors, and returns the list of UISettingses that match those selectors.
-func (c *uISettingses) List(ctx context.Context, opts v1.ListOptions) (result *v3.UISettingsList, err error) {
+// List takes label and field selectors, and returns the list of UISettings that match those selectors.
+func (c *uISettings) List(ctx context.Context, opts v1.ListOptions) (result *v3.UISettingsList, err error) {
 	var timeout time.Duration
 	if opts.TimeoutSeconds != nil {
 		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
 	}
 	result = &v3.UISettingsList{}
 	err = c.client.Get().
-		Namespace(c.ns).
-		Resource("uisettingses").
+		Resource("uisettings").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
 		Do(ctx).
@@ -79,27 +75,25 @@ func (c *uISettingses) List(ctx context.Context, opts v1.ListOptions) (result *v
 	return
 }
 
-// Watch returns a watch.Interface that watches the requested uISettingses.
-func (c *uISettingses) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
+// Watch returns a watch.Interface that watches the requested uISettings.
+func (c *uISettings) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
 	var timeout time.Duration
 	if opts.TimeoutSeconds != nil {
 		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
 	}
 	opts.Watch = true
 	return c.client.Get().
-		Namespace(c.ns).
-		Resource("uisettingses").
+		Resource("uisettings").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
 		Watch(ctx)
 }
 
 // Create takes the representation of a uISettings and creates it.  Returns the server's representation of the uISettings, and an error, if there is any.
-func (c *uISettingses) Create(ctx context.Context, uISettings *v3.UISettings, opts v1.CreateOptions) (result *v3.UISettings, err error) {
+func (c *uISettings) Create(ctx context.Context, uISettings *v3.UISettings, opts v1.CreateOptions) (result *v3.UISettings, err error) {
 	result = &v3.UISettings{}
 	err = c.client.Post().
-		Namespace(c.ns).
-		Resource("uisettingses").
+		Resource("uisettings").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(uISettings).
 		Do(ctx).
@@ -108,11 +102,10 @@ func (c *uISettingses) Create(ctx context.Context, uISettings *v3.UISettings, op
 }
 
 // Update takes the representation of a uISettings and updates it. Returns the server's representation of the uISettings, and an error, if there is any.
-func (c *uISettingses) Update(ctx context.Context, uISettings *v3.UISettings, opts v1.UpdateOptions) (result *v3.UISettings, err error) {
+func (c *uISettings) Update(ctx context.Context, uISettings *v3.UISettings, opts v1.UpdateOptions) (result *v3.UISettings, err error) {
 	result = &v3.UISettings{}
 	err = c.client.Put().
-		Namespace(c.ns).
-		Resource("uisettingses").
+		Resource("uisettings").
 		Name(uISettings.Name).
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(uISettings).
@@ -122,10 +115,9 @@ func (c *uISettingses) Update(ctx context.Context, uISettings *v3.UISettings, op
 }
 
 // Delete takes name of the uISettings and deletes it. Returns an error if one occurs.
-func (c *uISettingses) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
+func (c *uISettings) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	return c.client.Delete().
-		Namespace(c.ns).
-		Resource("uisettingses").
+		Resource("uisettings").
 		Name(name).
 		Body(&opts).
 		Do(ctx).
@@ -133,14 +125,13 @@ func (c *uISettingses) Delete(ctx context.Context, name string, opts v1.DeleteOp
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *uISettingses) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+func (c *uISettings) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
 	var timeout time.Duration
 	if listOpts.TimeoutSeconds != nil {
 		timeout = time.Duration(*listOpts.TimeoutSeconds) * time.Second
 	}
 	return c.client.Delete().
-		Namespace(c.ns).
-		Resource("uisettingses").
+		Resource("uisettings").
 		VersionedParams(&listOpts, scheme.ParameterCodec).
 		Timeout(timeout).
 		Body(&opts).
@@ -149,11 +140,10 @@ func (c *uISettingses) DeleteCollection(ctx context.Context, opts v1.DeleteOptio
 }
 
 // Patch applies the patch and returns the patched uISettings.
-func (c *uISettingses) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v3.UISettings, err error) {
+func (c *uISettings) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v3.UISettings, err error) {
 	result = &v3.UISettings{}
 	err = c.client.Patch(pt).
-		Namespace(c.ns).
-		Resource("uisettingses").
+		Resource("uisettings").
 		Name(name).
 		SubResource(subresources...).
 		VersionedParams(&opts, scheme.ParameterCodec).

@@ -144,10 +144,6 @@ type TierListerExpansion interface{}
 // UISettingsLister.
 type UISettingsListerExpansion interface{}
 
-// UISettingsNamespaceListerExpansion allows custom methods to be added to
-// UISettingsNamespaceLister.
-type UISettingsNamespaceListerExpansion interface{}
-
 // UISettingsGroupListerExpansion allows custom methods to be added to
 // UISettingsGroupLister.
 type UISettingsGroupListerExpansion interface{}
