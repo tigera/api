@@ -10,6 +10,7 @@ const (
 )
 
 // +genclient
+// +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // UISettings contains UI settings.
@@ -127,6 +128,7 @@ type UIDashboard struct {
 	// TBD
 }
 
+// +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // UISettingsList contains a list of UISettings resources.

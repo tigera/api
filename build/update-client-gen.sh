@@ -26,6 +26,7 @@ BINDIR=${REPO_ROOT}/bin
 # Generate the versioned clientset (pkg/client/clientset_generated/clientset)
 client-gen "$@" \
 		--go-header-file "${REPO_ROOT}/hack/boilerplate/boilerplate.go.txt" \
+		--plural-exceptions "UISettings:UISettings" \
 		--input-base "github.com/tigera/api/pkg/apis/" \
 		--input "projectcalico/v3" \
 		--clientset-path "github.com/tigera/api/pkg/client/clientset_generated/" \
@@ -33,11 +34,13 @@ client-gen "$@" \
 # generate lister
 lister-gen "$@" \
 		--go-header-file "${REPO_ROOT}/hack/boilerplate/boilerplate.go.txt" \
+		--plural-exceptions "UISettings:UISettings" \
 		--input-dirs="github.com/tigera/api/pkg/apis/projectcalico/v3" \
 		--output-package "github.com/tigera/api/pkg/client/listers_generated"
 # generate informer
 informer-gen "$@" \
 		--go-header-file "${REPO_ROOT}/hack/boilerplate/boilerplate.go.txt" \
+		--plural-exceptions "UISettings:UISettings" \
 		--input-dirs "github.com/tigera/api/pkg/apis/projectcalico/v3" \
 		--versioned-clientset-package "github.com/tigera/api/pkg/client/clientset_generated/clientset" \
 		--listers-package "github.com/tigera/api/pkg/client/listers_generated" \

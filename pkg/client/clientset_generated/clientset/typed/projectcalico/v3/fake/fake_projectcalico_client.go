@@ -126,8 +126,8 @@ func (c *FakeProjectcalicoV3) Tiers() v3.TierInterface {
 	return &FakeTiers{c}
 }
 
-func (c *FakeProjectcalicoV3) UISettingses(namespace string) v3.UISettingsInterface {
-	return &FakeUISettingses{c, namespace}
+func (c *FakeProjectcalicoV3) UISettings() v3.UISettingsInterface {
+	return &FakeUISettings{c}
 }
 
 func (c *FakeProjectcalicoV3) UISettingsGroups() v3.UISettingsGroupInterface {

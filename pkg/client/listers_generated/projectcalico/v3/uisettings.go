@@ -11,14 +11,15 @@ import (
 	"k8s.io/client-go/tools/cache"
 )
 
-// UISettingsLister helps list UISettingses.
+// UISettingsLister helps list UISettings.
 // All objects returned here must be treated as read-only.
 type UISettingsLister interface {
-	// List lists all UISettingses in the indexer.
+	// List lists all UISettings in the indexer.
 	// Objects returned here must be treated as read-only.
 	List(selector labels.Selector) (ret []*v3.UISettings, err error)
-	// UISettingses returns an object that can list and get UISettingses.
-	UISettingses(namespace string) UISettingsNamespaceLister
+	// Get retrieves the UISettings from the index for a given name.
+	// Objects returned here must be treated as read-only.
+	Get(name string) (*v3.UISettings, error)
 	UISettingsListerExpansion
 }
 
@@ -32,7 +33,7 @@ func NewUISettingsLister(indexer cache.Indexer) UISettingsLister {
 	return &uISettingsLister{indexer: indexer}
 }
 
-// List lists all UISettingses in the indexer.
+// List lists all UISettings in the indexer.
 func (s *uISettingsLister) List(selector labels.Selector) (ret []*v3.UISettings, err error) {
 	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
 		ret = append(ret, m.(*v3.UISettings))
@@ -40,41 +41,9 @@ func (s *uISettingsLister) List(selector labels.Selector) (ret []*v3.UISettings,
 	return ret, err
 }
 
-// UISettingses returns an object that can list and get UISettingses.
-func (s *uISettingsLister) UISettingses(namespace string) UISettingsNamespaceLister {
-	return uISettingsNamespaceLister{indexer: s.indexer, namespace: namespace}
-}
-
-// UISettingsNamespaceLister helps list and get UISettingses.
-// All objects returned here must be treated as read-only.
-type UISettingsNamespaceLister interface {
-	// List lists all UISettingses in the indexer for a given namespace.
-	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v3.UISettings, err error)
-	// Get retrieves the UISettings from the indexer for a given namespace and name.
-	// Objects returned here must be treated as read-only.
-	Get(name string) (*v3.UISettings, error)
-	UISettingsNamespaceListerExpansion
-}
-
-// uISettingsNamespaceLister implements the UISettingsNamespaceLister
-// interface.
-type uISettingsNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all UISettingses in the indexer for a given namespace.
-func (s uISettingsNamespaceLister) List(selector labels.Selector) (ret []*v3.UISettings, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v3.UISettings))
-	})
-	return ret, err
-}
-
-// Get retrieves the UISettings from the indexer for a given namespace and name.
-func (s uISettingsNamespaceLister) Get(name string) (*v3.UISettings, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
+// Get retrieves the UISettings from the index for a given name.
+func (s *uISettingsLister) Get(name string) (*v3.UISettings, error) {
+	obj, exists, err := s.indexer.GetByKey(name)
 	if err != nil {
 		return nil, err
 	}
