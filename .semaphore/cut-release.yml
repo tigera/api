@@ -25,7 +25,7 @@ global_job_config:
       # Login to docker in order to pull images.
       - docker login --username casey@tigera.io -u _json_key -p "$(cat /home/semaphore/tigera-dev-ci.json)" https://gcr.io
       - checkout
-      - git fetch --unshallow
+      - git fetch --unshallow || true
 
 blocks:
   - name: 'Cut Release'
