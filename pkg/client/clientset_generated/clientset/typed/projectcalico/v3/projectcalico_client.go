@@ -40,6 +40,8 @@ type ProjectcalicoV3Interface interface {
 	StagedKubernetesNetworkPoliciesGetter
 	StagedNetworkPoliciesGetter
 	TiersGetter
+	UISettingsGetter
+	UISettingsGroupsGetter
 }
 
 // ProjectcalicoV3Client is used to interact with features provided by the projectcalico.org group.
@@ -157,6 +159,14 @@ func (c *ProjectcalicoV3Client) StagedNetworkPolicies(namespace string) StagedNe
 
 func (c *ProjectcalicoV3Client) Tiers() TierInterface {
 	return newTiers(c)
+}
+
+func (c *ProjectcalicoV3Client) UISettings() UISettingsInterface {
+	return newUISettings(c)
+}
+
+func (c *ProjectcalicoV3Client) UISettingsGroups() UISettingsGroupInterface {
+	return newUISettingsGroups(c)
 }
 
 // NewForConfig creates a new ProjectcalicoV3Client for the given config.

@@ -66,6 +66,10 @@ type Interface interface {
 	StagedNetworkPolicies() StagedNetworkPolicyInformer
 	// Tiers returns a TierInformer.
 	Tiers() TierInformer
+	// UISettings returns a UISettingsInformer.
+	UISettings() UISettingsInformer
+	// UISettingsGroups returns a UISettingsGroupInformer.
+	UISettingsGroups() UISettingsGroupInformer
 }
 
 type version struct {
@@ -217,4 +221,14 @@ func (v *version) StagedNetworkPolicies() StagedNetworkPolicyInformer {
 // Tiers returns a TierInformer.
 func (v *version) Tiers() TierInformer {
 	return &tierInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// UISettings returns a UISettingsInformer.
+func (v *version) UISettings() UISettingsInformer {
+	return &uISettingsInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// UISettingsGroups returns a UISettingsGroupInformer.
+func (v *version) UISettingsGroups() UISettingsGroupInformer {
+	return &uISettingsGroupInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }

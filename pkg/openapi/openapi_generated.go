@@ -126,6 +126,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.ManagedClusterSpec":                    schema_pkg_apis_projectcalico_v3_ManagedClusterSpec(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.ManagedClusterStatus":                  schema_pkg_apis_projectcalico_v3_ManagedClusterStatus(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.ManagedClusterStatusCondition":         schema_pkg_apis_projectcalico_v3_ManagedClusterStatusCondition(ref),
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.NamedSelector":                         schema_pkg_apis_projectcalico_v3_NamedSelector(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.NamesAndLabelsMatch":                   schema_pkg_apis_projectcalico_v3_NamesAndLabelsMatch(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.NamespaceControllerConfig":             schema_pkg_apis_projectcalico_v3_NamespaceControllerConfig(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.NetworkPolicy":                         schema_pkg_apis_projectcalico_v3_NetworkPolicy(ref),
@@ -142,6 +143,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCaptureSpec":                     schema_pkg_apis_projectcalico_v3_PacketCaptureSpec(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCaptureStatus":                   schema_pkg_apis_projectcalico_v3_PacketCaptureStatus(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.PolicyControllerConfig":                schema_pkg_apis_projectcalico_v3_PolicyControllerConfig(ref),
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.Position":                              schema_pkg_apis_projectcalico_v3_Position(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.PrefixAdvertisement":                   schema_pkg_apis_projectcalico_v3_PrefixAdvertisement(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.Profile":                               schema_pkg_apis_projectcalico_v3_Profile(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.ProfileList":                           schema_pkg_apis_projectcalico_v3_ProfileList(ref),
@@ -183,6 +185,16 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.Tier":                                  schema_pkg_apis_projectcalico_v3_Tier(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.TierList":                              schema_pkg_apis_projectcalico_v3_TierList(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.TierSpec":                              schema_pkg_apis_projectcalico_v3_TierSpec(ref),
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.UIDashboard":                           schema_pkg_apis_projectcalico_v3_UIDashboard(ref),
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.UIGraphLayer":                          schema_pkg_apis_projectcalico_v3_UIGraphLayer(ref),
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.UIGraphNode":                           schema_pkg_apis_projectcalico_v3_UIGraphNode(ref),
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.UIGraphView":                           schema_pkg_apis_projectcalico_v3_UIGraphView(ref),
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.UISettings":                            schema_pkg_apis_projectcalico_v3_UISettings(ref),
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.UISettingsGroup":                       schema_pkg_apis_projectcalico_v3_UISettingsGroup(ref),
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.UISettingsGroupList":                   schema_pkg_apis_projectcalico_v3_UISettingsGroupList(ref),
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.UISettingsGroupSpec":                   schema_pkg_apis_projectcalico_v3_UISettingsGroupSpec(ref),
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.UISettingsList":                        schema_pkg_apis_projectcalico_v3_UISettingsList(ref),
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.UISettingsSpec":                        schema_pkg_apis_projectcalico_v3_UISettingsSpec(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.WorkloadEndpointControllerConfig":      schema_pkg_apis_projectcalico_v3_WorkloadEndpointControllerConfig(ref),
 		"github.com/tigera/api/pkg/lib/numorstring.Port":                                        schema_api_pkg_lib_numorstring_Port(ref),
 		"github.com/tigera/api/pkg/lib/numorstring.Protocol":                                    schema_api_pkg_lib_numorstring_Protocol(ref),
@@ -961,8 +973,16 @@ func schema_pkg_apis_projectcalico_v3_AuthorizedResourceGroup(ref common.Referen
 							Format:      "",
 						},
 					},
+					"uiSettingsGroup": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The UISettingsGroup name. This is only valid for uisettingsgroup/data sub resources.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
-				Required: []string{"namespace"},
+				Required: []string{"namespace", "uiSettingsGroup"},
 			},
 		},
 	}
@@ -3979,6 +3999,13 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 							Format:      "",
 						},
 					},
+					"flowLogsCollectorDebugTrace": {
+						SchemaProps: spec.SchemaProps{
+							Description: "When FlowLogsCollectorDebugTrace is set to true, enables the logs in the collector to be printed in their entirety.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 					"flowLogsFileEnabled": {
 						SchemaProps: spec.SchemaProps{
 							Description: "FlowLogsFileEnabled when set to true, enables logging flow logs to a file. If false no flow logging to file will occur.",
@@ -4452,7 +4479,7 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 					},
 					"awsSrcDstCheck": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Set source-destination-check on AWS EC2 instances. Accepted value must be one of \"DoNothing\", \"Enabled\" or \"Disabled\". [Default: DoNothing]",
+							Description: "Set source-destination-check on AWS EC2 instances. Accepted value must be one of \"DoNothing\", \"Enable\" or \"Disable\". [Default: DoNothing]",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -6171,6 +6198,28 @@ func schema_pkg_apis_projectcalico_v3_IPPoolSpec(ref common.ReferenceCallback) c
 							Format:      "",
 						},
 					},
+					"allowedUses": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AllowedUse controls what the IP pool will be used for.  If not specified or empty, defaults to [\"Tunnel\", \"Workload\"] for back-compatibility",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"awsSubnetID": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AWSSubnetID if specified Calico will attempt to ensure that IPs chosen from this IP pool are routed to the corresponding node by adding one or more secondary ENIs to the node and explicitly assigning the IP to one of the secondary ENIs.  Important: since subnets cannot cross availability zones, it's important to use Kubernetes node selectors to avoid scheduling pods to one availability zone using an IP pool that is backed by a subnet that belongs to another availability zone. If AWSSubnetID is specified, then the CIDR of the IP pool must be contained within the specified AWS subnet.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 				Required: []string{"cidr"},
 			},
@@ -6795,6 +6844,34 @@ func schema_pkg_apis_projectcalico_v3_ManagedClusterStatusCondition(ref common.R
 	}
 }
 
+func schema_pkg_apis_projectcalico_v3_NamedSelector(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "A Calico format label selector with an associated name.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"selector": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"name", "selector"},
+			},
+		},
+	}
+}
+
 func schema_pkg_apis_projectcalico_v3_NamesAndLabelsMatch(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -7256,7 +7333,7 @@ func schema_pkg_apis_projectcalico_v3_PacketCaptureFile(ref common.ReferenceCall
 				Properties: map[string]spec.Schema{
 					"node": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Node identifies with a a physical node from the cluster via its hostname",
+							Description: "Node identifies with a physical node from the cluster via its hostname",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -7281,6 +7358,12 @@ func schema_pkg_apis_projectcalico_v3_PacketCaptureFile(ref common.ReferenceCall
 									},
 								},
 							},
+						},
+					},
+					"state": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
 						},
 					},
 				},
@@ -7401,11 +7484,23 @@ func schema_pkg_apis_projectcalico_v3_PacketCaptureSpec(ref common.ReferenceCall
 							},
 						},
 					},
+					"startTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the start time from which this PacketCapture will capture packets. If omitted or the value is in the past, the capture will start immediately. If the value is changed to a future time, capture will stop immediately and restart at that time",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"endTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Defines the end time at which this PacketCapture will stop capturing packets. If omitted the capture will continue indefinitely. If the value is changed to the past, capture will stop immediately.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCaptureRule"},
+			"github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCaptureRule", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -7455,6 +7550,48 @@ func schema_pkg_apis_projectcalico_v3_PolicyControllerConfig(ref common.Referenc
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_Position(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "UI screen position.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"id": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"x": {
+						SchemaProps: spec.SchemaProps{
+							Default: 0,
+							Type:    []string{"integer"},
+							Format:  "int32",
+						},
+					},
+					"y": {
+						SchemaProps: spec.SchemaProps{
+							Default: 0,
+							Type:    []string{"integer"},
+							Format:  "int32",
+						},
+					},
+					"z": {
+						SchemaProps: spec.SchemaProps{
+							Default: 0,
+							Type:    []string{"integer"},
+							Format:  "int32",
+						},
+					},
+				},
+				Required: []string{"id", "x", "y", "z"},
+			},
+		},
 	}
 }
 
@@ -9482,6 +9619,502 @@ func schema_pkg_apis_projectcalico_v3_TierSpec(ref common.ReferenceCallback) com
 				},
 			},
 		},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_UIDashboard(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "UIDashboard contains the data for a UI dashboard.",
+				Type:        []string{"object"},
+			},
+		},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_UIGraphLayer(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "UIGraphLayer contains the data for a UI graph layer.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"nodes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The nodes that are aggregated into a single layer.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.UIGraphNode"),
+									},
+								},
+							},
+						},
+					},
+					"icon": {
+						SchemaProps: spec.SchemaProps{
+							Description: "A user-configurable icon in SVG format. If not specified, the default layer icon is used for this layer node.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"nodes", "icon"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/tigera/api/pkg/apis/projectcalico/v3.UIGraphNode"},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_UIGraphNode(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "UIGraphNode contains details about a graph node.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"id": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The node ID.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The node type.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The node name.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"namespace": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The node namespace.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"id", "type", "name"},
+			},
+		},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_UIGraphView(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "UIGraphView contains the data for a UI graph view.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"focus": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The set of nodes that are the focus of the graph. All nodes returned by the graph query will be connected to at least one of these nodes. If this is empty, then all nodes will be returned.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.UIGraphNode"),
+									},
+								},
+							},
+						},
+					},
+					"expanded": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The set of nodes that are expanded to the next level of expansion.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.UIGraphNode"),
+									},
+								},
+							},
+						},
+					},
+					"expandPorts": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Whether ports are expanded. If false, port information is aggregated.",
+							Default:     false,
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"followConnectionDirection": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Whether or not to automatically follow directly connected nodes.",
+							Default:     false,
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"splitIngressEgress": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Whether to split HostEndpoints, NetworkSets and Networks into separate ingress and egress nodes or to combine them. In a service-centric view, splitting these makes the graph clearer. This never splits pods which represent a true microservice which has ingress and egress connections.",
+							Default:     false,
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"hostAggregationSelectors": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The set of selectors used to aggregate hosts (Kubernetes nodes). Nodes are aggregated based on the supplied set of selectors. In the case of overlapping selectors, the order specified in the slice is the order checked and so the first selector to match is used.  The nodes will be aggregated into a graph node with the name specified in the NamedSelector.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.NamedSelector"),
+									},
+								},
+							},
+						},
+					},
+					"followedEgress": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Followed nodes. These are nodes on the periphery of the graph that we follow further out of the scope of the graph focus. For example a Node N may have egress connections to X and Y, but neither X nor Y are displayed in the graph because they are not explicitly in focus. The service graph response will indicate that Node N has egress connections that may be followed.  If Node N is added to this \"FollowedEgress\" then the response will include the egress connections to X and Y.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.UIGraphNode"),
+									},
+								},
+							},
+						},
+					},
+					"followedIngress": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.UIGraphNode"),
+									},
+								},
+							},
+						},
+					},
+					"layout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Layout type. Semi-arbitrary value used to specify the layout-type/algorithm. For example could specify different layout algorithms, or click-to-grid.  Mostly here for future use.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"position": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Positions of graph nodes.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.Position"),
+									},
+								},
+							},
+						},
+					},
+					"layers": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The set of layer names. This references other UISettings resources.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"expandPorts", "followConnectionDirection", "splitIngressEgress", "layout", "position", "layers"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/tigera/api/pkg/apis/projectcalico/v3.NamedSelector", "github.com/tigera/api/pkg/apis/projectcalico/v3.Position", "github.com/tigera/api/pkg/apis/projectcalico/v3.UIGraphNode"},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_UISettings(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "UISettings contains UI settings.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Standard object's metadata.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specification of the UISettings.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.UISettingsSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/tigera/api/pkg/apis/projectcalico/v3.UISettingsSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_UISettingsGroup(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "UISettingsGroup contains the settings that dictate how many UI settings may be created for a specific cluster/user combination. UI settings may only be persisted if there is a corresponding UISettingsGroup resource.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Standard object's metadata.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specification of the UISettingsGroup.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.UISettingsGroupSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/tigera/api/pkg/apis/projectcalico/v3.UISettingsGroupSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_UISettingsGroupList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "UISettingsGroupList contains a list of UISettingsGroup resources.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.UISettingsGroup"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata", "items"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/tigera/api/pkg/apis/projectcalico/v3.UISettingsGroup", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_UISettingsGroupSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "UISettingsGroupSpec contains the specification for a UISettingsGroup resource.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"description": {
+						SchemaProps: spec.SchemaProps{
+							Description: "This description is displayed by the UI when asking where to store any UI-specific settings such as views, layers, dashboards etc. This name should be a short description that relates the settings to the set of clusters defined below, the set of users or groups that are able to access to these settings (defined via RBAC) or the set of applications common to the set of users or groups that can access these settings. Examples might be: - \"cluster\" when these settings apply to the whole cluster - \"global\" when these settings apply to all clusters (in an Multi-Cluster environment) - \"security team\" if these settings are accessible only to the security group and therefore\n  applicable to the applications accessible by that team\n- \"storefront\" if these settings are accessible to all users and groups that can access the\n  storefront set of applications\n- \"user\" if these settings are accessible to only a single user",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"description"},
+			},
+		},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_UISettingsList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "UISettingsList contains a list of UISettings resources.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.UISettings"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata", "items"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/tigera/api/pkg/apis/projectcalico/v3.UISettings", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_UISettingsSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "UISettingsSpec contains the specification for a UISettings resource.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"group": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The settings group. Once configured this cannot be modified. The group must exist.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"description": {
+						SchemaProps: spec.SchemaProps{
+							Description: "This description is displayed by the UI.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"view": {
+						SchemaProps: spec.SchemaProps{
+							Description: "View data. One of View, Layer or Dashboard should be specified.",
+							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.UIGraphView"),
+						},
+					},
+					"layer": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Layer data. One of View, Layer or Dashboard should be specified.",
+							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.UIGraphLayer"),
+						},
+					},
+					"dashboard": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Dashboard data. One of View, Layer or Dashboard should be specified.",
+							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.UIDashboard"),
+						},
+					},
+				},
+				Required: []string{"group", "description"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/tigera/api/pkg/apis/projectcalico/v3.UIDashboard", "github.com/tigera/api/pkg/apis/projectcalico/v3.UIGraphLayer", "github.com/tigera/api/pkg/apis/projectcalico/v3.UIGraphView"},
 	}
 }
 
