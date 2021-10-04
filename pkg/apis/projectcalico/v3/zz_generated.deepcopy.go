@@ -2146,6 +2146,16 @@ func (in *FelixConfigurationSpec) DeepCopyInto(out *FelixConfigurationSpec) {
 		*out = new(AWSSrcDstCheckOption)
 		**out = **in
 	}
+	if in.AWSSecondaryIPRoutingRulePriority != nil {
+		in, out := &in.AWSSecondaryIPRoutingRulePriority, &out.AWSSecondaryIPRoutingRulePriority
+		*out = new(int)
+		**out = **in
+	}
+	if in.AWSRequestTimeout != nil {
+		in, out := &in.AWSRequestTimeout, &out.AWSRequestTimeout
+		*out = new(metav1.Duration)
+		**out = **in
+	}
 	if in.TPROXYPort != nil {
 		in, out := &in.TPROXYPort, &out.TPROXYPort
 		*out = new(int)
