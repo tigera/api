@@ -24,6 +24,9 @@ const (
 	// PacketCaptureStateScheduled represents the inactive state of a PacketCapture of being
 	// scheduled, but not capturing traffic
 	PacketCaptureStateScheduled = "Scheduled"
+	// PacketCaptureStateWaitingForTraffic represents the active state of a PacketCapture of capturing from a live
+	// interface, but waiting for traffic on that interface
+	PacketCaptureStateWaitingForTraffic = "WaitingForTraffic"
 	// PacketCaptureStateError represents the error state of a PacketCapture
 	PacketCaptureStateError = "Error"
 )
