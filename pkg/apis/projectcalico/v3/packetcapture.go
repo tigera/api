@@ -26,6 +26,9 @@ const (
 	PacketCaptureStateScheduled = "Scheduled"
 	// PacketCaptureStateError represents the error state of a PacketCapture
 	PacketCaptureStateError = "Error"
+	// PacketCaptureStateWaitingForTraffic represents the active state of a PacketCapture of capturing from a live
+	// interface, but waiting for traffic on that interface
+	PacketCaptureStateWaitingForTraffic = "WaitingForTraffic"
 )
 
 // +genclient
@@ -130,7 +133,7 @@ type PacketCaptureFile struct {
 	// Determines whether a PacketCapture is capturing traffic from any interface
 	// attached to the current node
 
-	// +kubebuilder:validation:Enum=Capturing;Finished;Scheduled;Error
+	// +kubebuilder:validation:Enum=Capturing;Finished;Scheduled;Error;WaitingForTraffic
 	State *PacketCaptureState `json:"state,omitempty" validate:"omitempty"`
 }
 
