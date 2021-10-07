@@ -10,20 +10,8 @@ agent:
     os_image: ubuntu1804
 
 global_job_config:
-  secrets:
-    - name: docker-hub
-    - name: marvin-github-ssh-private-key
-    - name: tigera-dev-ci-pull-credentials
-    - name: quay-robot-ee-push
   prologue:
     commands:
-      - echo $DOCKERHUB_PASSWORD | docker login --username "$DOCKERHUB_USERNAME" --password-stdin
-      # Correct permissions since they are too open by default:
-      - chmod 0600 ~/.keys/*
-      # Add the key to the ssh agent:
-      - ssh-add ~/.keys/*
-      # Login to docker in order to pull images.
-      - docker login --username casey@tigera.io -u _json_key -p "$(cat /home/semaphore/tigera-dev-ci.json)" https://gcr.io
       - checkout
       - git fetch --unshallow || true
 
@@ -31,17 +19,20 @@ blocks:
   - name: 'Cut Release'
     task:
       secrets:
-        - name: google-service-account-for-gcr
+        - name: marvin-github-ssh-private-key
+        - name: marvin-release-cutting-credentials
       prologue:
         commands:
           # Correct permissions since they are too open by default:
           - chmod 0600 ~/.keys/*
           # Add the key to the ssh agent:
           - ssh-add ~/.keys/*
-          # Login to docker in order to pull images.
-          - echo $QUAY_TOKEN | docker login --username $QUAY_USERNAME https://quay.io --password-stdin
+          # Login to gcr in order to push images to gcr.
+          - docker login --username marvin@tigera.io -u _json_key -p "$(cat ~/secrets/marvin-gcr-credentials.json)" https://gcr.io
+          # Login to quay in order to push images to quay.
+          - echo $MARVIN_QUAY_TOKEN | docker login --username $MARVIN_QUAY_USERNAME https://quay.io --password-stdin
       jobs:
         - name: Cut Release
           commands:
-          - make git-config CONFIRM=true
-          - make cut-release CONFIRM=true
+            - make git-config CONFIRM=true
+            - make cut-release CONFIRM=true
