@@ -36,6 +36,8 @@ type HostEndpointExpansion interface{}
 
 type IPPoolExpansion interface{}
 
+type IPReservationExpansion interface{}
+
 type KubeControllersConfigurationExpansion interface{}
 
 type LicenseKeyExpansion interface{}
