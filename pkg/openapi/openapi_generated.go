@@ -4542,6 +4542,13 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 							Format:      "int64",
 						},
 					},
+					"wafEnabledMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "WAFEnabledMode sets whether the Web Application Firewall should be enabled or not. [Default: Disabled]",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 			},
 		},
