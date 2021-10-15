@@ -15,6 +15,7 @@ const (
 	GlobalAlertDataSetAudit = "audit"
 	GlobalAlertDataSetDNS   = "dns"
 	GlobalAlertDataSetFlows = "flows"
+	GlobalAlertDataSetL7    = "l7"
 
 	GlobalAlertMetricAvg   = "avg"
 	GlobalAlertMetricMax   = "max"
