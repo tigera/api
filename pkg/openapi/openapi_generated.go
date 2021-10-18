@@ -4625,6 +4625,13 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 							Format:      "int32",
 						},
 					},
+					"flowLogsFilePerFlowProcessArgsLimit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FlowLogsFilePostSNATPortLimit is used to specify the maximum number of distinct post SNAT ports that will appear in the flowLogs. Default value is 3",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
 					"windowsFlowLogsFileDirectory": {
 						SchemaProps: spec.SchemaProps{
 							Description: "WindowsFlowLogsFileDirectory sets the directory where flow logs files are stored on Windows nodes. [Default: \"c:\\TigeraCalico\\flowlogs\"].",
