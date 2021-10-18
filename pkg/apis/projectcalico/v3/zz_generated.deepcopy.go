@@ -2169,6 +2169,11 @@ func (in *FelixConfigurationSpec) DeepCopyInto(out *FelixConfigurationSpec) {
 		*out = new(int)
 		**out = **in
 	}
+	if in.FlowLogsFileNatOutgoingPortLimit != nil {
+		in, out := &in.FlowLogsFileNatOutgoingPortLimit, &out.FlowLogsFileNatOutgoingPortLimit
+		*out = new(int)
+		**out = **in
+	}
 	if in.WindowsDNSExtraTTL != nil {
 		in, out := &in.WindowsDNSExtraTTL, &out.WindowsDNSExtraTTL
 		*out = new(metav1.Duration)
