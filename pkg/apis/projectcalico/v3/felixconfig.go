@@ -710,7 +710,11 @@ type FelixConfigurationSpec struct {
 	TPROXYPort *int `json:"tproxyPort,omitempty" validate:"omitempty,gt=0,lte=65535"`
 	// TPROXYUpstreamConnMark tells Felix which mark is used by the proxy for its upstream
 	// connections so that Felix can program the dataplane correctly.  [Default: 0x17]
-	TPROXYUpstreamConnMark *uint32 `json:"tproxyUpstreamConnMark,omitempty" validate:"omitempty,gt=0`
+	TPROXYUpstreamConnMark *uint32 `json:"tproxyUpstreamConnMark,omitempty" validate:"omitempty,gt=0"`
+
+	// WAFEnabledMode sets whether the Web Application Firewall should be enabled or not.
+	// [Default: Disabled]
+	WAFEnabledMode string `json:"wafEnabledMode,omitempty" validate:"omitempty,oneof=Disabled Enabled"`
 }
 
 type RouteTableRange struct {
