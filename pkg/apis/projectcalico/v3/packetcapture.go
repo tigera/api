@@ -62,7 +62,8 @@ type PacketCaptureSpec struct {
 	// 	expr && expr  -> Short-circuit and
 	// 	expr || expr  -> Short-circuit or
 	// 	( expr ) -> parens for grouping
-	// 	all() or the empty selector -> matches all endpoints.
+	// 	all() -> matches all endpoints.
+	// 	an empty selector will default to all
 	//
 	// Label names are allowed to contain alphanumerics, -, _ and /. String literals are more permissive
 	// but they do not support escape characters.
@@ -73,6 +74,7 @@ type PacketCaptureSpec struct {
 	// 	type in {"frontend", "backend"}
 	// 	deployment != "dev"
 	// 	! has(label_name)
+	// +kubebuilder:default:="all()"
 	Selector string `json:"selector,omitempty" validate:"selector"`
 
 	// The ordered set of filters applied to traffic captured from an interface.  Each rule contains a set of
