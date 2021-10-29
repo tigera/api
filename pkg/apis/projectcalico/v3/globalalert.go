@@ -12,6 +12,9 @@ const (
 	KindGlobalAlert     = "GlobalAlert"
 	KindGlobalAlertList = "GlobalAlertList"
 
+	GlobalAlertTypeUserDefined      = "UserDefined"
+	GlobalAlertTypeAnomalyDetection = "AnomalyDetection"
+
 	GlobalAlertDataSetAudit = "audit"
 	GlobalAlertDataSetDNS   = "dns"
 	GlobalAlertDataSetFlows = "flows"
@@ -41,12 +44,16 @@ type GlobalAlert struct {
 }
 
 type GlobalAlertSpec struct {
-	Summary     string           `json:"summary,omitempty" validate:"omitempty"`
-	Description string           `json:"description" validate:"required"`
+	// if type is omitted, assume UserDefined
+	Type        string `json:"type,omitempty" validate:"omitempty,oneof=UserDefined AnomalyDetection"`
+	Summary     string `json:"summary,omitempty" validate:"omitempty"`
+	Description string `json:"description" validate:"required"`
+	// required if Type is of AnomalyDetection
+	Job         string           `json:"job,omitempty" validate:"omitempty"`
 	Severity    int              `json:"severity" validate:"required,min=1,max=100"`
 	Period      *metav1.Duration `json:"period,omitempty" validate:"omitempty"`
 	Lookback    *metav1.Duration `json:"lookback,omitempty" validate:"omitempty"`
-	DataSet     string           `json:"dataSet" validate:"required,oneof=flows dns audit l7"`
+	DataSet     string           `json:"dataSet" validate:"required,oneof=flows dns audit"`
 	Query       string           `json:"query,omitempty" validate:"omitempty"`
 	AggregateBy []string         `json:"aggregateBy,omitempty" validate:"omitempty"`
 	Field       string           `json:"field,omitempty" validate:"omitempty"`
