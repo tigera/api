@@ -26,6 +26,9 @@ const (
 	PacketCaptureStateScheduled = "Scheduled"
 	// PacketCaptureStateError represents the error state of a PacketCapture
 	PacketCaptureStateError = "Error"
+	// PacketCaptureStateWaitingForTraffic represents the active state of a PacketCapture of capturing from a live
+	// interface, but waiting for traffic on that interface
+	PacketCaptureStateWaitingForTraffic = "WaitingForTraffic"
 )
 
 // +genclient
@@ -59,7 +62,8 @@ type PacketCaptureSpec struct {
 	// 	expr && expr  -> Short-circuit and
 	// 	expr || expr  -> Short-circuit or
 	// 	( expr ) -> parens for grouping
-	// 	all() or the empty selector -> matches all endpoints.
+	// 	all() -> matches all endpoints.
+	// 	an empty selector will default to all
 	//
 	// Label names are allowed to contain alphanumerics, -, _ and /. String literals are more permissive
 	// but they do not support escape characters.
@@ -70,6 +74,7 @@ type PacketCaptureSpec struct {
 	// 	type in {"frontend", "backend"}
 	// 	deployment != "dev"
 	// 	! has(label_name)
+	// +kubebuilder:default:="all()"
 	Selector string `json:"selector,omitempty" validate:"selector"`
 
 	// The ordered set of filters applied to traffic captured from an interface.  Each rule contains a set of
@@ -130,7 +135,7 @@ type PacketCaptureFile struct {
 	// Determines whether a PacketCapture is capturing traffic from any interface
 	// attached to the current node
 
-	// +kubebuilder:validation:Enum=Capturing;Finished;Scheduled;Error
+	// +kubebuilder:validation:Enum=Capturing;Finished;Scheduled;Error;WaitingForTraffic
 	State *PacketCaptureState `json:"state,omitempty" validate:"omitempty"`
 }
 

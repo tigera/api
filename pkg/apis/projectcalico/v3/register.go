@@ -30,6 +30,8 @@ var (
 		&HostEndpointList{},
 		&IPPool{},
 		&IPPoolList{},
+		&IPReservation{},
+		&IPReservationList{},
 		&BGPConfiguration{},
 		&BGPConfigurationList{},
 		&BGPPeer{},
@@ -44,6 +46,8 @@ var (
 		&ClusterInformationList{},
 		&NetworkSet{},
 		&NetworkSetList{},
+		&CalicoNodeStatus{},
+		&CalicoNodeStatusList{},
 
 		// Enterprise-only types.
 		&AuthenticationReview{},

@@ -47,6 +47,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().BGPConfigurations().Informer()}, nil
 	case v3.SchemeGroupVersion.WithResource("bgppeers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().BGPPeers().Informer()}, nil
+	case v3.SchemeGroupVersion.WithResource("caliconodestatuses"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().CalicoNodeStatuses().Informer()}, nil
 	case v3.SchemeGroupVersion.WithResource("clusterinformations"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().ClusterInformations().Informer()}, nil
 	case v3.SchemeGroupVersion.WithResource("deeppacketinspections"):
@@ -71,6 +73,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().HostEndpoints().Informer()}, nil
 	case v3.SchemeGroupVersion.WithResource("ippools"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().IPPools().Informer()}, nil
+	case v3.SchemeGroupVersion.WithResource("ipreservations"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().IPReservations().Informer()}, nil
 	case v3.SchemeGroupVersion.WithResource("kubecontrollersconfigurations"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().KubeControllersConfigurations().Informer()}, nil
 	case v3.SchemeGroupVersion.WithResource("licensekeys"):

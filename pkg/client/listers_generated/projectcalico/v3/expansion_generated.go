@@ -20,6 +20,10 @@ type BGPConfigurationListerExpansion interface{}
 // BGPPeerLister.
 type BGPPeerListerExpansion interface{}
 
+// CalicoNodeStatusListerExpansion allows custom methods to be added to
+// CalicoNodeStatusLister.
+type CalicoNodeStatusListerExpansion interface{}
+
 // ClusterInformationListerExpansion allows custom methods to be added to
 // ClusterInformationLister.
 type ClusterInformationListerExpansion interface{}
@@ -71,6 +75,10 @@ type HostEndpointListerExpansion interface{}
 // IPPoolListerExpansion allows custom methods to be added to
 // IPPoolLister.
 type IPPoolListerExpansion interface{}
+
+// IPReservationListerExpansion allows custom methods to be added to
+// IPReservationLister.
+type IPReservationListerExpansion interface{}
 
 // KubeControllersConfigurationListerExpansion allows custom methods to be added to
 // KubeControllersConfigurationLister.

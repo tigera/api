@@ -18,6 +18,8 @@ type Interface interface {
 	BGPConfigurations() BGPConfigurationInformer
 	// BGPPeers returns a BGPPeerInformer.
 	BGPPeers() BGPPeerInformer
+	// CalicoNodeStatuses returns a CalicoNodeStatusInformer.
+	CalicoNodeStatuses() CalicoNodeStatusInformer
 	// ClusterInformations returns a ClusterInformationInformer.
 	ClusterInformations() ClusterInformationInformer
 	// DeepPacketInspections returns a DeepPacketInspectionInformer.
@@ -42,6 +44,8 @@ type Interface interface {
 	HostEndpoints() HostEndpointInformer
 	// IPPools returns a IPPoolInformer.
 	IPPools() IPPoolInformer
+	// IPReservations returns a IPReservationInformer.
+	IPReservations() IPReservationInformer
 	// KubeControllersConfigurations returns a KubeControllersConfigurationInformer.
 	KubeControllersConfigurations() KubeControllersConfigurationInformer
 	// LicenseKeys returns a LicenseKeyInformer.
@@ -103,6 +107,11 @@ func (v *version) BGPPeers() BGPPeerInformer {
 	return &bGPPeerInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
+// CalicoNodeStatuses returns a CalicoNodeStatusInformer.
+func (v *version) CalicoNodeStatuses() CalicoNodeStatusInformer {
+	return &calicoNodeStatusInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
 // ClusterInformations returns a ClusterInformationInformer.
 func (v *version) ClusterInformations() ClusterInformationInformer {
 	return &clusterInformationInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
@@ -161,6 +170,11 @@ func (v *version) HostEndpoints() HostEndpointInformer {
 // IPPools returns a IPPoolInformer.
 func (v *version) IPPools() IPPoolInformer {
 	return &iPPoolInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// IPReservations returns a IPReservationInformer.
+func (v *version) IPReservations() IPReservationInformer {
+	return &iPReservationInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // KubeControllersConfigurations returns a KubeControllersConfigurationInformer.

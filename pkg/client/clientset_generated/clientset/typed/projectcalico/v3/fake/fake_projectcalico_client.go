@@ -30,6 +30,10 @@ func (c *FakeProjectcalicoV3) BGPPeers() v3.BGPPeerInterface {
 	return &FakeBGPPeers{c}
 }
 
+func (c *FakeProjectcalicoV3) CalicoNodeStatuses() v3.CalicoNodeStatusInterface {
+	return &FakeCalicoNodeStatuses{c}
+}
+
 func (c *FakeProjectcalicoV3) ClusterInformations() v3.ClusterInformationInterface {
 	return &FakeClusterInformations{c}
 }
@@ -76,6 +80,10 @@ func (c *FakeProjectcalicoV3) HostEndpoints() v3.HostEndpointInterface {
 
 func (c *FakeProjectcalicoV3) IPPools() v3.IPPoolInterface {
 	return &FakeIPPools{c}
+}
+
+func (c *FakeProjectcalicoV3) IPReservations() v3.IPReservationInterface {
+	return &FakeIPReservations{c}
 }
 
 func (c *FakeProjectcalicoV3) KubeControllersConfigurations() v3.KubeControllersConfigurationInterface {

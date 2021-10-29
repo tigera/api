@@ -16,6 +16,7 @@ type ProjectcalicoV3Interface interface {
 	AuthorizationReviewsGetter
 	BGPConfigurationsGetter
 	BGPPeersGetter
+	CalicoNodeStatusesGetter
 	ClusterInformationsGetter
 	DeepPacketInspectionsGetter
 	FelixConfigurationsGetter
@@ -28,6 +29,7 @@ type ProjectcalicoV3Interface interface {
 	GlobalThreatFeedsGetter
 	HostEndpointsGetter
 	IPPoolsGetter
+	IPReservationsGetter
 	KubeControllersConfigurationsGetter
 	LicenseKeysGetter
 	ManagedClustersGetter
@@ -63,6 +65,10 @@ func (c *ProjectcalicoV3Client) BGPConfigurations() BGPConfigurationInterface {
 
 func (c *ProjectcalicoV3Client) BGPPeers() BGPPeerInterface {
 	return newBGPPeers(c)
+}
+
+func (c *ProjectcalicoV3Client) CalicoNodeStatuses() CalicoNodeStatusInterface {
+	return newCalicoNodeStatuses(c)
 }
 
 func (c *ProjectcalicoV3Client) ClusterInformations() ClusterInformationInterface {
@@ -111,6 +117,10 @@ func (c *ProjectcalicoV3Client) HostEndpoints() HostEndpointInterface {
 
 func (c *ProjectcalicoV3Client) IPPools() IPPoolInterface {
 	return newIPPools(c)
+}
+
+func (c *ProjectcalicoV3Client) IPReservations() IPReservationInterface {
+	return newIPReservations(c)
 }
 
 func (c *ProjectcalicoV3Client) KubeControllersConfigurations() KubeControllersConfigurationInterface {

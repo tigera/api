@@ -381,6 +381,13 @@ type FelixConfigurationSpec struct {
 	// BPFKubeProxyEndpointSlicesEnabled in BPF mode, controls whether Felix's
 	// embedded kube-proxy accepts EndpointSlices or not.
 	BPFKubeProxyEndpointSlicesEnabled *bool `json:"bpfKubeProxyEndpointSlicesEnabled,omitempty" validate:"omitempty"`
+	// BPFPSNATPorts sets the range from which we randomly pick a port if there is a source port
+	// collision. This should be within the ephemeral range as defined by RFC 6056 (1024–65535) and
+	// preferably outside the  ephemeral ranges used by common operating systems. Linux uses
+	// 32768–60999, while others mostly use the IANA defined range 49152–65535. It is not necessarily
+	// a problem if this range overlaps with the operating systems. Both ends of the range are
+	// inclusive. [Default: 20000:29999]
+	BPFPSNATPorts *numorstring.Port `json:"bpfPSNATPorts,omitempty"`
 
 	SyslogReporterNetwork string `json:"syslogReporterNetwork,omitempty"`
 	SyslogReporterAddress string `json:"syslogReporterAddress,omitempty"`
@@ -477,6 +484,9 @@ type FelixConfigurationSpec struct {
 	// FlowLogsFilePerFlowProcessArgsLimit is used to specify the maximum number of distinct process args that will appear in the flowLogs.
 	// Default value is 5
 	FlowLogsFilePerFlowProcessArgsLimit *int `json:"flowLogsFilePerFlowProcessArgsLimit,omitempty" validate:"omitempty"`
+	// FlowLogsFileNatOutgoingPortLimit is used to specify the maximum number of distinct post SNAT ports that will appear
+	// in the flowLogs. Default value is 3
+	FlowLogsFileNatOutgoingPortLimit *int `json:"flowLogsFileNatOutgoingPortLimit,omitempty" validate:"omitempty"`
 
 	// WindowsFlowLogsFileDirectory sets the directory where flow logs files are stored on Windows nodes. [Default: "c:\\TigeraCalico\\flowlogs"].
 	WindowsFlowLogsFileDirectory string `json:"windowsFlowLogsFileDirectory,omitempty"`
@@ -680,6 +690,14 @@ type FelixConfigurationSpec struct {
 	// Set source-destination-check on AWS EC2 instances. Accepted value must be one of "DoNothing", "Enable" or "Disable".
 	// [Default: DoNothing]
 	AWSSrcDstCheck *AWSSrcDstCheckOption `json:"awsSrcDstCheck,omitempty" validate:"omitempty,oneof=DoNothing Enable Disable"`
+	// AWSSecondaryIPSupport controls whether Felix will try to provision AWS secondary ENIs and secondary IPs for
+	// workloads that have IPs from IP pools that are configured with an AWS subnet ID. [Default: Disabled]
+	AWSSecondaryIPSupport string `json:"awsSecondaryIPSupport,omitempty" validate:"omitempty,oneof=Enabled Disabled"`
+	// AWSSecondaryIPRoutingRulePriority controls the priority that Felix will use for routing rules when programming
+	// them for AWS Secondary IP support. [Default: 101]
+	AWSSecondaryIPRoutingRulePriority *int `json:"awsSecondaryIPRoutingRulePriority,omitempty" validate:"omitempty,gte=0,lte=4294967295"`
+	// AWSRequestTimeout is the timeout on AWS API requests. [Default: 30s]
+	AWSRequestTimeout *metav1.Duration `json:"awsRequestTimeout,omitempty" configv1timescale:"seconds"`
 
 	// When service IP advertisement is enabled, prevent routing loops to service IPs that are
 	// not in use, by dropping or rejecting packets that do not get DNAT'd by kube-proxy.
