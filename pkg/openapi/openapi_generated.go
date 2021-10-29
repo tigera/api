@@ -5241,17 +5241,6 @@ func schema_pkg_apis_projectcalico_v3_GlobalAlertSpec(ref common.ReferenceCallba
 							Format:      "",
 						},
 					},
-					"trainingInterval": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
-						},
-					},
-					"trainingLookback": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
-						},
-					},
 					"severity": {
 						SchemaProps: spec.SchemaProps{
 							Default: 0,
