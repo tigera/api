@@ -70,15 +70,15 @@ const (
 	GlobalAlertTypeAnomalyDetection GlobalAlertType = "AnomalyDetection"
 )
 
-func (t *Type) UnmarshalJSON(b []byte) error {
+func (t *GlobalAlertType) UnmarshalJSON(b []byte) error {
 	var s string
 	if err := json.Unmarshal(b, &s); err != nil {
 		return err
 	}
 	if s == "" {
-		*t = Type("UserDefined")
+		*t = GlobalAlertType("UserDefined")
 	} else {
-		*t = Type(s)
+		*t = GlobalAlertType(s)
 	}
 	return nil
 }
