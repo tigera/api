@@ -3,6 +3,7 @@
 package v3
 
 import (
+	"encoding/json"
 	"time"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -41,18 +42,45 @@ type GlobalAlert struct {
 }
 
 type GlobalAlertSpec struct {
-	Summary     string           `json:"summary,omitempty" validate:"omitempty"`
-	Description string           `json:"description" validate:"required"`
-	Severity    int              `json:"severity" validate:"required,min=1,max=100"`
-	Period      *metav1.Duration `json:"period,omitempty" validate:"omitempty"`
-	Lookback    *metav1.Duration `json:"lookback,omitempty" validate:"omitempty"`
-	DataSet     string           `json:"dataSet" validate:"required,oneof=flows dns audit l7"`
-	Query       string           `json:"query,omitempty" validate:"omitempty"`
-	AggregateBy []string         `json:"aggregateBy,omitempty" validate:"omitempty"`
-	Field       string           `json:"field,omitempty" validate:"omitempty"`
-	Metric      string           `json:"metric,omitempty" validate:"omitempty,oneof=avg max min sum count"`
-	Condition   string           `json:"condition,omitempty" validate:"omitempty,oneof=eq not_eq gt gte lt lte"`
-	Threshold   float64          `json:"threshold,omitempty" validate:"omitempty"`
+	// Type will dictate how the fields of the GlobalAlert will be utilized. Each Type
+	// will have different usages and defaults for the fields. [Default: UserDefined]
+	Type        GlobalAlertType `json:"type,omitempty" validate:"omitempty"`
+	Summary     string          `json:"summary,omitempty" validate:"omitempty"`
+	Description string          `json:"description" validate:"required"`
+	// Job sepcifies the AnomalyDetectionJob to run if GlobalAlert is of Type AnomalyDetection.
+	// Required if Type is of AnomalyDetection.
+	Job      string           `json:"job,omitempty" validate:"omitempty"`
+	Severity int              `json:"severity" validate:"required,min=1,max=100"`
+	Period   *metav1.Duration `json:"period,omitempty" validate:"omitempty"`
+	Lookback *metav1.Duration `json:"lookback,omitempty" validate:"omitempty"`
+	// DataSet detemines which dataset type the Query will use.  Required if Type is ofUserDefined.
+	DataSet     string   `json:"dataSet" validate:"omitempty,oneof=flows dns audit"`
+	Query       string   `json:"query,omitempty" validate:"omitempty"`
+	AggregateBy []string `json:"aggregateBy,omitempty" validate:"omitempty"`
+	Field       string   `json:"field,omitempty" validate:"omitempty"`
+	Metric      string   `json:"metric,omitempty" validate:"omitempty,oneof=avg max min sum count"`
+	Condition   string   `json:"condition,omitempty" validate:"omitempty,oneof=eq not_eq gt gte lt lte"`
+	Threshold   float64  `json:"threshold,omitempty" validate:"omitempty"`
+}
+
+type GlobalAlertType string
+
+const (
+	GlobalAlertTypeUserDefined      GlobalAlertType = "UserDefined"
+	GlobalAlertTypeAnomalyDetection GlobalAlertType = "AnomalyDetection"
+)
+
+func (t *GlobalAlertType) UnmarshalJSON(b []byte) error {
+	var s string
+	if err := json.Unmarshal(b, &s); err != nil {
+		return err
+	}
+	if s == "" {
+		*t = GlobalAlertType("UserDefined")
+	} else {
+		*t = GlobalAlertType(s)
+	}
+	return nil
 }
 
 type GlobalAlertStatus struct {
