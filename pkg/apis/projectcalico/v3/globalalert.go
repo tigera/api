@@ -44,7 +44,7 @@ type GlobalAlert struct {
 type GlobalAlertSpec struct {
 	// Type will dictate how the fields of the GlobalAlert will be utilized. Each Type
 	// will have different usages and defaults for the fields. [Default: UserDefined]
-	Type        GlobalAlertType `json:"type,omitempty" validate:"omitempty"`
+	Type        GlobalAlertType `json:"type,omitempty" validate:"omitempty,globalAlertType"`
 	Summary     string          `json:"summary,omitempty" validate:"omitempty"`
 	Description string          `json:"description" validate:"required"`
 	// Job sepcifies the AnomalyDetectionJob to run if GlobalAlert is of Type AnomalyDetection.
@@ -76,7 +76,7 @@ func (t *GlobalAlertType) UnmarshalJSON(b []byte) error {
 		return err
 	}
 	if s == "" {
-		*t = GlobalAlertType("UserDefined")
+		*t = GlobalAlertTypeUserDefined
 	} else {
 		*t = GlobalAlertType(s)
 	}
