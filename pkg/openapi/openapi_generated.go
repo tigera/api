@@ -1731,14 +1731,9 @@ func schema_pkg_apis_projectcalico_v3_CISBenchmarkNodeSummary(ref common.Referen
 					},
 					"totalInfo": {
 						SchemaProps: spec.SchemaProps{
-<<<<<<< HEAD
 							Default: 0,
 							Type:    []string{"integer"},
 							Format:  "int32",
-=======
-							Description: "Services is an optional field that contains options for matching Kubernetes Services. If specified, only traffic that originates from or terminates at endpoints within the selected service(s) will be matched, and only to/from each endpoint's port.\n\nServices cannot be specified on the same rule as Selector, NotSelector, NamespaceSelector, Nets, NotNets or ServiceAccounts.\n\nPorts and NotPorts can only be specified with Services on ingress rules.",
-							Ref:         ref("github.com/projectcalico/api/pkg/apis/projectcalico/v3.ServiceMatch"),
->>>>>>> origin/release-v3.21
 						},
 					},
 					"total": {
@@ -3438,7 +3433,7 @@ func schema_pkg_apis_projectcalico_v3_EntityRule(ref common.ReferenceCallback) c
 					},
 					"services": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Services is an optional field that contains options for matching Kubernetes Services. If specified, only traffic that originates from or terminates at endpoints within the selected service(s) will be matched, and only to/from each endpoint's port.\n\nServices cannot be specified on the same rule as Selector, NotSelector, NamespaceSelector, Ports, NotPorts, Nets, NotNets or ServiceAccounts.\n\nOnly valid on egress rules.",
+							Description: "Services is an optional field that contains options for matching Kubernetes Services. If specified, only traffic that originates from or terminates at endpoints within the selected service(s) will be matched, and only to/from each endpoint's port.\n\nServices cannot be specified on the same rule as Selector, NotSelector, NamespaceSelector, Nets, NotNets or ServiceAccounts.\n\nPorts and NotPorts can only be specified with Services on ingress rules.",
 							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ServiceMatch"),
 						},
 					},
@@ -6692,6 +6687,13 @@ func schema_pkg_apis_projectcalico_v3_IPPoolSpec(ref common.ReferenceCallback) c
 							Format:      "",
 						},
 					},
+					"disableBGPExport": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Disable exporting routes from this IP Pool’s CIDR over BGP. [Default: false]",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 					"blockSize": {
 						SchemaProps: spec.SchemaProps{
 							Description: "The block size to use for IP address assignments from this pool. Defaults to 26 for IPv4 and 112 for IPv6.",
@@ -9272,18 +9274,7 @@ func schema_pkg_apis_projectcalico_v3_Rule(ref common.ReferenceCallback) common.
 							Ref:         ref("github.com/tigera/api/pkg/lib/numorstring.Protocol"),
 						},
 					},
-<<<<<<< HEAD
 					"notICMP": {
-=======
-					"disableBGPExport": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Disable exporting routes from this IP Pool’s CIDR over BGP. [Default: false]",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"blockSize": {
->>>>>>> origin/release-v3.21
 						SchemaProps: spec.SchemaProps{
 							Description: "NotICMP is the negated version of the ICMP field.",
 							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ICMPFields"),
