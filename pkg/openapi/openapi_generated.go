@@ -93,6 +93,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalAlertList":                       schema_pkg_apis_projectcalico_v3_GlobalAlertList(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalAlertSpec":                       schema_pkg_apis_projectcalico_v3_GlobalAlertSpec(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalAlertStatus":                     schema_pkg_apis_projectcalico_v3_GlobalAlertStatus(ref),
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalAlertSubstitution":               schema_pkg_apis_projectcalico_v3_GlobalAlertSubstitution(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalAlertTemplate":                   schema_pkg_apis_projectcalico_v3_GlobalAlertTemplate(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalAlertTemplateList":               schema_pkg_apis_projectcalico_v3_GlobalAlertTemplateList(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalNetworkPolicy":                   schema_pkg_apis_projectcalico_v3_GlobalNetworkPolicy(ref),
@@ -5295,12 +5296,25 @@ func schema_pkg_apis_projectcalico_v3_GlobalAlertSpec(ref common.ReferenceCallba
 							Format: "double",
 						},
 					},
+					"substitutions": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalAlertSubstitution"),
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"description", "severity", "dataSet"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
+			"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalAlertSubstitution", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
 	}
 }
 
@@ -5358,6 +5372,41 @@ func schema_pkg_apis_projectcalico_v3_GlobalAlertStatus(ref common.ReferenceCall
 		},
 		Dependencies: []string{
 			"github.com/tigera/api/pkg/apis/projectcalico/v3.ErrorCondition", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_GlobalAlertSubstitution(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "GlobalAlertSubstitution substitutes for the variables in the IN operator of a Query.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"values": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
 	}
 }
 
