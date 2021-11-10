@@ -8201,21 +8201,21 @@ func schema_pkg_apis_projectcalico_v3_Position(ref common.ReferenceCallback) com
 							Format:  "",
 						},
 					},
-					"x": {
+					"xPos": {
 						SchemaProps: spec.SchemaProps{
 							Default: 0,
 							Type:    []string{"integer"},
 							Format:  "int32",
 						},
 					},
-					"y": {
+					"yPos": {
 						SchemaProps: spec.SchemaProps{
 							Default: 0,
 							Type:    []string{"integer"},
 							Format:  "int32",
 						},
 					},
-					"z": {
+					"zPos": {
 						SchemaProps: spec.SchemaProps{
 							Default: 0,
 							Type:    []string{"integer"},
@@ -8223,7 +8223,7 @@ func schema_pkg_apis_projectcalico_v3_Position(ref common.ReferenceCallback) com
 						},
 					},
 				},
-				Required: []string{"id", "x", "y", "z"},
+				Required: []string{"id", "xPos", "yPos", "zPos"},
 			},
 		},
 	}
