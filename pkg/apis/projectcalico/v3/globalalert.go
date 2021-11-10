@@ -53,6 +53,7 @@ type GlobalAlertSpec struct {
 	Metric      string           `json:"metric,omitempty" validate:"omitempty,oneof=avg max min sum count"`
 	Condition   string           `json:"condition,omitempty" validate:"omitempty,oneof=eq not_eq gt gte lt lte"`
 	Threshold   float64          `json:"threshold,omitempty" validate:"omitempty"`
+	Patterns    []string         `json:"patterns,omitempty validate:"omitempty`
 }
 
 type GlobalAlertStatus struct {

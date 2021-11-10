@@ -2526,6 +2526,11 @@ func (in *GlobalAlertSpec) DeepCopyInto(out *GlobalAlertSpec) {
 		*out = make([]string, len(*in))
 		copy(*out, *in)
 	}
+	if in.Patterns != nil {
+		in, out := &in.Patterns, &out.Patterns
+		*out = make([]string, len(*in))
+		copy(*out, *in)
+	}
 	return
 }
 
