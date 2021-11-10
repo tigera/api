@@ -87,10 +87,10 @@ type UIGraphView struct {
 
 // UI screen position.
 type Position struct {
-	ID string `json:"id" validate:"servicegraphid"`
-	X  int    `json:"x"`
-	Y  int    `json:"y"`
-	Z  int    `json:"z"`
+	ID   string `json:"id" validate:"servicegraphid"`
+	XPos int    `json:"xPos"`
+	YPos int    `json:"yPos"`
+	ZPos int    `json:"zPos"`
 }
 
 // A Calico format label selector with an associated name.
