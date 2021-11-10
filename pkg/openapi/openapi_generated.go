@@ -5295,6 +5295,20 @@ func schema_pkg_apis_projectcalico_v3_GlobalAlertSpec(ref common.ReferenceCallba
 							Format: "double",
 						},
 					},
+					"patterns": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"description", "severity", "dataSet"},
 			},
