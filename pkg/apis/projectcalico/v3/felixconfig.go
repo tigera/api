@@ -270,6 +270,11 @@ type FelixConfigurationSpec struct {
 	// like Application layer policy. [Default: Empty]
 	PolicySyncPathPrefix string `json:"policySyncPathPrefix,omitempty"`
 
+	// PolicySyncServiceAccount is used by Felix to check PolicySync client
+	// credentials against informed ServiceAccount name.
+	// [Default: policysync-sa]
+	PolicySyncServiceAccount string `json:"policySyncServiceAccount,omitempty"`
+
 	// UsageReportingEnabled reports anonymous Calico version number and cluster size to projectcalico.org. Logs warnings returned by the usage
 	// server. For example, if a significant security vulnerability has been discovered in the version of Calico being used. [Default: true]
 	UsageReportingEnabled *bool `json:"usageReportingEnabled,omitempty"`
