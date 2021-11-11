@@ -31,13 +31,13 @@ type UISettingsSpec struct {
 	Description string `json:"description" validate:"uiDescription"`
 
 	// View data. One of View, Layer or Dashboard should be specified.
-	View *UIGraphView `json:"view,omitempty"`
+	View *UIGraphView `json:"view,omitempty" validate:"omitempty"`
 
 	// Layer data. One of View, Layer or Dashboard should be specified.
-	Layer *UIGraphLayer `json:"layer,omitempty"`
+	Layer *UIGraphLayer `json:"layer,omitempty" validate:"omitempty"`
 
 	// Dashboard data. One of View, Layer or Dashboard should be specified.
-	Dashboard *UIDashboard `json:"dashboard,omitempty"`
+	Dashboard *UIDashboard `json:"dashboard,omitempty" validate:"omitempty"`
 }
 
 // UIGraphView contains the data for a UI graph view.
@@ -50,15 +50,15 @@ type UIGraphView struct {
 	Expanded []UIGraphNode `json:"expanded,omitempty" validate:"omitempty,dive"`
 
 	// Whether ports are expanded. If false, port information is aggregated.
-	ExpandPorts bool `json:"expandPorts"`
+	ExpandPorts bool `json:"expandPorts" validate:"omitempty"`
 
 	// Whether or not to automatically follow directly connected nodes.
-	FollowConnectionDirection bool `json:"followConnectionDirection"`
+	FollowConnectionDirection bool `json:"followConnectionDirection" validate:"omitempty"`
 
 	// Whether to split HostEndpoints, NetworkSets and Networks into separate ingress and egress nodes or to combine
 	// them. In a service-centric view, splitting these makes the graph clearer. This never splits pods which represent
 	// a true microservice which has ingress and egress connections.
-	SplitIngressEgress bool `json:"splitIngressEgress"`
+	SplitIngressEgress bool `json:"splitIngressEgress" validate:"omitempty"`
 
 	// The set of selectors used to aggregate hosts (Kubernetes nodes). Nodes are aggregated based on the supplied set
 	// of selectors. In the case of overlapping selectors, the order specified in the slice is the order checked and so
@@ -76,10 +76,10 @@ type UIGraphView struct {
 
 	// Layout type. Semi-arbitrary value used to specify the layout-type/algorithm. For example could specify
 	// different layout algorithms, or click-to-grid.  Mostly here for future use.
-	LayoutType string `json:"layout"`
+	LayoutType string `json:"layoutType" validate:"omitempty"`
 
 	// Positions of graph nodes.
-	Positions []Position `json:"position"`
+	Positions []Position `json:"positions" validate:"omitempty"`
 
 	// The set of layer names. This references other UISettings resources.
 	Layers []string `json:"layers" validate:"omitempty,dive,name"`
@@ -105,7 +105,7 @@ type UIGraphLayer struct {
 	Nodes []UIGraphNode `json:"nodes"`
 
 	// A user-configurable icon in SVG format. If not specified, the default layer icon is used for this layer node.
-	Icon string `json:"icon"`
+	Icon string `json:"icon" validate:"omitempty"`
 }
 
 // UIGraphNode contains details about a graph node.
