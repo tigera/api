@@ -41,18 +41,19 @@ type GlobalAlert struct {
 }
 
 type GlobalAlertSpec struct {
-	Summary     string           `json:"summary,omitempty" validate:"omitempty"`
-	Description string           `json:"description" validate:"required"`
-	Severity    int              `json:"severity" validate:"required,min=1,max=100"`
-	Period      *metav1.Duration `json:"period,omitempty" validate:"omitempty"`
-	Lookback    *metav1.Duration `json:"lookback,omitempty" validate:"omitempty"`
-	DataSet     string           `json:"dataSet" validate:"required,oneof=flows dns audit l7"`
-	Query       string           `json:"query,omitempty" validate:"omitempty"`
-	AggregateBy []string         `json:"aggregateBy,omitempty" validate:"omitempty"`
-	Field       string           `json:"field,omitempty" validate:"omitempty"`
-	Metric      string           `json:"metric,omitempty" validate:"omitempty,oneof=avg max min sum count"`
-	Condition   string           `json:"condition,omitempty" validate:"omitempty,oneof=eq not_eq gt gte lt lte"`
-	Threshold   float64          `json:"threshold,omitempty" validate:"omitempty"`
+	Summary       string                             `json:"summary,omitempty" validate:"omitempty"`
+	Description   string                             `json:"description" validate:"required"`
+	Severity      int                                `json:"severity" validate:"required,min=1,max=100"`
+	Period        *metav1.Duration                   `json:"period,omitempty" validate:"omitempty"`
+	Lookback      *metav1.Duration                   `json:"lookback,omitempty" validate:"omitempty"`
+	DataSet       string                             `json:"dataSet" validate:"required,oneof=flows dns audit l7"`
+	Query         string                             `json:"query,omitempty" validate:"omitempty"`
+	AggregateBy   []string                           `json:"aggregateBy,omitempty" validate:"omitempty"`
+	Field         string                             `json:"field,omitempty" validate:"omitempty"`
+	Metric        string                             `json:"metric,omitempty" validate:"omitempty,oneof=avg max min sum count"`
+	Condition     string                             `json:"condition,omitempty" validate:"omitempty,oneof=eq not_eq gt gte lt lte"`
+	Threshold     float64                            `json:"threshold,omitempty" validate:"omitempty"`
+	Substitutions map[string]GlobalAlertSubstitution `json:"substitutions,omitempty" validate:"omitempty"`
 }
 
 type GlobalAlertStatus struct {
@@ -72,6 +73,11 @@ type GlobalAlertList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata"`
 	Items           []GlobalAlert `json:"items"`
+}
+
+// GlobalAlertSubstitution substitutes for the variables in the IN operator of a Query.
+type GlobalAlertSubstitution struct {
+	Values []string `json:"values,omitempty"`
 }
 
 // NewGlobalAlert creates a new (zeroed) GlobalAlert struct with the TypeMetadata
