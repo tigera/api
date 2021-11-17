@@ -87,7 +87,7 @@ type UIGraphView struct {
 
 // UI screen position.
 type Position struct {
-	ID   string `json:"id" validate:"servicegraphid"`
+	ID   string `json:"id" validate:"servicegraphId"`
 	XPos int    `json:"xPos"`
 	YPos int    `json:"yPos"`
 	ZPos int    `json:"zPos"`
