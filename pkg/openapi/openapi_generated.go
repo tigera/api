@@ -10297,14 +10297,20 @@ func schema_pkg_apis_projectcalico_v3_UIGraphLayer(ref common.ReferenceCallback)
 					},
 					"icon": {
 						SchemaProps: spec.SchemaProps{
-							Description: "A user-configurable icon in SVG format. If not specified, the default layer icon is used for this layer node.",
-							Default:     "",
+							Description: "A user-configurable icon. If not specified, the default layer icon is used for this layer node.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"color": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The color used to represent the layer when an Icon has not been specified.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 				},
-				Required: []string{"nodes", "icon"},
+				Required: []string{"nodes"},
 			},
 		},
 		Dependencies: []string{
@@ -10457,7 +10463,7 @@ func schema_pkg_apis_projectcalico_v3_UIGraphView(ref common.ReferenceCallback) 
 							},
 						},
 					},
-					"layout": {
+					"layoutType": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Layout type. Semi-arbitrary value used to specify the layout-type/algorithm. For example could specify different layout algorithms, or click-to-grid.  Mostly here for future use.",
 							Default:     "",
@@ -10465,7 +10471,7 @@ func schema_pkg_apis_projectcalico_v3_UIGraphView(ref common.ReferenceCallback) 
 							Format:      "",
 						},
 					},
-					"position": {
+					"positions": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Positions of graph nodes.",
 							Type:        []string{"array"},
@@ -10495,7 +10501,7 @@ func schema_pkg_apis_projectcalico_v3_UIGraphView(ref common.ReferenceCallback) 
 						},
 					},
 				},
-				Required: []string{"expandPorts", "followConnectionDirection", "splitIngressEgress", "layout", "position", "layers"},
+				Required: []string{"expandPorts", "followConnectionDirection", "splitIngressEgress", "layoutType", "positions", "layers"},
 			},
 		},
 		Dependencies: []string{
