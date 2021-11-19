@@ -12,6 +12,10 @@ agent:
 global_job_config:
   prologue:
     commands:
+      # Correct permissions since they are too open by default:
+      - chmod 0600 ~/.keys/*
+      # Add the key to the ssh agent:
+      - ssh-add ~/.keys/*
       - checkout
       - git fetch --unshallow || true
 
@@ -23,10 +27,6 @@ blocks:
         - name: marvin-release-cutting-credentials
       prologue:
         commands:
-          # Correct permissions since they are too open by default:
-          - chmod 0600 ~/.keys/*
-          # Add the key to the ssh agent:
-          - ssh-add ~/.keys/*
           # Login to gcr in order to push images to gcr.
           - docker login --username marvin@tigera.io -u _json_key -p "$(cat ~/secrets/marvin-gcr-credentials.json)" https://gcr.io
           # Login to quay in order to push images to quay.
