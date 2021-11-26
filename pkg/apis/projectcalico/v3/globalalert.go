@@ -16,7 +16,7 @@ const (
 	GlobalAlertDataSetDNS   = "dns"
 	GlobalAlertDataSetFlows = "flows"
 	GlobalAlertDataSetL7    = "l7"
-	GlobalAlertDataSetRS    = "rs"
+	GlobalAlertDataSetRS    = "runtime"
 
 	GlobalAlertMetricAvg   = "avg"
 	GlobalAlertMetricMax   = "max"
@@ -47,7 +47,7 @@ type GlobalAlertSpec struct {
 	Severity      int                       `json:"severity" validate:"required,min=1,max=100"`
 	Period        *metav1.Duration          `json:"period,omitempty" validate:"omitempty"`
 	Lookback      *metav1.Duration          `json:"lookback,omitempty" validate:"omitempty"`
-	DataSet       string                    `json:"dataSet" validate:"required,oneof=flows dns audit l7 rs"`
+	DataSet       string                    `json:"dataSet" validate:"required,oneof=flows dns audit l7 runtime"`
 	Query         string                    `json:"query,omitempty" validate:"omitempty"`
 	AggregateBy   []string                  `json:"aggregateBy,omitempty" validate:"omitempty"`
 	Field         string                    `json:"field,omitempty" validate:"omitempty"`
