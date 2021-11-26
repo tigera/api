@@ -93,6 +93,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalAlertList":                       schema_pkg_apis_projectcalico_v3_GlobalAlertList(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalAlertSpec":                       schema_pkg_apis_projectcalico_v3_GlobalAlertSpec(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalAlertStatus":                     schema_pkg_apis_projectcalico_v3_GlobalAlertStatus(ref),
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalAlertSubstitution":               schema_pkg_apis_projectcalico_v3_GlobalAlertSubstitution(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalAlertTemplate":                   schema_pkg_apis_projectcalico_v3_GlobalAlertTemplate(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalAlertTemplateList":               schema_pkg_apis_projectcalico_v3_GlobalAlertTemplateList(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalNetworkPolicy":                   schema_pkg_apis_projectcalico_v3_GlobalNetworkPolicy(ref),
@@ -3433,7 +3434,7 @@ func schema_pkg_apis_projectcalico_v3_EntityRule(ref common.ReferenceCallback) c
 					},
 					"services": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Services is an optional field that contains options for matching Kubernetes Services. If specified, only traffic that originates from or terminates at endpoints within the selected service(s) will be matched, and only to/from each endpoint's port.\n\nServices cannot be specified on the same rule as Selector, NotSelector, NamespaceSelector, Ports, NotPorts, Nets, NotNets or ServiceAccounts.\n\nOnly valid on egress rules.",
+							Description: "Services is an optional field that contains options for matching Kubernetes Services. If specified, only traffic that originates from or terminates at endpoints within the selected service(s) will be matched, and only to/from each endpoint's port.\n\nServices cannot be specified on the same rule as Selector, NotSelector, NamespaceSelector, Nets, NotNets or ServiceAccounts.\n\nPorts and NotPorts can only be specified with Services on ingress rules.",
 							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ServiceMatch"),
 						},
 					},
@@ -5295,12 +5296,25 @@ func schema_pkg_apis_projectcalico_v3_GlobalAlertSpec(ref common.ReferenceCallba
 							Format: "double",
 						},
 					},
+					"substitutions": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalAlertSubstitution"),
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"description", "severity", "dataSet"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
+			"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalAlertSubstitution", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
 	}
 }
 
@@ -5358,6 +5372,41 @@ func schema_pkg_apis_projectcalico_v3_GlobalAlertStatus(ref common.ReferenceCall
 		},
 		Dependencies: []string{
 			"github.com/tigera/api/pkg/apis/projectcalico/v3.ErrorCondition", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_GlobalAlertSubstitution(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "GlobalAlertSubstitution substitutes for the variables in the set operators of a Query.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"values": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
 	}
 }
 
@@ -6683,6 +6732,13 @@ func schema_pkg_apis_projectcalico_v3_IPPoolSpec(ref common.ReferenceCallback) c
 					"disabled": {
 						SchemaProps: spec.SchemaProps{
 							Description: "When disabled is true, Calico IPAM will not assign addresses from this pool.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"disableBGPExport": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Disable exporting routes from this IP Pool’s CIDR over BGP. [Default: false]",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
@@ -10290,14 +10346,20 @@ func schema_pkg_apis_projectcalico_v3_UIGraphLayer(ref common.ReferenceCallback)
 					},
 					"icon": {
 						SchemaProps: spec.SchemaProps{
-							Description: "A user-configurable icon in SVG format. If not specified, the default layer icon is used for this layer node.",
-							Default:     "",
+							Description: "A user-configurable icon. If not specified, the default layer icon is used for this layer node.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"color": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The color used to represent the layer when an Icon has not been specified.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 				},
-				Required: []string{"nodes", "icon"},
+				Required: []string{"nodes"},
 			},
 		},
 		Dependencies: []string{
@@ -10450,7 +10512,7 @@ func schema_pkg_apis_projectcalico_v3_UIGraphView(ref common.ReferenceCallback) 
 							},
 						},
 					},
-					"layout": {
+					"layoutType": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Layout type. Semi-arbitrary value used to specify the layout-type/algorithm. For example could specify different layout algorithms, or click-to-grid.  Mostly here for future use.",
 							Default:     "",
@@ -10458,7 +10520,7 @@ func schema_pkg_apis_projectcalico_v3_UIGraphView(ref common.ReferenceCallback) 
 							Format:      "",
 						},
 					},
-					"position": {
+					"positions": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Positions of graph nodes.",
 							Type:        []string{"array"},
@@ -10488,7 +10550,7 @@ func schema_pkg_apis_projectcalico_v3_UIGraphView(ref common.ReferenceCallback) 
 						},
 					},
 				},
-				Required: []string{"expandPorts", "followConnectionDirection", "splitIngressEgress", "layout", "position", "layers"},
+				Required: []string{"expandPorts", "followConnectionDirection", "splitIngressEgress", "layoutType", "positions", "layers"},
 			},
 		},
 		Dependencies: []string{
