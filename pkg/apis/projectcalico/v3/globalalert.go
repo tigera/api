@@ -54,13 +54,14 @@ type GlobalAlertSpec struct {
 	Period   *metav1.Duration `json:"period,omitempty" validate:"omitempty"`
 	Lookback *metav1.Duration `json:"lookback,omitempty" validate:"omitempty"`
 	// DataSet detemines which dataset type the Query will use.  Required if Type is ofUserDefined.
-	DataSet     string   `json:"dataSet" validate:"omitempty,oneof=flows dns audit"`
-	Query       string   `json:"query,omitempty" validate:"omitempty"`
-	AggregateBy []string `json:"aggregateBy,omitempty" validate:"omitempty"`
-	Field       string   `json:"field,omitempty" validate:"omitempty"`
-	Metric      string   `json:"metric,omitempty" validate:"omitempty,oneof=avg max min sum count"`
-	Condition   string   `json:"condition,omitempty" validate:"omitempty,oneof=eq not_eq gt gte lt lte"`
-	Threshold   float64  `json:"threshold,omitempty" validate:"omitempty"`
+	DataSet       string                    `json:"dataSet" validate:"required,oneof=flows dns audit l7"`
+	Query         string                    `json:"query,omitempty" validate:"omitempty"`
+	AggregateBy   []string                  `json:"aggregateBy,omitempty" validate:"omitempty"`
+	Field         string                    `json:"field,omitempty" validate:"omitempty"`
+	Metric        string                    `json:"metric,omitempty" validate:"omitempty,oneof=avg max min sum count"`
+	Condition     string                    `json:"condition,omitempty" validate:"omitempty,oneof=eq not_eq gt gte lt lte"`
+	Threshold     float64                   `json:"threshold,omitempty" validate:"omitempty"`
+	Substitutions []GlobalAlertSubstitution `json:"substitutions,omitempty" validate:"omitempty"`
 }
 
 type GlobalAlertType string
@@ -100,6 +101,12 @@ type GlobalAlertList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata"`
 	Items           []GlobalAlert `json:"items"`
+}
+
+// GlobalAlertSubstitution substitutes for the variables in the set operators of a Query.
+type GlobalAlertSubstitution struct {
+	Name   string   `json:"name" validate:"required"`
+	Values []string `json:"values,omitempty"`
 }
 
 // NewGlobalAlert creates a new (zeroed) GlobalAlert struct with the TypeMetadata
