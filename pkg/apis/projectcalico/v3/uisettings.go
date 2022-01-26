@@ -43,15 +43,15 @@ type UISettingsSpec struct {
 // UIGraphView contains the data for a UI graph view.
 type UIGraphView struct {
 	// Whether ports are expanded. If false, port information is aggregated.
-	ExpandPorts bool `json:"expandPorts" validate:"omitempty"`
+	ExpandPorts *bool `json:"expandPorts,omitempty" validate:"omitempty"`
 
 	// Whether or not to automatically follow directly connected nodes.
-	FollowConnectionDirection bool `json:"followConnectionDirection,omitempty" validate:"omitempty"`
+	FollowConnectionDirection *bool `json:"followConnectionDirection,omitempty" validate:"omitempty"`
 
 	// Whether to split HostEndpoints, NetworkSets and Networks into separate ingress and egress nodes or to combine
 	// them. In a service-centric view, splitting these makes the graph clearer. This never splits pods which represent
 	// a true microservice which has ingress and egress connections.
-	SplitIngressEgress bool `json:"splitIngressEgress,omitempty" validate:"omitempty"`
+	SplitIngressEgress *bool `json:"splitIngressEgress,omitempty" validate:"omitempty"`
 
 	// The set of selectors used to aggregate hosts (Kubernetes nodes). Nodes are aggregated based on the supplied set
 	// of selectors. In the case of overlapping selectors, the order specified in the slice is the order checked and so
@@ -122,27 +122,27 @@ type UIGraphNodeView struct {
 	UIGraphNode `json:",inline"`
 
 	// This node is a primary focus of the graph (i.e. the graph contains this node and connected nodes).
-	InFocus bool `json:"inFocus,omitempty" validate:"omitempty"`
+	InFocus *bool `json:"inFocus,omitempty" validate:"omitempty"`
 
 	// This node is expanded to the next level.  This node can, for example, be a layer that is expanded into its
 	// constituent parts.
-	Expanded bool `json:"expanded,omitempty" validate:"omitempty"`
+	Expanded *bool `json:"expanded,omitempty" validate:"omitempty"`
 
 	// Whether the ingress/egress connections to/from this node are included in the graph.  This effectively brings
 	// more nodes into focus.
-	FollowIngress bool `json:"followIngress,omitempty" validate:"omitempty"`
-	FollowEgress  bool `json:"followEgress,omitempty" validate:"omitempty"`
+	FollowIngress *bool `json:"followIngress,omitempty" validate:"omitempty"`
+	FollowEgress  *bool `json:"followEgress,omitempty" validate:"omitempty"`
 
 	// Whether the UI should de-emphasize the node when visible. This is just a UI directive and does not correspond to
 	// a backend parameter.
-	Deemphasize bool `json:"deemphasize,omitempty" validate:"omitempty"`
+	Deemphasize *bool `json:"deemphasize,omitempty" validate:"omitempty"`
 
 	// Whether the UI should hide the node. This is just a UI directive and does not correspond to a backend parameter.
-	Hide bool `json:"hide,omitempty" validate:"omitempty"`
+	Hide *bool `json:"hide,omitempty" validate:"omitempty"`
 
 	// Whether the UI should hide unrelated nodes. This is just a UI directive and does not correspond to a backend
 	// parameter.
-	HideUnrelated bool `json:"hideUnrelated,omitempty" validate:"omitempty"`
+	HideUnrelated *bool `json:"hideUnrelated,omitempty" validate:"omitempty"`
 }
 
 // UIDashboard contains the data for a UI dashboard.
