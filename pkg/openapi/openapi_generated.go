@@ -10516,7 +10516,6 @@ func schema_pkg_apis_projectcalico_v3_UIGraphView(ref common.ReferenceCallback) 
 					"expandPorts": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Whether ports are expanded. If false, port information is aggregated.",
-							Default:     false,
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
@@ -10600,7 +10599,6 @@ func schema_pkg_apis_projectcalico_v3_UIGraphView(ref common.ReferenceCallback) 
 						},
 					},
 				},
-				Required: []string{"expandPorts"},
 			},
 		},
 		Dependencies: []string{
