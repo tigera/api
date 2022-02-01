@@ -4835,7 +4835,7 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 					},
 					"l7LogsFileAggregationDestinationInfo": {
 						SchemaProps: spec.SchemaProps{
-							Description: "if type is omitted, assume UserDefined",
+							Description: "L7LogsFileAggregationDestinationInfo is used to choose the type of aggregation for the destination metadata on L7 log entries. [Default: IncludeL7DestinationInfo - include destination metadata]. Accepted values are IncludeL7DestinationInfo and ExcludeL7DestinationInfo. IncludeL7DestinationInfo - Include destination metadata in the logs. ExcludeL7DestinationInfo - Aggregate over all other fields ignoring the destination aggregated name, namespace, and type.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -4870,8 +4870,9 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 					},
 					"l7LogsFileAggregationURLCharLimit": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Description: "Limit on the length of the URL collected in L7 logs. When a URL length reaches this limit it is sliced off, and the sliced URL is sent to log storage. [Default: 250]",
+							Type:        []string{"integer"},
+							Format:      "int32",
 						},
 					},
 					"l7LogsFilePerNodeLimit": {
@@ -4985,22 +4986,7 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 							Format:      "int32",
 						},
 					},
-				},
-				Required: []string{"active", "healthy"},
-			},
-		},
-		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.ErrorCondition", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
-	}
-}
-
-func schema_pkg_apis_projectcalico_v3_GlobalAlertTemplate(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
+					"captureRotationSeconds": {
 						SchemaProps: spec.SchemaProps{
 							Description: "CaptureRotationSeconds controls the time rotation of a packet capture. [Default: 3600]",
 							Type:        []string{"integer"},
@@ -5537,14 +5523,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalNetworkPolicy(ref common.ReferenceCa
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"type": {
-						SchemaProps: spec.SchemaProps{
-							Description: "if Type is not provided assume UserDefined to  avoid breaking changes",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"summary": {
+					"kind": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
 							Type:        []string{"string"},
@@ -5558,24 +5537,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalNetworkPolicy(ref common.ReferenceCa
 							Format:      "",
 						},
 					},
-					"job": {
-						SchemaProps: spec.SchemaProps{
-							Description: "required if Type is of AnomalyDetection",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"trainingInterval": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
-						},
-					},
-					"trainingLookback": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
-						},
-					},
-					"severity": {
+					"metadata": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
 							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
@@ -10659,7 +10621,7 @@ func schema_pkg_apis_projectcalico_v3_UIGraphView(ref common.ReferenceCallback) 
 	}
 }
 
-func schema_pkg_apis_projectcalico_v3_ThreatFeedFormat(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_pkg_apis_projectcalico_v3_UISettings(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
