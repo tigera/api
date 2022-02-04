@@ -38,6 +38,10 @@ type UISettingsSpec struct {
 
 	// Dashboard data. One of View, Layer or Dashboard should be specified.
 	Dashboard *UIDashboard `json:"dashboard,omitempty" validate:"omitempty"`
+
+	// The user associated with these settings. This is filled in by the APIServer on a create request if the owning
+	// group is filtered by user. Cannot be modified.
+	User string `json:"user,omitempty" validate:"omitempty"`
 }
 
 // UIGraphView contains the data for a UI graph view.
