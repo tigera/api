@@ -277,7 +277,6 @@ type FelixConfigurationSpec struct {
 	// UsageReportingEnabled reports anonymous Calico version number and cluster size to projectcalico.org. Logs warnings returned by the usage
 	// server. For example, if a significant security vulnerability has been discovered in the version of Calico being used. [Default: true]
 	UsageReportingEnabled *bool `json:"usageReportingEnabled,omitempty"`
-
 	// UsageReportingInitialDelay controls the minimum delay before Felix makes a report. [Default: 300s]
 	UsageReportingInitialDelay *metav1.Duration `json:"usageReportingInitialDelay,omitempty" configv1timescale:"seconds" confignamev1:"UsageReportingInitialDelaySecs"`
 	// UsageReportingInterval controls the interval at which Felix makes reports. [Default: 86400s]

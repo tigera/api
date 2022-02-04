@@ -27,7 +27,7 @@ include ./lib.Makefile
 endif
 
 # Override DOCKER_RUN from lib.Makefile. We need to trick this particular directory to think
-# that its package is github.com/projectcalico/api for easier mirroring.
+# that its package is github.com/tigera/api for easier mirroring.
 DOCKER_RUN := mkdir -p ../.go-pkg-cache bin $(GOMOD_CACHE) && \
 	docker run --rm \
 		--net=host \

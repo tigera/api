@@ -10777,6 +10777,13 @@ func schema_pkg_apis_projectcalico_v3_UISettingsGroupSpec(ref common.ReferenceCa
 							Format:      "",
 						},
 					},
+					"filterType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The type of filter to use when listing and watching the UISettings associated with this group. If set to None a List/watch of UISettings in this group will return all UISettings. If set to User a list/watch of UISettings in this group will return only UISettings created by the user making the request. For settings groups that are specific to users and where multiple users may access the settings in this group we recommend setting this to \"User\" to avoid cluttering up the UI with settings for other users. Note this is only a filter. Full lockdown of UISettings for specific users should be handled using appropriate RBAC.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 				Required: []string{"description"},
 			},
@@ -10872,6 +10879,13 @@ func schema_pkg_apis_projectcalico_v3_UISettingsSpec(ref common.ReferenceCallbac
 						SchemaProps: spec.SchemaProps{
 							Description: "Dashboard data. One of View, Layer or Dashboard should be specified.",
 							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.UIDashboard"),
+						},
+					},
+					"user": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The user associated with these settings. This is filled in by the APIServer on a create request if the owning group is filtered by user. Cannot be modified.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},
