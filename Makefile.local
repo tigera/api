@@ -9,7 +9,7 @@ update: check-dirty
 	# Clone a temporary copy of the Calico repo at the given version.
 	rm -rf /tmp/calico-api-mirror
 	mkdir -p /tmp/calico-api-mirror
-	git clone --depth 1 git@github.com:projectcalico/calico.git -b $(CALICO_VERSION) /tmp/calico-api-mirror
+	git clone --depth 1 git@github.com:tigera/calico-private.git -b $(CALICO_VERSION) /tmp/calico-api-mirror
 	# Remove local files - we'll add them back from the Calico repo's contents.
 	rm -r pkg/ build/ examples/ hack/
 	# Add in files from the Calico repo.
