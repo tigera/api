@@ -53,3 +53,17 @@ blocks:
         - name: Static Checks
           commands:
             - make static-checks
+  - name: Trigger pin updates
+    execution_time_limit:
+      minutes: 5
+    dependencies: [ ]
+    skip:
+      when: "(branch != 'master') and (branch !~ '^release-calient-v\d*\.\d*')"
+    task:
+      secrets:
+        - name: semaphore-api
+      jobs:
+        - name: Trigger pin updates
+          commands:
+            - checkout
+            - make semaphore-run-auto-pin-update-workflows
