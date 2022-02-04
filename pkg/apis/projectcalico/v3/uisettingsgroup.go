@@ -9,6 +9,11 @@ const (
 	KindUISettingsGroupList = "UISettingsGroupList"
 )
 
+const (
+	FilterTypeNone = "None"
+	FilterTypeUser = "User"
+)
+
 // +genclient
 // +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -40,6 +45,16 @@ type UISettingsGroupSpec struct {
 	//   storefront set of applications
 	// - "user" if these settings are accessible to only a single user
 	Description string `json:"description" validate:"uiDescription"`
+
+	// The type of filter to use when listing and watching the UISettings associated with this group. If set to None
+	// a List/watch of UISettings in this group will return all UISettings. If set to User a list/watch of UISettings
+	// in this group will return only UISettings created by the user making the request.
+	// For settings groups that are specific to users and where multiple users may access the settings in this group
+	// we recommend setting this to "User" to avoid cluttering up the UI with settings for other users.
+	// Note this is only a filter. Full lockdown of UISettings for specific users should be handled using appropriate
+	// RBAC.
+	// +kubebuilder:validation:Enum=None;User
+	FilterType string `json:"filterType,omitempty" validate:"omitempty"`
 }
 
 // +genclient:nonNamespaced
