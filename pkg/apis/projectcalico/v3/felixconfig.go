@@ -182,6 +182,10 @@ type FelixConfigurationSpec struct {
 	// LogSeveritySys is the log severity above which logs are sent to the syslog. Set to None for no logging to syslog.
 	// [Default: Info]
 	LogSeveritySys string `json:"logSeveritySys,omitempty" validate:"omitempty,logLevel"`
+	// LogDebugFilenameRegex controls which source code files have their Debug log output included in the logs.
+	// Only logs from files with names that match the given regular expression are included.  The filter only applies
+	// to Debug level logs.
+	LogDebugFilenameRegex string `json:"logDebugFilenameRegex,omitempty" validate:"omitempty,regexp"`
 
 	IPIPEnabled *bool `json:"ipipEnabled,omitempty" confignamev1:"IpInIpEnabled"`
 	// IPIPMTU is the MTU to set on the tunnel device. See Configuring MTU [Default: 1440]
@@ -670,6 +674,8 @@ type FelixConfigurationSpec struct {
 	WireguardMTU *int `json:"wireguardMTU,omitempty"`
 	// WireguardHostEncryptionEnabled controls whether Wireguard host-to-host encryption is enabled. [Default: false]
 	WireguardHostEncryptionEnabled *bool `json:"wireguardHostEncryptionEnabled,omitempty"`
+	// WireguardKeepAlive controls Wireguard PersistentKeepalive option. Set 0 to disable. [Default: 0]
+	WireguardPersistentKeepAlive *metav1.Duration `json:"wireguardKeepAlive,omitempty"`
 
 	// +kubebuilder:validation:MinLength=1
 	// CaptureDir controls directory to store file capture. [Default: /var/log/calico/pcap]
