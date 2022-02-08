@@ -115,10 +115,10 @@ type UIGraphNode struct {
 	Type string `json:"type" validate:"servicegraphNodeType"`
 
 	// The node name.
-	Name string `json:"name" validate:"name"`
+	Name string `json:"name" validate:"serviceGraphNodeName"`
 
 	// The node namespace.
-	Namespace string `json:"namespace,omitempty" validate:"omitempty,name"`
+	Namespace string `json:"namespace,omitempty" validate:"omitempty,serviceGraphNodeName"`
 }
 
 // UIGraphNodeView contains the view configuration for a specific graph node.
