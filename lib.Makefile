@@ -157,6 +157,7 @@ ifeq ($(BUILDARCH),amd64)
 	ETCD_IMAGE = quay.io/coreos/etcd:$(ETCD_VERSION)
 endif
 UBI_IMAGE ?= registry.access.redhat.com/ubi8/ubi-minimal:$(UBI_VERSION)
+UBI_IMAGE_FULL  ?= registry.access.redhat.com/ubi8/ubi:$(UBI_VERSION)
 
 ifeq ($(GIT_USE_SSH),true)
 	GIT_CONFIG_SSH ?= git config --global url."ssh://git@github.com/".insteadOf "https://github.com/";
@@ -251,6 +252,8 @@ DOCKER_RUN_RO := mkdir -p .go-pkg-cache bin $(GOMOD_CACHE) && \
 		-w /go/src/$(PACKAGE_NAME)
 
 DOCKER_GO_BUILD := $(DOCKER_RUN) $(CALICO_BUILD)
+
+DOCKER_GO_BUILD_CGO=$(DOCKER_RUN) -e CGO_ENABLED=$(CGO_ENABLED) -e CGO_LDFLAGS=$(CGO_LDFLAGS) $(CALICO_BUILD)
 
 ###############################################################################
 # Updating pins
@@ -531,7 +534,7 @@ LINT_ARGS ?= --max-issues-per-linter 0 --max-same-issues 0 --timeout 8m
 
 .PHONY: golangci-lint
 golangci-lint: $(GENERATED_FILES)
-	$(DOCKER_RUN) $(CALICO_BUILD) sh -c '$(GIT_CONFIG_SSH) golangci-lint run $(LINT_ARGS)'
+	$(DOCKER_GO_BUILD_CGO) sh -c '$(GIT_CONFIG_SSH) golangci-lint run $(LINT_ARGS)'
 
 .PHONY: go-fmt goimports fix
 fix go-fmt goimports:
