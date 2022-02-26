@@ -48,9 +48,9 @@ type GlobalAlertSpec struct {
 	Type        GlobalAlertType `json:"type,omitempty" validate:"omitempty,globalAlertType"`
 	Summary     string          `json:"summary,omitempty" validate:"omitempty"`
 	Description string          `json:"description" validate:"required"`
-	// Job sepcifies the AnomalyDetectionJob to run if GlobalAlert is of Type AnomalyDetection.
+	// Detector sepcifies the AnomalyDetectionJob to run if GlobalAlert is of Type AnomalyDetection.
 	// Required if Type is of AnomalyDetection.
-	Job      string           `json:"job,omitempty" validate:"omitempty"`
+	Detector string           `json:"detector,omitempty" validate:"omitempty"`
 	Severity int              `json:"severity" validate:"required,min=1,max=100"`
 	Period   *metav1.Duration `json:"period,omitempty" validate:"omitempty"`
 	Lookback *metav1.Duration `json:"lookback,omitempty" validate:"omitempty"`
