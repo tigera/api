@@ -5230,6 +5230,13 @@ func schema_pkg_apis_projectcalico_v3_GlobalAlertSpec(ref common.ReferenceCallba
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Type will dictate how the fields of the GlobalAlert will be utilized. Each Type will have different usages and defaults for the fields. [Default: UserDefined]",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"summary": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
@@ -5241,6 +5248,13 @@ func schema_pkg_apis_projectcalico_v3_GlobalAlertSpec(ref common.ReferenceCallba
 							Default: "",
 							Type:    []string{"string"},
 							Format:  "",
+						},
+					},
+					"job": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Job sepcifies the AnomalyDetectionJob to run if GlobalAlert is of Type AnomalyDetection. Required if Type is of AnomalyDetection.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"severity": {
@@ -5262,9 +5276,10 @@ func schema_pkg_apis_projectcalico_v3_GlobalAlertSpec(ref common.ReferenceCallba
 					},
 					"dataSet": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
+							Description: "DataSet detemines which dataset type the Query will use.  Required if Type is ofUserDefined.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"query": {
