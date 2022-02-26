@@ -5250,9 +5250,9 @@ func schema_pkg_apis_projectcalico_v3_GlobalAlertSpec(ref common.ReferenceCallba
 							Format:  "",
 						},
 					},
-					"job": {
+					"detector": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Job sepcifies the AnomalyDetectionJob to run if GlobalAlert is of Type AnomalyDetection. Required if Type is of AnomalyDetection.",
+							Description: "Detector sepcifies the AnomalyDetectionJob to run if GlobalAlert is of Type AnomalyDetection. Required if Type is of AnomalyDetection.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
