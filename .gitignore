@@ -21,4 +21,4 @@ bin/
 /.idea/
 /.vscode/
 
-pkg/report
+pkg/report/
