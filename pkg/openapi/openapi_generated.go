@@ -5239,44 +5239,49 @@ func schema_pkg_apis_projectcalico_v3_GlobalAlertSpec(ref common.ReferenceCallba
 					},
 					"summary": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "Template for the description field in generated events, description is used if this is omitted.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"description": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
+							Description: "Human-readable description of the template.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"detector": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Detector sepcifies the AnomalyDetectionJob to run if GlobalAlert is of Type AnomalyDetection. Required if Type is of AnomalyDetection.",
+							Description: "Detector specifies the AnomalyDetection Detector to run. Required and used only if Type is AnomalyDetection.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"severity": {
 						SchemaProps: spec.SchemaProps{
-							Default: 0,
-							Type:    []string{"integer"},
-							Format:  "int32",
+							Description: "Severity of the alert for display in Manager.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
 						},
 					},
 					"period": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+							Description: "If Type is UserDefined, it is how often the query defined will run. If Type is AnomalyDetection it is how often the detector will be run.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
 					"lookback": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+							Description: "How much data to gather at once. If Type is UserDefined, it must exceed audit log flush interval, dnsLogsFlushInterval, or flowLogsFlushInterval as appropriate.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
 					"dataSet": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DataSet detemines which dataset type the Query will use.  Required if Type is ofUserDefined.",
+							Description: "DataSet determines which dataset type the Query will use. Required and used only if Type is UserDefined.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -5284,13 +5289,15 @@ func schema_pkg_apis_projectcalico_v3_GlobalAlertSpec(ref common.ReferenceCallba
 					},
 					"query": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "Which data to include from the source data set. Written in a domain-specific query language. Only used if Type is UserDefined.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"aggregateBy": {
 						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
+							Description: "An optional list of fields to aggregate results. Only used if Type is UserDefined.",
+							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
@@ -5304,31 +5311,36 @@ func schema_pkg_apis_projectcalico_v3_GlobalAlertSpec(ref common.ReferenceCallba
 					},
 					"field": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "Which field to aggregate results by if using a metric other than count. Only used if Type is UserDefined.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"metric": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "A metric to apply to aggregated results. count is the number of log entries matching the aggregation pattern. Others are applied only to numeric fields in the logs. Only used if Type is UserDefined.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"condition": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "Compare the value of the metric to the threshold using this condition. Only used if Type is UserDefined.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"threshold": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"number"},
-							Format: "double",
+							Description: "A numeric value to compare the value of the metric against. Only used if Type is UserDefined.",
+							Type:        []string{"number"},
+							Format:      "double",
 						},
 					},
 					"substitutions": {
 						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
+							Description: "An optional list of values to replace variable names in query. Only used if Type is UserDefined.",
+							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{

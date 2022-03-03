@@ -13,11 +13,12 @@ const (
 	KindGlobalAlert     = "GlobalAlert"
 	KindGlobalAlertList = "GlobalAlertList"
 
-	GlobalAlertDataSetAudit = "audit"
-	GlobalAlertDataSetDNS   = "dns"
-	GlobalAlertDataSetFlows = "flows"
-	GlobalAlertDataSetL7    = "l7"
-	GlobalAlertDataSetWAF   = "waf"
+	GlobalAlertDataSetAudit         = "audit"
+	GlobalAlertDataSetDNS           = "dns"
+	GlobalAlertDataSetFlows         = "flows"
+	GlobalAlertDataSetL7            = "l7"
+	GlobalAlertDataSetWAF           = "waf"
+	GlobalAlertDataSetVulnerability = "vulnerability"
 
 	GlobalAlertMetricAvg   = "avg"
 	GlobalAlertMetricMax   = "max"
@@ -43,25 +44,47 @@ type GlobalAlert struct {
 }
 
 type GlobalAlertSpec struct {
-	// Type will dictate how the fields of the GlobalAlert will be utilized. Each Type
-	// will have different usages and defaults for the fields. [Default: UserDefined]
-	Type        GlobalAlertType `json:"type,omitempty" validate:"omitempty,globalAlertType"`
-	Summary     string          `json:"summary,omitempty" validate:"omitempty"`
-	Description string          `json:"description" validate:"required"`
-	// Detector sepcifies the AnomalyDetectionJob to run if GlobalAlert is of Type AnomalyDetection.
-	// Required if Type is of AnomalyDetection.
-	Detector string           `json:"detector,omitempty" validate:"omitempty"`
-	Severity int              `json:"severity" validate:"required,min=1,max=100"`
-	Period   *metav1.Duration `json:"period,omitempty" validate:"omitempty"`
+	// Type will dictate how the fields of the GlobalAlert will be utilized.
+	// Each Type will have different usages and defaults for the fields. [Default: UserDefined]
+	Type GlobalAlertType `json:"type,omitempty" validate:"omitempty,globalAlertType"`
+	// Template for the description field in generated events, description is used if this is omitted.
+	Summary string `json:"summary,omitempty" validate:"omitempty"`
+	// Human-readable description of the template.
+	Description string `json:"description" validate:"required"`
+	// Detector specifies the AnomalyDetection Detector to run.
+	// Required and used only if Type is AnomalyDetection.
+	Detector string `json:"detector,omitempty" validate:"omitempty"`
+	// Severity of the alert for display in Manager.
+	Severity int `json:"severity" validate:"required,min=1,max=100"`
+	// If Type is UserDefined, it is how often the query defined will run.
+	// If Type is AnomalyDetection it is how often the detector will be run.
+	Period *metav1.Duration `json:"period,omitempty" validate:"omitempty"`
+	// How much data to gather at once.
+	// If Type is UserDefined, it must exceed audit log flush interval, dnsLogsFlushInterval, or flowLogsFlushInterval as appropriate.
 	Lookback *metav1.Duration `json:"lookback,omitempty" validate:"omitempty"`
-	// DataSet detemines which dataset type the Query will use.  Required if Type is ofUserDefined.
-	DataSet       string                    `json:"dataSet" validate:"omitempty,oneof=flows dns audit l7 waf"`
-	Query         string                    `json:"query,omitempty" validate:"omitempty"`
-	AggregateBy   []string                  `json:"aggregateBy,omitempty" validate:"omitempty"`
-	Field         string                    `json:"field,omitempty" validate:"omitempty"`
-	Metric        string                    `json:"metric,omitempty" validate:"omitempty,oneof=avg max min sum count"`
-	Condition     string                    `json:"condition,omitempty" validate:"omitempty,oneof=eq not_eq gt gte lt lte"`
-	Threshold     float64                   `json:"threshold,omitempty" validate:"omitempty"`
+	// DataSet determines which dataset type the Query will use.
+	// Required and used only if Type is UserDefined.
+	DataSet string `json:"dataSet" validate:"omitempty,oneof=flows dns audit l7 waf vulnerability"`
+	// Which data to include from the source data set. Written in a domain-specific query language. Only used if Type is UserDefined.
+	Query string `json:"query,omitempty" validate:"omitempty"`
+	// An optional list of fields to aggregate results.
+	// Only used if Type is UserDefined.
+	AggregateBy []string `json:"aggregateBy,omitempty" validate:"omitempty"`
+	// Which field to aggregate results by if using a metric other than count.
+	// Only used if Type is UserDefined.
+	Field string `json:"field,omitempty" validate:"omitempty"`
+	// A metric to apply to aggregated results. count is the number of log entries matching the aggregation pattern.
+	// Others are applied only to numeric fields in the logs.
+	// Only used if Type is UserDefined.
+	Metric string `json:"metric,omitempty" validate:"omitempty,oneof=avg max min sum count"`
+	// Compare the value of the metric to the threshold using this condition.
+	// Only used if Type is UserDefined.
+	Condition string `json:"condition,omitempty" validate:"omitempty,oneof=eq not_eq gt gte lt lte"`
+	// A numeric value to compare the value of the metric against.
+	// Only used if Type is UserDefined.
+	Threshold float64 `json:"threshold,omitempty" validate:"omitempty"`
+	// An optional list of values to replace variable names in query.
+	// Only used if Type is UserDefined.
 	Substitutions []GlobalAlertSubstitution `json:"substitutions,omitempty" validate:"omitempty"`
 }
 
