@@ -4,6 +4,8 @@
 
 package v3
 
+type AlertExceptionExpansion interface{}
+
 type AuthenticationReviewExpansion interface{}
 
 type AuthorizationReviewExpansion interface{}

@@ -10,6 +10,8 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
+	// AlertExceptions returns a AlertExceptionInformer.
+	AlertExceptions() AlertExceptionInformer
 	// AuthenticationReviews returns a AuthenticationReviewInformer.
 	AuthenticationReviews() AuthenticationReviewInformer
 	// AuthorizationReviews returns a AuthorizationReviewInformer.
@@ -85,6 +87,11 @@ type version struct {
 // New returns a new Interface.
 func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakListOptions internalinterfaces.TweakListOptionsFunc) Interface {
 	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
+}
+
+// AlertExceptions returns a AlertExceptionInformer.
+func (v *version) AlertExceptions() AlertExceptionInformer {
+	return &alertExceptionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // AuthenticationReviews returns a AuthenticationReviewInformer.
