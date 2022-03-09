@@ -19,6 +19,10 @@ import (
 
 func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenAPIDefinition {
 	return map[string]common.OpenAPIDefinition{
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.AlertException":                        schema_pkg_apis_projectcalico_v3_AlertException(ref),
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.AlertExceptionList":                    schema_pkg_apis_projectcalico_v3_AlertExceptionList(ref),
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.AlertExceptionSpec":                    schema_pkg_apis_projectcalico_v3_AlertExceptionSpec(ref),
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.AlertExceptionStatus":                  schema_pkg_apis_projectcalico_v3_AlertExceptionStatus(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.AuditEventsSelection":                  schema_pkg_apis_projectcalico_v3_AuditEventsSelection(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.AuditResource":                         schema_pkg_apis_projectcalico_v3_AuditResource(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.AuditSummary":                          schema_pkg_apis_projectcalico_v3_AuditSummary(ref),
@@ -176,6 +180,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.ReportTemplate":                        schema_pkg_apis_projectcalico_v3_ReportTemplate(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.ReportTypeSpec":                        schema_pkg_apis_projectcalico_v3_ReportTypeSpec(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.ResourceID":                            schema_pkg_apis_projectcalico_v3_ResourceID(ref),
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.RouteTableIDRange":                     schema_pkg_apis_projectcalico_v3_RouteTableIDRange(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.RouteTableRange":                       schema_pkg_apis_projectcalico_v3_RouteTableRange(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.Rule":                                  schema_pkg_apis_projectcalico_v3_Rule(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.RuleMetadata":                          schema_pkg_apis_projectcalico_v3_RuleMetadata(ref),
@@ -500,6 +505,160 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"k8s.io/apimachinery/pkg/runtime.Unknown":                                               schema_k8sio_apimachinery_pkg_runtime_Unknown(ref),
 		"k8s.io/apimachinery/pkg/util/intstr.IntOrString":                                       schema_apimachinery_pkg_util_intstr_IntOrString(ref),
 		"k8s.io/apimachinery/pkg/version.Info":                                                  schema_k8sio_apimachinery_pkg_version_Info(ref),
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_AlertException(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "AlertException defines exceptions for alert events.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.AlertExceptionSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.AlertExceptionStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/tigera/api/pkg/apis/projectcalico/v3.AlertExceptionSpec", "github.com/tigera/api/pkg/apis/projectcalico/v3.AlertExceptionStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_AlertExceptionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "AlertExceptionList contains a list of AlertException resources.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.AlertException"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata", "items"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/tigera/api/pkg/apis/projectcalico/v3.AlertException", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_AlertExceptionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "AlertExceptionSpec contains the specification for an alert exception resource.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"description": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The description is displayed by the UI.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"selector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Selector defines a query string for alert events to be excluded from UI search results.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"period": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Period controls how long an alert exception will be active. It is optional and omitting Peroid will make the alert exception active forever.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+				},
+				Required: []string{"description", "selector"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_AlertExceptionStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "AlertExceptionStatus contains the status of an alert exception.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"lastExecuted": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -1313,11 +1472,23 @@ func schema_pkg_apis_projectcalico_v3_BGPConfigurationSpec(ref common.ReferenceC
 							Format:      "int32",
 						},
 					},
+					"nodeMeshPassword": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Optional BGP password for full node-to-mesh peerings. This field can only be set on the default BGPConfiguration instance and requires that NodeMesh is enabled",
+							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.BGPPassword"),
+						},
+					},
+					"nodeMeshMaxRestartTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Time to allow for software restart for node-to-mesh peerings.  When specified, this is configured as the graceful restart timeout.  When not specified, the BIRD default of 120s is used. This field can only be set on the default BGPConfiguration instance and requires that NodeMesh is enabled",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.Community", "github.com/tigera/api/pkg/apis/projectcalico/v3.PrefixAdvertisement", "github.com/tigera/api/pkg/apis/projectcalico/v3.ServiceClusterIPBlock", "github.com/tigera/api/pkg/apis/projectcalico/v3.ServiceExternalIPBlock", "github.com/tigera/api/pkg/apis/projectcalico/v3.ServiceLoadBalancerIPBlock"},
+			"github.com/tigera/api/pkg/apis/projectcalico/v3.BGPPassword", "github.com/tigera/api/pkg/apis/projectcalico/v3.Community", "github.com/tigera/api/pkg/apis/projectcalico/v3.PrefixAdvertisement", "github.com/tigera/api/pkg/apis/projectcalico/v3.ServiceClusterIPBlock", "github.com/tigera/api/pkg/apis/projectcalico/v3.ServiceExternalIPBlock", "github.com/tigera/api/pkg/apis/projectcalico/v3.ServiceLoadBalancerIPBlock", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
 	}
 }
 
@@ -4422,6 +4593,47 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 							Ref:         ref("github.com/tigera/api/pkg/lib/numorstring.Port"),
 						},
 					},
+					"bpfMapSizeNATFrontend": {
+						SchemaProps: spec.SchemaProps{
+							Description: "BPFMapSizeNATFrontend sets the size for nat front end map. FrontendMap should be large enough to hold an entry for each nodeport, external IP and each port in each service.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"bpfMapSizeNATBackend": {
+						SchemaProps: spec.SchemaProps{
+							Description: "BPFMapSizeNATBackend sets the size for nat back end map. This is the total number of endpoints. This is mostly more than the size of the number of services.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"bpfMapSizeNATAffinity": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"bpfMapSizeRoute": {
+						SchemaProps: spec.SchemaProps{
+							Description: "BPFMapSizeRoute sets the size for the routes map.  The routes map should be large enough to hold one entry per workload and a handful of entries per host (enough to cover its own IPs and tunnel IPs).",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"bpfMapSizeConntrack": {
+						SchemaProps: spec.SchemaProps{
+							Description: "BPFMapSizeConntrack sets the size for the conntrack map.  This map must be large enough to hold an entry for each active connection.  Warning: changing the size of the conntrack map can cause disruption.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"bpfMapSizeIPSets": {
+						SchemaProps: spec.SchemaProps{
+							Description: "BPFMapSizeIPSets sets the size for ipsets map.  The IP sets map must be large enough to hold an entry for each endpoint matched by every selector in the source/destination matches in network policy.  Selectors such as \"all()\" can result in large numbers of entries (one entry per endpoint in that case).",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
 					"syslogReporterNetwork": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
@@ -4904,9 +5116,23 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 							Format:      "",
 						},
 					},
+					"routeTableRanges": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Calico programs additional Linux route tables for various purposes. RouteTableRanges specifies a set of table index ranges that Calico should use. Deprecates`RouteTableRange`, overrides `RouteTableRange`.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.RouteTableIDRange"),
+									},
+								},
+							},
+						},
+					},
 					"routeTableRange": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Calico programs additional Linux route tables for various purposes.  RouteTableRange specifies the indices of the route tables that Calico should use.",
+							Description: "Deprecated in favor of RouteTableRanges. Calico programs additional Linux route tables for various purposes. RouteTableRange specifies the indices of the route tables that Calico should use.",
 							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.RouteTableRange"),
 						},
 					},
@@ -5080,7 +5306,7 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.ProtoPort", "github.com/tigera/api/pkg/apis/projectcalico/v3.RouteTableRange", "github.com/tigera/api/pkg/lib/numorstring.Port", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
+			"github.com/tigera/api/pkg/apis/projectcalico/v3.ProtoPort", "github.com/tigera/api/pkg/apis/projectcalico/v3.RouteTableIDRange", "github.com/tigera/api/pkg/apis/projectcalico/v3.RouteTableRange", "github.com/tigera/api/pkg/lib/numorstring.Port", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
 	}
 }
 
@@ -5230,52 +5456,74 @@ func schema_pkg_apis_projectcalico_v3_GlobalAlertSpec(ref common.ReferenceCallba
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Type will dictate how the fields of the GlobalAlert will be utilized. Each Type will have different usages and defaults for the fields. [Default: UserDefined]",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"summary": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "Template for the description field in generated events, description is used if this is omitted.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"description": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
+							Description: "Human-readable description of the template.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"detector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Detector specifies the AnomalyDetection Detector to run. Required and used only if Type is AnomalyDetection.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"severity": {
 						SchemaProps: spec.SchemaProps{
-							Default: 0,
-							Type:    []string{"integer"},
-							Format:  "int32",
+							Description: "Severity of the alert for display in Manager.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
 						},
 					},
 					"period": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+							Description: "If Type is UserDefined, it is how often the query defined will run. If Type is AnomalyDetection it is how often the detector will be run.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
 					"lookback": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+							Description: "How much data to gather at once. If Type is UserDefined, it must exceed audit log flush interval, dnsLogsFlushInterval, or flowLogsFlushInterval as appropriate.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
 					"dataSet": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
+							Description: "DataSet determines which dataset type the Query will use. Required and used only if Type is UserDefined.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"query": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "Which data to include from the source data set. Written in a domain-specific query language. Only used if Type is UserDefined.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"aggregateBy": {
 						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
+							Description: "An optional list of fields to aggregate results. Only used if Type is UserDefined.",
+							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
@@ -5289,31 +5537,36 @@ func schema_pkg_apis_projectcalico_v3_GlobalAlertSpec(ref common.ReferenceCallba
 					},
 					"field": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "Which field to aggregate results by if using a metric other than count. Only used if Type is UserDefined.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"metric": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "A metric to apply to aggregated results. count is the number of log entries matching the aggregation pattern. Others are applied only to numeric fields in the logs. Only used if Type is UserDefined.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"condition": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "Compare the value of the metric to the threshold using this condition. Only used if Type is UserDefined.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"threshold": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"number"},
-							Format: "double",
+							Description: "A numeric value to compare the value of the metric against. Only used if Type is UserDefined.",
+							Type:        []string{"number"},
+							Format:      "double",
 						},
 					},
 					"substitutions": {
 						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
+							Description: "An optional list of values to replace variable names in query. Only used if Type is UserDefined.",
+							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
@@ -9274,6 +9527,33 @@ func schema_pkg_apis_projectcalico_v3_ResourceID(ref common.ReferenceCallback) c
 						},
 					},
 				},
+			},
+		},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_RouteTableIDRange(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"min": {
+						SchemaProps: spec.SchemaProps{
+							Default: 0,
+							Type:    []string{"integer"},
+							Format:  "int32",
+						},
+					},
+					"max": {
+						SchemaProps: spec.SchemaProps{
+							Default: 0,
+							Type:    []string{"integer"},
+							Format:  "int32",
+						},
+					},
+				},
+				Required: []string{"min", "max"},
 			},
 		},
 	}
