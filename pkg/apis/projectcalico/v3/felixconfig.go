@@ -391,6 +391,26 @@ type FelixConfigurationSpec struct {
 	// a problem if this range overlaps with the operating systems. Both ends of the range are
 	// inclusive. [Default: 20000:29999]
 	BPFPSNATPorts *numorstring.Port `json:"bpfPSNATPorts,omitempty"`
+	// BPFMapSizeNATFrontend sets the size for nat front end map.
+	// FrontendMap should be large enough to hold an entry for each nodeport,
+	// external IP and each port in each service.
+	BPFMapSizeNATFrontend *int `json:"bpfMapSizeNATFrontend,omitempty"`
+	// BPFMapSizeNATBackend sets the size for nat back end map.
+	// This is the total number of endpoints. This is mostly
+	// more than the size of the number of services.
+	BPFMapSizeNATBackend  *int `json:"bpfMapSizeNATBackend,omitempty"`
+	BPFMapSizeNATAffinity *int `json:"bpfMapSizeNATAffinity,omitempty"`
+	// BPFMapSizeRoute sets the size for the routes map.  The routes map should be large enough
+	// to hold one entry per workload and a handful of entries per host (enough to cover its own IPs and
+	// tunnel IPs).
+	BPFMapSizeRoute *int `json:"bpfMapSizeRoute,omitempty"`
+	// BPFMapSizeConntrack sets the size for the conntrack map.  This map must be large enough to hold
+	// an entry for each active connection.  Warning: changing the size of the conntrack map can cause disruption.
+	BPFMapSizeConntrack *int `json:"bpfMapSizeConntrack,omitempty"`
+	// BPFMapSizeIPSets sets the size for ipsets map.  The IP sets map must be large enough to hold an entry
+	// for each endpoint matched by every selector in the source/destination matches in network policy.  Selectors
+	// such as "all()" can result in large numbers of entries (one entry per endpoint in that case).
+	BPFMapSizeIPSets *int `json:"bpfMapSizeIPSets,omitempty"`
 
 	SyslogReporterNetwork string `json:"syslogReporterNetwork,omitempty"`
 	SyslogReporterAddress string `json:"syslogReporterAddress,omitempty"`
@@ -643,8 +663,14 @@ type FelixConfigurationSpec struct {
 	// - CalicoIPAM: the default - use IPAM data to construct routes.
 	RouteSource string `json:"routeSource,omitempty" validate:"omitempty,routeSource"`
 
-	// Calico programs additional Linux route tables for various purposes.  RouteTableRange
-	// specifies the indices of the route tables that Calico should use.
+	// Calico programs additional Linux route tables for various purposes.
+	// RouteTableRanges specifies a set of table index ranges that Calico should use.
+	// Deprecates`RouteTableRange`, overrides `RouteTableRange`.
+	RouteTableRanges *RouteTableRanges `json:"routeTableRanges,omitempty" validate:"omitempty,dive"`
+
+	// Deprecated in favor of RouteTableRanges.
+	// Calico programs additional Linux route tables for various purposes.
+	// RouteTableRange specifies the indices of the route tables that Calico should use.
 	RouteTableRange *RouteTableRange `json:"routeTableRange,omitempty" validate:"omitempty"`
 
 	// EgressIPSupport defines three different support modes for egress IP function. [Default: Disabled]
@@ -732,6 +758,13 @@ type RouteTableRange struct {
 	Min int `json:"min"`
 	Max int `json:"max"`
 }
+
+type RouteTableIDRange struct {
+	Min int `json:"min"`
+	Max int `json:"max"`
+}
+
+type RouteTableRanges []RouteTableIDRange
 
 // ProtoPort is combination of protocol, port, and CIDR. Protocol and port must be specified.
 type ProtoPort struct {

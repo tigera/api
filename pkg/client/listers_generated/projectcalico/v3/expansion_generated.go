@@ -4,6 +4,10 @@
 
 package v3
 
+// AlertExceptionListerExpansion allows custom methods to be added to
+// AlertExceptionLister.
+type AlertExceptionListerExpansion interface{}
+
 // AuthenticationReviewListerExpansion allows custom methods to be added to
 // AuthenticationReviewLister.
 type AuthenticationReviewListerExpansion interface{}
