@@ -60,6 +60,21 @@ const (
 	AWSSrcDstCheckOptionDisable                        = "Disable"
 )
 
+const (
+	AWSSecondaryIPEnabled               = "Enabled"
+	AWSSecondaryIPDisabled              = "Disabled"
+	AWSSecondaryIPEnabledENIPerWorkload = "EnabledENIPerWorkload"
+)
+
+// +kubebuilder:validation:Enum=NoDelay;DelayDeniedPacket;DelayDNSResponse
+type DNSPolicyMode string
+
+const (
+	DNSPolicyModeNoDelay           DNSPolicyMode = "NoDelay"
+	DNSPolicyModeDelayDeniedPacket DNSPolicyMode = "DelayDeniedPacket"
+	DNSPolicyModeDelayDNSResponse  DNSPolicyMode = "DelayDNSResponse"
+)
+
 // FelixConfigurationSpec contains the values of the Felix configuration.
 type FelixConfigurationSpec struct {
 	UseInternalDataplaneDriver *bool  `json:"useInternalDataplaneDriver,omitempty"`
@@ -326,10 +341,6 @@ type FelixConfigurationSpec struct {
 	DebugSimulateCalcGraphHangAfter *metav1.Duration `json:"debugSimulateCalcGraphHangAfter,omitempty" configv1timescale:"seconds"`
 	DebugSimulateDataplaneHangAfter *metav1.Duration `json:"debugSimulateDataplaneHangAfter,omitempty" configv1timescale:"seconds"`
 
-	// DNSPolicyNfqueueID is the NFQUEUE ID to use for DNS Policy re-evaluation when the domains IP hasn't been programmed
-	// to ipsets yet. [Default: 100]
-	DNSPolicyNfqueueID *int `json:"dnsPolicyNfqueueID,omitempty" validate:"omitempty,gte=0,lte=65535"`
-
 	IptablesNATOutgoingInterfaceFilter string `json:"iptablesNATOutgoingInterfaceFilter,omitempty" validate:"omitempty,ifaceFilter"`
 
 	// SidecarAccelerationEnabled enables experimental sidecar acceleration [Default: false]
@@ -475,17 +486,17 @@ type FelixConfigurationSpec struct {
 	// FlowLogsFileAggregationKindForAllowed is used to choose the type of aggregation for flow log entries created for
 	// allowed connections. [Default: 2 - pod prefix name based aggregation].
 	// Accepted values are 0, 1 and 2.
-	// 0 - No aggregation
-	// 1 - Source port based aggregation
+	// 0 - No aggregation.
+	// 1 - Source port based aggregation.
 	// 2 - Pod prefix name based aggreagation.
 	FlowLogsFileAggregationKindForAllowed *int `json:"flowLogsFileAggregationKindForAllowed,omitempty" validate:"omitempty,flowLogAggregationKind"`
 	// FlowLogsFileAggregationKindForDenied is used to choose the type of aggregation for flow log entries created for
 	// denied connections. [Default: 1 - source port based aggregation].
 	// Accepted values are 0, 1 and 2.
-	// 0 - No aggregation
-	// 1 - Source port based aggregation
+	// 0 - No aggregation.
+	// 1 - Source port based aggregation.
 	// 2 - Pod prefix name based aggregation.
-	// 3 - No destination ports based aggregation
+	// 3 - No destination ports based aggregation.
 	FlowLogsFileAggregationKindForDenied *int `json:"flowLogsFileAggregationKindForDenied,omitempty" validate:"omitempty,flowLogAggregationKind"`
 	// FlowLogsFileEnabledForAllowed is used to enable/disable flow logs entries created for allowed connections. Default is true.
 	// This parameter only takes effect when FlowLogsFileReporterEnabled is set to true.
@@ -510,6 +521,10 @@ type FelixConfigurationSpec struct {
 	// FlowLogsFileNatOutgoingPortLimit is used to specify the maximum number of distinct post SNAT ports that will appear
 	// in the flowLogs. Default value is 3
 	FlowLogsFileNatOutgoingPortLimit *int `json:"flowLogsFileNatOutgoingPortLimit,omitempty" validate:"omitempty"`
+	// FlowLogsFileDomainsLimit is used to configure the number of (destination) domains to include in the flow log. The
+	// domains are only included at aggregation level 0 or 1.
+	// [Default: 5]
+	FlowLogsFileDomainsLimit *int `json:"flowLogsFileDomainsLimit,omitempty" validate:"omitempty"`
 
 	// WindowsFlowLogsFileDirectory sets the directory where flow logs files are stored on Windows nodes. [Default: "c:\\TigeraCalico\\flowlogs"].
 	WindowsFlowLogsFileDirectory string `json:"windowsFlowLogsFileDirectory,omitempty"`
@@ -568,8 +583,8 @@ type FelixConfigurationSpec struct {
 	// DNSLogsFileAggregationKind is used to choose the type of aggregation for DNS log entries.
 	// [Default: 1 - client name prefix aggregation].
 	// Accepted values are 0 and 1.
-	// 0 - No aggregation
-	// 1 - Aggregate over clients with the same name prefix
+	// 0 - No aggregation.
+	// 1 - Aggregate over clients with the same name prefix.
 	DNSLogsFileAggregationKind *int `json:"dnsLogsFileAggregationKind,omitempty" validate:"omitempty,dnsAggregationKind"`
 	// Limit on the number of DNS logs that can be emitted within each flush interval.  When
 	// this limit has been reached, Felix counts the number of unloggable DNS responses within
@@ -579,6 +594,39 @@ type FelixConfigurationSpec struct {
 	// DNSLogsLatency indicates to include measurements of DNS request/response latency in each DNS log.
 	// [Default: true]
 	DNSLogsLatency *bool `json:"dnsLogsLatency,omitempty"`
+	// DNSPolicyMode specifies how DNS policy programming will be handled.
+	// DelayDeniedPacket - Felix delays any denied packet that traversed a policy that included egress domain matches,
+	// but did not match. The packet is released after a fixed time, or after the destination IP address was programmed.
+	// DelayDNSResponse - Felix delays any DNS response until related IPSets are programmed. This introduces some
+	// latency to all DNS packets (even when no IPSet programming is required), but it ensures policy hit statistics
+	// are accurate. This is the recommended setting when you are making use of staged policies or policy rule hit
+	// statistics.
+	// NoDelay - Felix does not introduce any delay to the packets. DNS rules may not have been programmed by the time
+	// the first packet traverses the policy rules. Client applications need to handle reconnection attempts if initial
+	// connection attempts fail. This may be problematic for some applications or for very low DNS TTLs.
+	//
+	// On Windows, or when using the eBPF dataplane, this setting is ignored and "NoDelay" is always used.
+	//
+	// [Default: DelayDeniedPacket]
+	DNSPolicyMode *DNSPolicyMode `json:"dnsPolicyMode,omitempty" validate:"omitempty,oneof=NoDelay DelayDeniedPacket DelayDNSResponse"`
+	// DNSPolicyNfqueueID is the NFQUEUE ID to use for DNS Policy re-evaluation when the domains IP hasn't been programmed
+	// to ipsets yet. Used when DNSPolicyMode is DelayDeniedPacket. [Default: 100]
+	DNSPolicyNfqueueID *int `json:"dnsPolicyNfqueueID,omitempty" validate:"omitempty,gte=0,lte=65535"`
+	// DNSPolicyNfqueueID is the size of the NFQUEUE for DNS policy re-evaluation. This is the maximum number of denied
+	// packets that may be queued up pending re-evaluation.
+	// Used when DNSPolicyMode is DelayDeniedPacket. [Default: 100]
+	DNSPolicyNfqueueSize *int `json:"dnsPolicyNfqueueSize,omitempty" validate:"omitempty,gte=0,lte=65535"`
+	// DNSPacketsNfqueueID is the NFQUEUE ID to use for capturing DNS packets to ensure programming IPSets occurs before
+	// the response is released. Used when DNSPolicyMode is DelayDNSResponse. [Default: 101]
+	DNSPacketsNfqueueID *int `json:"dnsPacketsNfqueueID,omitempty" validate:"omitempty,gte=0,lte=65535"`
+	// DNSPacketsNfqueueSize is the size of the NFQUEUE for captured DNS packets. This is the maximum number of DNS
+	// packets that may be queued awaiting programming in the dataplane. Used when DNSPolicyMode is DelayDNSResponse.
+	// [Default: 100]
+	DNSPacketsNfqueueSize *int `json:"dnsPacketsNfqueueSize,omitempty" validate:"omitempty,gte=0,lte=65535"`
+	// DNSPacketsNfqueueMaxHoldDuration is the max length of time to hold on to a DNS response while waiting for the
+	// the dataplane to be programmed. Used when DNSPolicyMode is DelayDNSResponse.
+	// [Default: 3s]
+	DNSPacketsNfqueueMaxHoldDuration *metav1.Duration `json:"dnsPacketsNfqueueMaxHoldDuration,omitempty"`
 
 	// L7LogsFlushInterval configures the interval at which Felix exports L7 logs.
 	// [Default: 300s]
@@ -721,9 +769,14 @@ type FelixConfigurationSpec struct {
 	// Set source-destination-check on AWS EC2 instances. Accepted value must be one of "DoNothing", "Enable" or "Disable".
 	// [Default: DoNothing]
 	AWSSrcDstCheck *AWSSrcDstCheckOption `json:"awsSrcDstCheck,omitempty" validate:"omitempty,oneof=DoNothing Enable Disable"`
-	// AWSSecondaryIPSupport controls whether Felix will try to provision AWS secondary ENIs and secondary IPs for
-	// workloads that have IPs from IP pools that are configured with an AWS subnet ID. [Default: Disabled]
-	AWSSecondaryIPSupport string `json:"awsSecondaryIPSupport,omitempty" validate:"omitempty,oneof=Enabled Disabled"`
+	// AWSSecondaryIPSupport controls whether Felix will try to provision AWS secondary ENIs for
+	// workloads that have IPs from IP pools that are configured with an AWS subnet ID.  If the field is set to
+	// "EnabledENIPerWorkload" then each workload with an AWS-backed IP will be assigned its own secondary ENI.
+	// If set to "Enabled" then each workload with an AWS-backed IP pool will be allocated a secondary IP address
+	// on a secondary ENI; this mode requires additional IP pools to be provisioned for the host to claim IPs for
+	// the primary IP of the secondary ENIs. Accepted value must be one of "Enabled", "EnabledENIPerWorkload" or
+	// "Disabled". [Default: Disabled]
+	AWSSecondaryIPSupport string `json:"awsSecondaryIPSupport,omitempty" validate:"omitempty,oneof=Enabled EnabledENIPerWorkload Disabled"`
 	// AWSSecondaryIPRoutingRulePriority controls the priority that Felix will use for routing rules when programming
 	// them for AWS Secondary IP support. [Default: 101]
 	AWSSecondaryIPRoutingRulePriority *int `json:"awsSecondaryIPRoutingRulePriority,omitempty" validate:"omitempty,gte=0,lte=4294967295"`
