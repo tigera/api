@@ -74,6 +74,9 @@ ifeq ($(word 1,$(subst v, ,$(ARCH))),arm)
 ARM_VERSION := $(word 2,$(subst v, ,$(ARCH)))
 endif
 
+# detect the local outbound ip address
+LOCAL_IP_ENV?=$(shell ip route get 8.8.8.8 | head -1 | awk '{print $$7}')
+
 LATEST_IMAGE_TAG?=latest
 
 # these macros create a list of valid architectures for pushing manifests
@@ -157,6 +160,7 @@ ifeq ($(BUILDARCH),amd64)
 	ETCD_IMAGE = quay.io/coreos/etcd:$(ETCD_VERSION)
 endif
 UBI_IMAGE ?= registry.access.redhat.com/ubi8/ubi-minimal:$(UBI_VERSION)
+UBI_IMAGE_FULL  ?= registry.access.redhat.com/ubi8/ubi:$(UBI_VERSION)
 
 ifeq ($(GIT_USE_SSH),true)
 	GIT_CONFIG_SSH ?= git config --global url."ssh://git@github.com/".insteadOf "https://github.com/";
@@ -217,6 +221,21 @@ ifdef ARM_VERSION
 GOARCH_FLAGS :=-e GOARCH=arm -e GOARM=$(ARM_VERSION)
 endif
 
+# Set the platform correctly for building docker images so that 
+# cross-builds get the correct architecture set in the produced images.
+ifeq ($(ARCH),arm64)
+TARGET_PLATFORM=--platform=linux/arm64/v8
+endif
+ifeq ($(ARCH),armv7)
+TARGET_PLATFORM=--platform=linux/arm/v7
+endif
+
+# DOCKER_BUILD is the base build command used for building all images.
+DOCKER_BUILD=docker buildx build --pull \
+	     --build-arg QEMU_IMAGE=$(CALICO_BUILD) \
+	     --build-arg UBI_IMAGE=$(UBI_IMAGE) \
+	     --build-arg UBI_IMAGE_FULL=$(UBI_IMAGE_FULL) \
+	     --build-arg GIT_VERSION=$(GIT_VERSION) $(TARGET_PLATFORM)
 
 DOCKER_RUN := mkdir -p ../.go-pkg-cache bin $(GOMOD_CACHE) && \
 	docker run --rm \
@@ -251,6 +270,8 @@ DOCKER_RUN_RO := mkdir -p .go-pkg-cache bin $(GOMOD_CACHE) && \
 		-w /go/src/$(PACKAGE_NAME)
 
 DOCKER_GO_BUILD := $(DOCKER_RUN) $(CALICO_BUILD)
+
+DOCKER_GO_BUILD_CGO=$(DOCKER_RUN) -e CGO_ENABLED=$(CGO_ENABLED) -e CGO_LDFLAGS=$(CGO_LDFLAGS) $(CALICO_BUILD)
 
 ###############################################################################
 # Updating pins
@@ -531,7 +552,7 @@ LINT_ARGS ?= --max-issues-per-linter 0 --max-same-issues 0 --timeout 8m
 
 .PHONY: golangci-lint
 golangci-lint: $(GENERATED_FILES)
-	$(DOCKER_RUN) $(CALICO_BUILD) sh -c '$(GIT_CONFIG_SSH) golangci-lint run $(LINT_ARGS)'
+	$(DOCKER_GO_BUILD_CGO) sh -c '$(GIT_CONFIG_SSH) golangci-lint run $(LINT_ARGS)'
 
 .PHONY: go-fmt goimports fix
 fix go-fmt goimports:
