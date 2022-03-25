@@ -37,7 +37,8 @@ type AlertExceptionSpec struct {
 	Selector string `json:"selector" validate:"required"`
 
 	// Period controls how long an alert exception will be active. It is optional and
-	// omitting Peroid will make the alert exception active forever.
+	// omitting Period will make the alert exception active forever.
+	// +optional
 	Period *metav1.Duration `json:"period,omitempty" validate:"omitempty"`
 }
 
