@@ -147,3 +147,24 @@ LINT_ARGS := --disable gosimple,govet,structcheck,errcheck,goimports,unused,inef
 .PHONY: ci
 ## Run what CI runs
 ci: clean check-generated-files static-checks ut
+
+# update pulls in the latest contents of this repository from the upstream
+# github.com/projectcalico/calico/api directory.
+CALICO_VERSION ?= $(shell git rev-parse --abbrev-ref HEAD)
+update: check-dirty
+	# Clone a temporary copy of the Calico repo at the given version.
+	rm -rf /tmp/calico-api-mirror
+	mkdir -p /tmp/calico-api-mirror
+	git clone --depth 1 git@github.com:tigera/calico-private.git -b $(CALICO_VERSION) /tmp/calico-api-mirror
+	# Remove local files - we'll add them back from the Calico repo's contents.
+	rm -r pkg/ build/ examples/ hack/
+	# Add in files from the Calico repo.
+	cp -r /tmp/calico-api-mirror/api/. .
+	cp /tmp/calico-api-mirror/lib.Makefile .
+	cp /tmp/calico-api-mirror/metadata.mk .
+	# Some files, we want to keep the local versions of. 
+	# For example, README content is different between the two locations.
+	git checkout Makefile.local README.md
+
+check-dirty:
+	git diff --quiet || (echo "Repository has local changes" && exit 1)
