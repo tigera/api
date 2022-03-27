@@ -78,6 +78,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.DeepPacketInspectionList":              schema_pkg_apis_projectcalico_v3_DeepPacketInspectionList(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.DeepPacketInspectionSpec":              schema_pkg_apis_projectcalico_v3_DeepPacketInspectionSpec(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.DeepPacketInspectionStatus":            schema_pkg_apis_projectcalico_v3_DeepPacketInspectionStatus(ref),
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.DetectorParams":                        schema_pkg_apis_projectcalico_v3_DetectorParams(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.EgressSpec":                            schema_pkg_apis_projectcalico_v3_EgressSpec(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.EndpointPort":                          schema_pkg_apis_projectcalico_v3_EndpointPort(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.EndpointsReportEndpoint":               schema_pkg_apis_projectcalico_v3_EndpointsReportEndpoint(ref),
@@ -629,7 +630,7 @@ func schema_pkg_apis_projectcalico_v3_AlertExceptionSpec(ref common.ReferenceCal
 					},
 					"period": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Period controls how long an alert exception will be active. It is optional and omitting Peroid will make the alert exception active forever.",
+							Description: "Period controls how long an alert exception will be active. It is optional and omitting Period will make the alert exception active forever.",
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
@@ -3141,6 +3142,27 @@ func schema_pkg_apis_projectcalico_v3_DeepPacketInspectionStatus(ref common.Refe
 	}
 }
 
+func schema_pkg_apis_projectcalico_v3_DetectorParams(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name specifies the AnomalyDetection Detector to run.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+	}
+}
+
 func schema_pkg_apis_projectcalico_v3_EgressSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -4484,13 +4506,6 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
-					"dnsPolicyNfqueueID": {
-						SchemaProps: spec.SchemaProps{
-							Description: "DNSPolicyNfqueueID is the NFQUEUE ID to use for DNS Policy re-evaluation when the domains IP hasn't been programmed to ipsets yet. [Default: 100]",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
 					"iptablesNATOutgoingInterfaceFilter": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
@@ -4793,14 +4808,14 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 					},
 					"flowLogsFileAggregationKindForAllowed": {
 						SchemaProps: spec.SchemaProps{
-							Description: "FlowLogsFileAggregationKindForAllowed is used to choose the type of aggregation for flow log entries created for allowed connections. [Default: 2 - pod prefix name based aggregation]. Accepted values are 0, 1 and 2. 0 - No aggregation 1 - Source port based aggregation 2 - Pod prefix name based aggreagation.",
+							Description: "FlowLogsFileAggregationKindForAllowed is used to choose the type of aggregation for flow log entries created for allowed connections. [Default: 2 - pod prefix name based aggregation]. Accepted values are 0, 1 and 2. 0 - No aggregation. 1 - Source port based aggregation. 2 - Pod prefix name based aggreagation.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
 					},
 					"flowLogsFileAggregationKindForDenied": {
 						SchemaProps: spec.SchemaProps{
-							Description: "FlowLogsFileAggregationKindForDenied is used to choose the type of aggregation for flow log entries created for denied connections. [Default: 1 - source port based aggregation]. Accepted values are 0, 1 and 2. 0 - No aggregation 1 - Source port based aggregation 2 - Pod prefix name based aggregation. 3 - No destination ports based aggregation",
+							Description: "FlowLogsFileAggregationKindForDenied is used to choose the type of aggregation for flow log entries created for denied connections. [Default: 1 - source port based aggregation]. Accepted values are 0, 1 and 2. 0 - No aggregation. 1 - Source port based aggregation. 2 - Pod prefix name based aggregation. 3 - No destination ports based aggregation.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -4979,7 +4994,7 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 					},
 					"dnsLogsFileAggregationKind": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DNSLogsFileAggregationKind is used to choose the type of aggregation for DNS log entries. [Default: 1 - client name prefix aggregation]. Accepted values are 0 and 1. 0 - No aggregation 1 - Aggregate over clients with the same name prefix",
+							Description: "DNSLogsFileAggregationKind is used to choose the type of aggregation for DNS log entries. [Default: 1 - client name prefix aggregation]. Accepted values are 0 and 1. 0 - No aggregation. 1 - Aggregate over clients with the same name prefix.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -4996,6 +5011,47 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 							Description: "DNSLogsLatency indicates to include measurements of DNS request/response latency in each DNS log. [Default: true]",
 							Type:        []string{"boolean"},
 							Format:      "",
+						},
+					},
+					"dnsPolicyMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DNSPolicyMode specifies how DNS policy programming will be handled. DelayDeniedPacket - Felix delays any denied packet that traversed a policy that included egress domain matches, but did not match. The packet is released after a fixed time, or after the destination IP address was programmed. DelayDNSResponse - Felix delays any DNS response until related IPSets are programmed. This introduces some latency to all DNS packets (even when no IPSet programming is required), but it ensures policy hit statistics are accurate. This is the recommended setting when you are making use of staged policies or policy rule hit statistics. NoDelay - Felix does not introduce any delay to the packets. DNS rules may not have been programmed by the time the first packet traverses the policy rules. Client applications need to handle reconnection attempts if initial connection attempts fail. This may be problematic for some applications or for very low DNS TTLs.\n\nOn Windows, or when using the eBPF dataplane, this setting is ignored and \"NoDelay\" is always used.\n\n[Default: DelayDeniedPacket]",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"dnsPolicyNfqueueID": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DNSPolicyNfqueueID is the NFQUEUE ID to use for DNS Policy re-evaluation when the domains IP hasn't been programmed to ipsets yet. Used when DNSPolicyMode is DelayDeniedPacket. [Default: 100]",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"dnsPolicyNfqueueSize": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DNSPolicyNfqueueID is the size of the NFQUEUE for DNS policy re-evaluation. This is the maximum number of denied packets that may be queued up pending re-evaluation. Used when DNSPolicyMode is DelayDeniedPacket. [Default: 100]",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"dnsPacketsNfqueueID": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DNSPacketsNfqueueID is the NFQUEUE ID to use for capturing DNS packets to ensure programming IPSets occurs before the response is released. Used when DNSPolicyMode is DelayDNSResponse. [Default: 101]",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"dnsPacketsNfqueueSize": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DNSPacketsNfqueueSize is the size of the NFQUEUE for captured DNS packets. This is the maximum number of DNS packets that may be queued awaiting programming in the dataplane. Used when DNSPolicyMode is DelayDNSResponse. [Default: 100]",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"dnsPacketsNfqueueMaxHoldDuration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DNSPacketsNfqueueMaxHoldDuration is the max length of time to hold on to a DNS response while waiting for the the dataplane to be programmed. Used when DNSPolicyMode is DelayDNSResponse. [Default: 3s]",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
 					"l7LogsFlushInterval": {
@@ -5249,7 +5305,7 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 					},
 					"awsSecondaryIPSupport": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AWSSecondaryIPSupport controls whether Felix will try to provision AWS secondary ENIs and secondary IPs for workloads that have IPs from IP pools that are configured with an AWS subnet ID. [Default: Disabled]",
+							Description: "AWSSecondaryIPSupport controls whether Felix will try to provision AWS secondary ENIs for workloads that have IPs from IP pools that are configured with an AWS subnet ID.  If the field is set to \"EnabledENIPerWorkload\" then each workload with an AWS-backed IP will be assigned its own secondary ENI. If set to \"Enabled\" then each workload with an AWS-backed IP pool will be allocated a secondary IP address on a secondary ENI; this mode requires additional IP pools to be provisioned for the host to claim IPs for the primary IP of the secondary ENIs. Accepted value must be one of \"Enabled\", \"EnabledENIPerWorkload\" or \"Disabled\". [Default: Disabled]",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -5458,7 +5514,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalAlertSpec(ref common.ReferenceCallba
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Type will dictate how the fields of the GlobalAlert will be utilized. Each Type will have different usages and defaults for the fields. [Default: UserDefined]",
+							Description: "Type will dictate how the fields of the GlobalAlert will be utilized. Each Type will have different usages and defaults for the fields. [Default: RuleBased]",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -5478,13 +5534,6 @@ func schema_pkg_apis_projectcalico_v3_GlobalAlertSpec(ref common.ReferenceCallba
 							Format:      "",
 						},
 					},
-					"detector": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Detector specifies the AnomalyDetection Detector to run. Required and used only if Type is AnomalyDetection.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
 					"severity": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Severity of the alert for display in Manager.",
@@ -5495,34 +5544,33 @@ func schema_pkg_apis_projectcalico_v3_GlobalAlertSpec(ref common.ReferenceCallba
 					},
 					"period": {
 						SchemaProps: spec.SchemaProps{
-							Description: "If Type is UserDefined, it is how often the query defined will run. If Type is AnomalyDetection it is how often the detector will be run.",
+							Description: "If Type is RuleBased, it is how often the query defined will run. If Type is AnomalyDetection it is how often the detector will be run.",
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
 					"lookback": {
 						SchemaProps: spec.SchemaProps{
-							Description: "How much data to gather at once. If Type is UserDefined, it must exceed audit log flush interval, dnsLogsFlushInterval, or flowLogsFlushInterval as appropriate.",
+							Description: "How much data to gather at once. If Type is RuleBased, it must exceed audit log flush interval, dnsLogsFlushInterval, or flowLogsFlushInterval as appropriate.",
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
 					"dataSet": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DataSet determines which dataset type the Query will use. Required and used only if Type is UserDefined.",
-							Default:     "",
+							Description: "DataSet determines which dataset type the Query will use. Required and used only if Type is RuleBased.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"query": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Which data to include from the source data set. Written in a domain-specific query language. Only used if Type is UserDefined.",
+							Description: "Which data to include from the source data set. Written in a domain-specific query language. Only used if Type is RuleBased.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"aggregateBy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "An optional list of fields to aggregate results. Only used if Type is UserDefined.",
+							Description: "An optional list of fields to aggregate results. Only used if Type is RuleBased.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -5537,35 +5585,35 @@ func schema_pkg_apis_projectcalico_v3_GlobalAlertSpec(ref common.ReferenceCallba
 					},
 					"field": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Which field to aggregate results by if using a metric other than count. Only used if Type is UserDefined.",
+							Description: "Which field to aggregate results by if using a metric other than count. Only used if Type is RuleBased.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"metric": {
 						SchemaProps: spec.SchemaProps{
-							Description: "A metric to apply to aggregated results. count is the number of log entries matching the aggregation pattern. Others are applied only to numeric fields in the logs. Only used if Type is UserDefined.",
+							Description: "A metric to apply to aggregated results. count is the number of log entries matching the aggregation pattern. Others are applied only to numeric fields in the logs. Only used if Type is RuleBased.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"condition": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Compare the value of the metric to the threshold using this condition. Only used if Type is UserDefined.",
+							Description: "Compare the value of the metric to the threshold using this condition. Only used if Type is RuleBased.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"threshold": {
 						SchemaProps: spec.SchemaProps{
-							Description: "A numeric value to compare the value of the metric against. Only used if Type is UserDefined.",
+							Description: "A numeric value to compare the value of the metric against. Only used if Type is RuleBased.",
 							Type:        []string{"number"},
 							Format:      "double",
 						},
 					},
 					"substitutions": {
 						SchemaProps: spec.SchemaProps{
-							Description: "An optional list of values to replace variable names in query. Only used if Type is UserDefined.",
+							Description: "An optional list of values to replace variable names in query. Only used if Type is RuleBased.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -5577,12 +5625,18 @@ func schema_pkg_apis_projectcalico_v3_GlobalAlertSpec(ref common.ReferenceCallba
 							},
 						},
 					},
+					"detector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Parameters for configuring an AnomalyDetection run. Only used if Type is AnomalyDetection.",
+							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.DetectorParams"),
+						},
+					},
 				},
-				Required: []string{"description", "severity", "dataSet"},
+				Required: []string{"description", "severity"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalAlertSubstitution", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
+			"github.com/tigera/api/pkg/apis/projectcalico/v3.DetectorParams", "github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalAlertSubstitution", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
 	}
 }
 
