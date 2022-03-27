@@ -45,53 +45,53 @@ type GlobalAlert struct {
 
 type GlobalAlertSpec struct {
 	// Type will dictate how the fields of the GlobalAlert will be utilized.
-	// Each Type will have different usages and defaults for the fields. [Default: UserDefined]
+	// Each Type will have different usages and defaults for the fields. [Default: RuleBased]
 	Type GlobalAlertType `json:"type,omitempty" validate:"omitempty,globalAlertType"`
 	// Template for the description field in generated events, description is used if this is omitted.
 	Summary string `json:"summary,omitempty" validate:"omitempty"`
 	// Human-readable description of the template.
 	Description string `json:"description" validate:"required"`
-	// Detector specifies the AnomalyDetection Detector to run.
-	// Required and used only if Type is AnomalyDetection.
-	Detector string `json:"detector,omitempty" validate:"omitempty"`
 	// Severity of the alert for display in Manager.
 	Severity int `json:"severity" validate:"required,min=1,max=100"`
-	// If Type is UserDefined, it is how often the query defined will run.
+	// If Type is RuleBased, it is how often the query defined will run.
 	// If Type is AnomalyDetection it is how often the detector will be run.
 	Period *metav1.Duration `json:"period,omitempty" validate:"omitempty"`
 	// How much data to gather at once.
-	// If Type is UserDefined, it must exceed audit log flush interval, dnsLogsFlushInterval, or flowLogsFlushInterval as appropriate.
+	// If Type is RuleBased, it must exceed audit log flush interval, dnsLogsFlushInterval, or flowLogsFlushInterval as appropriate.
 	Lookback *metav1.Duration `json:"lookback,omitempty" validate:"omitempty"`
 	// DataSet determines which dataset type the Query will use.
-	// Required and used only if Type is UserDefined.
-	DataSet string `json:"dataSet" validate:"omitempty,oneof=flows dns audit l7 waf vulnerability"`
-	// Which data to include from the source data set. Written in a domain-specific query language. Only used if Type is UserDefined.
+	// Required and used only if Type is RuleBased.
+	DataSet string `json:"dataSet,omitempty" validate:"omitempty,oneof=flows dns audit l7 waf vulnerability"`
+	// Which data to include from the source data set. Written in a domain-specific query language. Only used if Type is RuleBased.
 	Query string `json:"query,omitempty" validate:"omitempty"`
 	// An optional list of fields to aggregate results.
-	// Only used if Type is UserDefined.
+	// Only used if Type is RuleBased.
 	AggregateBy []string `json:"aggregateBy,omitempty" validate:"omitempty"`
 	// Which field to aggregate results by if using a metric other than count.
-	// Only used if Type is UserDefined.
+	// Only used if Type is RuleBased.
 	Field string `json:"field,omitempty" validate:"omitempty"`
 	// A metric to apply to aggregated results. count is the number of log entries matching the aggregation pattern.
 	// Others are applied only to numeric fields in the logs.
-	// Only used if Type is UserDefined.
+	// Only used if Type is RuleBased.
 	Metric string `json:"metric,omitempty" validate:"omitempty,oneof=avg max min sum count"`
 	// Compare the value of the metric to the threshold using this condition.
-	// Only used if Type is UserDefined.
+	// Only used if Type is RuleBased.
 	Condition string `json:"condition,omitempty" validate:"omitempty,oneof=eq not_eq gt gte lt lte"`
 	// A numeric value to compare the value of the metric against.
-	// Only used if Type is UserDefined.
+	// Only used if Type is RuleBased.
 	Threshold float64 `json:"threshold,omitempty" validate:"omitempty"`
 	// An optional list of values to replace variable names in query.
-	// Only used if Type is UserDefined.
+	// Only used if Type is RuleBased.
 	Substitutions []GlobalAlertSubstitution `json:"substitutions,omitempty" validate:"omitempty"`
+	// Parameters for configuring an AnomalyDetection run.
+	// Only used if Type is AnomalyDetection.
+	Detector *DetectorParams `json:"detector,omitempty" validate:"omitempty"`
 }
 
 type GlobalAlertType string
 
 const (
-	GlobalAlertTypeUserDefined      GlobalAlertType = "UserDefined"
+	GlobalAlertTypeRuleBased        GlobalAlertType = "RuleBased"
 	GlobalAlertTypeAnomalyDetection GlobalAlertType = "AnomalyDetection"
 )
 
@@ -101,7 +101,7 @@ func (t *GlobalAlertType) UnmarshalJSON(b []byte) error {
 		return err
 	}
 	if s == "" {
-		*t = GlobalAlertTypeUserDefined
+		*t = GlobalAlertTypeRuleBased
 	} else {
 		*t = GlobalAlertType(s)
 	}
@@ -115,6 +115,11 @@ type GlobalAlertStatus struct {
 	LastExecuted    *metav1.Time     `json:"lastExecuted,omitempty"`
 	LastEvent       *metav1.Time     `json:"lastEvent,omitempty"`
 	ErrorConditions []ErrorCondition `json:"errorConditions,omitempty"`
+}
+
+type DetectorParams struct {
+	// Name specifies the AnomalyDetection Detector to run.
+	Name string `json:"name"`
 }
 
 // +genclient:nonNamespaced
