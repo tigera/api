@@ -103,7 +103,7 @@ func (c *FakeDeepPacketInspections) UpdateStatus(ctx context.Context, deepPacket
 // Delete takes name of the deepPacketInspection and deletes it. Returns an error if one occurs.
 func (c *FakeDeepPacketInspections) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(deeppacketinspectionsResource, c.ns, name), &v3.DeepPacketInspection{})
+		Invokes(testing.NewDeleteActionWithOptions(deeppacketinspectionsResource, c.ns, name, opts), &v3.DeepPacketInspection{})
 
 	return err
 }

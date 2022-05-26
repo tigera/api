@@ -85,7 +85,7 @@ func (c *FakeUISettings) Update(ctx context.Context, uISettings *v3.UISettings, 
 // Delete takes name of the uISettings and deletes it. Returns an error if one occurs.
 func (c *FakeUISettings) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteAction(uisettingsResource, name), &v3.UISettings{})
+		Invokes(testing.NewRootDeleteActionWithOptions(uisettingsResource, name, opts), &v3.UISettings{})
 	return err
 }
 

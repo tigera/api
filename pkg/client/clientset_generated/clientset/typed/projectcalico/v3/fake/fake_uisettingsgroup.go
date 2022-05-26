@@ -85,7 +85,7 @@ func (c *FakeUISettingsGroups) Update(ctx context.Context, uISettingsGroup *v3.U
 // Delete takes name of the uISettingsGroup and deletes it. Returns an error if one occurs.
 func (c *FakeUISettingsGroups) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteAction(uisettingsgroupsResource, name), &v3.UISettingsGroup{})
+		Invokes(testing.NewRootDeleteActionWithOptions(uisettingsgroupsResource, name, opts), &v3.UISettingsGroup{})
 	return err
 }
 

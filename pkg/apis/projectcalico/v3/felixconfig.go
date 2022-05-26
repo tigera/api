@@ -75,11 +75,29 @@ const (
 	DNSPolicyModeDelayDNSResponse  DNSPolicyMode = "DelayDNSResponse"
 )
 
+// +kubebuilder:validation:Enum=Enabled;Disabled
+type FloatingIPType string
+
+const (
+	FloatingIPsEnabled  FloatingIPType = "Enabled"
+	FloatingIPsDisabled FloatingIPType = "Disabled"
+)
+
 // FelixConfigurationSpec contains the values of the Felix configuration.
 type FelixConfigurationSpec struct {
-	UseInternalDataplaneDriver *bool  `json:"useInternalDataplaneDriver,omitempty"`
-	DataplaneDriver            string `json:"dataplaneDriver,omitempty"`
+	// UseInternalDataplaneDriver, if true, Felix will use its internal dataplane programming logic.  If false, it
+	// will launch an external dataplane driver and communicate with it over protobuf.
+	UseInternalDataplaneDriver *bool `json:"useInternalDataplaneDriver,omitempty"`
+	// DataplaneDriver filename of the external dataplane driver to use.  Only used if UseInternalDataplaneDriver
+	// is set to false.
+	DataplaneDriver string `json:"dataplaneDriver,omitempty"`
 
+	// DataplaneWatchdogTimeout is the readiness/liveness timeout used for Felix's (internal) dataplane driver.
+	// Increase this value if you experience spurious non-ready or non-live events when Felix is under heavy load.
+	// Decrease the value to get felix to report non-live or non-ready more quickly. [Default: 90s]
+	DataplaneWatchdogTimeout *metav1.Duration `json:"dataplaneWatchdogTimeout,omitempty" configv1timescale:"seconds"`
+
+	// IPv6Support controls whether Felix enables support for IPv6 (if supported by the in-use dataplane).
 	IPv6Support *bool `json:"ipv6Support,omitempty" confignamev1:"Ipv6Support"`
 
 	// RouteRefreshInterval is the period at which Felix re-checks the routes
@@ -202,15 +220,19 @@ type FelixConfigurationSpec struct {
 	// to Debug level logs.
 	LogDebugFilenameRegex string `json:"logDebugFilenameRegex,omitempty" validate:"omitempty,regexp"`
 
+	// IPIPEnabled overrides whether Felix should configure an IPIP interface on the host. Optional as Felix determines this based on the existing IP pools. [Default: nil (unset)]
 	IPIPEnabled *bool `json:"ipipEnabled,omitempty" confignamev1:"IpInIpEnabled"`
 	// IPIPMTU is the MTU to set on the tunnel device. See Configuring MTU [Default: 1440]
 	IPIPMTU *int `json:"ipipMTU,omitempty" confignamev1:"IpInIpMtu"`
 
-	VXLANEnabled *bool `json:"vxlanEnabled,omitempty"`
-	// VXLANMTU is the MTU to set on the tunnel device. See Configuring MTU [Default: 1440]
-	VXLANMTU  *int `json:"vxlanMTU,omitempty"`
-	VXLANPort *int `json:"vxlanPort,omitempty"`
-	VXLANVNI  *int `json:"vxlanVNI,omitempty"`
+	// VXLANEnabled overrides whether Felix should create the VXLAN tunnel device for VXLAN networking. Optional as Felix determines this based on the existing IP pools. [Default: nil (unset)]
+	VXLANEnabled *bool `json:"vxlanEnabled,omitempty" confignamev1:"VXLANEnabled"`
+	// VXLANMTU is the MTU to set on the IPv4 VXLAN tunnel device. See Configuring MTU [Default: 1410]
+	VXLANMTU *int `json:"vxlanMTU,omitempty"`
+	// VXLANMTUV6 is the MTU to set on the IPv6 VXLAN tunnel device. See Configuring MTU [Default: 1390]
+	VXLANMTUV6 *int `json:"vxlanMTUV6,omitempty"`
+	VXLANPort  *int `json:"vxlanPort,omitempty"`
+	VXLANVNI   *int `json:"vxlanVNI,omitempty"`
 
 	// AllowVXLANPacketsFromWorkloads controls whether Felix will add a rule to drop VXLAN encapsulated traffic
 	// from workloads [Default: false]
@@ -306,9 +328,13 @@ type FelixConfigurationSpec struct {
 	// (ie it uses the iptables MASQUERADE target)
 	NATOutgoingAddress string `json:"natOutgoingAddress,omitempty"`
 
-	// This is the source address to use on programmed device routes. By default the source address is left blank,
+	// This is the IPv4 source address to use on programmed device routes. By default the source address is left blank,
 	// leaving the kernel to choose the source address used.
 	DeviceRouteSourceAddress string `json:"deviceRouteSourceAddress,omitempty"`
+
+	// This is the IPv6 source address to use on programmed device routes. By default the source address is left blank,
+	// leaving the kernel to choose the source address used.
+	DeviceRouteSourceAddressIPv6 string `json:"deviceRouteSourceAddressIPv6,omitempty"`
 
 	// This defines the route protocol added to programmed device routes, by default this will be RTPROT_BOOT
 	// when left blank.
@@ -422,6 +448,10 @@ type FelixConfigurationSpec struct {
 	// for each endpoint matched by every selector in the source/destination matches in network policy.  Selectors
 	// such as "all()" can result in large numbers of entries (one entry per endpoint in that case).
 	BPFMapSizeIPSets *int `json:"bpfMapSizeIPSets,omitempty"`
+	// BPFEnforceRPF enforce strict RPF on all interfaces with BPF programs regardless of
+	// what is the per-interfaces or global setting. Possible values are Disabled or
+	// Strict. [Default: Strict]
+	BPFEnforceRPF string `json:"bpfEnforceRPF,omitempty"`
 
 	SyslogReporterNetwork string `json:"syslogReporterNetwork,omitempty"`
 	SyslogReporterAddress string `json:"syslogReporterAddress,omitempty"`
@@ -521,8 +551,8 @@ type FelixConfigurationSpec struct {
 	// FlowLogsFileNatOutgoingPortLimit is used to specify the maximum number of distinct post SNAT ports that will appear
 	// in the flowLogs. Default value is 3
 	FlowLogsFileNatOutgoingPortLimit *int `json:"flowLogsFileNatOutgoingPortLimit,omitempty" validate:"omitempty"`
-	// FlowLogsFileDomainsLimit is used to configure the number of (destination) domains to include in the flow log. The
-	// domains are only included at aggregation level 0 or 1.
+	// FlowLogsFileDomainsLimit is used to configure the number of (destination) domains to include in the flow log.
+	// These are not included for workload or host endpoint destinations.
 	// [Default: 5]
 	FlowLogsFileDomainsLimit *int `json:"flowLogsFileDomainsLimit,omitempty" validate:"omitempty"`
 
@@ -789,6 +819,10 @@ type FelixConfigurationSpec struct {
 	// [Default: Drop]
 	ServiceLoopPrevention string `json:"serviceLoopPrevention,omitempty" validate:"omitempty,oneof=Drop Reject Disabled"`
 
+	// WorkloadSourceSpoofing controls whether pods can use the allowedSourcePrefixes annotation to send traffic with a source IP
+	// address that is not theirs. This is disabled by default. When set to "Any", pods can request any prefix.
+	WorkloadSourceSpoofing string `json:"workloadSourceSpoofing,omitempty" validate:"omitempty,oneof=Disabled Any)"`
+
 	// MTUIfacePattern is a regular expression that controls which interfaces Felix should scan in order
 	// to calculate the host's MTU.
 	// This should not match workload interfaces (usually named cali...).
@@ -804,7 +838,13 @@ type FelixConfigurationSpec struct {
 	TPROXYPort *int `json:"tproxyPort,omitempty" validate:"omitempty,gt=0,lte=65535"`
 	// TPROXYUpstreamConnMark tells Felix which mark is used by the proxy for its upstream
 	// connections so that Felix can program the dataplane correctly.  [Default: 0x17]
-	TPROXYUpstreamConnMark *uint32 `json:"tproxyUpstreamConnMark,omitempty" validate:"omitempty,gt=0`
+	TPROXYUpstreamConnMark *uint32 `json:"tproxyUpstreamConnMark,omitempty" validate:"omitempty,gt=0"`
+
+	// FloatingIPs configures whether or not Felix will program floating IP addresses.
+	//
+	// +kubebuilder:default=Disabled
+	// +optional
+	FloatingIPs *FloatingIPType `json:"floatingIPs,omitempty" validate:"omitempty"`
 }
 
 type RouteTableRange struct {
@@ -818,6 +858,15 @@ type RouteTableIDRange struct {
 }
 
 type RouteTableRanges []RouteTableIDRange
+
+func (r RouteTableRanges) Len() int {
+	var len int = 0
+	for _, rng := range r {
+		len += rng.Max - rng.Min
+	}
+
+	return len
+}
 
 // ProtoPort is combination of protocol, port, and CIDR. Protocol and port must be specified.
 type ProtoPort struct {

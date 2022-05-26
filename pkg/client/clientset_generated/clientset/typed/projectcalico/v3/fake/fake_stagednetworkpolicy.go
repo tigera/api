@@ -91,7 +91,7 @@ func (c *FakeStagedNetworkPolicies) Update(ctx context.Context, stagedNetworkPol
 // Delete takes name of the stagedNetworkPolicy and deletes it. Returns an error if one occurs.
 func (c *FakeStagedNetworkPolicies) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(stagednetworkpoliciesResource, c.ns, name), &v3.StagedNetworkPolicy{})
+		Invokes(testing.NewDeleteActionWithOptions(stagednetworkpoliciesResource, c.ns, name, opts), &v3.StagedNetworkPolicy{})
 
 	return err
 }

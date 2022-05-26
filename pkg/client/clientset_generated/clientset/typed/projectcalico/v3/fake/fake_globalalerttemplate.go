@@ -85,7 +85,7 @@ func (c *FakeGlobalAlertTemplates) Update(ctx context.Context, globalAlertTempla
 // Delete takes name of the globalAlertTemplate and deletes it. Returns an error if one occurs.
 func (c *FakeGlobalAlertTemplates) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteAction(globalalerttemplatesResource, name), &v3.GlobalAlertTemplate{})
+		Invokes(testing.NewRootDeleteActionWithOptions(globalalerttemplatesResource, name, opts), &v3.GlobalAlertTemplate{})
 	return err
 }
 
