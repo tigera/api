@@ -96,7 +96,7 @@ func (c *FakeAuthenticationReviews) UpdateStatus(ctx context.Context, authentica
 // Delete takes name of the authenticationReview and deletes it. Returns an error if one occurs.
 func (c *FakeAuthenticationReviews) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteAction(authenticationreviewsResource, name), &v3.AuthenticationReview{})
+		Invokes(testing.NewRootDeleteActionWithOptions(authenticationreviewsResource, name, opts), &v3.AuthenticationReview{})
 	return err
 }
 
