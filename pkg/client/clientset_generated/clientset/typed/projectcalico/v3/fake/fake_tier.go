@@ -85,7 +85,7 @@ func (c *FakeTiers) Update(ctx context.Context, tier *v3.Tier, opts v1.UpdateOpt
 // Delete takes name of the tier and deletes it. Returns an error if one occurs.
 func (c *FakeTiers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteAction(tiersResource, name), &v3.Tier{})
+		Invokes(testing.NewRootDeleteActionWithOptions(tiersResource, name, opts), &v3.Tier{})
 	return err
 }
 
