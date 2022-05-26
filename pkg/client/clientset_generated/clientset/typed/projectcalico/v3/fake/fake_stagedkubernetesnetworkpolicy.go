@@ -91,7 +91,7 @@ func (c *FakeStagedKubernetesNetworkPolicies) Update(ctx context.Context, staged
 // Delete takes name of the stagedKubernetesNetworkPolicy and deletes it. Returns an error if one occurs.
 func (c *FakeStagedKubernetesNetworkPolicies) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(stagedkubernetesnetworkpoliciesResource, c.ns, name), &v3.StagedKubernetesNetworkPolicy{})
+		Invokes(testing.NewDeleteActionWithOptions(stagedkubernetesnetworkpoliciesResource, c.ns, name, opts), &v3.StagedKubernetesNetworkPolicy{})
 
 	return err
 }

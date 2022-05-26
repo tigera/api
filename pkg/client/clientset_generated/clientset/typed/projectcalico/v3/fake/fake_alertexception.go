@@ -96,7 +96,7 @@ func (c *FakeAlertExceptions) UpdateStatus(ctx context.Context, alertException *
 // Delete takes name of the alertException and deletes it. Returns an error if one occurs.
 func (c *FakeAlertExceptions) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteAction(alertexceptionsResource, name), &v3.AlertException{})
+		Invokes(testing.NewRootDeleteActionWithOptions(alertexceptionsResource, name, opts), &v3.AlertException{})
 	return err
 }
 

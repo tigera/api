@@ -96,7 +96,7 @@ func (c *FakeGlobalThreatFeeds) UpdateStatus(ctx context.Context, globalThreatFe
 // Delete takes name of the globalThreatFeed and deletes it. Returns an error if one occurs.
 func (c *FakeGlobalThreatFeeds) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteAction(globalthreatfeedsResource, name), &v3.GlobalThreatFeed{})
+		Invokes(testing.NewRootDeleteActionWithOptions(globalthreatfeedsResource, name, opts), &v3.GlobalThreatFeed{})
 	return err
 }
 
