@@ -85,7 +85,7 @@ func (c *FakeGlobalReportTypes) Update(ctx context.Context, globalReportType *v3
 // Delete takes name of the globalReportType and deletes it. Returns an error if one occurs.
 func (c *FakeGlobalReportTypes) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteAction(globalreporttypesResource, name), &v3.GlobalReportType{})
+		Invokes(testing.NewRootDeleteActionWithOptions(globalreporttypesResource, name, opts), &v3.GlobalReportType{})
 	return err
 }
 

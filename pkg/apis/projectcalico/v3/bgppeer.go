@@ -120,6 +120,11 @@ type BGPPeerSpec struct {
 	// "Recursive" means "gateway recursive".  "DirectIfDirectlyConnected" means to configure
 	// "gateway direct" when the peer is directly connected.
 	BIRDGatewayMode BIRDGatewayMode `json:"birdGatewayMode,omitempty" validate:"omitempty,birdGatewayMode"`
+
+	// Maximum number of local AS numbers that are allowed in the AS path for received routes.
+	// This removes BGP loop prevention and should only be used if absolutely necesssary.
+	// +optional
+	NumAllowedLocalASNumbers *int32 `json:"numAllowedLocalASNumbers,omitempty"`
 }
 
 type SourceAddress string

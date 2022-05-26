@@ -103,7 +103,7 @@ func (c *FakePacketCaptures) UpdateStatus(ctx context.Context, packetCapture *v3
 // Delete takes name of the packetCapture and deletes it. Returns an error if one occurs.
 func (c *FakePacketCaptures) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(packetcapturesResource, c.ns, name), &v3.PacketCapture{})
+		Invokes(testing.NewDeleteActionWithOptions(packetcapturesResource, c.ns, name, opts), &v3.PacketCapture{})
 
 	return err
 }
