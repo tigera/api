@@ -96,7 +96,7 @@ func (c *FakeLicenseKeys) UpdateStatus(ctx context.Context, licenseKey *v3.Licen
 // Delete takes name of the licenseKey and deletes it. Returns an error if one occurs.
 func (c *FakeLicenseKeys) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteAction(licensekeysResource, name), &v3.LicenseKey{})
+		Invokes(testing.NewRootDeleteActionWithOptions(licensekeysResource, name, opts), &v3.LicenseKey{})
 	return err
 }
 

@@ -96,7 +96,7 @@ func (c *FakeGlobalAlerts) UpdateStatus(ctx context.Context, globalAlert *v3.Glo
 // Delete takes name of the globalAlert and deletes it. Returns an error if one occurs.
 func (c *FakeGlobalAlerts) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteAction(globalalertsResource, name), &v3.GlobalAlert{})
+		Invokes(testing.NewRootDeleteActionWithOptions(globalalertsResource, name, opts), &v3.GlobalAlert{})
 	return err
 }
 

@@ -85,7 +85,7 @@ func (c *FakeRemoteClusterConfigurations) Update(ctx context.Context, remoteClus
 // Delete takes name of the remoteClusterConfiguration and deletes it. Returns an error if one occurs.
 func (c *FakeRemoteClusterConfigurations) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteAction(remoteclusterconfigurationsResource, name), &v3.RemoteClusterConfiguration{})
+		Invokes(testing.NewRootDeleteActionWithOptions(remoteclusterconfigurationsResource, name, opts), &v3.RemoteClusterConfiguration{})
 	return err
 }
 
