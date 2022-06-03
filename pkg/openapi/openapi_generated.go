@@ -7864,6 +7864,13 @@ func schema_pkg_apis_projectcalico_v3_ManagedClusterSpec(ref common.ReferenceCal
 							Format:      "",
 						},
 					},
+					"operatorNamespace": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The namespace of the managed cluster's operator. This value is used in the generation of the InstallationManifest.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 			},
 		},
