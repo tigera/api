@@ -66,6 +66,8 @@ type EgressSpec struct {
 	NamespaceSelector string `json:"namespaceSelector,omitempty" validate:"omitempty,selector"`
 	// Selector
 	Selector string `json:"selector,omitempty" validate:"omitempty,selector"`
+	// MaxNextHops
+	MaxNextHops int `json:"maxNextHops,omitempty" validate:"omitempty,gte=0"`
 }
 
 // NewProfile creates a new (zeroed) Profile struct with the TypeMetadata initialised to the current

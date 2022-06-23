@@ -3183,6 +3183,13 @@ func schema_pkg_apis_projectcalico_v3_EgressSpec(ref common.ReferenceCallback) c
 							Format:      "",
 						},
 					},
+					"maxNextHops": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MaxNextHops",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
 				},
 			},
 		},
@@ -5356,6 +5363,13 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 							Description: "TPROXYUpstreamConnMark tells Felix which mark is used by the proxy for its upstream connections so that Felix can program the dataplane correctly.  [Default: 0x17]",
 							Type:        []string{"integer"},
 							Format:      "int64",
+						},
+					},
+					"floatingIPs": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FloatingIPs configures whether or not Felix will program floating IP addresses.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},
