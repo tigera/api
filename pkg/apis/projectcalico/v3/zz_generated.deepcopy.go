@@ -2616,6 +2616,11 @@ func (in *FelixConfigurationSpec) DeepCopyInto(out *FelixConfigurationSpec) {
 		*out = new(uint32)
 		**out = **in
 	}
+	if in.FloatingIPs != nil {
+		in, out := &in.FloatingIPs, &out.FloatingIPs
+		*out = new(FloatingIPType)
+		**out = **in
+	}
 	return
 }
 
