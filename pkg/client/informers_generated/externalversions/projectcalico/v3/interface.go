@@ -20,6 +20,8 @@ type Interface interface {
 	BGPConfigurations() BGPConfigurationInformer
 	// BGPPeers returns a BGPPeerInformer.
 	BGPPeers() BGPPeerInformer
+	// BlockAffinities returns a BlockAffinityInformer.
+	BlockAffinities() BlockAffinityInformer
 	// CalicoNodeStatuses returns a CalicoNodeStatusInformer.
 	CalicoNodeStatuses() CalicoNodeStatusInformer
 	// ClusterInformations returns a ClusterInformationInformer.
@@ -44,6 +46,8 @@ type Interface interface {
 	GlobalThreatFeeds() GlobalThreatFeedInformer
 	// HostEndpoints returns a HostEndpointInformer.
 	HostEndpoints() HostEndpointInformer
+	// IPAMConfigurations returns a IPAMConfigurationInformer.
+	IPAMConfigurations() IPAMConfigurationInformer
 	// IPPools returns a IPPoolInformer.
 	IPPools() IPPoolInformer
 	// IPReservations returns a IPReservationInformer.
@@ -114,6 +118,11 @@ func (v *version) BGPPeers() BGPPeerInformer {
 	return &bGPPeerInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
+// BlockAffinities returns a BlockAffinityInformer.
+func (v *version) BlockAffinities() BlockAffinityInformer {
+	return &blockAffinityInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
 // CalicoNodeStatuses returns a CalicoNodeStatusInformer.
 func (v *version) CalicoNodeStatuses() CalicoNodeStatusInformer {
 	return &calicoNodeStatusInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
@@ -172,6 +181,11 @@ func (v *version) GlobalThreatFeeds() GlobalThreatFeedInformer {
 // HostEndpoints returns a HostEndpointInformer.
 func (v *version) HostEndpoints() HostEndpointInformer {
 	return &hostEndpointInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// IPAMConfigurations returns a IPAMConfigurationInformer.
+func (v *version) IPAMConfigurations() IPAMConfigurationInformer {
+	return &iPAMConfigurationInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // IPPools returns a IPPoolInformer.
