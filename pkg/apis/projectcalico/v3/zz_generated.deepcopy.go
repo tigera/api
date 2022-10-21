@@ -2209,6 +2209,11 @@ func (in *FelixConfigurationSpec) DeepCopyInto(out *FelixConfigurationSpec) {
 		*out = new(int)
 		**out = **in
 	}
+	if in.BPFHostConntrackBypass != nil {
+		in, out := &in.BPFHostConntrackBypass, &out.BPFHostConntrackBypass
+		*out = new(bool)
+		**out = **in
+	}
 	if in.IPSecAllowUnsecuredTraffic != nil {
 		in, out := &in.IPSecAllowUnsecuredTraffic, &out.IPSecAllowUnsecuredTraffic
 		*out = new(bool)
