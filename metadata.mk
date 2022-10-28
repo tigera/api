@@ -22,10 +22,17 @@ ORGANIZATION = tigera
 # The Semaphore calico-private ID, used when making calls to the Semaphore API.
 SEMAPHORE_PROJECT_ID=8a309869-f767-49dc-924f-fa927edbf657
 
+# Directory containing the Banzai secrets bundle, which we use to find the license key.
+ifneq ("$(wildcard $(HOME)/.banzai/secrets)","")
+    SECRETS_PATH ?= $(HOME)/.banzai/secrets
+else
+    SECRETS_PATH ?= $(HOME)/secrets
+endif
+
 # Configure git to access repositories using SSH.
 GIT_USE_SSH = true
 
-# Conigure private repos
+# Configure private repos
 EXTRA_DOCKER_ARGS += --init -e GOPRIVATE=github.com/tigera/*
 
 # The version of BIRD to use for calico/node builds and confd tests.
