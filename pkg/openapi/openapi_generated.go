@@ -1164,8 +1164,16 @@ func schema_pkg_apis_projectcalico_v3_AuthorizedResourceGroup(ref common.Referen
 							Format:      "",
 						},
 					},
+					"managedCluster": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ManagedCluster is the name of the ManagedCluster. This is only valid for managedclusters.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
-				Required: []string{"namespace", "uiSettingsGroup"},
+				Required: []string{"namespace", "uiSettingsGroup", "managedCluster"},
 			},
 		},
 	}
@@ -1774,6 +1782,13 @@ func schema_pkg_apis_projectcalico_v3_BGPPeerSpec(ref common.ReferenceCallback) 
 							Description: "Maximum number of local AS numbers that are allowed in the AS path for received routes. This removes BGP loop prevention and should only be used if absolutely necesssary.",
 							Type:        []string{"integer"},
 							Format:      "int32",
+						},
+					},
+					"ttlSecurity": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TTLSecurity enables the generalized TTL security mechanism (GTSM) which protects against spoofed packets by ignoring received packets with a smaller than expected TTL value. The provided value is the number of hops (edges) between the peers.",
+							Type:        []string{"integer"},
+							Format:      "byte",
 						},
 					},
 				},
@@ -4326,7 +4341,7 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 					},
 					"vxlanEnabled": {
 						SchemaProps: spec.SchemaProps{
-							Description: "VXLANEnabled overrides whether Felix should create the VXLAN tunnel device for VXLAN networking. Optional as Felix determines this based on the existing IP pools. [Default: nil (unset)]",
+							Description: "VXLANEnabled overrides whether Felix should create the VXLAN tunnel device for IPv4 VXLAN networking. Optional as Felix determines this based on the existing IP pools. [Default: nil (unset)]",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
@@ -5440,6 +5455,19 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 					"egressIPRoutingRulePriority": {
 						SchemaProps: spec.SchemaProps{
 							Description: "EgressIPRoutingRulePriority controls the priority value to use for the egress IP routing rule. [Default: 100]",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"egressGatewayPollInterval": {
+						SchemaProps: spec.SchemaProps{
+							Description: "EgressGatewayPollInterval is the interval at which Felix will poll remote egress gateways to check their health.  Only Egress Gateways with a named \"health\" port will be polled in this way.  Egress Gateways that fail the health check will be taken our of use as if they have been deleted.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"egressGatewayPollFailureCount": {
+						SchemaProps: spec.SchemaProps{
+							Description: "EgressGatewayPollFailureCount is the minimum number of poll failures before a remote Egress Gateway is considered to have failed.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -6760,6 +6788,27 @@ func schema_pkg_apis_projectcalico_v3_GlobalThreatFeedSpec(ref common.ReferenceC
 							Format:      "",
 						},
 					},
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Determines whether the Global Threat Feed is Enabled or Disabled.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"description": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Human-readable description of the template.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"feedType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Distinguishes between Builtin Global Threat Feeds and Custom feed types.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"globalNetworkSet": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalNetworkSetSync"),
@@ -7438,7 +7487,7 @@ func schema_pkg_apis_projectcalico_v3_IPPoolSpec(ref common.ReferenceCallback) c
 					},
 					"natOutgoing": {
 						SchemaProps: spec.SchemaProps{
-							Description: "When nat-outgoing is true, packets sent from Calico networked containers in this pool to destinations outside of this pool will be masqueraded.",
+							Description: "When natOutgoing is true, packets sent from Calico networked containers in this pool to destinations outside of this pool will be masqueraded.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
