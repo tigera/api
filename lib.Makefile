@@ -1,3 +1,9 @@
+# Find path to the repo root dir (i.e. this files's dir).  Must be first in the file, before including anything.
+REPO_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+
+# Always install the git hooks to prevent publishing closed source code to a non-private repo.
+install_hooks:=$(shell $(REPO_DIR)/hack/install-git-hooks)
+
 # Disable built-in rules
 .SUFFIXES:
 
@@ -588,7 +594,7 @@ pre-commit:
 
 .PHONY: install-git-hooks
 install-git-hooks:
-	./install-git-hooks
+	$(REPO_DIR)/install-git-hooks
 
 .PHONY: check-module-path-tigera-api
 check-module-path-tigera-api:
@@ -1121,6 +1127,18 @@ release-dev-image-to-registry-%:
 release-dev-image-arch-to-registry-%:
 	$(CRANE) cp $(DEV_REGISTRY)/$(BUILD_IMAGE):$(DEV_TAG)-$* $(RELEASE_REGISTRY)/$(BUILD_IMAGE):$(RELEASE_TAG)-$*$(double_quote)
 
+# create-release-branch creates a release branch based off of the dev tag for the current commit on master. After the
+# release branch is created and pushed, git-create-next-dev-tag is called to create a new empty commit on master and
+# tag that empty commit with an incremented minor version of the previous dev tag for the next release.
+create-release-branch: var-require-one-of-CONFIRM-DRYRUN var-require-all-DEV_TAG_SUFFIX-RELEASE_BRANCH_PREFIX fetch-all
+	$(if $(filter-out $(RELEASE_BRANCH_BASE),$(call current-branch)),$(error create-release-branch must be called on $(RELEASE_BRANCH_BASE)),)
+	$(eval NEXT_RELEASE_VERSION := $(shell echo "$(call git-release-tag-from-dev-tag)" | awk -F  "." '{print $$1"."$$2+1"."0}'))
+	$(eval RELEASE_BRANCH_VERSION := $(shell echo "$(call git-release-tag-from-dev-tag)" | awk -F  "." '{print $$1"."$$2}'))
+	git checkout -B $(RELEASE_BRANCH_PREFIX)-$(RELEASE_BRANCH_VERSION) $(GIT_REMOTE)/$(RELEASE_BRANCH_BASE)
+	$(GIT) push $(GIT_REMOTE) $(RELEASE_BRANCH_PREFIX)-$(RELEASE_BRANCH_VERSION)
+	$(MAKE) dev-tag-next-release push-next-release-dev-tag\
+ 		BRANCH=$(call current-branch) NEXT_RELEASE_VERSION=$(NEXT_RELEASE_VERSION) DEV_TAG_SUFFIX=$(DEV_TAG_SUFFIX)
+
 # release-prereqs checks that the environment is configured properly to create a release.
 release-prereqs:
 ifndef VERSION
@@ -1253,13 +1271,13 @@ bin/helm:
 	mv $(TMP)/linux-amd64/helm bin/helm
 
 helm-install-gcs-plugin:
-	bin/helm3 plugin install https://github.com/viglesiasce/helm-gcs.git
+	bin/helm plugin install https://github.com/viglesiasce/helm-gcs.git
 
 # Upload to Google tigera-helm-charts storage bucket.
 publish-charts:
-	bin/helm3 repo add tigera gs://tigera-helm-charts
+	bin/helm repo add tigera gs://tigera-helm-charts
 	for chart in ./bin/*.tgz; do \
-		bin/helm3 gcs push $$chart gs://tigera-helm-charts; \
+		bin/helm gcs push $$chart gs://tigera-helm-charts; \
 	done
 
 bin/yq:
@@ -1321,7 +1339,7 @@ help:
 ###############################################################################
 # Common functions for launching a local Elastic instance.
 ###############################################################################
-ELASTIC_VERSION ?= 7.17.5
+ELASTIC_VERSION ?= 7.17.6
 ELASTIC_IMAGE   ?= docker.elastic.co/elasticsearch/elasticsearch:$(ELASTIC_VERSION)
 
 ## Run elasticsearch as a container (tigera-elastic)
