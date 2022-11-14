@@ -225,7 +225,7 @@ type FelixConfigurationSpec struct {
 	// IPIPMTU is the MTU to set on the tunnel device. See Configuring MTU [Default: 1440]
 	IPIPMTU *int `json:"ipipMTU,omitempty" confignamev1:"IpInIpMtu"`
 
-	// VXLANEnabled overrides whether Felix should create the VXLAN tunnel device for VXLAN networking. Optional as Felix determines this based on the existing IP pools. [Default: nil (unset)]
+	// VXLANEnabled overrides whether Felix should create the VXLAN tunnel device for IPv4 VXLAN networking. Optional as Felix determines this based on the existing IP pools. [Default: nil (unset)]
 	VXLANEnabled *bool `json:"vxlanEnabled,omitempty" confignamev1:"VXLANEnabled"`
 	// VXLANMTU is the MTU to set on the IPv4 VXLAN tunnel device. See Configuring MTU [Default: 1410]
 	VXLANMTU *int `json:"vxlanMTU,omitempty"`
@@ -773,6 +773,13 @@ type FelixConfigurationSpec struct {
 	EgressIPVXLANVNI *int `json:"egressIPVXLANVNI,omitempty"`
 	// EgressIPRoutingRulePriority controls the priority value to use for the egress IP routing rule. [Default: 100]
 	EgressIPRoutingRulePriority *int `json:"egressIPRoutingRulePriority,omitempty" validate:"omitempty,gt=0,lt=32766"`
+	// EgressGatewayPollInterval is the interval at which Felix will poll remote egress gateways to check their
+	// health.  Only Egress Gateways with a named "health" port will be polled in this way.  Egress Gateways that
+	// fail the health check will be taken our of use as if they have been deleted.
+	EgressGatewayPollInterval *metav1.Duration `json:"egressGatewayPollInterval,omitempty" configv1timescale:"seconds"`
+	// EgressGatewayPollFailureCount is the minimum number of poll failures before a remote Egress Gateway is considered
+	// to have failed.
+	EgressGatewayPollFailureCount *int `json:"egressGatewayPollFailureCount,omitempty" validate:"omitempty,gt=0"`
 
 	// RouteSyncDisabled will disable all operations performed on the route table. Set to true to
 	// run in network-policy mode only.
