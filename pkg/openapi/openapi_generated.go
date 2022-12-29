@@ -122,6 +122,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.HTTPMatch":                             schema_pkg_apis_projectcalico_v3_HTTPMatch(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.HTTPPath":                              schema_pkg_apis_projectcalico_v3_HTTPPath(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.HTTPPull":                              schema_pkg_apis_projectcalico_v3_HTTPPull(ref),
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.HealthTimeoutOverride":                 schema_pkg_apis_projectcalico_v3_HealthTimeoutOverride(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.HostEndpoint":                          schema_pkg_apis_projectcalico_v3_HostEndpoint(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.HostEndpointList":                      schema_pkg_apis_projectcalico_v3_HostEndpointList(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.HostEndpointSpec":                      schema_pkg_apis_projectcalico_v3_HostEndpointSpec(ref),
@@ -3966,7 +3967,7 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 					},
 					"dataplaneWatchdogTimeout": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DataplaneWatchdogTimeout is the readiness/liveness timeout used for Felix's (internal) dataplane driver. Increase this value if you experience spurious non-ready or non-live events when Felix is under heavy load. Decrease the value to get felix to report non-live or non-ready more quickly. [Default: 90s]",
+							Description: "DataplaneWatchdogTimeout is the readiness/liveness timeout used for Felix's (internal) dataplane driver. Increase this value if you experience spurious non-ready or non-live events when Felix is under heavy load. Decrease the value to get felix to report non-live or non-ready more quickly. [Default: 90s]\n\nDeprecated: replaced by the generic HealthTimeoutOverrides.",
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
@@ -4280,6 +4281,20 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"integer"},
 							Format: "int32",
+						},
+					},
+					"healthTimeoutOverrides": {
+						SchemaProps: spec.SchemaProps{
+							Description: "HealthTimeoutOverrides allows the internal watchdog timeouts of individual subcomponents to be overriden.  This is useful for working around \"false positive\" liveness timeouts that can occur in particularly stressful workloads or if CPU is constrained.  For a list of active subcomponents, see Felix's logs.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.HealthTimeoutOverride"),
+									},
+								},
+							},
 						},
 					},
 					"prometheusMetricsEnabled": {
@@ -5443,7 +5458,7 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.ProtoPort", "github.com/tigera/api/pkg/apis/projectcalico/v3.RouteTableIDRange", "github.com/tigera/api/pkg/apis/projectcalico/v3.RouteTableRange", "github.com/tigera/api/pkg/lib/numorstring.Port", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
+			"github.com/tigera/api/pkg/apis/projectcalico/v3.HealthTimeoutOverride", "github.com/tigera/api/pkg/apis/projectcalico/v3.ProtoPort", "github.com/tigera/api/pkg/apis/projectcalico/v3.RouteTableIDRange", "github.com/tigera/api/pkg/apis/projectcalico/v3.RouteTableRange", "github.com/tigera/api/pkg/lib/numorstring.Port", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
 	}
 }
 
@@ -6789,6 +6804,34 @@ func schema_pkg_apis_projectcalico_v3_HTTPPull(ref common.ReferenceCallback) com
 		},
 		Dependencies: []string{
 			"github.com/tigera/api/pkg/apis/projectcalico/v3.HTTPHeader", "github.com/tigera/api/pkg/apis/projectcalico/v3.ThreatFeedFormat"},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_HealthTimeoutOverride(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"timeout": {
+						SchemaProps: spec.SchemaProps{
+							Default: 0,
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+				},
+				Required: []string{"name", "timeout"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
 	}
 }
 
