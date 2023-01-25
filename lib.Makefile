@@ -167,6 +167,33 @@ endif
 GO_BUILD_IMAGE ?= calico/go-build
 CALICO_BUILD    = $(GO_BUILD_IMAGE):$(GO_BUILD_VER)
 
+
+# We use BoringCrypto as FIPS validated cryptography in order to allow users to run in FIPS Mode (amd64 only).
+ifeq ($(ARCH), $(filter $(ARCH),amd64))
+GOEXPERIMENT?=boringcrypto
+TAGS?=boringcrypto,osusergo,netgo
+CGO_ENABLED?=1
+else
+CGO_ENABLED?=0
+endif
+
+# Build a static binary with boring crypto support.
+# This function expects you to pass in two arguments:
+#   1st arg: path/to/input/package(s)
+#   2nd arg: path/to/output/binary
+# Only when arch = amd64 it will use boring crypto to build the binary.
+# Uses VERSION_FLAGS when set.
+# TODO: once all images can be built using this function, we can revert the $(DOCKER_RUN)... line with $(DOCKER_BUILD_CGO)
+define build_cgo_boring_binary
+	echo "building a static binary..."
+	$(DOCKER_RUN) -e CGO_ENABLED=$(CGO_ENABLED) $(GO_BUILD_IMAGE):$(GO19_BUILD_VER) \
+		sh -c '$(GIT_CONFIG_SSH) \
+		GOEXPERIMENT=$(GOEXPERIMENT) go build -o $(2)  \
+		-tags $(TAGS) -v -buildvcs=false \
+		-ldflags "$(VERSION_FLAGS) -linkmode external -extldflags -static" \
+		$(1)'
+endef
+
 # Images used in build / test across multiple directories.
 PROTOC_CONTAINER=calico/protoc:$(PROTOC_VER)-$(BUILDARCH)
 ETCD_IMAGE ?= quay.io/coreos/etcd:$(ETCD_VERSION)-$(ARCH)
@@ -882,8 +909,14 @@ endif
 # cd-common tags and pushes images with the branch name and git version. This target uses PUSH_IMAGES, BUILD_IMAGE,
 # and BRANCH_NAME env variables to figure out what to tag and where to push it to.
 cd-common: var-require-one-of-CONFIRM-DRYRUN var-require-all-BRANCH_NAME
-	$(MAKE) retag-build-images-with-registries push-images-to-registries push-manifests IMAGETAG=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(BRANCH_NAME) EXCLUDEARCH="$(EXCLUDEARCH)"
-	$(MAKE) retag-build-images-with-registries push-images-to-registries push-manifests IMAGETAG=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(shell git describe --tags --dirty --long --always --abbrev=12) EXCLUDEARCH="$(EXCLUDEARCH)"
+ifndef OMIT_IMAGES
+	$(MAKE) retag-build-images-with-registries push-images-to-registries IMAGETAG=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(BRANCH_NAME) EXCLUDEARCH="$(EXCLUDEARCH)"
+	$(MAKE) retag-build-images-with-registries push-images-to-registries IMAGETAG=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(shell git describe --tags --dirty --long --always --abbrev=12) EXCLUDEARCH="$(EXCLUDEARCH)"
+endif
+ifndef OMIT_MANIFESTS
+	$(MAKE) push-manifests IMAGETAG=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(BRANCH_NAME) EXCLUDEARCH="$(EXCLUDEARCH)"
+	$(MAKE) push-manifests IMAGETAG=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(shell git describe --tags --dirty --long --always --abbrev=12) EXCLUDEARCH="$(EXCLUDEARCH)"
+endif
 
 ###############################################################################
 # Release targets and helpers
@@ -1339,7 +1372,7 @@ help:
 ###############################################################################
 # Common functions for launching a local Elastic instance.
 ###############################################################################
-ELASTIC_VERSION ?= 7.17.6
+ELASTIC_VERSION ?= 7.17.7
 ELASTIC_IMAGE   ?= docker.elastic.co/elasticsearch/elasticsearch:$(ELASTIC_VERSION)
 
 ## Run elasticsearch as a container (tigera-elastic)
