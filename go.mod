@@ -10,7 +10,7 @@ require (
 	github.com/onsi/gomega v1.10.1
 	k8s.io/api v0.23.2
 	k8s.io/apimachinery v0.23.2
-	k8s.io/apiserver v0.0.0-00010101000000-000000000000
+	k8s.io/apiserver v0.23.2
 	k8s.io/client-go v0.23.2
 	k8s.io/kube-openapi v0.0.0-20211115234752-e816edb12b65
 )
