@@ -10,18 +10,14 @@ require (
 	github.com/onsi/gomega v1.10.1
 	k8s.io/api v0.23.2
 	k8s.io/apimachinery v0.23.2
-	k8s.io/apiserver v0.0.0-00010101000000-000000000000
+	k8s.io/apiserver v0.23.2
 	k8s.io/client-go v0.23.2
 	k8s.io/kube-openapi v0.0.0-20211115234752-e816edb12b65
 )
 
 replace (
-	k8s.io/api => k8s.io/api v0.23.2
 	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.23.2
-	k8s.io/apimachinery => k8s.io/apimachinery v0.23.2
-	k8s.io/apiserver => k8s.io/apiserver v0.23.2
 	k8s.io/cli-runtime => k8s.io/cli-runtime v0.23.2
-	k8s.io/client-go => k8s.io/client-go v0.23.2
 	k8s.io/cloud-provider => k8s.io/cloud-provider v0.23.2
 	k8s.io/cluster-bootstrap => k8s.io/cluster-bootstrap v0.23.2
 	k8s.io/code-generator => k8s.io/code-generator v0.23.2
