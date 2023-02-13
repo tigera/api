@@ -1,3 +1,9 @@
+# Find path to the repo root dir (i.e. this files's dir).  Must be first in the file, before including anything.
+REPO_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+
+# Always install the git hooks to prevent publishing closed source code to a non-private repo.
+install_hooks:=$(shell $(REPO_DIR)/hack/install-git-hooks)
+
 # Disable built-in rules
 .SUFFIXES:
 
@@ -160,6 +166,32 @@ endif
 # we do not need to use the arch since go-build:v0.15 now is multi-arch manifest
 GO_BUILD_IMAGE ?= calico/go-build
 CALICO_BUILD    = $(GO_BUILD_IMAGE):$(GO_BUILD_VER)
+
+# Build a static binary with boring crypto support.
+# This function expects you to pass in two arguments:
+#   1st arg: path/to/input/package(s)
+#   2nd arg: path/to/output/binary
+# Only when arch = amd64 it will use boring crypto to build the binary.
+# Uses VERSION_FLAGS when set.
+# TODO: once all images can be built using this function, we can revert the $(DOCKER_RUN)... line with $(DOCKER_BUILD_CGO)
+define build_static_cgo_boring_binary
+    $(DOCKER_RUN) -e CGO_ENABLED=1 $(GO_BUILD_IMAGE):$(GO19_BUILD_VER) \
+        sh -c '$(GIT_CONFIG_SSH) \
+        GOEXPERIMENT=boringcrypto go build -o $(2)  \
+        -tags boringcrypto,osusergo,netgo -v -buildvcs=false \
+        -ldflags "$(VERSION_FLAGS) -linkmode external -extldflags -static" \
+        $(1)'
+endef
+
+# For binaries that do not require boring crypto.
+define build_binary
+	$(DOCKER_RUN) $(GO_BUILD_IMAGE):$(GO19_BUILD_VER) \
+		sh -c '$(GIT_CONFIG_SSH) \
+		go build -o $(2)  \
+		-v -buildvcs=false \
+		-ldflags "$(VERSION_FLAGS)" \
+		$(1)'
+endef
 
 # Images used in build / test across multiple directories.
 PROTOC_CONTAINER=calico/protoc:$(PROTOC_VER)-$(BUILDARCH)
@@ -588,7 +620,7 @@ pre-commit:
 
 .PHONY: install-git-hooks
 install-git-hooks:
-	./install-git-hooks
+	$(REPO_DIR)/install-git-hooks
 
 .PHONY: check-module-path-tigera-api
 check-module-path-tigera-api:
@@ -876,8 +908,14 @@ endif
 # cd-common tags and pushes images with the branch name and git version. This target uses PUSH_IMAGES, BUILD_IMAGE,
 # and BRANCH_NAME env variables to figure out what to tag and where to push it to.
 cd-common: var-require-one-of-CONFIRM-DRYRUN var-require-all-BRANCH_NAME
-	$(MAKE) retag-build-images-with-registries push-images-to-registries push-manifests IMAGETAG=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(BRANCH_NAME) EXCLUDEARCH="$(EXCLUDEARCH)"
-	$(MAKE) retag-build-images-with-registries push-images-to-registries push-manifests IMAGETAG=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(shell git describe --tags --dirty --long --always --abbrev=12) EXCLUDEARCH="$(EXCLUDEARCH)"
+ifndef OMIT_IMAGES
+	$(MAKE) retag-build-images-with-registries push-images-to-registries IMAGETAG=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(BRANCH_NAME) EXCLUDEARCH="$(EXCLUDEARCH)"
+	$(MAKE) retag-build-images-with-registries push-images-to-registries IMAGETAG=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(shell git describe --tags --dirty --long --always --abbrev=12) EXCLUDEARCH="$(EXCLUDEARCH)"
+endif
+ifndef OMIT_MANIFESTS
+	$(MAKE) push-manifests IMAGETAG=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(BRANCH_NAME) EXCLUDEARCH="$(EXCLUDEARCH)"
+	$(MAKE) push-manifests IMAGETAG=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(shell git describe --tags --dirty --long --always --abbrev=12) EXCLUDEARCH="$(EXCLUDEARCH)"
+endif
 
 ###############################################################################
 # Release targets and helpers
@@ -1121,6 +1159,18 @@ release-dev-image-to-registry-%:
 release-dev-image-arch-to-registry-%:
 	$(CRANE) cp $(DEV_REGISTRY)/$(BUILD_IMAGE):$(DEV_TAG)-$* $(RELEASE_REGISTRY)/$(BUILD_IMAGE):$(RELEASE_TAG)-$*$(double_quote)
 
+# create-release-branch creates a release branch based off of the dev tag for the current commit on master. After the
+# release branch is created and pushed, git-create-next-dev-tag is called to create a new empty commit on master and
+# tag that empty commit with an incremented minor version of the previous dev tag for the next release.
+create-release-branch: var-require-one-of-CONFIRM-DRYRUN var-require-all-DEV_TAG_SUFFIX-RELEASE_BRANCH_PREFIX fetch-all
+	$(if $(filter-out $(RELEASE_BRANCH_BASE),$(call current-branch)),$(error create-release-branch must be called on $(RELEASE_BRANCH_BASE)),)
+	$(eval NEXT_RELEASE_VERSION := $(shell echo "$(call git-release-tag-from-dev-tag)" | awk -F  "." '{print $$1"."$$2+1"."0}'))
+	$(eval RELEASE_BRANCH_VERSION := $(shell echo "$(call git-release-tag-from-dev-tag)" | awk -F  "." '{print $$1"."$$2}'))
+	git checkout -B $(RELEASE_BRANCH_PREFIX)-$(RELEASE_BRANCH_VERSION) $(GIT_REMOTE)/$(RELEASE_BRANCH_BASE)
+	$(GIT) push $(GIT_REMOTE) $(RELEASE_BRANCH_PREFIX)-$(RELEASE_BRANCH_VERSION)
+	$(MAKE) dev-tag-next-release push-next-release-dev-tag\
+ 		BRANCH=$(call current-branch) NEXT_RELEASE_VERSION=$(NEXT_RELEASE_VERSION) DEV_TAG_SUFFIX=$(DEV_TAG_SUFFIX)
+
 # release-prereqs checks that the environment is configured properly to create a release.
 release-prereqs:
 ifndef VERSION
@@ -1253,13 +1303,13 @@ bin/helm:
 	mv $(TMP)/linux-amd64/helm bin/helm
 
 helm-install-gcs-plugin:
-	bin/helm3 plugin install https://github.com/viglesiasce/helm-gcs.git
+	bin/helm plugin install https://github.com/viglesiasce/helm-gcs.git
 
 # Upload to Google tigera-helm-charts storage bucket.
 publish-charts:
-	bin/helm3 repo add tigera gs://tigera-helm-charts
+	bin/helm repo add tigera gs://tigera-helm-charts
 	for chart in ./bin/*.tgz; do \
-		bin/helm3 gcs push $$chart gs://tigera-helm-charts; \
+		bin/helm gcs push $$chart gs://tigera-helm-charts; \
 	done
 
 bin/yq:
@@ -1321,7 +1371,7 @@ help:
 ###############################################################################
 # Common functions for launching a local Elastic instance.
 ###############################################################################
-ELASTIC_VERSION ?= 7.17.5
+ELASTIC_VERSION ?= 7.17.7
 ELASTIC_IMAGE   ?= docker.elastic.co/elasticsearch/elasticsearch:$(ELASTIC_VERSION)
 
 ## Run elasticsearch as a container (tigera-elastic)
