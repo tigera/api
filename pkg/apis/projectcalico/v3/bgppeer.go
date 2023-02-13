@@ -125,6 +125,25 @@ type BGPPeerSpec struct {
 	// This removes BGP loop prevention and should only be used if absolutely necesssary.
 	// +optional
 	NumAllowedLocalASNumbers *int32 `json:"numAllowedLocalASNumbers,omitempty"`
+
+	// TTLSecurity enables the generalized TTL security mechanism (GTSM) which protects against spoofed packets by
+	// ignoring received packets with a smaller than expected TTL value. The provided value is the number of hops
+	// (edges) between the peers.
+	// +optional
+	TTLSecurity *uint8 `json:"ttlSecurity,omitempty"`
+
+	// The ordered set of BGPFilters applied on this BGP peer.
+	// +optional
+	Filters []string `json:"filters,omitempty" validate:"omitempty,dive,name"`
+
+	// Name of the external network to which this peer belongs.
+	// +optional
+	ExternalNetwork string `json:"externalNetwork,omitempty" validate:"omitempty,name"`
+
+	// Add an exact, i.e. /32, static route toward peer IP in order to prevent route flapping.
+	// ReachableBy contains the address of the gateway which peer can be reached by.
+	// +optional
+	ReachableBy string `json:"reachableBy,omitempty" validate:"omitempty,reachableBy"`
 }
 
 type SourceAddress string
