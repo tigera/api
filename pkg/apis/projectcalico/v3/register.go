@@ -34,6 +34,8 @@ var (
 		&IPReservationList{},
 		&BGPConfiguration{},
 		&BGPConfigurationList{},
+		&BGPFilter{},
+		&BGPFilterList{},
 		&BGPPeer{},
 		&BGPPeerList{},
 		&Profile{},
@@ -92,6 +94,8 @@ var (
 		&UISettingsGroupList{},
 		&UISettings{},
 		&UISettingsList{},
+		&ExternalNetwork{},
+		&ExternalNetworkList{},
 	}
 )
 
