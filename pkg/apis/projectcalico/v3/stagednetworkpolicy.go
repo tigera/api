@@ -136,7 +136,7 @@ func NewStagedNetworkPolicyList() *StagedNetworkPolicyList {
 	}
 }
 
-//ConvertStagedPolicyToEnforced converts a StagedNetworkPolicy into a StagedAction, NetworkPolicy pair
+// ConvertStagedPolicyToEnforced converts a StagedNetworkPolicy into a StagedAction, NetworkPolicy pair
 func ConvertStagedPolicyToEnforced(staged *StagedNetworkPolicy) (StagedAction, *NetworkPolicy) {
 	//Convert StagedNetworkPolicy to NetworkPolicy
 	enforced := NewNetworkPolicy()
