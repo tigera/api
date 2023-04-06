@@ -80,6 +80,8 @@ var (
 		&ManagedClusterList{},
 		&PacketCapture{},
 		&PacketCaptureList{},
+		&PolicyRecommendationScope{},
+		&PolicyRecommendationScopeList{},
 		&RemoteClusterConfiguration{},
 		&RemoteClusterConfigurationList{},
 		&StagedGlobalNetworkPolicy{},
