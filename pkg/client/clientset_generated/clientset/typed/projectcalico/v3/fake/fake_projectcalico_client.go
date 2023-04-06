@@ -130,6 +130,10 @@ func (c *FakeProjectcalicoV3) PacketCaptures(namespace string) v3.PacketCaptureI
 	return &FakePacketCaptures{c, namespace}
 }
 
+func (c *FakeProjectcalicoV3) PolicyRecommendationScopes() v3.PolicyRecommendationScopeInterface {
+	return &FakePolicyRecommendationScopes{c}
+}
+
 func (c *FakeProjectcalicoV3) Profiles() v3.ProfileInterface {
 	return &FakeProfiles{c}
 }

@@ -40,8 +40,7 @@ ifeq ($(ARCHES),)
 endif
 
 # list of arches *not* to build when doing *-all
-#    until s390x works correctly
-EXCLUDEARCH ?= s390x
+EXCLUDEARCH?=
 VALIDARCHES = $(filter-out $(EXCLUDEARCH),$(ARCHES))
 
 # BUILDARCH is the host architecture
@@ -63,9 +62,6 @@ endif
 ifeq ($(BUILDARCH),x86_64)
 	BUILDARCH=amd64
 endif
-ifeq ($(BUILDARCH),armv7l)
-        BUILDARCH=armv7
-endif
 
 # unless otherwise set, I am building for my own architecture, i.e. not cross-compiling
 ARCH ?= $(BUILDARCH)
@@ -76,12 +72,6 @@ ifeq ($(ARCH),aarch64)
 endif
 ifeq ($(ARCH),x86_64)
 	override ARCH=amd64
-endif
-ifeq ($(ARCH),armv7l)
-        override ARCH=armv7
-endif
-ifeq ($(ARCH),armhfv7)
-        override ARCH=armv7
 endif
 
 # If ARCH is arm based, find the requested version/variant
@@ -172,24 +162,64 @@ CALICO_BUILD    = $(GO_BUILD_IMAGE):$(GO_BUILD_VER)
 #   1st arg: path/to/input/package(s)
 #   2nd arg: path/to/output/binary
 # Only when arch = amd64 it will use boring crypto to build the binary.
-# Uses VERSION_FLAGS when set.
-# TODO: once all images can be built using this function, we can revert the $(DOCKER_RUN)... line with $(DOCKER_BUILD_CGO)
+# Uses LDFLAGS, CGO_LDFLAGS, CGO_CFLAGS when set.
+# Tests that the resulting binary contains boringcrypto symbols.
 define build_static_cgo_boring_binary
-    $(DOCKER_RUN) -e CGO_ENABLED=1 $(GO_BUILD_IMAGE):$(GO19_BUILD_VER) \
+    $(DOCKER_RUN) \
+        -e CGO_ENABLED=1 \
+        -e CGO_LDFLAGS=$(CGO_LDFLAGS) \
+        -e CGO_CFLAGS=$(CGO_CFLAGS) \
+        $(GO_BUILD_IMAGE):$(GO_BUILD_VER) \
         sh -c '$(GIT_CONFIG_SSH) \
-        GOEXPERIMENT=boringcrypto go build -o $(2)  \
-        -tags boringcrypto,osusergo,netgo -v -buildvcs=false \
-        -ldflags "$(VERSION_FLAGS) -linkmode external -extldflags -static" \
-        $(1)'
+            GOEXPERIMENT=boringcrypto go build -o $(2)  \
+            -tags fipsstrict,osusergo,netgo$(if $(BUILD_TAGS),$(comma)$(BUILD_TAGS)) -v -buildvcs=false \
+            -ldflags "$(LDFLAGS) -linkmode external -extldflags -static" \
+            $(1) \
+            && go tool nm $(2) | grep '_Cfunc__goboringcrypto_' 1> /dev/null'
+endef
+
+# Build a binary with boring crypto support.
+# This function expects you to pass in two arguments:
+#   1st arg: path/to/input/package(s)
+#   2nd arg: path/to/output/binary
+# Only when arch = amd64 it will use boring crypto to build the binary.
+# Uses LDFLAGS, CGO_LDFLAGS, CGO_CFLAGS when set.
+# Tests that the resulting binary contains boringcrypto symbols.
+define build_cgo_boring_binary
+    $(DOCKER_RUN) \
+        -e CGO_ENABLED=1 \
+        -e CGO_LDFLAGS=$(CGO_LDFLAGS) \
+        -e CGO_CFLAGS=$(CGO_CFLAGS) \
+        $(GO_BUILD_IMAGE):$(GO_BUILD_VER) \
+        sh -c '$(GIT_CONFIG_SSH) \
+            GOEXPERIMENT=boringcrypto go build -o $(2)  \
+            -tags fipsstrict$(if $(BUILD_TAGS),$(comma)$(BUILD_TAGS)) -v -buildvcs=false \
+            -ldflags "$(LDFLAGS)" \
+            $(1) \
+            && go tool nm $(2) | grep '_Cfunc__goboringcrypto_' 1> /dev/null'
+endef
+
+# Use this when building binaries that need cgo, but have no crypto and therefore would not contain any boring symbols.
+define build_cgo_binary
+    $(DOCKER_RUN) \
+        -e CGO_ENABLED=1 \
+        -e CGO_LDFLAGS=$(CGO_LDFLAGS) \
+        -e CGO_CFLAGS=$(CGO_CFLAGS) \
+        $(GO_BUILD_IMAGE):$(GO_BUILD_VER) \
+        sh -c '$(GIT_CONFIG_SSH) \
+            go build -o $(2)  \
+            -v -buildvcs=false \
+            -ldflags "$(LDFLAGS)" \
+            $(1)'
 endef
 
 # For binaries that do not require boring crypto.
 define build_binary
-	$(DOCKER_RUN) $(GO_BUILD_IMAGE):$(GO19_BUILD_VER) \
+	$(DOCKER_RUN) $(GO_BUILD_IMAGE):$(GO_BUILD_VER) \
 		sh -c '$(GIT_CONFIG_SSH) \
 		go build -o $(2)  \
 		-v -buildvcs=false \
-		-ldflags "$(VERSION_FLAGS)" \
+		-ldflags "$(LDFLAGS)" \
 		$(1)'
 endef
 
@@ -270,12 +300,6 @@ CERTS_PATH := $(REPO_ROOT)/hack/test/certs
 # cross-builds get the correct architecture set in the produced images.
 ifeq ($(ARCH),arm64)
 TARGET_PLATFORM=--platform=linux/arm64/v8
-endif
-ifeq ($(ARCH),armv7)
-TARGET_PLATFORM=--platform=linux/arm/v7
-endif
-ifeq ($(ARCH),ppc64le)
-TARGET_PLATFORM=--platform=linux/ppc64le
 endif
 
 # DOCKER_BUILD is the base build command used for building all images.
@@ -768,6 +792,8 @@ semaphore-run-auto-pin-update-workflows:
 # Generate testify mocks in the build container.
 gen-mocks:
 	$(DOCKER_RUN) $(CALICO_BUILD) sh -c '$(MAKE) mockery-run'
+	# The generated files need import reordering to pass static-checks
+	$(MAKE) fix
 
 # Run mockery for each path in MOCKERY_FILE_PATHS. The the generated mocks are
 # created in package and in test files. Look here for more information https://github.com/vektra/mockery
@@ -1292,7 +1318,7 @@ kind $(KIND):
 
 kubectl $(KUBECTL):
 	mkdir -p $(KIND_DIR)
-	curl -L https://storage.googleapis.com/kubernetes-release/release/$(K8S_VERSION)/bin/linux/$(ARCH)/kubectl -o $@
+	curl -L https://storage.googleapis.com/kubernetes-release/release/$(KUBECTL_VERSION)/bin/linux/$(ARCH)/kubectl -o $@
 	chmod +x $@
 
 bin/helm:
@@ -1371,14 +1397,15 @@ help:
 ###############################################################################
 # Common functions for launching a local Elastic instance.
 ###############################################################################
-ELASTIC_VERSION ?= 7.17.7
 ELASTIC_IMAGE   ?= docker.elastic.co/elasticsearch/elasticsearch:$(ELASTIC_VERSION)
 
 ## Run elasticsearch as a container (tigera-elastic)
 .PHONY: run-elastic
-run-elastic: stop-elastic
+run-elastic: $(REPO_ROOT)/.elasticsearch.created
+$(REPO_ROOT)/.elasticsearch.created:
 	# Run ES on Docker.
 	docker run --detach \
+	-m 2GB \
 	--net=host \
 	--name=tigera-elastic \
 	-e "discovery.type=single-node" \
@@ -1386,9 +1413,15 @@ run-elastic: stop-elastic
 
 	# Wait until ES is accepting requests.
 	@while ! docker exec tigera-elastic curl localhost:9200 2> /dev/null; do echo "Waiting for Elasticsearch to come up..."; sleep 2; done
+	touch $@
+
+	# Configure elastic to ignore high watermark errors, since this is just for tests.
+	curl -XPUT -H "Content-Type: application/json" http://localhost:9200/_cluster/settings -d '{"transient": {"cluster.routing.allocation.disk.threshold_enabled": false }}'
+	curl -XPUT -H "Content-Type: application/json" http://localhost:9200/_all/_settings -d '{"index.blocks.read_only_allow_delete": null}'
 
 ## Stop elasticsearch with name tigera-elastic
 .PHONY: stop-elastic
 stop-elastic:
 	-docker rm -f tigera-elastic
+	rm -rf $(REPO_ROOT)/.elasticsearch.created
 

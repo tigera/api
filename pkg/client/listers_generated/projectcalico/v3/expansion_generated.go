@@ -136,6 +136,10 @@ type PacketCaptureListerExpansion interface{}
 // PacketCaptureNamespaceLister.
 type PacketCaptureNamespaceListerExpansion interface{}
 
+// PolicyRecommendationScopeListerExpansion allows custom methods to be added to
+// PolicyRecommendationScopeLister.
+type PolicyRecommendationScopeListerExpansion interface{}
+
 // ProfileListerExpansion allows custom methods to be added to
 // ProfileLister.
 type ProfileListerExpansion interface{}
