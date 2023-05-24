@@ -94,6 +94,9 @@ type AuthorizedResourceGroup struct {
 
 	// The UISettingsGroup name. This is only valid for uisettingsgroup/data sub resources.
 	UISettingsGroup string `json:"uiSettingsGroup" validate:"omitempty"`
+
+	// ManagedCluster is the name of the ManagedCluster. This is only valid for managedclusters.
+	ManagedCluster string `json:"managedCluster" validate:"omitempty"`
 }
 
 // New AuthorizationReview creates a new (zeroed) AuthorizationReview struct with the TypeMetadata

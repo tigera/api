@@ -348,10 +348,8 @@ type EndpointsReportService struct {
 	EnvoyEnabled bool `json:"envoyEnabled,omitempty"`
 }
 
-//
 // Prints FlowEndpoint contents. This is a slightly less verbose version of the resource names but should have
 // sufficient context to be useful.
-//
 func (f FlowEndpoint) String() string {
 	switch f.Kind {
 	case KindK8sPod:

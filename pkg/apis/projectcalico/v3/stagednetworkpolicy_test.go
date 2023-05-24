@@ -20,7 +20,7 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	. "github.com/tigera/api/pkg/apis/projectcalico/v3"
+	apiv3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
 
 	"github.com/tigera/api/pkg/lib/numorstring"
 )
@@ -42,8 +42,8 @@ var _ = Describe("StagedNetworkPolicySpec", func() {
 	var npFieldsByName map[string]reflect.StructField
 
 	BeforeEach(func() {
-		snpFieldsByName = fieldsByName(StagedNetworkPolicySpec{})
-		npFieldsByName = fieldsByName(NetworkPolicySpec{})
+		snpFieldsByName = fieldsByName(apiv3.StagedNetworkPolicySpec{})
+		npFieldsByName = fieldsByName(apiv3.NetworkPolicySpec{})
 	})
 
 	It("and NetworkPolicySpec shared fields should have the same tags", func() {
@@ -92,20 +92,20 @@ var _ = Describe("StagedNetworkPolicySpec", func() {
 		inproto := numorstring.ProtocolFromString("UDP")
 		port80 := numorstring.SinglePort(uint16(80))
 		port443 := numorstring.SinglePort(uint16(443))
-		irule := Rule{
-			Action:    Allow,
+		irule := apiv3.Rule{
+			Action:    apiv3.Allow,
 			IPVersion: &v4,
 			Protocol:  &iproto,
-			ICMP: &ICMPFields{
+			ICMP: &apiv3.ICMPFields{
 				Type: &itype,
 				Code: &icode,
 			},
 			NotProtocol: &inproto,
-			NotICMP: &ICMPFields{
+			NotICMP: &apiv3.ICMPFields{
 				Type: &intype,
 				Code: &incode,
 			},
-			Source: EntityRule{
+			Source: apiv3.EntityRule{
 				Nets:        []string{"10.100.10.1"},
 				Selector:    "mylabel = value1",
 				Ports:       []numorstring.Port{port80},
@@ -113,7 +113,7 @@ var _ = Describe("StagedNetworkPolicySpec", func() {
 				NotSelector: "has(label1)",
 				NotPorts:    []numorstring.Port{port443},
 			},
-			Destination: EntityRule{
+			Destination: apiv3.EntityRule{
 				Nets:        []string{"10.100.1.1"},
 				Selector:    "",
 				Ports:       []numorstring.Port{port443},
@@ -129,20 +129,20 @@ var _ = Describe("StagedNetworkPolicySpec", func() {
 		encode := 8
 		eproto := numorstring.ProtocolFromInt(uint8(30))
 		enproto := numorstring.ProtocolFromInt(uint8(62))
-		erule := Rule{
-			Action:    Allow,
+		erule := apiv3.Rule{
+			Action:    apiv3.Allow,
 			IPVersion: &v4,
 			Protocol:  &eproto,
-			ICMP: &ICMPFields{
+			ICMP: &apiv3.ICMPFields{
 				Type: &etype,
 				Code: &ecode,
 			},
 			NotProtocol: &enproto,
-			NotICMP: &ICMPFields{
+			NotICMP: &apiv3.ICMPFields{
 				Type: &entype,
 				Code: &encode,
 			},
-			Source: EntityRule{
+			Source: apiv3.EntityRule{
 				Nets:        []string{"10.100.1.1"},
 				Selector:    "pcns.namespacelabel1 == 'value1'",
 				Ports:       []numorstring.Port{port443},
@@ -150,7 +150,7 @@ var _ = Describe("StagedNetworkPolicySpec", func() {
 				NotSelector: "has(label2)",
 				NotPorts:    []numorstring.Port{port80},
 			},
-			Destination: EntityRule{
+			Destination: apiv3.EntityRule{
 				Nets:        []string{"10.100.10.1"},
 				Selector:    "pcns.namespacelabel2 == 'value2'",
 				Ports:       []numorstring.Port{port80},
@@ -162,17 +162,17 @@ var _ = Describe("StagedNetworkPolicySpec", func() {
 		order := float64(101)
 		selector := "mylabel == selectme"
 
-		staged := NewStagedNetworkPolicy()
+		staged := apiv3.NewStagedNetworkPolicy()
 		staged.Name = "juventus"
 		staged.Namespace = "champion"
 		staged.Spec.Order = &order
-		staged.Spec.Ingress = []Rule{irule}
-		staged.Spec.Egress = []Rule{erule}
+		staged.Spec.Ingress = []apiv3.Rule{irule}
+		staged.Spec.Egress = []apiv3.Rule{erule}
 		staged.Spec.Selector = selector
-		staged.Spec.Types = []PolicyType{PolicyTypeIngress}
-		staged.Spec.StagedAction = StagedActionSet
+		staged.Spec.Types = []apiv3.PolicyType{apiv3.PolicyTypeIngress}
+		staged.Spec.StagedAction = apiv3.StagedActionSet
 
-		stagedAction, enforced := ConvertStagedPolicyToEnforced(staged)
+		stagedAction, enforced := apiv3.ConvertStagedPolicyToEnforced(staged)
 
 		//TODO: mgianluc all common fields should be checked, though following is good enough coverage
 		Expect(stagedAction).To(Equal(staged.Spec.StagedAction))

@@ -46,6 +46,9 @@ type ManagedClusterSpec struct {
 	// Field to store dynamically generated manifest for installing component into
 	// the actual application cluster corresponding to this Managed Cluster
 	InstallationManifest string `json:"installationManifest,omitempty"`
+	// The namespace of the managed cluster's operator. This value is used in
+	// the generation of the InstallationManifest.
+	OperatorNamespace string `json:"operatorNamespace,omitempty"`
 }
 
 type ManagedClusterStatus struct {

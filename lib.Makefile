@@ -1,3 +1,9 @@
+# Find path to the repo root dir (i.e. this files's dir).  Must be first in the file, before including anything.
+REPO_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+
+# Always install the git hooks to prevent publishing closed source code to a non-private repo.
+install_hooks:=$(shell $(REPO_DIR)/hack/install-git-hooks)
+
 # Disable built-in rules
 .SUFFIXES:
 
@@ -18,6 +24,15 @@ test: ut fv st
 # This variable is only set if ARCHES is not set
 ARCHES ?= $(patsubst docker-image/Dockerfile.%,%,$(wildcard docker-image/Dockerfile.*))
 
+# Some repositories keep their Dockerfile(s) in the sub-directories of the 'docker-image'
+# directory (e.g., voltron). Make sure ARCHES gets filled from all unique Dockerfiles.
+ifeq ($(ARCHES),)
+	dockerfiles_in_subdir=$(wildcard docker-image/**/Dockerfile.*)
+	ifneq ($(dockerfiles_in_subdir),)
+		ARCHES=$(patsubst Dockerfile.%,%,$(shell basename -a $(dockerfiles_in_subdir) | sort | uniq))
+	endif
+endif
+
 # Some repositories keep their Dockerfile(s) in the root directory instead of in
 # the 'docker-image' subdir. Make sure ARCHES gets filled in either way.
 ifeq ($(ARCHES),)
@@ -25,8 +40,7 @@ ifeq ($(ARCHES),)
 endif
 
 # list of arches *not* to build when doing *-all
-#    until s390x works correctly
-EXCLUDEARCH ?= s390x
+EXCLUDEARCH?=
 VALIDARCHES = $(filter-out $(EXCLUDEARCH),$(ARCHES))
 
 # BUILDARCH is the host architecture
@@ -48,9 +62,6 @@ endif
 ifeq ($(BUILDARCH),x86_64)
 	BUILDARCH=amd64
 endif
-ifeq ($(BUILDARCH),armv7l)
-        BUILDARCH=armv7
-endif
 
 # unless otherwise set, I am building for my own architecture, i.e. not cross-compiling
 ARCH ?= $(BUILDARCH)
@@ -61,12 +72,6 @@ ifeq ($(ARCH),aarch64)
 endif
 ifeq ($(ARCH),x86_64)
 	override ARCH=amd64
-endif
-ifeq ($(ARCH),armv7l)
-        override ARCH=armv7
-endif
-ifeq ($(ARCH),armhfv7)
-        override ARCH=armv7
 endif
 
 # If ARCH is arm based, find the requested version/variant
@@ -152,6 +157,72 @@ endif
 GO_BUILD_IMAGE ?= calico/go-build
 CALICO_BUILD    = $(GO_BUILD_IMAGE):$(GO_BUILD_VER)
 
+# Build a static binary with boring crypto support.
+# This function expects you to pass in two arguments:
+#   1st arg: path/to/input/package(s)
+#   2nd arg: path/to/output/binary
+# Only when arch = amd64 it will use boring crypto to build the binary.
+# Uses LDFLAGS, CGO_LDFLAGS, CGO_CFLAGS when set.
+# Tests that the resulting binary contains boringcrypto symbols.
+define build_static_cgo_boring_binary
+    $(DOCKER_RUN) \
+        -e CGO_ENABLED=1 \
+        -e CGO_LDFLAGS=$(CGO_LDFLAGS) \
+        -e CGO_CFLAGS=$(CGO_CFLAGS) \
+        $(GO_BUILD_IMAGE):$(GO_BUILD_VER) \
+        sh -c '$(GIT_CONFIG_SSH) \
+            GOEXPERIMENT=boringcrypto go build -o $(2)  \
+            -tags fipsstrict,osusergo,netgo$(if $(BUILD_TAGS),$(comma)$(BUILD_TAGS)) -v -buildvcs=false \
+            -ldflags "$(LDFLAGS) -linkmode external -extldflags -static" \
+            $(1) \
+            && go tool nm $(2) | grep '_Cfunc__goboringcrypto_' 1> /dev/null'
+endef
+
+# Build a binary with boring crypto support.
+# This function expects you to pass in two arguments:
+#   1st arg: path/to/input/package(s)
+#   2nd arg: path/to/output/binary
+# Only when arch = amd64 it will use boring crypto to build the binary.
+# Uses LDFLAGS, CGO_LDFLAGS, CGO_CFLAGS when set.
+# Tests that the resulting binary contains boringcrypto symbols.
+define build_cgo_boring_binary
+    $(DOCKER_RUN) \
+        -e CGO_ENABLED=1 \
+        -e CGO_LDFLAGS=$(CGO_LDFLAGS) \
+        -e CGO_CFLAGS=$(CGO_CFLAGS) \
+        $(GO_BUILD_IMAGE):$(GO_BUILD_VER) \
+        sh -c '$(GIT_CONFIG_SSH) \
+            GOEXPERIMENT=boringcrypto go build -o $(2)  \
+            -tags fipsstrict$(if $(BUILD_TAGS),$(comma)$(BUILD_TAGS)) -v -buildvcs=false \
+            -ldflags "$(LDFLAGS)" \
+            $(1) \
+            && go tool nm $(2) | grep '_Cfunc__goboringcrypto_' 1> /dev/null'
+endef
+
+# Use this when building binaries that need cgo, but have no crypto and therefore would not contain any boring symbols.
+define build_cgo_binary
+    $(DOCKER_RUN) \
+        -e CGO_ENABLED=1 \
+        -e CGO_LDFLAGS=$(CGO_LDFLAGS) \
+        -e CGO_CFLAGS=$(CGO_CFLAGS) \
+        $(GO_BUILD_IMAGE):$(GO_BUILD_VER) \
+        sh -c '$(GIT_CONFIG_SSH) \
+            go build -o $(2)  \
+            -v -buildvcs=false \
+            -ldflags "$(LDFLAGS)" \
+            $(1)'
+endef
+
+# For binaries that do not require boring crypto.
+define build_binary
+	$(DOCKER_RUN) $(GO_BUILD_IMAGE):$(GO_BUILD_VER) \
+		sh -c '$(GIT_CONFIG_SSH) \
+		go build -o $(2)  \
+		-v -buildvcs=false \
+		-ldflags "$(LDFLAGS)" \
+		$(1)'
+endef
+
 # Images used in build / test across multiple directories.
 PROTOC_CONTAINER=calico/protoc:$(PROTOC_VER)-$(BUILDARCH)
 ETCD_IMAGE ?= quay.io/coreos/etcd:$(ETCD_VERSION)-$(ARCH)
@@ -221,13 +292,14 @@ ifdef ARM_VERSION
 GOARCH_FLAGS :=-e GOARCH=arm -e GOARM=$(ARM_VERSION)
 endif
 
-# Set the platform correctly for building docker images so that 
+# Location of certificates used in UTs.
+REPO_ROOT := $(shell git rev-parse --show-toplevel)
+CERTS_PATH := $(REPO_ROOT)/hack/test/certs
+
+# Set the platform correctly for building docker images so that
 # cross-builds get the correct architecture set in the produced images.
 ifeq ($(ARCH),arm64)
 TARGET_PLATFORM=--platform=linux/arm64/v8
-endif
-ifeq ($(ARCH),armv7)
-TARGET_PLATFORM=--platform=linux/arm/v7
 endif
 
 # DOCKER_BUILD is the base build command used for building all images.
@@ -249,8 +321,8 @@ DOCKER_RUN := mkdir -p ../.go-pkg-cache bin $(GOMOD_CACHE) && \
 		-e OS=$(BUILDOS) \
 		-e GOOS=$(BUILDOS) \
 		-e GOFLAGS=$(GOFLAGS) \
-		-v $(CURDIR)/..:/go/src/github.com/projectcalico/calico:rw \
-		-v $(CURDIR)/../.go-pkg-cache:/go-cache:rw \
+		-v $(REPO_ROOT):/go/src/github.com/projectcalico/calico:rw \
+		-v $(REPO_ROOT)/.go-pkg-cache:/go-cache:rw \
 		-w /go/src/$(PACKAGE_NAME)
 
 DOCKER_RUN_RO := mkdir -p .go-pkg-cache bin $(GOMOD_CACHE) && \
@@ -265,13 +337,17 @@ DOCKER_RUN_RO := mkdir -p .go-pkg-cache bin $(GOMOD_CACHE) && \
 		-e OS=$(BUILDOS) \
 		-e GOOS=$(BUILDOS) \
 		-e GOFLAGS=$(GOFLAGS) \
-		-v $(CURDIR)/..:/go/src/github.com/projectcalico/calico:ro \
-		-v $(CURDIR)/../.go-pkg-cache:/go-cache:rw \
+		-v $(REPO_ROOT):/go/src/github.com/projectcalico/calico:ro \
+		-v $(REPO_ROOT)/.go-pkg-cache:/go-cache:rw \
 		-w /go/src/$(PACKAGE_NAME)
 
 DOCKER_GO_BUILD := $(DOCKER_RUN) $(CALICO_BUILD)
 
 DOCKER_GO_BUILD_CGO=$(DOCKER_RUN) -e CGO_ENABLED=$(CGO_ENABLED) -e CGO_LDFLAGS=$(CGO_LDFLAGS) $(CALICO_BUILD)
+
+# A target that does nothing but it always stale, used to force a rebuild on certain targets based on some non-file criteria.
+.PHONY: force-rebuild
+force-rebuild:
 
 ###############################################################################
 # Updating pins
@@ -568,7 +644,7 @@ pre-commit:
 
 .PHONY: install-git-hooks
 install-git-hooks:
-	./install-git-hooks
+	$(REPO_DIR)/install-git-hooks
 
 .PHONY: check-module-path-tigera-api
 check-module-path-tigera-api:
@@ -699,7 +775,7 @@ semaphore-run-workflow:
 # This is a helpful wrapper of the semaphore-run-workflow target to run the update_pins workflow file for a project.
 semaphore-run-auto-pin-update-workflow:
 	SEMAPHORE_WORKFLOW_FILE=update_pins.yml $(MAKE) semaphore-run-workflow
-	@echo Successully triggered the semaphore pin update workflow
+	@echo Successfully triggered the semaphore pin update workflow
 
 # This target triggers the 'semaphore-run-auto-pin-update-workflow' target for every SEMAPHORE_PROJECT_ID in the list of
 # SEMAPHORE_AUTO_PIN_UPDATE_PROJECT_IDS.
@@ -716,6 +792,8 @@ semaphore-run-auto-pin-update-workflows:
 # Generate testify mocks in the build container.
 gen-mocks:
 	$(DOCKER_RUN) $(CALICO_BUILD) sh -c '$(MAKE) mockery-run'
+	# The generated files need import reordering to pass static-checks
+	$(MAKE) fix
 
 # Run mockery for each path in MOCKERY_FILE_PATHS. The the generated mocks are
 # created in package and in test files. Look here for more information https://github.com/vektra/mockery
@@ -856,13 +934,19 @@ endif
 # cd-common tags and pushes images with the branch name and git version. This target uses PUSH_IMAGES, BUILD_IMAGE,
 # and BRANCH_NAME env variables to figure out what to tag and where to push it to.
 cd-common: var-require-one-of-CONFIRM-DRYRUN var-require-all-BRANCH_NAME
-	$(MAKE) retag-build-images-with-registries push-images-to-registries push-manifests IMAGETAG=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(BRANCH_NAME) EXCLUDEARCH="$(EXCLUDEARCH)"
-	$(MAKE) retag-build-images-with-registries push-images-to-registries push-manifests IMAGETAG=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(shell git describe --tags --dirty --long --always --abbrev=12) EXCLUDEARCH="$(EXCLUDEARCH)"
+ifndef OMIT_IMAGES
+	$(MAKE) retag-build-images-with-registries push-images-to-registries IMAGETAG=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(BRANCH_NAME) EXCLUDEARCH="$(EXCLUDEARCH)"
+	$(MAKE) retag-build-images-with-registries push-images-to-registries IMAGETAG=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(shell git describe --tags --dirty --long --always --abbrev=12) EXCLUDEARCH="$(EXCLUDEARCH)"
+endif
+ifndef OMIT_MANIFESTS
+	$(MAKE) push-manifests IMAGETAG=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(BRANCH_NAME) EXCLUDEARCH="$(EXCLUDEARCH)"
+	$(MAKE) push-manifests IMAGETAG=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(shell git describe --tags --dirty --long --always --abbrev=12) EXCLUDEARCH="$(EXCLUDEARCH)"
+endif
 
 ###############################################################################
 # Release targets and helpers
 #
-# The followings targets and macros are used to help start and cut releases.
+# The following targets and macros are used to help start and cut releases.
 # At high level, this involves:
 # - Creating release branches
 # - Adding empty commits to start next release, and updating the 'dev' tag
@@ -895,7 +979,7 @@ fetch-all:
 
 # git-dev-tag retrieves the dev tag for the current commit (the one are dev images are tagged with).
 git-dev-tag = $(shell git describe --tags --long --always --abbrev=12 --match "*dev*")
-# git-release-tag-from-dev-tag get's the release version from the current commits dev tag.
+# git-release-tag-from-dev-tag gets the release version from the current commits dev tag.
 git-release-tag-from-dev-tag = $(shell echo $(call git-dev-tag) | grep -P -o "^v\d*.\d*.\d*")
 # git-release-tag-for-current-commit gets the release tag for the current commit if there is one.
 git-release-tag-for-current-commit = $(shell git describe --tags --exact-match --exclude "*dev*")
@@ -1101,11 +1185,184 @@ release-dev-image-to-registry-%:
 release-dev-image-arch-to-registry-%:
 	$(CRANE) cp $(DEV_REGISTRY)/$(BUILD_IMAGE):$(DEV_TAG)-$* $(RELEASE_REGISTRY)/$(BUILD_IMAGE):$(RELEASE_TAG)-$*$(double_quote)
 
+# create-release-branch creates a release branch based off of the dev tag for the current commit on master. After the
+# release branch is created and pushed, git-create-next-dev-tag is called to create a new empty commit on master and
+# tag that empty commit with an incremented minor version of the previous dev tag for the next release.
+create-release-branch: var-require-one-of-CONFIRM-DRYRUN var-require-all-DEV_TAG_SUFFIX-RELEASE_BRANCH_PREFIX fetch-all
+	$(if $(filter-out $(RELEASE_BRANCH_BASE),$(call current-branch)),$(error create-release-branch must be called on $(RELEASE_BRANCH_BASE)),)
+	$(eval NEXT_RELEASE_VERSION := $(shell echo "$(call git-release-tag-from-dev-tag)" | awk -F  "." '{print $$1"."$$2+1"."0}'))
+	$(eval RELEASE_BRANCH_VERSION := $(shell echo "$(call git-release-tag-from-dev-tag)" | awk -F  "." '{print $$1"."$$2}'))
+	git checkout -B $(RELEASE_BRANCH_PREFIX)-$(RELEASE_BRANCH_VERSION) $(GIT_REMOTE)/$(RELEASE_BRANCH_BASE)
+	$(GIT) push $(GIT_REMOTE) $(RELEASE_BRANCH_PREFIX)-$(RELEASE_BRANCH_VERSION)
+	$(MAKE) dev-tag-next-release push-next-release-dev-tag\
+ 		BRANCH=$(call current-branch) NEXT_RELEASE_VERSION=$(NEXT_RELEASE_VERSION) DEV_TAG_SUFFIX=$(DEV_TAG_SUFFIX)
+
 # release-prereqs checks that the environment is configured properly to create a release.
 release-prereqs:
 ifndef VERSION
 	$(error VERSION is undefined - run using make release VERSION=vX.Y.Z)
 endif
+
+# Check if the codebase is dirty or not.
+check-dirty:
+	@if [ "$$(git --no-pager diff --stat)" != "" ]; then \
+	echo "The following files are dirty"; git --no-pager diff --stat; exit 1; fi
+
+###############################################################################
+# Common functions for launching a local Kubernetes control plane.
+###############################################################################
+## Kubernetes apiserver used for tests
+APISERVER_NAME := calico-local-apiserver
+run-k8s-apiserver: stop-k8s-apiserver run-etcd
+	docker run --detach --net=host \
+		--name $(APISERVER_NAME) \
+		-v $(REPO_ROOT):/go/src/github.com/projectcalico/calico \
+		-v $(CERTS_PATH):/home/user/certs \
+		-e KUBECONFIG=/home/user/certs/kubeconfig \
+		$(CALICO_BUILD) kube-apiserver \
+		--etcd-servers=http://$(LOCAL_IP_ENV):2379 \
+		--service-cluster-ip-range=10.101.0.0/16,fd00:96::/112 \
+		--authorization-mode=RBAC \
+		--service-account-key-file=/home/user/certs/service-account.pem \
+		--service-account-signing-key-file=/home/user/certs/service-account-key.pem \
+		--service-account-issuer=https://localhost:443 \
+		--api-audiences=kubernetes.default \
+		--client-ca-file=/home/user/certs/ca.pem \
+		--tls-cert-file=/home/user/certs/kubernetes.pem \
+		--tls-private-key-file=/home/user/certs/kubernetes-key.pem \
+		--enable-priority-and-fairness=false \
+		--max-mutating-requests-inflight=0 \
+		--max-requests-inflight=0
+
+	# Wait until the apiserver is accepting requests.
+	while ! docker exec $(APISERVER_NAME) kubectl get namespace default; do echo "Waiting for apiserver to come up..."; sleep 2; done
+
+	# Wait until we can configure a cluster role binding which allows anonymous auth.
+	while ! docker exec $(APISERVER_NAME) kubectl create \
+		clusterrolebinding anonymous-admin \
+		--clusterrole=cluster-admin \
+		--user=system:anonymous 2>/dev/null ; \
+		do echo "Waiting for $(APISERVER_NAME) to come up"; \
+		sleep 1; \
+		done
+
+	# Create CustomResourceDefinition (CRD) for Calico resources
+	while ! docker exec $(APISERVER_NAME) kubectl \
+		apply -f /go/src/github.com/projectcalico/calico/libcalico-go/config/crd/; \
+		do echo "Trying to create CRDs"; \
+		sleep 1; \
+		done
+
+# Stop Kubernetes apiserver
+stop-k8s-apiserver:
+	@-docker rm -f $(APISERVER_NAME)
+
+# Run a local Kubernetes controller-manager in a docker container, useful for tests.
+CONTROLLER_MANAGER_NAME := calico-local-controller-manager
+run-k8s-controller-manager: stop-k8s-controller-manager run-k8s-apiserver
+	docker run --detach --net=host \
+		--name $(CONTROLLER_MANAGER_NAME) \
+		-v $(CERTS_PATH):/home/user/certs \
+		$(CALICO_BUILD) kube-controller-manager \
+		--master=https://127.0.0.1:6443 \
+		--kubeconfig=/home/user/certs/kube-controller-manager.kubeconfig \
+		--min-resync-period=3m \
+		--allocate-node-cidrs=true \
+		--cluster-cidr=192.168.0.0/16 \
+		--v=5 \
+		--service-account-private-key-file=/home/user/certs/service-account-key.pem \
+		--root-ca-file=/home/user/certs/ca.pem
+
+## Stop Kubernetes controller manager
+stop-k8s-controller-manager:
+	@-docker rm -f $(CONTROLLER_MANAGER_NAME)
+
+###############################################################################
+# Common functions for create a local kind cluster.
+###############################################################################
+KIND_DIR := $(REPO_ROOT)/hack/test/kind
+KIND ?= $(KIND_DIR)/kind
+KUBECTL ?= $(KIND_DIR)/kubectl
+
+# Different tests may require different kind configurations.
+KIND_CONFIG ?= $(KIND_DIR)/kind.config
+KIND_NAME = $(basename $(notdir $(KIND_CONFIG)))
+KIND_KUBECONFIG?=$(KIND_DIR)/$(KIND_NAME)-kubeconfig.yaml
+
+kind-cluster-create: $(REPO_ROOT)/.$(KIND_NAME).created
+$(REPO_ROOT)/.$(KIND_NAME).created: $(KUBECTL) $(KIND)
+	# First make sure any previous cluster is deleted
+	$(MAKE) kind-cluster-destroy
+
+	# Create a kind cluster.
+	$(KIND) create cluster \
+		--config $(KIND_CONFIG) \
+		--kubeconfig $(KIND_KUBECONFIG) \
+		--name $(KIND_NAME) \
+		--image kindest/node:$(K8S_VERSION)
+
+	# Wait for controller manager to be running and healthy, then create Calico CRDs.
+	while ! KUBECONFIG=$(KIND_KUBECONFIG) $(KUBECTL) get serviceaccount default; do echo "Waiting for default serviceaccount to be created..."; sleep 2; done
+	while ! KUBECONFIG=$(KIND_KUBECONFIG) $(KUBECTL) create -f $(REPO_ROOT)/libcalico-go/config/crd; do echo "Waiting for CRDs to be created"; sleep 2; done
+	touch $@
+
+kind-cluster-destroy: $(KIND) $(KUBECTL)
+	-$(KUBECTL) --kubeconfig=$(KIND_KUBECONFIG) drain kind-control-plane kind-worker kind-worker2 kind-worker3 --ignore-daemonsets --force
+	-$(KIND) delete cluster --name $(KIND_NAME)
+	rm -f $(KIND_KUBECONFIG)
+	rm -f $(REPO_ROOT)/.$(KIND_NAME).created
+
+kind $(KIND):
+	mkdir -p $(KIND_DIR)
+	$(DOCKER_GO_BUILD) sh -c "GOBIN=/go/src/github.com/projectcalico/calico/hack/test/kind go install sigs.k8s.io/kind@v0.14.0"
+
+kubectl $(KUBECTL):
+	mkdir -p $(KIND_DIR)
+	curl -L https://storage.googleapis.com/kubernetes-release/release/$(KUBECTL_VERSION)/bin/linux/$(ARCH)/kubectl -o $@
+	chmod +x $@
+
+bin/helm:
+	mkdir -p bin
+	$(eval TMP := $(shell mktemp -d))
+	wget -q https://get.helm.sh/helm-v3.11.0-linux-amd64.tar.gz -O $(TMP)/helm3.tar.gz
+	tar -zxvf $(TMP)/helm3.tar.gz -C $(TMP)
+	mv $(TMP)/linux-amd64/helm bin/helm
+
+helm-install-gcs-plugin:
+	bin/helm plugin install https://github.com/viglesiasce/helm-gcs.git
+
+# Upload to Google tigera-helm-charts storage bucket.
+publish-charts:
+	bin/helm repo add tigera gs://tigera-helm-charts
+	for chart in ./bin/*.tgz; do \
+		bin/helm gcs push $$chart gs://tigera-helm-charts; \
+	done
+
+bin/yq:
+	mkdir -p bin
+	$(eval TMP := $(shell mktemp -d))
+	wget https://github.com/mikefarah/yq/releases/download/v4.27.3/yq_linux_$(BUILDARCH).tar.gz -O $(TMP)/yq4.tar.gz
+	tar -zxvf $(TMP)/yq4.tar.gz -C $(TMP)
+	mv $(TMP)/yq_linux_$(BUILDARCH) bin/yq
+
+###############################################################################
+# Common functions for launching a local etcd instance.
+###############################################################################
+## Run etcd as a container (calico-etcd)
+# TODO: We shouldn't need to tear this down every time it is called.
+# TODO: We shouldn't need to enable the v2 API, but some of our test code still relies on it.
+.PHONY: run-etcd stop-etcd
+run-etcd: stop-etcd
+	docker run --detach \
+		--net=host \
+		--entrypoint=/usr/local/bin/etcd \
+		--name calico-etcd $(ETCD_IMAGE) \
+		--enable-v2 \
+		--advertise-client-urls "http://$(LOCAL_IP_ENV):2379,http://127.0.0.1:2379,http://$(LOCAL_IP_ENV):4001,http://127.0.0.1:4001" \
+		--listen-client-urls "http://0.0.0.0:2379,http://0.0.0.0:4001"
+
+stop-etcd:
+	@-docker rm -f calico-etcd
 
 ###############################################################################
 # Helpers
@@ -1136,4 +1393,35 @@ help:
 	@echo "BUILDARCH (host):	$(BUILDARCH)"
 	@echo "CALICO_BUILD:		$(CALICO_BUILD)"
 	@echo "-----------------------------------------------------------"
+
+###############################################################################
+# Common functions for launching a local Elastic instance.
+###############################################################################
+ELASTIC_IMAGE   ?= docker.elastic.co/elasticsearch/elasticsearch:$(ELASTIC_VERSION)
+
+## Run elasticsearch as a container (tigera-elastic)
+.PHONY: run-elastic
+run-elastic: $(REPO_ROOT)/.elasticsearch.created
+$(REPO_ROOT)/.elasticsearch.created:
+	# Run ES on Docker.
+	docker run --detach \
+	-m 2GB \
+	--net=host \
+	--name=tigera-elastic \
+	-e "discovery.type=single-node" \
+	$(ELASTIC_IMAGE)
+
+	# Wait until ES is accepting requests.
+	@while ! docker exec tigera-elastic curl localhost:9200 2> /dev/null; do echo "Waiting for Elasticsearch to come up..."; sleep 2; done
+	touch $@
+
+	# Configure elastic to ignore high watermark errors, since this is just for tests.
+	curl -XPUT -H "Content-Type: application/json" http://localhost:9200/_cluster/settings -d '{"transient": {"cluster.routing.allocation.disk.threshold_enabled": false }}'
+	curl -XPUT -H "Content-Type: application/json" http://localhost:9200/_all/_settings -d '{"index.blocks.read_only_allow_delete": null}'
+
+## Stop elasticsearch with name tigera-elastic
+.PHONY: stop-elastic
+stop-elastic:
+	-docker rm -f tigera-elastic
+	rm -rf $(REPO_ROOT)/.elasticsearch.created
 

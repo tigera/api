@@ -3,16 +3,12 @@
 package v3
 
 import (
-	"time"
-
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 const (
 	KindAlertException     = "AlertException"
 	KindAlertExceptionList = "AlertExceptionList"
-
-	AlertExceptionMinPeriod = time.Minute
 )
 
 // +genclient
@@ -36,15 +32,21 @@ type AlertExceptionSpec struct {
 	// Selector defines a query string for alert events to be excluded from UI search results.
 	Selector string `json:"selector" validate:"required"`
 
-	// Period controls how long an alert exception will be active. It is optional and
-	// omitting Period will make the alert exception active forever.
+	// StartTime defines the start time from which this alert exception will take effect.
+	// If the value is in the past, matched alerts will be filtered immediately.
+	// If the value is changed to a future time, alert exceptions will restart at that time.
+	// +kubebuilder:validation:Format="date-time"
+	StartTime metav1.Time `json:"startTime" validate:"required"`
+
+	// EndTime defines the end time at which this alert exception will expire.
+	// If omitted the alert exception filtering will continue indefinitely.
 	// +optional
-	Period *metav1.Duration `json:"period,omitempty" validate:"omitempty"`
+	//+kubebuilder:validation:Format="date-time"
+	EndTime *metav1.Time `json:"endTime,omitempty" validate:"omitempty"`
 }
 
 // AlertExceptionStatus contains the status of an alert exception.
 type AlertExceptionStatus struct {
-	LastExecuted *metav1.Time `json:"lastExecuted,omitempty"`
 }
 
 // +genclient:nonNamespaced

@@ -218,6 +218,8 @@ type StagedAction string
 const (
 	StagedActionSet    StagedAction = "Set"
 	StagedActionDelete StagedAction = "Delete"
+	StagedActionLearn  StagedAction = "Learn"
+	StagedActionIgnore StagedAction = "Ignore"
 )
 
 type RuleMetadata struct {

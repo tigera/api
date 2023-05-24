@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2022 Tigera, Inc. All rights reserved.
+// Copyright (c) 2019-2023 Tigera, Inc. All rights reserved.
 
 package v3
 
@@ -34,6 +34,8 @@ var (
 		&IPReservationList{},
 		&BGPConfiguration{},
 		&BGPConfigurationList{},
+		&BGPFilter{},
+		&BGPFilterList{},
 		&BGPPeer{},
 		&BGPPeerList{},
 		&Profile{},
@@ -48,6 +50,10 @@ var (
 		&NetworkSetList{},
 		&CalicoNodeStatus{},
 		&CalicoNodeStatusList{},
+		&IPAMConfiguration{},
+		&IPAMConfigurationList{},
+		&BlockAffinity{},
+		&BlockAffinityList{},
 
 		// Enterprise-only types.
 		&AlertException{},
@@ -58,6 +64,8 @@ var (
 		&AuthorizationReviewList{},
 		&DeepPacketInspection{},
 		&DeepPacketInspectionList{},
+		&EgressGatewayPolicy{},
+		&EgressGatewayPolicyList{},
 		&GlobalAlert{},
 		&GlobalAlertList{},
 		&GlobalAlertTemplate{},
@@ -74,6 +82,8 @@ var (
 		&ManagedClusterList{},
 		&PacketCapture{},
 		&PacketCaptureList{},
+		&PolicyRecommendationScope{},
+		&PolicyRecommendationScopeList{},
 		&RemoteClusterConfiguration{},
 		&RemoteClusterConfigurationList{},
 		&StagedGlobalNetworkPolicy{},
@@ -88,6 +98,8 @@ var (
 		&UISettingsGroupList{},
 		&UISettings{},
 		&UISettingsList{},
+		&ExternalNetwork{},
+		&ExternalNetworkList{},
 	}
 )
 

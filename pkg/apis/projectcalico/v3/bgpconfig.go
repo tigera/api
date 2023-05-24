@@ -25,6 +25,13 @@ const (
 	KindBGPConfigurationList = "BGPConfigurationList"
 )
 
+type BindMode string
+
+const (
+	BindModeNone   BindMode = "None"
+	BindModeNodeIP BindMode = "NodeIP"
+)
+
 // +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
@@ -94,6 +101,16 @@ type BGPConfigurationSpec struct {
 	// This field can only be set on the default BGPConfiguration instance and requires that NodeMesh is enabled
 	// +optional
 	NodeMeshMaxRestartTime *metav1.Duration `json:"nodeMeshMaxRestartTime,omitempty" confignamev1:"node_mesh_restart_time"`
+
+	// BindMode indicates whether to listen for BGP connections on all addresses (None)
+	// or only on the node's canonical IP address Node.Spec.BGP.IPvXAddress (NodeIP).
+	// Default behaviour is to listen for BGP connections on all addresses.
+	// +optional
+	BindMode *BindMode `json:"bindMode,omitempty"`
+
+	// IgnoredInterfaces indicates the network interfaces that needs to be excluded when reading device routes.
+	// +optional
+	IgnoredInterfaces []string `json:"ignoredInterfaces,omitempty" validate:"omitempty,dive,ignoredInterface"`
 }
 
 // ServiceLoadBalancerIPBlock represents a single allowed LoadBalancer IP CIDR block.

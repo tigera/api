@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2021 Tigera, Inc. All rights reserved.
+// Copyright (c) 2017-2022 Tigera, Inc. All rights reserved.
 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -49,6 +49,7 @@ const (
 	KindFelixConfigurationList = "FelixConfigurationList"
 	IptablesBackendLegacy      = "Legacy"
 	IptablesBackendNFTables    = "NFT"
+	IptablesBackendAuto        = "Auto"
 )
 
 // +kubebuilder:validation:Enum=DoNothing;Enable;Disable
@@ -75,11 +76,31 @@ const (
 	DNSPolicyModeDelayDNSResponse  DNSPolicyMode = "DelayDNSResponse"
 )
 
+// +kubebuilder:validation:Enum=Enabled;Disabled
+type FloatingIPType string
+
+const (
+	FloatingIPsEnabled  FloatingIPType = "Enabled"
+	FloatingIPsDisabled FloatingIPType = "Disabled"
+)
+
 // FelixConfigurationSpec contains the values of the Felix configuration.
 type FelixConfigurationSpec struct {
-	UseInternalDataplaneDriver *bool  `json:"useInternalDataplaneDriver,omitempty"`
-	DataplaneDriver            string `json:"dataplaneDriver,omitempty"`
+	// UseInternalDataplaneDriver, if true, Felix will use its internal dataplane programming logic.  If false, it
+	// will launch an external dataplane driver and communicate with it over protobuf.
+	UseInternalDataplaneDriver *bool `json:"useInternalDataplaneDriver,omitempty"`
+	// DataplaneDriver filename of the external dataplane driver to use.  Only used if UseInternalDataplaneDriver
+	// is set to false.
+	DataplaneDriver string `json:"dataplaneDriver,omitempty"`
 
+	// DataplaneWatchdogTimeout is the readiness/liveness timeout used for Felix's (internal) dataplane driver.
+	// Increase this value if you experience spurious non-ready or non-live events when Felix is under heavy load.
+	// Decrease the value to get felix to report non-live or non-ready more quickly. [Default: 90s]
+	//
+	// Deprecated: replaced by the generic HealthTimeoutOverrides.
+	DataplaneWatchdogTimeout *metav1.Duration `json:"dataplaneWatchdogTimeout,omitempty" configv1timescale:"seconds"`
+
+	// IPv6Support controls whether Felix enables support for IPv6 (if supported by the in-use dataplane).
 	IPv6Support *bool `json:"ipv6Support,omitempty" confignamev1:"Ipv6Support"`
 
 	// RouteRefreshInterval is the period at which Felix re-checks the routes
@@ -115,18 +136,22 @@ type FelixConfigurationSpec struct {
 	// attempts to acquire the iptables lock if it is not available. Lower values make Felix more
 	// responsive when the lock is contended, but use more CPU. [Default: 50ms]
 	IptablesLockProbeInterval *metav1.Duration `json:"iptablesLockProbeInterval,omitempty" configv1timescale:"milliseconds" confignamev1:"IptablesLockProbeIntervalMillis"`
-	// FeatureDetectOverride is used to override the feature detection.
-	// Values are specified in a comma separated list with no spaces, example;
-	// "SNATFullyRandom=true,MASQFullyRandom=false,RestoreSupportsLock=".
-	// "true" or "false" will force the feature, empty or omitted values are
-	// auto-detected.
+	// FeatureDetectOverride is used to override feature detection based on auto-detected platform
+	// capabilities.  Values are specified in a comma separated list with no spaces, example;
+	// "SNATFullyRandom=true,MASQFullyRandom=false,RestoreSupportsLock=".  "true" or "false" will
+	// force the feature, empty or omitted values are auto-detected.
 	FeatureDetectOverride string `json:"featureDetectOverride,omitempty" validate:"omitempty,keyValueList"`
+	// FeatureGates is used to enable or disable tech-preview Calico features.
+	// Values are specified in a comma separated list with no spaces, example;
+	// "BPFConnectTimeLoadBalancingWorkaround=enabled,XyZ=false". This is
+	// used to enable features that are not fully production ready.
+	FeatureGates string `json:"featureGates,omitempty" validate:"omitempty,keyValueList"`
 	// IpsetsRefreshInterval is the period at which Felix re-checks all iptables
 	// state to ensure that no other process has accidentally broken Calico's rules. Set to 0 to
 	// disable iptables refresh. [Default: 90s]
 	IpsetsRefreshInterval *metav1.Duration `json:"ipsetsRefreshInterval,omitempty" configv1timescale:"seconds"`
 	MaxIpsetSize          *int             `json:"maxIpsetSize,omitempty"`
-	// IptablesBackend specifies which backend of iptables will be used. The default is legacy.
+	// IptablesBackend specifies which backend of iptables will be used. The default is Auto.
 	IptablesBackend *IptablesBackend `json:"iptablesBackend,omitempty" validate:"omitempty,iptablesBackend"`
 
 	// XDPRefreshInterval is the period at which Felix re-checks all XDP state to ensure that no
@@ -181,6 +206,9 @@ type FelixConfigurationSpec struct {
 	DefaultEndpointToHostAction string `json:"defaultEndpointToHostAction,omitempty" validate:"omitempty,dropAcceptReturn"`
 	IptablesFilterAllowAction   string `json:"iptablesFilterAllowAction,omitempty" validate:"omitempty,acceptReturn"`
 	IptablesMangleAllowAction   string `json:"iptablesMangleAllowAction,omitempty" validate:"omitempty,acceptReturn"`
+	// IptablesFilterDenyAction controls what happens to traffic that is denied by network policy. By default Calico blocks traffic
+	// with an iptables "DROP" action. If you want to use "REJECT" action instead you can configure it in here.
+	IptablesFilterDenyAction string `json:"iptablesFilterDenyAction,omitempty" validate:"omitempty,dropReject"`
 	// LogPrefix is the log prefix that Felix uses when rendering LOG rules. [Default: calico-packet]
 	LogPrefix string `json:"logPrefix,omitempty"`
 
@@ -202,15 +230,19 @@ type FelixConfigurationSpec struct {
 	// to Debug level logs.
 	LogDebugFilenameRegex string `json:"logDebugFilenameRegex,omitempty" validate:"omitempty,regexp"`
 
+	// IPIPEnabled overrides whether Felix should configure an IPIP interface on the host. Optional as Felix determines this based on the existing IP pools. [Default: nil (unset)]
 	IPIPEnabled *bool `json:"ipipEnabled,omitempty" confignamev1:"IpInIpEnabled"`
 	// IPIPMTU is the MTU to set on the tunnel device. See Configuring MTU [Default: 1440]
 	IPIPMTU *int `json:"ipipMTU,omitempty" confignamev1:"IpInIpMtu"`
 
-	VXLANEnabled *bool `json:"vxlanEnabled,omitempty"`
-	// VXLANMTU is the MTU to set on the tunnel device. See Configuring MTU [Default: 1440]
-	VXLANMTU  *int `json:"vxlanMTU,omitempty"`
-	VXLANPort *int `json:"vxlanPort,omitempty"`
-	VXLANVNI  *int `json:"vxlanVNI,omitempty"`
+	// VXLANEnabled overrides whether Felix should create the VXLAN tunnel device for IPv4 VXLAN networking. Optional as Felix determines this based on the existing IP pools. [Default: nil (unset)]
+	VXLANEnabled *bool `json:"vxlanEnabled,omitempty" confignamev1:"VXLANEnabled"`
+	// VXLANMTU is the MTU to set on the IPv4 VXLAN tunnel device. See Configuring MTU [Default: 1410]
+	VXLANMTU *int `json:"vxlanMTU,omitempty"`
+	// VXLANMTUV6 is the MTU to set on the IPv6 VXLAN tunnel device. See Configuring MTU [Default: 1390]
+	VXLANMTUV6 *int `json:"vxlanMTUV6,omitempty"`
+	VXLANPort  *int `json:"vxlanPort,omitempty"`
+	VXLANVNI   *int `json:"vxlanVNI,omitempty"`
 
 	// AllowVXLANPacketsFromWorkloads controls whether Felix will add a rule to drop VXLAN encapsulated traffic
 	// from workloads [Default: false]
@@ -240,6 +272,11 @@ type FelixConfigurationSpec struct {
 	HealthEnabled *bool   `json:"healthEnabled,omitempty"`
 	HealthHost    *string `json:"healthHost,omitempty"`
 	HealthPort    *int    `json:"healthPort,omitempty"`
+	// HealthTimeoutOverrides allows the internal watchdog timeouts of individual subcomponents to be
+	// overridden.  This is useful for working around "false positive" liveness timeouts that can occur
+	// in particularly stressful workloads or if CPU is constrained.  For a list of active
+	// subcomponents, see Felix's logs.
+	HealthTimeoutOverrides []HealthTimeoutOverride `json:"healthTimeoutOverrides,omitempty" validate:"omitempty,dive"`
 
 	// PrometheusMetricsEnabled enables the Prometheus metrics server in Felix if set to true. [Default: false]
 	PrometheusMetricsEnabled *bool `json:"prometheusMetricsEnabled,omitempty"`
@@ -306,9 +343,13 @@ type FelixConfigurationSpec struct {
 	// (ie it uses the iptables MASQUERADE target)
 	NATOutgoingAddress string `json:"natOutgoingAddress,omitempty"`
 
-	// This is the source address to use on programmed device routes. By default the source address is left blank,
+	// This is the IPv4 source address to use on programmed device routes. By default the source address is left blank,
 	// leaving the kernel to choose the source address used.
 	DeviceRouteSourceAddress string `json:"deviceRouteSourceAddress,omitempty"`
+
+	// This is the IPv6 source address to use on programmed device routes. By default the source address is left blank,
+	// leaving the kernel to choose the source address used.
+	DeviceRouteSourceAddressIPv6 string `json:"deviceRouteSourceAddressIPv6,omitempty"`
 
 	// This defines the route protocol added to programmed device routes, by default this will be RTPROT_BOOT
 	// when left blank.
@@ -370,6 +411,10 @@ type FelixConfigurationSpec struct {
 	// flows over as well as any interfaces that handle incoming traffic to nodeports and services from outside the
 	// cluster.  It should not match the workload interfaces (usually named cali...).
 	BPFDataIfacePattern string `json:"bpfDataIfacePattern,omitempty" validate:"omitempty,regexp"`
+	// BPFL3IfacePattern is a regular expression that allows to list tunnel devices like wireguard or vxlan (i.e., L3 devices)
+	// in addition to BPFDataIfacePattern. That is, tunnel interfaces not created by Calico, that Calico workload traffic flows
+	// over as well as any interfaces that handle incoming traffic to nodeports and services from outside the cluster.
+	BPFL3IfacePattern string `json:"bpfL3IfacePattern,omitempty" validate:"omitempty,regexp"`
 	// BPFConnectTimeLoadBalancingEnabled when in BPF mode, controls whether Felix installs the connection-time load
 	// balancer.  The connect-time load balancer is required for the host to be able to reach Kubernetes services
 	// and it improves the performance of pod-to-service connections.  The only reason to disable it is for debugging
@@ -381,9 +426,13 @@ type FelixConfigurationSpec struct {
 	// is sent directly from the remote node.  In "DSR" mode, the remote node appears to use the IP of the ingress
 	// node; this requires a permissive L2 network.  [Default: Tunnel]
 	BPFExternalServiceMode string `json:"bpfExternalServiceMode,omitempty" validate:"omitempty,bpfServiceMode"`
+	// BPFDSROptoutCIDRs is a list of CIDRs which are excluded from DSR. That is, clients
+	// in those CIDRs will accesses nodeports as if BPFExternalServiceMode was set to
+	// Tunnel.
+	BPFDSROptoutCIDRs *[]string `json:"bpfDSROptoutCIDRs,omitempty" validate:"omitempty,cidrs"`
 	// BPFExtToServiceConnmark in BPF mode, control a 32bit mark that is set on connections from an
 	// external client to a local service. This mark allows us to control how packets of that
-	// connection are routed within the host and how is routing intepreted by RPF check. [Default: 0]
+	// connection are routed within the host and how is routing interpreted by RPF check. [Default: 0]
 	BPFExtToServiceConnmark *int `json:"bpfExtToServiceConnmark,omitempty" validate:"omitempty,gte=0,lte=4294967295"`
 	// BPFKubeProxyIptablesCleanupEnabled, if enabled in BPF mode, Felix will proactively clean up the upstream
 	// Kubernetes kube-proxy's iptables chains.  Should only be enabled if kube-proxy is not running.  [Default: true]
@@ -422,6 +471,19 @@ type FelixConfigurationSpec struct {
 	// for each endpoint matched by every selector in the source/destination matches in network policy.  Selectors
 	// such as "all()" can result in large numbers of entries (one entry per endpoint in that case).
 	BPFMapSizeIPSets *int `json:"bpfMapSizeIPSets,omitempty"`
+	// BPFMapSizeIfState sets the size for ifstate map.  The ifstate map must be large enough to hold an entry
+	// for each device (host + workloads) on a host.
+	BPFMapSizeIfState *int `json:"bpfMapSizeIfState,omitempty"`
+	// BPFHostConntrackBypass Controls whether to bypass Linux conntrack in BPF mode for
+	// workloads and services. [Default: true - bypass Linux conntrack]
+	BPFHostConntrackBypass *bool `json:"bpfHostConntrackBypass,omitempty"`
+	// BPFEnforceRPF enforce strict RPF on all host interfaces with BPF programs regardless of
+	// what is the per-interfaces or global setting. Possible values are Disabled, Strict
+	// or Loose. [Default: Loose]
+	BPFEnforceRPF string `json:"bpfEnforceRPF,omitempty"`
+	// BPFPolicyDebugEnabled when true, Felix records detailed information
+	// about the BPF policy programs, which can be examined with the calico-bpf command-line tool.
+	BPFPolicyDebugEnabled *bool `json:"bpfPolicyDebugEnabled,omitempty"`
 
 	SyslogReporterNetwork string `json:"syslogReporterNetwork,omitempty"`
 	SyslogReporterAddress string `json:"syslogReporterAddress,omitempty"`
@@ -521,8 +583,8 @@ type FelixConfigurationSpec struct {
 	// FlowLogsFileNatOutgoingPortLimit is used to specify the maximum number of distinct post SNAT ports that will appear
 	// in the flowLogs. Default value is 3
 	FlowLogsFileNatOutgoingPortLimit *int `json:"flowLogsFileNatOutgoingPortLimit,omitempty" validate:"omitempty"`
-	// FlowLogsFileDomainsLimit is used to configure the number of (destination) domains to include in the flow log. The
-	// domains are only included at aggregation level 0 or 1.
+	// FlowLogsFileDomainsLimit is used to configure the number of (destination) domains to include in the flow log.
+	// These are not included for workload or host endpoint destinations.
 	// [Default: 5]
 	FlowLogsFileDomainsLimit *int `json:"flowLogsFileDomainsLimit,omitempty" validate:"omitempty"`
 
@@ -734,17 +796,43 @@ type FelixConfigurationSpec struct {
 	EgressIPVXLANVNI *int `json:"egressIPVXLANVNI,omitempty"`
 	// EgressIPRoutingRulePriority controls the priority value to use for the egress IP routing rule. [Default: 100]
 	EgressIPRoutingRulePriority *int `json:"egressIPRoutingRulePriority,omitempty" validate:"omitempty,gt=0,lt=32766"`
+	// EgressGatewayPollInterval is the interval at which Felix will poll remote egress gateways to check their
+	// health.  Only Egress Gateways with a named "health" port will be polled in this way.  Egress Gateways that
+	// fail the health check will be taken our of use as if they have been deleted.
+	EgressGatewayPollInterval *metav1.Duration `json:"egressGatewayPollInterval,omitempty" configv1timescale:"seconds"`
+	// EgressGatewayPollFailureCount is the minimum number of poll failures before a remote Egress Gateway is considered
+	// to have failed.
+	EgressGatewayPollFailureCount *int `json:"egressGatewayPollFailureCount,omitempty" validate:"omitempty,gt=0"`
 
-	// WireguardEnabled controls whether Wireguard is enabled. [Default: false]
+	// RouteSyncDisabled will disable all operations performed on the route table. Set to true to
+	// run in network-policy mode only.
+	RouteSyncDisabled *bool `json:"routeSyncDisabled,omitempty"`
+
+	// ExternalNetworkSupport defines two different support modes for external network function. [Default: Disabled]
+	// - Disabled:  External network function is disabled.
+	// - Enabled:   External network function is enabled.
+	ExternalNetworkSupport string `json:"externalNetworkSupport,omitempty" validate:"omitempty,oneof=Disabled Enabled"`
+	// ExternalNetworkRoutingRulePriority controls the priority value to use for the external network routing rule. [Default: 102]
+	ExternalNetworkRoutingRulePriority *int `json:"externalNetworkRoutingRulePriority,omitempty" validate:"omitempty,gt=0,lt=32766"`
+
+	// WireguardEnabled controls whether Wireguard is enabled for IPv4 (encapsulating IPv4 traffic over an IPv4 underlay network). [Default: false]
 	WireguardEnabled *bool `json:"wireguardEnabled,omitempty"`
-	// WireguardListeningPort controls the listening port used by Wireguard. [Default: 51820]
+	// WireguardEnabledV6 controls whether Wireguard is enabled for IPv6 (encapsulating IPv6 traffic over an IPv6 underlay network). [Default: false]
+	WireguardEnabledV6 *bool `json:"wireguardEnabledV6,omitempty"`
+	// WireguardListeningPort controls the listening port used by IPv4 Wireguard. [Default: 51820]
 	WireguardListeningPort *int `json:"wireguardListeningPort,omitempty" validate:"omitempty,gt=0,lte=65535"`
+	// WireguardListeningPortV6 controls the listening port used by IPv6 Wireguard. [Default: 51821]
+	WireguardListeningPortV6 *int `json:"wireguardListeningPortV6,omitempty" validate:"omitempty,gt=0,lte=65535"`
 	// WireguardRoutingRulePriority controls the priority value to use for the Wireguard routing rule. [Default: 99]
 	WireguardRoutingRulePriority *int `json:"wireguardRoutingRulePriority,omitempty" validate:"omitempty,gt=0,lt=32766"`
-	// WireguardInterfaceName specifies the name to use for the Wireguard interface. [Default: wg.calico]
+	// WireguardInterfaceName specifies the name to use for the IPv4 Wireguard interface. [Default: wireguard.cali]
 	WireguardInterfaceName string `json:"wireguardInterfaceName,omitempty" validate:"omitempty,interface"`
-	// WireguardMTU controls the MTU on the Wireguard interface. See Configuring MTU [Default: 1420]
+	// WireguardInterfaceNameV6 specifies the name to use for the IPv6 Wireguard interface. [Default: wg-v6.cali]
+	WireguardInterfaceNameV6 string `json:"wireguardInterfaceNameV6,omitempty" validate:"omitempty,interface"`
+	// WireguardMTU controls the MTU on the IPv4 Wireguard interface. See Configuring MTU [Default: 1440]
 	WireguardMTU *int `json:"wireguardMTU,omitempty"`
+	// WireguardMTUV6 controls the MTU on the IPv6 Wireguard interface. See Configuring MTU [Default: 1420]
+	WireguardMTUV6 *int `json:"wireguardMTUV6,omitempty"`
 	// WireguardHostEncryptionEnabled controls whether Wireguard host-to-host encryption is enabled. [Default: false]
 	WireguardHostEncryptionEnabled *bool `json:"wireguardHostEncryptionEnabled,omitempty"`
 	// WireguardKeepAlive controls Wireguard PersistentKeepalive option. Set 0 to disable. [Default: 0]
@@ -789,6 +877,10 @@ type FelixConfigurationSpec struct {
 	// [Default: Drop]
 	ServiceLoopPrevention string `json:"serviceLoopPrevention,omitempty" validate:"omitempty,oneof=Drop Reject Disabled"`
 
+	// WorkloadSourceSpoofing controls whether pods can use the allowedSourcePrefixes annotation to send traffic with a source IP
+	// address that is not theirs. This is disabled by default. When set to "Any", pods can request any prefix.
+	WorkloadSourceSpoofing string `json:"workloadSourceSpoofing,omitempty" validate:"omitempty,oneof=Disabled Any"`
+
 	// MTUIfacePattern is a regular expression that controls which interfaces Felix should scan in order
 	// to calculate the host's MTU.
 	// This should not match workload interfaces (usually named cali...).
@@ -804,7 +896,18 @@ type FelixConfigurationSpec struct {
 	TPROXYPort *int `json:"tproxyPort,omitempty" validate:"omitempty,gt=0,lte=65535"`
 	// TPROXYUpstreamConnMark tells Felix which mark is used by the proxy for its upstream
 	// connections so that Felix can program the dataplane correctly.  [Default: 0x17]
-	TPROXYUpstreamConnMark *uint32 `json:"tproxyUpstreamConnMark,omitempty" validate:"omitempty,gt=0`
+	TPROXYUpstreamConnMark *uint32 `json:"tproxyUpstreamConnMark,omitempty" validate:"omitempty,gt=0"`
+
+	// FloatingIPs configures whether or not Felix will program non-OpenStack floating IP addresses.  (OpenStack-derived
+	// floating IPs are always programmed, regardless of this setting.)
+	//
+	// +optional
+	FloatingIPs *FloatingIPType `json:"floatingIPs,omitempty" validate:"omitempty"`
+}
+
+type HealthTimeoutOverride struct {
+	Name    string          `json:"name"`
+	Timeout metav1.Duration `json:"timeout"`
 }
 
 type RouteTableRange struct {
@@ -818,6 +921,15 @@ type RouteTableIDRange struct {
 }
 
 type RouteTableRanges []RouteTableIDRange
+
+func (r RouteTableRanges) NumDesignatedTables() int {
+	var len int = 0
+	for _, rng := range r {
+		len += (rng.Max - rng.Min) + 1 // add one, since range is inclusive
+	}
+
+	return len
+}
 
 // ProtoPort is combination of protocol, port, and CIDR. Protocol and port must be specified.
 type ProtoPort struct {

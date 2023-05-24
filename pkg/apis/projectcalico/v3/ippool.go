@@ -58,7 +58,7 @@ type IPPoolSpec struct {
 	// then this is defaulted to "Never" (i.e. IPIP tunneling is disabled).
 	IPIPMode IPIPMode `json:"ipipMode,omitempty" validate:"omitempty,ipIpMode"`
 
-	// When nat-outgoing is true, packets sent from Calico networked containers in
+	// When natOutgoing is true, packets sent from Calico networked containers in
 	// this pool to destinations outside of this pool will be masqueraded.
 	NATOutgoing bool `json:"natOutgoing,omitempty"`
 
@@ -68,7 +68,7 @@ type IPPoolSpec struct {
 	// Disable exporting routes from this IP Pool's CIDR over BGP. [Default: false]
 	DisableBGPExport bool `json:"disableBGPExport,omitempty" validate:"omitempty"`
 
-	// The block size to use for IP address assignments from this pool. Defaults to 26 for IPv4 and 112 for IPv6.
+	// The block size to use for IP address assignments from this pool. Defaults to 26 for IPv4 and 122 for IPv6.
 	BlockSize int `json:"blockSize,omitempty"`
 
 	// Allows IPPool to allocate for a specific node by label selector.

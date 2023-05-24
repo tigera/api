@@ -146,9 +146,7 @@ func NewGlobalReportTypeList() *GlobalReportTypeList {
 	}
 }
 
-//
 // Prints ResourceID contents.
-//
 func (resource ResourceID) String() (expanded string) {
 	const calicoApiVersion = "projectcalico.org/v3"
 
@@ -172,9 +170,7 @@ func (resource ResourceID) String() (expanded string) {
 	return expanded
 }
 
-//
 // Prints AuditResource contents.
-//
 func (resource AuditResource) String() (expanded string) {
 	return fmt.Sprintf("Res=%s; Grp=%s; Ver=%s; Name=%s; Namespace=%s",
 		resource.Resource, resource.APIGroup, resource.APIVersion, resource.Name, resource.Namespace,

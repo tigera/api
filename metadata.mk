@@ -3,17 +3,19 @@
 #################################################################################################
 
 # The version of github.com/projectcalico/go-build to use.
-GO_BUILD_VER = v0.65
+GO_BUILD_VER = v0.85
 
-# Version of Kubernetes to use for tests.
-K8S_VERSION     = v1.23.0
-KUBECTL_VERSION = v1.23.0
+# Version of Kubernetes and kindest/node to use for tests.
+K8S_VERSION     = v1.24.7
+# This is used for bitnami/kubectl and kubectl binary release in compliance benchmarker, confd, and kube-controllers.
+KUBECTL_VERSION = v1.26.4
 
 # Version of various tools used in the build and tests.
 COREDNS_VERSION=1.5.2
-ETCD_VERSION=v3.3.7
+ELASTIC_VERSION=7.17.9
+ETCD_VERSION=v3.5.6
 PROTOC_VER=v0.1
-UBI_VERSION=8.5
+UBI_VERSION=8.8
 
 # Configuration for Semaphore integration.
 ORGANIZATION = tigera
@@ -21,14 +23,21 @@ ORGANIZATION = tigera
 # The Semaphore calico-private ID, used when making calls to the Semaphore API.
 SEMAPHORE_PROJECT_ID=8a309869-f767-49dc-924f-fa927edbf657
 
+# Directory containing the Banzai secrets bundle, which we use to find the license key.
+ifneq ("$(wildcard $(HOME)/.banzai/secrets)","")
+    SECRETS_PATH ?= $(HOME)/.banzai/secrets
+else
+    SECRETS_PATH ?= $(HOME)/secrets
+endif
+
 # Configure git to access repositories using SSH.
 GIT_USE_SSH = true
 
-# Conigure private repos
-EXTRA_DOCKER_ARGS += --init -e GOPRIVATE=github.com/tigera/*
+# Configure private repos
+EXTRA_DOCKER_ARGS += -e GOPRIVATE=github.com/tigera/*
 
 # The version of BIRD to use for calico/node builds and confd tests.
-BIRD_VERSION=v0.3.3-184-g202a2186
+BIRD_VERSION=v0.3.3-202-g7a77fb73
 
 # DEV_REGISTRIES configures the container image registries which are built from this
 # repository.

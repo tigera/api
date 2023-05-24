@@ -114,7 +114,7 @@ func NewStagedKubernetesNetworkPolicyList() *StagedKubernetesNetworkPolicyList {
 	}
 }
 
-//ConvertStagedKubernetesPolicyToK8SEnforced converts a StagedKubernetesNetworkPolicy into a StagedAction, networkingv1 NetworkPolicy pair
+// ConvertStagedKubernetesPolicyToK8SEnforced converts a StagedKubernetesNetworkPolicy into a StagedAction, networkingv1 NetworkPolicy pair
 func ConvertStagedKubernetesPolicyToK8SEnforced(staged *StagedKubernetesNetworkPolicy) (StagedAction, *networkingv1.NetworkPolicy) {
 	//Convert StagedKubernetesNetworkPolicy to networkingv1.NetworkPolicy
 	enforced := networkingv1.NetworkPolicy{}

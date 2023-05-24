@@ -14,6 +14,7 @@ const (
 	KindGlobalThreatFeedList  = "GlobalThreatFeedList"
 	DefaultPullPeriod         = 24 * time.Hour
 	MinPullPeriod             = 5 * time.Minute
+	MaxDescriptionLength      = 256
 	SecretConfigMapNamePrefix = "globalthreatfeed"
 )
 
@@ -37,7 +38,20 @@ type GlobalThreatFeed struct {
 // GlobalThreatFeedSpec contains the specification of a GlobalThreatFeed resource.
 type GlobalThreatFeedSpec struct {
 	// Content describes the kind of data the data feed provides.
-	Content          ThreatFeedContent     `json:"content,omitempty" validate:"omitempty,oneof=IPSet DomainNameSet"`
+	// +kubebuilder:default=IPSet
+	// +optional
+	Content ThreatFeedContent `json:"content,omitempty" validate:"omitempty,oneof=IPSet DomainNameSet"`
+	// Determines whether the Global Threat Feed is Enabled or Disabled.
+	// +kubebuilder:default=Enabled
+	// +optional
+	Mode *ThreatFeedMode `json:"mode,omitempty" validate:"omitempty,oneof=Enabled Disabled"`
+	// Human-readable description of the template.
+	// +kubebuilder:validation:MaxLength:=256
+	Description string `json:"description,omitempty"`
+	// Distinguishes between Builtin Global Threat Feeds and Custom feed types.
+	// +kubebuilder:default=Custom
+	// +optional
+	FeedType         *ThreatFeedType       `json:"feedType,omitempty" validate:"omitempty,oneof=Builtin Custom"`
 	GlobalNetworkSet *GlobalNetworkSetSync `json:"globalNetworkSet,omitempty"`
 	Pull             *Pull                 `json:"pull,omitempty"`
 }
@@ -52,14 +66,29 @@ type GlobalThreatFeedList struct {
 	Items           []GlobalThreatFeed `json:"items"`
 }
 
+// +kubebuilder:validation:Enum=IPSet;DomainNameSet
 type ThreatFeedContent string
+
+// +kubebuilder:validation:Enum=Enabled;Disabled
+type ThreatFeedMode string
+
+// +kubebuilder:validation:Enum=Builtin;Custom
+type ThreatFeedType string
 
 const (
 	ThreatFeedContentIPset         ThreatFeedContent = "IPSet"
 	ThreatFeedContentDomainNameSet ThreatFeedContent = "DomainNameSet"
 )
 
-var ThreatFeedContentDefault = ThreatFeedContentIPset
+const (
+	ThreatFeedModeEnabled  ThreatFeedMode = "Enabled"
+	ThreatFeedModeDisabled ThreatFeedMode = "Disabled"
+)
+
+const (
+	ThreatFeedTypeBuiltin ThreatFeedType = "Builtin"
+	ThreatFeedTypeCustom  ThreatFeedType = "Custom"
+)
 
 type GlobalNetworkSetSync struct {
 	Labels map[string]string `json:"labels,omitempty" validate:"labels"`

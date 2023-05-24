@@ -23,7 +23,7 @@ import (
 	networkingv1 "k8s.io/api/networking/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	. "github.com/tigera/api/pkg/apis/projectcalico/v3"
+	apiv3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
 )
 
 var (
@@ -43,7 +43,7 @@ var _ = Describe("StagedKubernetesNetworkPolicySpec", func() {
 	var k8snpFieldsByName map[string]reflect.StructField
 
 	BeforeEach(func() {
-		sknpFieldsByName = fieldsByName(StagedKubernetesNetworkPolicySpec{})
+		sknpFieldsByName = fieldsByName(apiv3.StagedKubernetesNetworkPolicySpec{})
 		k8snpFieldsByName = fieldsByName(networkingv1.NetworkPolicySpec{})
 	})
 
@@ -84,13 +84,13 @@ var _ = Describe("StagedKubernetesNetworkPolicySpec", func() {
 	})
 
 	It("should be able to properly convert from staged to enforced", func() {
-		staged := StagedKubernetesNetworkPolicy{
+		staged := apiv3.StagedKubernetesNetworkPolicy{
 			ObjectMeta: metav1.ObjectMeta{
 				Name:      "zinedine",
 				Namespace: "zidane",
 			},
-			Spec: StagedKubernetesNetworkPolicySpec{
-				StagedAction: StagedActionSet,
+			Spec: apiv3.StagedKubernetesNetworkPolicySpec{
+				StagedAction: apiv3.StagedActionSet,
 				PodSelector: metav1.LabelSelector{
 					MatchLabels: map[string]string{"label": "value"},
 				},
@@ -113,7 +113,7 @@ var _ = Describe("StagedKubernetesNetworkPolicySpec", func() {
 			},
 		}
 
-		stagedAction, enforced := ConvertStagedKubernetesPolicyToK8SEnforced(&staged)
+		stagedAction, enforced := apiv3.ConvertStagedKubernetesPolicyToK8SEnforced(&staged)
 
 		//TODO: mgianluc all common fields should be checked, though following is good enough coverage
 		Expect(stagedAction).To(Equal(staged.Spec.StagedAction))

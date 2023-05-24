@@ -150,7 +150,7 @@ func NewStagedGlobalNetworkPolicyList() *StagedGlobalNetworkPolicyList {
 	}
 }
 
-//ConvertStagedGlobalPolicyToEnforced converts a StagedGlobalNetworkPolicy into a StagedAction, GlobalNetworkPolicy pair
+// ConvertStagedGlobalPolicyToEnforced converts a StagedGlobalNetworkPolicy into a StagedAction, GlobalNetworkPolicy pair
 func ConvertStagedGlobalPolicyToEnforced(staged *StagedGlobalNetworkPolicy) (StagedAction, *GlobalNetworkPolicy) {
 	enforced := NewGlobalNetworkPolicy()
 	copier.Copy(&enforced.ObjectMeta, &staged.ObjectMeta)
