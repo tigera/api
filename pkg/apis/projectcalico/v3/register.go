@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2022 Tigera, Inc. All rights reserved.
+// Copyright (c) 2019-2023 Tigera, Inc. All rights reserved.
 
 package v3
 
@@ -64,6 +64,8 @@ var (
 		&AuthorizationReviewList{},
 		&DeepPacketInspection{},
 		&DeepPacketInspectionList{},
+		&EgressGatewayPolicy{},
+		&EgressGatewayPolicyList{},
 		&GlobalAlert{},
 		&GlobalAlertList{},
 		&GlobalAlertTemplate{},

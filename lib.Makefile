@@ -1235,7 +1235,7 @@ run-k8s-apiserver: stop-k8s-apiserver run-etcd
 		--max-requests-inflight=0
 
 	# Wait until the apiserver is accepting requests.
-	while ! docker exec $(APISERVER_NAME) kubectl get nodes; do echo "Waiting for apiserver to come up..."; sleep 2; done
+	while ! docker exec $(APISERVER_NAME) kubectl get namespace default; do echo "Waiting for apiserver to come up..."; sleep 2; done
 
 	# Wait until we can configure a cluster role binding which allows anonymous auth.
 	while ! docker exec $(APISERVER_NAME) kubectl create \
@@ -1324,7 +1324,7 @@ kubectl $(KUBECTL):
 bin/helm:
 	mkdir -p bin
 	$(eval TMP := $(shell mktemp -d))
-	wget -q https://get.helm.sh/helm-v3.3.1-linux-amd64.tar.gz -O $(TMP)/helm3.tar.gz
+	wget -q https://get.helm.sh/helm-v3.11.0-linux-amd64.tar.gz -O $(TMP)/helm3.tar.gz
 	tar -zxvf $(TMP)/helm3.tar.gz -C $(TMP)
 	mv $(TMP)/linux-amd64/helm bin/helm
 

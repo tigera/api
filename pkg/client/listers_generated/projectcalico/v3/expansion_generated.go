@@ -48,6 +48,10 @@ type DeepPacketInspectionListerExpansion interface{}
 // DeepPacketInspectionNamespaceLister.
 type DeepPacketInspectionNamespaceListerExpansion interface{}
 
+// EgressGatewayPolicyListerExpansion allows custom methods to be added to
+// EgressGatewayPolicyLister.
+type EgressGatewayPolicyListerExpansion interface{}
+
 // ExternalNetworkListerExpansion allows custom methods to be added to
 // ExternalNetworkLister.
 type ExternalNetworkListerExpansion interface{}
