@@ -8,13 +8,13 @@ GO_BUILD_VER = v0.82
 # Version of Kubernetes to use for tests.
 K8S_VERSION     = v1.24.7
 # This is used for bitnami/kubectl and kubectl binary release in compliance benchmarker, confd, and kube-controllers.
-KUBECTL_VERSION = v1.24.11
+KUBECTL_VERSION = v1.24.13
 
 # Version of various tools used in the build and tests.
 COREDNS_VERSION=1.5.2
 ETCD_VERSION=v3.5.1
 PROTOC_VER=v0.1
-UBI_VERSION=8.7
+UBI_VERSION=8.8
 
 # Configuration for Semaphore integration.
 ORGANIZATION = tigera
@@ -36,7 +36,7 @@ GIT_USE_SSH = true
 EXTRA_DOCKER_ARGS += --init -e GOPRIVATE=github.com/tigera/*
 
 # The version of BIRD to use for calico/node builds and confd tests.
-BIRD_VERSION=v0.3.3-200-g245602b0
+BIRD_VERSION=v0.3.3-202-g7a77fb73
 
 # DEV_REGISTRIES configures the container image registries which are built from this
 # repository.
