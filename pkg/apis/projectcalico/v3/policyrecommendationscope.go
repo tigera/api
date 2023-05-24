@@ -82,8 +82,8 @@ type PolicyRecommendationScopeNamespaceSpec struct {
 	// recommendation engine should create policies for. The syntax is the same as the
 	// NetworkPolicy.projectcalico.org resource selectors.
 	Selector string `json:"selector" validate:"selector"`
-	// The name of the policy recommendation tier for namespace-segmented policies.
-	// [Default: "namespace-segmentation"]
+	// The name of the policy recommendation tier for namespace-isolated policies.
+	// [Default: "namespace-isolation"]
 	// +optional
 	TierName string `json:"tierName,omitempty" validate:"omitempty,name"`
 }

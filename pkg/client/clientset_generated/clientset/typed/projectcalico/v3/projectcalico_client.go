@@ -24,6 +24,7 @@ type ProjectcalicoV3Interface interface {
 	CalicoNodeStatusesGetter
 	ClusterInformationsGetter
 	DeepPacketInspectionsGetter
+	EgressGatewayPoliciesGetter
 	ExternalNetworksGetter
 	FelixConfigurationsGetter
 	GlobalAlertsGetter
@@ -97,6 +98,10 @@ func (c *ProjectcalicoV3Client) ClusterInformations() ClusterInformationInterfac
 
 func (c *ProjectcalicoV3Client) DeepPacketInspections(namespace string) DeepPacketInspectionInterface {
 	return newDeepPacketInspections(c, namespace)
+}
+
+func (c *ProjectcalicoV3Client) EgressGatewayPolicies() EgressGatewayPolicyInterface {
+	return newEgressGatewayPolicies(c)
 }
 
 func (c *ProjectcalicoV3Client) ExternalNetworks() ExternalNetworkInterface {
