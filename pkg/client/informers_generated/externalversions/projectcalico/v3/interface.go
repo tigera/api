@@ -30,6 +30,8 @@ type Interface interface {
 	ClusterInformations() ClusterInformationInformer
 	// DeepPacketInspections returns a DeepPacketInspectionInformer.
 	DeepPacketInspections() DeepPacketInspectionInformer
+	// EgressGatewayPolicies returns a EgressGatewayPolicyInformer.
+	EgressGatewayPolicies() EgressGatewayPolicyInformer
 	// ExternalNetworks returns a ExternalNetworkInformer.
 	ExternalNetworks() ExternalNetworkInformer
 	// FelixConfigurations returns a FelixConfigurationInformer.
@@ -147,6 +149,11 @@ func (v *version) ClusterInformations() ClusterInformationInformer {
 // DeepPacketInspections returns a DeepPacketInspectionInformer.
 func (v *version) DeepPacketInspections() DeepPacketInspectionInformer {
 	return &deepPacketInspectionInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// EgressGatewayPolicies returns a EgressGatewayPolicyInformer.
+func (v *version) EgressGatewayPolicies() EgressGatewayPolicyInformer {
+	return &egressGatewayPolicyInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // ExternalNetworks returns a ExternalNetworkInformer.

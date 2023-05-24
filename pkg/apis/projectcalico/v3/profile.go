@@ -1,4 +1,4 @@
-// Copyright (c) 2017,2021 Tigera, Inc. All rights reserved.
+// Copyright (c) 2017-2023 Tigera, Inc. All rights reserved.
 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -58,15 +58,31 @@ type ProfileSpec struct {
 	// labels inherited from the profile, the endpoint label values take precedence.
 	LabelsToApply map[string]string `json:"labelsToApply,omitempty" validate:"omitempty,labels"`
 	// Egress control.
-	EgressGateway *EgressSpec `json:"egressGateway,omitempty" validate:"omitempty"`
+	EgressGateway *EgressGatewaySpec `json:"egressGateway,omitempty" validate:"omitempty"`
 }
 
+// EgressGatewaySpec allows to define an egress gateway directly, or to refer to
+// an egress gateway policy resource.
+type EgressGatewaySpec struct {
+	// Only one of these may be set.
+	// Reference to an EgressGatewayPolicy to use.
+	Policy string `json:"policy,omitempty" validate:"omitempty"`
+
+	// Reference to a specific EgressGateway to use.
+	Gateway *EgressSpec `json:"gateway,omitempty" validate:"omitempty"`
+}
+
+// EgressSpec defines which egress gateway should be used.
 type EgressSpec struct {
-	// NamespaceSelector
+	// NamespaceSelector selects one or more namespaces containing an egress gateway deployment.
 	NamespaceSelector string `json:"namespaceSelector,omitempty" validate:"omitempty,selector"`
-	// Selector
+
+	// Selector is an expression used to pick out the egress gateway that the destination can
+	// be reached via.
 	Selector string `json:"selector,omitempty" validate:"omitempty,selector"`
-	// MaxNextHops
+
+	// MaxNextHops specifies the maximum number of egress gateway replicas from the selected
+	// deployment that a pod should depend on.
 	MaxNextHops int `json:"maxNextHops,omitempty" validate:"omitempty,gte=0"`
 }
 

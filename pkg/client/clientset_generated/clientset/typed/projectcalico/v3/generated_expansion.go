@@ -24,6 +24,8 @@ type ClusterInformationExpansion interface{}
 
 type DeepPacketInspectionExpansion interface{}
 
+type EgressGatewayPolicyExpansion interface{}
+
 type ExternalNetworkExpansion interface{}
 
 type FelixConfigurationExpansion interface{}
