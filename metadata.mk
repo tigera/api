@@ -3,22 +3,24 @@
 #################################################################################################
 
 # The version of github.com/projectcalico/go-build to use.
-GO_BUILD_VER = v0.85
+GO_BUILD_VER=v0.87
 
-# Version of Kubernetes and kindest/node to use for tests.
-K8S_VERSION     = v1.24.7
-# This is used for bitnami/kubectl and kubectl binary release in compliance benchmarker, confd, and kube-controllers.
-KUBECTL_VERSION = v1.26.4
+# Version of Kubernetes to use for tests, bitnami/kubectl, and kubectl binary release in
+# compliance benchmarker, confd, and kube-controllers.
+K8S_VERSION=v1.26.6
 
 # Version of various tools used in the build and tests.
 COREDNS_VERSION=1.5.2
-ELASTIC_VERSION=7.17.9
+ELASTIC_VERSION=7.17.11
 ETCD_VERSION=v3.5.6
+# FIXME upgrading to kindest/node newer than v1.24.7 causes Node/kind-cluster and sig-network conformance
+# tests to timeout or fail.
+KINDEST_NODE_VERSION=v1.24.7
 PROTOC_VER=v0.1
 UBI_VERSION=8.8
 
 # Configuration for Semaphore integration.
-ORGANIZATION = tigera
+ORGANIZATION=tigera
 
 # The Semaphore calico-private ID, used when making calls to the Semaphore API.
 SEMAPHORE_PROJECT_ID=8a309869-f767-49dc-924f-fa927edbf657

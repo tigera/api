@@ -28,8 +28,16 @@ const (
 	// AllNames is used for List or Watch queries to wildcard the name.
 	AllNames = ""
 
-	// Label used to denote the Namespace.  This is added to workload endpoints and network sets by Calico
-	// and may be used for label matches by Policy selectors.
+	// Label used to denote the Kind. This is added to network sets by Calico and may be used for
+	// label matches by Policy selectors.
+	LabelKind = "projectcalico.org/kind"
+
+	// Label used to denote the Name. This is added to network sets by Calico and may be used for
+	// label matches by Policy selectors.
+	LabelName = "projectcalico.org/name"
+
+	// Label used to denote the Namespace. This is added to workload endpoints and network sets by
+	// Calico and may be used for label matches by Policy selectors.
 	LabelNamespace = "projectcalico.org/namespace"
 
 	// Label used to denote the ServiceAccount.  This is added to the workload endpoints by Calico
