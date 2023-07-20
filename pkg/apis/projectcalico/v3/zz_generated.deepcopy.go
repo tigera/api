@@ -1911,6 +1911,11 @@ func (in *EgressGatewayRule) DeepCopyInto(out *EgressGatewayRule) {
 		*out = new(EgressSpec)
 		**out = **in
 	}
+	if in.GatewayPreference != nil {
+		in, out := &in.GatewayPreference, &out.GatewayPreference
+		*out = new(GatewayPreferenceType)
+		**out = **in
+	}
 	return
 }
 

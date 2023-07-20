@@ -106,9 +106,13 @@ type FelixConfigurationSpec struct {
 	// RouteRefreshInterval is the period at which Felix re-checks the routes
 	// in the dataplane to ensure that no other process has accidentally broken Calico's rules.
 	// Set to 0 to disable route refresh. [Default: 90s]
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:Pattern=`^([0-9]+(\\.[0-9]+)?(ms|s|m|h))*$`
 	RouteRefreshInterval *metav1.Duration `json:"routeRefreshInterval,omitempty" configv1timescale:"seconds"`
 	// InterfaceRefreshInterval is the period at which Felix rescans local interfaces to verify their state.
 	// The rescan can be disabled by setting the interval to 0.
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:Pattern=`^([0-9]+(\\.[0-9]+)?(ms|s|m|h))*$`
 	InterfaceRefreshInterval *metav1.Duration `json:"interfaceRefreshInterval,omitempty" configv1timescale:"seconds"`
 	// IptablesRefreshInterval is the period at which Felix re-checks the IP sets
 	// in the dataplane to ensure that no other process has accidentally broken Calico's rules.
@@ -116,11 +120,15 @@ type FelixConfigurationSpec struct {
 	// other refresh intervals as a workaround for a Linux kernel bug that was fixed in kernel
 	// version 4.11. If you are using v4.11 or greater you may want to set this to, a higher value
 	// to reduce Felix CPU usage. [Default: 10s]
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:Pattern=`^([0-9]+(\\.[0-9]+)?(ms|s|m|h))*$`
 	IptablesRefreshInterval *metav1.Duration `json:"iptablesRefreshInterval,omitempty" configv1timescale:"seconds"`
 	// IptablesPostWriteCheckInterval is the period after Felix has done a write
 	// to the dataplane that it schedules an extra read back in order to check the write was not
 	// clobbered by another process. This should only occur if another application on the system
 	// doesn't respect the iptables lock. [Default: 1s]
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:Pattern=`^([0-9]+(\\.[0-9]+)?(ms|s|m|h))*$`
 	IptablesPostWriteCheckInterval *metav1.Duration `json:"iptablesPostWriteCheckInterval,omitempty" configv1timescale:"seconds" confignamev1:"IptablesPostWriteCheckIntervalSecs"`
 	// IptablesLockFilePath is the location of the iptables lock file. You may need to change this
 	// if the lock file is not in its standard location (for example if you have mapped it into Felix's
@@ -131,34 +139,48 @@ type FelixConfigurationSpec struct {
 	// processes that also take the lock. When running Felix inside a container, this requires the
 	// /run directory of the host to be mounted into the calico/node or calico/felix container.
 	// [Default: 0s disabled]
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:Pattern=`^([0-9]+(\\.[0-9]+)?(ms|s|m|h))*$`
 	IptablesLockTimeout *metav1.Duration `json:"iptablesLockTimeout,omitempty" configv1timescale:"seconds" confignamev1:"IptablesLockTimeoutSecs"`
 	// IptablesLockProbeInterval is the time that Felix will wait between
 	// attempts to acquire the iptables lock if it is not available. Lower values make Felix more
 	// responsive when the lock is contended, but use more CPU. [Default: 50ms]
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:Pattern=`^([0-9]+(\\.[0-9]+)?(ms|s|m|h))*$`
 	IptablesLockProbeInterval *metav1.Duration `json:"iptablesLockProbeInterval,omitempty" configv1timescale:"milliseconds" confignamev1:"IptablesLockProbeIntervalMillis"`
 	// FeatureDetectOverride is used to override feature detection based on auto-detected platform
 	// capabilities.  Values are specified in a comma separated list with no spaces, example;
 	// "SNATFullyRandom=true,MASQFullyRandom=false,RestoreSupportsLock=".  "true" or "false" will
 	// force the feature, empty or omitted values are auto-detected.
+	// +kubebuilder:validation:Pattern=`^([a-zA-Z0-9-_]+=(true|false|),)*([a-zA-Z0-9-_]+=(true|false|))?$`
 	FeatureDetectOverride string `json:"featureDetectOverride,omitempty" validate:"omitempty,keyValueList"`
 	// FeatureGates is used to enable or disable tech-preview Calico features.
 	// Values are specified in a comma separated list with no spaces, example;
 	// "BPFConnectTimeLoadBalancingWorkaround=enabled,XyZ=false". This is
 	// used to enable features that are not fully production ready.
+	// +kubebuilder:validation:Pattern=`^([a-zA-Z0-9-_]+=([^=]+),)*([a-zA-Z0-9-_]+=([^=]+))?$`
 	FeatureGates string `json:"featureGates,omitempty" validate:"omitempty,keyValueList"`
 	// IpsetsRefreshInterval is the period at which Felix re-checks all iptables
 	// state to ensure that no other process has accidentally broken Calico's rules. Set to 0 to
 	// disable iptables refresh. [Default: 90s]
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:Pattern=`^([0-9]+(\\.[0-9]+)?(ms|s|m|h))*$`
 	IpsetsRefreshInterval *metav1.Duration `json:"ipsetsRefreshInterval,omitempty" configv1timescale:"seconds"`
 	MaxIpsetSize          *int             `json:"maxIpsetSize,omitempty"`
 	// IptablesBackend specifies which backend of iptables will be used. The default is Auto.
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:Pattern=`^(?i)(Auto|FelixConfiguration|FelixConfigurationList|Legacy|NFT)?$`
 	IptablesBackend *IptablesBackend `json:"iptablesBackend,omitempty" validate:"omitempty,iptablesBackend"`
 
 	// XDPRefreshInterval is the period at which Felix re-checks all XDP state to ensure that no
 	// other process has accidentally broken Calico's BPF maps or attached programs. Set to 0 to
 	// disable XDP refresh. [Default: 90s]
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:Pattern=`^([0-9]+(\\.[0-9]+)?(ms|s|m|h))*$`
 	XDPRefreshInterval *metav1.Duration `json:"xdpRefreshInterval,omitempty" configv1timescale:"seconds"`
 
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:Pattern=`^([0-9]+(\\.[0-9]+)?(ms|s|m|h))*$`
 	NetlinkTimeout *metav1.Duration `json:"netlinkTimeout,omitempty" configv1timescale:"seconds" confignamev1:"NetlinkTimeoutSecs"`
 
 	// MetadataAddr is the IP address or domain name of the server that can answer VM queries for
@@ -195,6 +217,7 @@ type FelixConfigurationSpec struct {
 	// Calico's rules from being bypassed. If you switch to append mode, be sure that the other rules in the chains
 	// signal acceptance by falling through to the Calico rules, otherwise the Calico policy will be bypassed.
 	// [Default: insert]
+	// +kubebuilder:validation:Pattern=`^(?i)(insert|append)?$`
 	ChainInsertMode string `json:"chainInsertMode,omitempty"`
 	// DefaultEndpointToHostAction controls what happens to traffic that goes from a workload endpoint to the host
 	// itself (after the traffic hits the endpoint egress policy). By default Calico blocks traffic from workload
@@ -203,11 +226,15 @@ type FelixConfigurationSpec struct {
 	// "INPUT" chain; Calico will insert its rules at the top of that chain, then "RETURN" packets to the "INPUT" chain
 	// once it has completed processing workload endpoint egress policy. Use ACCEPT to unconditionally accept packets
 	// from workloads after processing workload endpoint egress policy. [Default: Drop]
+	// +kubebuilder:validation:Pattern=`^(?i)(Drop|Accept|Return)?$`
 	DefaultEndpointToHostAction string `json:"defaultEndpointToHostAction,omitempty" validate:"omitempty,dropAcceptReturn"`
-	IptablesFilterAllowAction   string `json:"iptablesFilterAllowAction,omitempty" validate:"omitempty,acceptReturn"`
-	IptablesMangleAllowAction   string `json:"iptablesMangleAllowAction,omitempty" validate:"omitempty,acceptReturn"`
+	// +kubebuilder:validation:Pattern=`^(?i)(Accept|Return)?$`
+	IptablesFilterAllowAction string `json:"iptablesFilterAllowAction,omitempty" validate:"omitempty,acceptReturn"`
+	// +kubebuilder:validation:Pattern=`^(?i)(Accept|Return)?$`
+	IptablesMangleAllowAction string `json:"iptablesMangleAllowAction,omitempty" validate:"omitempty,acceptReturn"`
 	// IptablesFilterDenyAction controls what happens to traffic that is denied by network policy. By default Calico blocks traffic
 	// with an iptables "DROP" action. If you want to use "REJECT" action instead you can configure it in here.
+	// +kubebuilder:validation:Pattern=`^(?i)(Drop|Reject)?$`
 	IptablesFilterDenyAction string `json:"iptablesFilterDenyAction,omitempty" validate:"omitempty,dropReject"`
 	// LogPrefix is the log prefix that Felix uses when rendering LOG rules. [Default: calico-packet]
 	LogPrefix string `json:"logPrefix,omitempty"`
@@ -219,11 +246,14 @@ type FelixConfigurationSpec struct {
 	LogFilePath string `json:"logFilePath,omitempty"`
 
 	// LogSeverityFile is the log severity above which logs are sent to the log file. [Default: Info]
+	// kubebuilder:validation:Pattern=`^(?i)(Debug|Info|Warning|Error|Fatal)?$`
 	LogSeverityFile string `json:"logSeverityFile,omitempty" validate:"omitempty,logLevel"`
 	// LogSeverityScreen is the log severity above which logs are sent to the stdout. [Default: Info]
+	// kubebuilder:validation:Pattern=`^(?i)(Debug|Info|Warning|Error|Fatal)?$`
 	LogSeverityScreen string `json:"logSeverityScreen,omitempty" validate:"omitempty,logLevel"`
 	// LogSeveritySys is the log severity above which logs are sent to the syslog. Set to None for no logging to syslog.
 	// [Default: Info]
+	// kubebuilder:validation:Pattern=`^(?i)(Debug|Info|Warning|Error|Fatal)?$`
 	LogSeveritySys string `json:"logSeveritySys,omitempty" validate:"omitempty,logLevel"`
 	// LogDebugFilenameRegex controls which source code files have their Debug log output included in the logs.
 	// Only logs from files with names that match the given regular expression are included.  The filter only applies
@@ -255,12 +285,18 @@ type FelixConfigurationSpec struct {
 
 	// ReportingInterval is the interval at which Felix reports its status into the datastore or 0 to disable.
 	// Must be non-zero in OpenStack deployments. [Default: 30s]
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:Pattern=`^([0-9]+(\\.[0-9]+)?(ms|s|m|h))*$`
 	ReportingInterval *metav1.Duration `json:"reportingInterval,omitempty" configv1timescale:"seconds" confignamev1:"ReportingIntervalSecs"`
 	// ReportingTTL is the time-to-live setting for process-wide status reports. [Default: 90s]
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:Pattern=`^([0-9]+(\\.[0-9]+)?(ms|s|m|h))*$`
 	ReportingTTL *metav1.Duration `json:"reportingTTL,omitempty" configv1timescale:"seconds" confignamev1:"ReportingTTLSecs"`
 
-	EndpointReportingEnabled *bool            `json:"endpointReportingEnabled,omitempty"`
-	EndpointReportingDelay   *metav1.Duration `json:"endpointReportingDelay,omitempty" configv1timescale:"seconds" confignamev1:"EndpointReportingDelaySecs"`
+	EndpointReportingEnabled *bool `json:"endpointReportingEnabled,omitempty"`
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:Pattern=`^([0-9]+(\\.[0-9]+)?(ms|s|m|h))*$`
+	EndpointReportingDelay *metav1.Duration `json:"endpointReportingDelay,omitempty" configv1timescale:"seconds" confignamev1:"EndpointReportingDelaySecs"`
 
 	// IptablesMarkMask is the mask that Felix selects its IPTables Mark bits from. Should be a 32 bit hexadecimal
 	// number with at least 8 bits set, none of which clash with any other mark bits in use on the system.
@@ -330,8 +366,12 @@ type FelixConfigurationSpec struct {
 	// server. For example, if a significant security vulnerability has been discovered in the version of Calico being used. [Default: true]
 	UsageReportingEnabled *bool `json:"usageReportingEnabled,omitempty"`
 	// UsageReportingInitialDelay controls the minimum delay before Felix makes a report. [Default: 300s]
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:Pattern=`^([0-9]+(\\.[0-9]+)?(ms|s|m|h))*$`
 	UsageReportingInitialDelay *metav1.Duration `json:"usageReportingInitialDelay,omitempty" configv1timescale:"seconds" confignamev1:"UsageReportingInitialDelaySecs"`
 	// UsageReportingInterval controls the interval at which Felix makes reports. [Default: 86400s]
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:Pattern=`^([0-9]+(\\.[0-9]+)?(ms|s|m|h))*$`
 	UsageReportingInterval *metav1.Duration `json:"usageReportingInterval,omitempty" configv1timescale:"seconds" confignamev1:"UsageReportingIntervalSecs"`
 
 	// NATPortRange specifies the range of ports that is used for port mapping when doing outgoing NAT. When unset the default behavior of the
@@ -375,11 +415,16 @@ type FelixConfigurationSpec struct {
 
 	// DropActionOverride overrides the Drop action in Felix, optionally changing the behavior to Accept, and optionally adding Log.
 	// Possible values are Drop, LogAndDrop, Accept, LogAndAccept. [Default: Drop]
+	// +kubebuilder:validation:Pattern=`^(?i)(Drop|LogAndDrop|Accept|LogAndAccept)?$`
 	DropActionOverride string `json:"dropActionOverride,omitempty" validate:"omitempty,dropActionOverride"`
 
-	DebugMemoryProfilePath          string           `json:"debugMemoryProfilePath,omitempty"`
-	DebugDisableLogDropping         *bool            `json:"debugDisableLogDropping,omitempty"`
+	DebugMemoryProfilePath  string `json:"debugMemoryProfilePath,omitempty"`
+	DebugDisableLogDropping *bool  `json:"debugDisableLogDropping,omitempty"`
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:Pattern=`^([0-9]+(\\.[0-9]+)?(ms|s|m|h))*$`
 	DebugSimulateCalcGraphHangAfter *metav1.Duration `json:"debugSimulateCalcGraphHangAfter,omitempty" configv1timescale:"seconds"`
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:Pattern=`^([0-9]+(\\.[0-9]+)?(ms|s|m|h))*$`
 	DebugSimulateDataplaneHangAfter *metav1.Duration `json:"debugSimulateDataplaneHangAfter,omitempty" configv1timescale:"seconds"`
 
 	IptablesNATOutgoingInterfaceFilter string `json:"iptablesNATOutgoingInterfaceFilter,omitempty" validate:"omitempty,ifaceFilter"`
@@ -405,6 +450,7 @@ type FelixConfigurationSpec struct {
 	// "Debug".  The logs are emitted to the BPF trace pipe, accessible with the command `tc exec bpf debug`.
 	// [Default: Off].
 	// +optional
+	// +kubebuilder:validation:Pattern=`^(?i)(Off|Info|Debug)?$`
 	BPFLogLevel string `json:"bpfLogLevel,omitempty" validate:"omitempty,bpfLogLevel"`
 	// BPFDataIfacePattern is a regular expression that controls which interfaces Felix should attach BPF programs to
 	// in order to catch traffic to/from the network.  This needs to match the interfaces that Calico workload traffic
@@ -425,6 +471,7 @@ type FelixConfigurationSpec struct {
 	// is tunneled to the remote node.  If set to "DSR", the request traffic is tunneled but the response traffic
 	// is sent directly from the remote node.  In "DSR" mode, the remote node appears to use the IP of the ingress
 	// node; this requires a permissive L2 network.  [Default: Tunnel]
+	// +kubebuilder:validation:Pattern=`^(?i)(Tunnel|DSR)?$`
 	BPFExternalServiceMode string `json:"bpfExternalServiceMode,omitempty" validate:"omitempty,bpfServiceMode"`
 	// BPFDSROptoutCIDRs is a list of CIDRs which are excluded from DSR. That is, clients
 	// in those CIDRs will accesses nodeports as if BPFExternalServiceMode was set to
@@ -440,6 +487,8 @@ type FelixConfigurationSpec struct {
 	// BPFKubeProxyMinSyncPeriod, in BPF mode, controls the minimum time between updates to the dataplane for Felix's
 	// embedded kube-proxy.  Lower values give reduced set-up latency.  Higher values reduce Felix CPU usage by
 	// batching up more work.  [Default: 1s]
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:Pattern=`^([0-9]+(\\.[0-9]+)?(ms|s|m|h))*$`
 	BPFKubeProxyMinSyncPeriod *metav1.Duration `json:"bpfKubeProxyMinSyncPeriod,omitempty" validate:"omitempty" configv1timescale:"seconds"`
 	// BPFKubeProxyEndpointSlicesEnabled in BPF mode, controls whether Felix's
 	// embedded kube-proxy accepts EndpointSlices or not.
@@ -480,6 +529,7 @@ type FelixConfigurationSpec struct {
 	// BPFEnforceRPF enforce strict RPF on all host interfaces with BPF programs regardless of
 	// what is the per-interfaces or global setting. Possible values are Disabled, Strict
 	// or Loose. [Default: Loose]
+	// +kubebuilder:validation:Pattern=`^(?i)(Disabled|Strict|Loose)?$`
 	BPFEnforceRPF string `json:"bpfEnforceRPF,omitempty"`
 	// BPFPolicyDebugEnabled when true, Felix records detailed information
 	// about the BPF policy programs, which can be examined with the calico-bpf command-line tool.
@@ -501,12 +551,17 @@ type FelixConfigurationSpec struct {
 	// IPSecLogLevel controls log level for IPSec components. Set to None for no logging.
 	// A generic log level terminology is used [None, Notice, Info, Debug, Verbose].
 	// [Default: Info]
+	// +kubebuilder:validation:Pattern=`^(?i)(None|Notice|Info|Debug|Verbose)?$`
 	IPSecLogLevel string `json:"ipsecLogLevel,omitempty" validate:"omitempty,ipsecLogLevel"`
 	// IPSecPolicyRefreshInterval is the interval at which Felix will check the kernel's IPsec policy tables and
 	// repair any inconsistencies. [Default: 600s]
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:Pattern=`^([0-9]+(\\.[0-9]+)?(ms|s|m|h))*$`
 	IPSecPolicyRefreshInterval *metav1.Duration `json:"ipsecPolicyRefreshInterval,omitempty" configv1timescale:"seconds"`
 
 	// FlowLogsFlushInterval configures the interval at which Felix exports flow logs.
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:Pattern=`^([0-9]+(\\.[0-9]+)?(ms|s|m|h))*$`
 	FlowLogsFlushInterval *metav1.Duration `json:"flowLogsFlushInterval,omitempty" configv1timescale:"seconds"`
 	// FlowLogsEnableHostEndpoint enables Flow logs reporting for HostEndpoints.
 	FlowLogsEnableHostEndpoint *bool `json:"flowLogsEnableHostEndpoint,omitempty"`
@@ -551,6 +606,7 @@ type FelixConfigurationSpec struct {
 	// 0 - No aggregation.
 	// 1 - Source port based aggregation.
 	// 2 - Pod prefix name based aggreagation.
+	// +kubebuilder:validation:Enum=0;1;2
 	FlowLogsFileAggregationKindForAllowed *int `json:"flowLogsFileAggregationKindForAllowed,omitempty" validate:"omitempty,flowLogAggregationKind"`
 	// FlowLogsFileAggregationKindForDenied is used to choose the type of aggregation for flow log entries created for
 	// denied connections. [Default: 1 - source port based aggregation].
@@ -559,6 +615,7 @@ type FelixConfigurationSpec struct {
 	// 1 - Source port based aggregation.
 	// 2 - Pod prefix name based aggregation.
 	// 3 - No destination ports based aggregation.
+	// +kubebuilder:validation:Enum=0;1;2;3
 	FlowLogsFileAggregationKindForDenied *int `json:"flowLogsFileAggregationKindForDenied,omitempty" validate:"omitempty,flowLogAggregationKind"`
 	// FlowLogsFileEnabledForAllowed is used to enable/disable flow logs entries created for allowed connections. Default is true.
 	// This parameter only takes effect when FlowLogsFileReporterEnabled is set to true.
@@ -602,6 +659,8 @@ type FelixConfigurationSpec struct {
 	// Extra time to keep IPs and alias names that are learnt from DNS, in addition to each name
 	// or IP's advertised TTL. The default value is 120s which is same as the default value of
 	// ServicePointManager.DnsRefreshTimeout on .net framework. [Default: 120s].
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:Pattern=`^([0-9]+(\\.[0-9]+)?(ms|s|m|h))*$`
 	WindowsDNSExtraTTL *metav1.Duration `json:"windowsDnsExtraTTL,omitempty" configv1timescale:"seconds"`
 
 	// The DNS servers that Felix should trust. Each entry here must be `<ip>[:<port>]` - indicating an
@@ -616,16 +675,22 @@ type FelixConfigurationSpec struct {
 	DNSCacheFile string `json:"dnsCacheFile,omitempty"`
 	// The periodic interval at which Felix saves learnt DNS information to the cache file. [Default:
 	// 60s].
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:Pattern=`^([0-9]+(\\.[0-9]+)?(ms|s|m|h))*$`
 	DNSCacheSaveInterval *metav1.Duration `json:"dnsCacheSaveInterval,omitempty" configv1timescale:"seconds"`
 	// An arbitrary number that can be changed, at runtime, to tell Felix to discard all its
 	// learnt DNS information. [Default: 0].
 	DNSCacheEpoch *int `json:"dnsCacheEpoch,omitempty"`
 	// Extra time to keep IPs and alias names that are learnt from DNS, in addition to each name
 	// or IP's advertised TTL. [Default: 0s].
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:Pattern=`^([0-9]+(\\.[0-9]+)?(ms|s|m|h))*$`
 	DNSExtraTTL *metav1.Duration `json:"dnsExtraTTL,omitempty" configv1timescale:"seconds"`
 
 	// DNSLogsFlushInterval configures the interval at which Felix exports DNS logs.
 	// [Default: 300s]
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:Pattern=`^([0-9]+(\\.[0-9]+)?(ms|s|m|h))*$`
 	DNSLogsFlushInterval *metav1.Duration `json:"dnsLogsFlushInterval,omitempty" configv1timescale:"seconds"`
 	// DNSLogsFileEnabled controls logging DNS logs to a file. If false no DNS logging to file will occur.
 	// [Default: false]
@@ -647,6 +712,7 @@ type FelixConfigurationSpec struct {
 	// Accepted values are 0 and 1.
 	// 0 - No aggregation.
 	// 1 - Aggregate over clients with the same name prefix.
+	// +kubebuilder:validation:Enum=0;1
 	DNSLogsFileAggregationKind *int `json:"dnsLogsFileAggregationKind,omitempty" validate:"omitempty,dnsAggregationKind"`
 	// Limit on the number of DNS logs that can be emitted within each flush interval.  When
 	// this limit has been reached, Felix counts the number of unloggable DNS responses within
@@ -688,10 +754,14 @@ type FelixConfigurationSpec struct {
 	// DNSPacketsNfqueueMaxHoldDuration is the max length of time to hold on to a DNS response while waiting for the
 	// the dataplane to be programmed. Used when DNSPolicyMode is DelayDNSResponse.
 	// [Default: 3s]
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:Pattern=`^([0-9]+(\\.[0-9]+)?(ms|s|m|h))*$`
 	DNSPacketsNfqueueMaxHoldDuration *metav1.Duration `json:"dnsPacketsNfqueueMaxHoldDuration,omitempty"`
 
 	// L7LogsFlushInterval configures the interval at which Felix exports L7 logs.
 	// [Default: 300s]
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:Pattern=`^([0-9]+(\\.[0-9]+)?(ms|s|m|h))*$`
 	L7LogsFlushInterval *metav1.Duration `json:"l7LogsFlushInterval,omitempty" configv1timescale:"seconds"`
 	// L7LogsFileEnabled controls logging L7 logs to a file. If false no L7 logging to file will occur.
 	// [Default: true]
@@ -710,24 +780,28 @@ type FelixConfigurationSpec struct {
 	// Accepted values are IncludeL7HTTPHeaderInfo and ExcludeL7HTTPHeaderInfo.
 	// IncludeL7HTTPHeaderInfo - Include HTTP header data in the logs.
 	// ExcludeL7HTTPHeaderInfo - Aggregate over all other fields ignoring the user agent and log type.
+	// +kubebuilder:validation:Pattern=`^(?i)(IncludeL7HTTPHeaderInfo|ExcludeL7HTTPHeaderInfo)?$`
 	L7LogsFileAggregationHTTPHeaderInfo *string `json:"l7LogsFileAggregationHTTPHeaderInfo,omitempty" validate:"omitempty,l7HTTPHeaderAggregation"`
 	// L7LogsFileAggregationHTTPMethod is used to choose the type of aggregation for the HTTP request method on L7 log entries.
 	// [Default: IncludeL7HTTPMethod - include the HTTP method].
 	// Accepted values are IncludeL7HTTPMethod and ExcludeL7HTTPMethod.
 	// IncludeL7HTTPMethod - Include HTTP method in the logs.
 	// ExcludeL7HTTPMethod - Aggregate over all other fields ignoring the HTTP method.
+	// +kubebuilder:validation:Pattern=`^(?i)(IncludeL7HTTPMethod|ExcludeL7HTTPMethod)?$`
 	L7LogsFileAggregationHTTPMethod *string `json:"l7LogsFileAggregationHTTPMethod,omitempty" validate:"omitempty,l7HTTPMethodAggregation"`
 	// L7LogsFileAggregationServiceInfo is used to choose the type of aggregation for the service data on L7 log entries.
 	// [Default: IncludeL7ServiceInfo - include service data].
 	// Accepted values are IncludeL7ServiceInfo and ExcludeL7ServiceInfo.
 	// IncludeL7ServiceInfo - Include service data in the logs.
 	// ExcludeL7ServiceInfo - Aggregate over all other fields ignoring the service name, namespace, and port.
+	// +kubebuilder:validation:Pattern=`^(?i)(IncludeL7ServiceInfo|ExcludeL7ServiceInfo)?$`
 	L7LogsFileAggregationServiceInfo *string `json:"l7LogsFileAggregationServiceInfo,omitempty" validate:"omitempty,l7ServiceAggregation"`
 	// L7LogsFileAggregationDestinationInfo is used to choose the type of aggregation for the destination metadata on L7 log entries.
 	// [Default: IncludeL7DestinationInfo - include destination metadata].
 	// Accepted values are IncludeL7DestinationInfo and ExcludeL7DestinationInfo.
 	// IncludeL7DestinationInfo - Include destination metadata in the logs.
 	// ExcludeL7DestinationInfo - Aggregate over all other fields ignoring the destination aggregated name, namespace, and type.
+	// +kubebuilder:validation:Pattern=`^(?i)(IncludeL7DestinationInfo|ExcludeL7DestinationInfo)?$`
 	L7LogsFileAggregationDestinationInfo *string `json:"l7LogsFileAggregationDestinationInfo,omitempty" validate:"omitempty,l7DestinationAggregation"`
 	// L7LogsFileAggregationExcludeSourceInfo is used to choose the type of aggregation for the source metadata on L7 log entries.
 	// [Default: IncludeL7SourceInfoNoPort - include all source metadata except for the source port].
@@ -735,20 +809,23 @@ type FelixConfigurationSpec struct {
 	// IncludeL7SourceInfo - Include source metadata in the logs.
 	// IncludeL7SourceInfoNoPort - Include source metadata in the logs excluding the source port.
 	// ExcludeL7SourceInfo - Aggregate over all other fields ignoring the source aggregated name, namespace, and type.
+	// +kubebuilder:validation:Pattern=`^(?i)(IncludeL7SourceInfo|IncludeL7SourceInfoNoPort|ExcludeL7SourceInfo)?$`
 	L7LogsFileAggregationSourceInfo *string `json:"l7LogsFileAggregationSourceInfo,omitempty" validate:"omitempty,l7SourceAggregation"`
 	// L7LogsFileAggregationResponseCode is used to choose the type of aggregation for the response code on L7 log entries.
 	// [Default: IncludeL7ResponseCode - include the response code].
 	// Accepted values are IncludeL7ResponseCode and ExcludeL7ResponseCode.
 	// IncludeL7ResponseCode - Include the response code in the logs.
 	// ExcludeL7ResponseCode - Aggregate over all other fields ignoring the response code.
+	// +kubebuilder:validation:Pattern=`^(?i)(IncludeL7ResponseCode|ExcludeL7ResponseCode)?$`
 	L7LogsFileAggregationResponseCode *string `json:"l7LogsFileAggregationResponseCode,omitempty" validate:"omitempty,l7ResponseCodeAggregation"`
 	// L7LogsFileAggregationTrimURL is used to choose the type of aggregation for the url on L7 log entries.
 	// [Default: IncludeL7FullURL - include the full URL up to however many path components are allowed by L7LogsFileAggregationNumURLPath].
-	// Accepted values are 0 and 1.
+	// Accepted values:
 	// IncludeL7FullURL - Include the full URL up to however many path components are allowed by L7LogsFileAggregationNumURLPath.
 	// TrimURLQuery - Aggregate over all other fields ignoring the query parameters on the URL.
 	// TrimURLQueryAndPath - Aggregate over all other fields and the base URL only.
 	// ExcludeL7URL - Aggregate over all other fields ignoring the URL entirely.
+	// +kubebuilder:validation:Pattern=`^(?i)(IncludeL7FullURL|TrimURLQuery|TrimURLQueryAndPath|ExcludeL7URL)?$`
 	L7LogsFileAggregationTrimURL *string `json:"l7LogsFileAggregationTrimURL,omitempty" validate:"omitempty,l7URLAggregation"`
 	// L7LogsFileAggregationNumURLPath is used to choose the number of components in the url path to display.
 	// This allows for the url to be truncated in case parts of the path provide no value. Setting this value
@@ -771,6 +848,7 @@ type FelixConfigurationSpec struct {
 	// RouteSource configures where Felix gets its routing information.
 	// - WorkloadIPs: use workload endpoints to construct routes.
 	// - CalicoIPAM: the default - use IPAM data to construct routes.
+	// +kubebuilder:validation:Pattern=`^(?i)(WorkloadIPs|CalicoIPAM)?$`
 	RouteSource string `json:"routeSource,omitempty" validate:"omitempty,routeSource"`
 
 	// Calico programs additional Linux route tables for various purposes.
@@ -789,6 +867,7 @@ type FelixConfigurationSpec struct {
 	//                                per-pod egress annotations are ignored.
 	// - EnabledPerNamespaceOrPerPod: Egress IP function is enabled and can be configured per-namespace or per-pod,
 	//                                with per-pod egress annotations overriding namespace annotations.
+	// +kubebuilder:validation:Pattern=`^(?i)(Disabled|EnabledPerNamespace|EnabledPerNamespaceOrPerPod)?$`
 	EgressIPSupport string `json:"egressIPSupport,omitempty" validate:"omitempty,oneof=Disabled EnabledPerNamespace EnabledPerNamespaceOrPerPod"`
 	// EgressIPVXLANPort is the port number of vxlan tunnel device for egress traffic. [Default: 4790]
 	EgressIPVXLANPort *int `json:"egressIPVXLANPort,omitempty"`
@@ -799,6 +878,8 @@ type FelixConfigurationSpec struct {
 	// EgressGatewayPollInterval is the interval at which Felix will poll remote egress gateways to check their
 	// health.  Only Egress Gateways with a named "health" port will be polled in this way.  Egress Gateways that
 	// fail the health check will be taken our of use as if they have been deleted.
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:Pattern=`^([0-9]+(\\.[0-9]+)?(ms|s|m|h))*$`
 	EgressGatewayPollInterval *metav1.Duration `json:"egressGatewayPollInterval,omitempty" configv1timescale:"seconds"`
 	// EgressGatewayPollFailureCount is the minimum number of poll failures before a remote Egress Gateway is considered
 	// to have failed.
@@ -811,6 +892,7 @@ type FelixConfigurationSpec struct {
 	// ExternalNetworkSupport defines two different support modes for external network function. [Default: Disabled]
 	// - Disabled:  External network function is disabled.
 	// - Enabled:   External network function is enabled.
+	// +kubebuilder:validation:Pattern=`^(?i)(Disabled|Enabled)?$`
 	ExternalNetworkSupport string `json:"externalNetworkSupport,omitempty" validate:"omitempty,oneof=Disabled Enabled"`
 	// ExternalNetworkRoutingRulePriority controls the priority value to use for the external network routing rule. [Default: 102]
 	ExternalNetworkRoutingRulePriority *int `json:"externalNetworkRoutingRulePriority,omitempty" validate:"omitempty,gt=0,lt=32766"`
@@ -836,6 +918,8 @@ type FelixConfigurationSpec struct {
 	// WireguardHostEncryptionEnabled controls whether Wireguard host-to-host encryption is enabled. [Default: false]
 	WireguardHostEncryptionEnabled *bool `json:"wireguardHostEncryptionEnabled,omitempty"`
 	// WireguardKeepAlive controls Wireguard PersistentKeepalive option. Set 0 to disable. [Default: 0]
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:Pattern=`^([0-9]+(\\.[0-9]+)?(ms|s|m|h))*$`
 	WireguardPersistentKeepAlive *metav1.Duration `json:"wireguardKeepAlive,omitempty"`
 
 	// +kubebuilder:validation:MinLength=1
@@ -864,21 +948,26 @@ type FelixConfigurationSpec struct {
 	// on a secondary ENI; this mode requires additional IP pools to be provisioned for the host to claim IPs for
 	// the primary IP of the secondary ENIs. Accepted value must be one of "Enabled", "EnabledENIPerWorkload" or
 	// "Disabled". [Default: Disabled]
+	// +kubebuilder:validation:Pattern=`^(?i)(Enabled|EnabledENIPerWorkload|Disabled)?$`
 	AWSSecondaryIPSupport string `json:"awsSecondaryIPSupport,omitempty" validate:"omitempty,oneof=Enabled EnabledENIPerWorkload Disabled"`
 	// AWSSecondaryIPRoutingRulePriority controls the priority that Felix will use for routing rules when programming
 	// them for AWS Secondary IP support. [Default: 101]
 	AWSSecondaryIPRoutingRulePriority *int `json:"awsSecondaryIPRoutingRulePriority,omitempty" validate:"omitempty,gte=0,lte=4294967295"`
 	// AWSRequestTimeout is the timeout on AWS API requests. [Default: 30s]
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:Pattern=`^([0-9]+(\\.[0-9]+)?(ms|s|m|h))*$`
 	AWSRequestTimeout *metav1.Duration `json:"awsRequestTimeout,omitempty" configv1timescale:"seconds"`
 
 	// When service IP advertisement is enabled, prevent routing loops to service IPs that are
 	// not in use, by dropping or rejecting packets that do not get DNAT'd by kube-proxy.
 	// Unless set to "Disabled", in which case such routing loops continue to be allowed.
 	// [Default: Drop]
+	// +kubebuilder:validation:Pattern=`^(?i)(Drop|Reject|Disabled)?$`
 	ServiceLoopPrevention string `json:"serviceLoopPrevention,omitempty" validate:"omitempty,oneof=Drop Reject Disabled"`
 
 	// WorkloadSourceSpoofing controls whether pods can use the allowedSourcePrefixes annotation to send traffic with a source IP
 	// address that is not theirs. This is disabled by default. When set to "Any", pods can request any prefix.
+	// +kubebuilder:validation:Pattern=`^(?i)(Disabled|Any)?$`
 	WorkloadSourceSpoofing string `json:"workloadSourceSpoofing,omitempty" validate:"omitempty,oneof=Disabled Any"`
 
 	// MTUIfacePattern is a regular expression that controls which interfaces Felix should scan in order
@@ -890,6 +979,7 @@ type FelixConfigurationSpec struct {
 	// TPROXYMode sets whether traffic is directed through a transparent proxy
 	// for further processing or not and how is the proxying done.
 	// [Default: Disabled]
+	// +kubebuilder:validation:Pattern=`^(?i)(Disabled|Enabled|EnabledAllServices)?$`
 	TPROXYMode string `json:"tproxyMode,omitempty" validate:"omitempty,oneof=Disabled Enabled EnabledAllServices"`
 	// TPROXYPort sets to which port proxied traffic should be redirected.
 	// [Default: 16001]
