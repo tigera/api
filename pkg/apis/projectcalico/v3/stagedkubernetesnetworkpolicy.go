@@ -118,8 +118,8 @@ func NewStagedKubernetesNetworkPolicyList() *StagedKubernetesNetworkPolicyList {
 func ConvertStagedKubernetesPolicyToK8SEnforced(staged *StagedKubernetesNetworkPolicy) (StagedAction, *networkingv1.NetworkPolicy) {
 	//Convert StagedKubernetesNetworkPolicy to networkingv1.NetworkPolicy
 	enforced := networkingv1.NetworkPolicy{}
-	copier.Copy(&enforced.ObjectMeta, &staged.ObjectMeta)
-	copier.Copy(&enforced.Spec, &staged.Spec)
+	_ = copier.Copy(&enforced.ObjectMeta, &staged.ObjectMeta)
+	_ = copier.Copy(&enforced.Spec, &staged.Spec)
 	enforced.TypeMeta = metav1.TypeMeta{APIVersion: "networking.k8s.io/v1", Kind: "NetworkPolicy"}
 	return staged.Spec.StagedAction, &enforced
 }
