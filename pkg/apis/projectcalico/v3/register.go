@@ -100,6 +100,8 @@ var (
 		&UISettingsList{},
 		&ExternalNetwork{},
 		&ExternalNetworkList{},
+		&SecurityEventWebhook{},
+		&SecurityEventWebhookList{},
 	}
 )
 

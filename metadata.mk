@@ -3,15 +3,15 @@
 #################################################################################################
 
 # The version of github.com/projectcalico/go-build to use.
-GO_BUILD_VER=v0.87
+GO_BUILD_VER=v0.89
 
 # Version of Kubernetes to use for tests, bitnami/kubectl, and kubectl binary release in
 # compliance benchmarker, confd, and kube-controllers.
-K8S_VERSION=v1.26.6
+K8S_VERSION=v1.27.6
 
 # Version of various tools used in the build and tests.
 COREDNS_VERSION=1.5.2
-ELASTIC_VERSION=7.17.11
+ELASTIC_VERSION=7.17.14
 ETCD_VERSION=v3.5.6
 # FIXME upgrading to kindest/node newer than v1.24.7 causes Node/kind-cluster and sig-network conformance
 # tests to timeout or fail.
@@ -45,6 +45,15 @@ BIRD_VERSION=v0.3.3-202-g7a77fb73
 # repository.
 DEV_REGISTRIES ?= tigera
 
-# RELEASE_REGISTIRES configures the container images registries which are published to 
+# RELEASE_REGISTRIES configures the container images registries which are published to
 # as part of an official release.
 RELEASE_REGISTRIES = quay.io/tigera
+
+# The directory for windows image tarballs
+WINDOWS_DIST = dist/windows
+
+# FIXME: Use WINDOWS_HPC_VERSION and remove WINDOWS_VERSIONS when containerd v1.6 is EOL'd
+# The Windows HPC container version used as base for Calico Windows images
+WINDOWS_HPC_VERSION ?= v1.0.0
+# The Windows versions used as base for Calico Windows images
+WINDOWS_VERSIONS ?= 1809 ltsc2022

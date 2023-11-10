@@ -99,24 +99,24 @@ type IPPoolAllowedUse string
 
 const (
 	IPPoolAllowedUseWorkload      IPPoolAllowedUse = "Workload"
-	IPPoolAllowedUseTunnel                         = "Tunnel"
-	IPPoolAllowedUseHostSecondary                  = "HostSecondaryInterface"
+	IPPoolAllowedUseTunnel        IPPoolAllowedUse = "Tunnel"
+	IPPoolAllowedUseHostSecondary IPPoolAllowedUse = "HostSecondaryInterface"
 )
 
 type VXLANMode string
 
 const (
 	VXLANModeNever       VXLANMode = "Never"
-	VXLANModeAlways                = "Always"
-	VXLANModeCrossSubnet           = "CrossSubnet"
+	VXLANModeAlways      VXLANMode = "Always"
+	VXLANModeCrossSubnet VXLANMode = "CrossSubnet"
 )
 
 type IPIPMode string
 
 const (
 	IPIPModeNever       IPIPMode = "Never"
-	IPIPModeAlways               = "Always"
-	IPIPModeCrossSubnet          = "CrossSubnet"
+	IPIPModeAlways      IPIPMode = "Always"
+	IPIPModeCrossSubnet IPIPMode = "CrossSubnet"
 )
 
 // The following definitions are only used for APIv1 backwards compatibility.
@@ -125,8 +125,8 @@ type EncapMode string
 
 const (
 	Undefined   EncapMode = ""
-	Always                = "always"
-	CrossSubnet           = "cross-subnet"
+	Always      EncapMode = "always"
+	CrossSubnet EncapMode = "cross-subnet"
 )
 
 const DefaultMode = Always
