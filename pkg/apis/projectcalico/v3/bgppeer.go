@@ -150,28 +150,28 @@ type SourceAddress string
 
 const (
 	SourceAddressUseNodeIP SourceAddress = "UseNodeIP"
-	SourceAddressNone                    = "None"
+	SourceAddressNone      SourceAddress = "None"
 )
 
 type FailureDetectionMode string
 
 const (
 	FailureDetectionModeNone                   FailureDetectionMode = "None"
-	FailureDetectionModeBFDIfDirectlyConnected                      = "BFDIfDirectlyConnected"
+	FailureDetectionModeBFDIfDirectlyConnected FailureDetectionMode = "BFDIfDirectlyConnected"
 )
 
 type RestartMode string
 
 const (
 	RestartModeGracefulRestart          RestartMode = "GracefulRestart"
-	RestartModeLongLivedGracefulRestart             = "LongLivedGracefulRestart"
+	RestartModeLongLivedGracefulRestart RestartMode = "LongLivedGracefulRestart"
 )
 
 type BIRDGatewayMode string
 
 const (
 	BIRDGatewayModeRecursive                 BIRDGatewayMode = "Recursive"
-	BIRDGatewayModeDirectIfDirectlyConnected                 = "DirectIfDirectlyConnected"
+	BIRDGatewayModeDirectIfDirectlyConnected BIRDGatewayMode = "DirectIfDirectlyConnected"
 )
 
 // BGPPassword contains ways to specify a BGP password.
