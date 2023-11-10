@@ -76,6 +76,10 @@ type PolicyRecommendationScopeStatusCondition struct {
 // PolicyRecommendationScopeNamespaceSpec contains namespace information that defines the namespace based
 // recommended policy.
 type PolicyRecommendationScopeNamespaceSpec struct {
+	// Pass intra-namespace traffic.
+	// [Default: false]
+	// +optional
+	IntraNamespacePassThroughTraffic bool `json:"intraNamespacePassThroughTraffic,omitempty"`
 	// Recommendation status. One of Enabled, Disabled.
 	RecStatus PolicyRecommendationNamespaceStatus `json:"recStatus,omitempty" validate:"omitempty,policyrecstatus"`
 	// The namespace selector is an expression used to pick out the namespaces that the policy

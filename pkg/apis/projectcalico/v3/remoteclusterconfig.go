@@ -42,7 +42,29 @@ type RemoteClusterConfigurationSpec struct {
 
 	// Inline the k8s config fields.
 	KubeConfig `json:",inline"`
+
+	// Configuration options that do not relate to the underlying datastore connection. These fields relate to the
+	// syncing of resources once the connection is established. These fields can be set independent of the other
+	// connection-oriented fields, e.g. they can be set when ClusterAccessSecret is non-nil.
+	// +kubebuilder:default={overlayRoutingMode: "Disabled"}
+	SyncOptions RemoteClusterSyncOptions `json:"syncOptions,omitempty"`
 }
+
+type RemoteClusterSyncOptions struct {
+	// Determines whether overlay routing will be established between federated clusters. If unspecified during create or
+	// update of RemoteClusterConfiguration, this field will default based on the encapsulation mode of the local cluster
+	// at the time of RemoteClusterConfiguration application: "Enabled" if VXLAN, "Disabled" otherwise. If upgrading from
+	// a version that predates this field, this field will default to "Disabled".
+	// +kubebuilder:default=Disabled
+	OverlayRoutingMode OverlayRoutingMode `json:"overlayRoutingMode,omitempty" validate:"omitempty,oneof=Enabled Disabled"`
+}
+
+type OverlayRoutingMode string
+
+const (
+	OverlayRoutingModeEnabled  OverlayRoutingMode = "Enabled"
+	OverlayRoutingModeDisabled OverlayRoutingMode = "Disabled"
+)
 
 type EtcdConfig struct {
 	// A comma separated list of etcd endpoints. Valid if DatastoreType is etcdv3.  [Default: ]
