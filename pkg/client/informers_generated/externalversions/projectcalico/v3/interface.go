@@ -76,6 +76,8 @@ type Interface interface {
 	Profiles() ProfileInformer
 	// RemoteClusterConfigurations returns a RemoteClusterConfigurationInformer.
 	RemoteClusterConfigurations() RemoteClusterConfigurationInformer
+	// SecurityEventWebhooks returns a SecurityEventWebhookInformer.
+	SecurityEventWebhooks() SecurityEventWebhookInformer
 	// StagedGlobalNetworkPolicies returns a StagedGlobalNetworkPolicyInformer.
 	StagedGlobalNetworkPolicies() StagedGlobalNetworkPolicyInformer
 	// StagedKubernetesNetworkPolicies returns a StagedKubernetesNetworkPolicyInformer.
@@ -264,6 +266,11 @@ func (v *version) Profiles() ProfileInformer {
 // RemoteClusterConfigurations returns a RemoteClusterConfigurationInformer.
 func (v *version) RemoteClusterConfigurations() RemoteClusterConfigurationInformer {
 	return &remoteClusterConfigurationInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// SecurityEventWebhooks returns a SecurityEventWebhookInformer.
+func (v *version) SecurityEventWebhooks() SecurityEventWebhookInformer {
+	return &securityEventWebhookInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // StagedGlobalNetworkPolicies returns a StagedGlobalNetworkPolicyInformer.
