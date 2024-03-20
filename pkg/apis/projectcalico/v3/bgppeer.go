@@ -122,7 +122,7 @@ type BGPPeerSpec struct {
 	BIRDGatewayMode BIRDGatewayMode `json:"birdGatewayMode,omitempty" validate:"omitempty,birdGatewayMode"`
 
 	// Maximum number of local AS numbers that are allowed in the AS path for received routes.
-	// This removes BGP loop prevention and should only be used if absolutely necesssary.
+	// This removes BGP loop prevention and should only be used if absolutely necessary.
 	// +optional
 	NumAllowedLocalASNumbers *int32 `json:"numAllowedLocalASNumbers,omitempty"`
 
