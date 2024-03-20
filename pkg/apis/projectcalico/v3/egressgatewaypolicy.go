@@ -66,6 +66,12 @@ type EgressGatewayRule struct {
 	// If no gateway is set then the destination is routed normally rather than via an egress gateway.
 	// +optional
 	Gateway *EgressSpec `json:"gateway,omitempty" validate:"omitempty"`
+
+	// GatewayPreference specifies which egress gateways to use. If set to PreferNodeLocal, egress gateways in the same node as
+	// the client will be used if available. Otherwise all the active egress gateways will be used.
+	// +kubebuilder:default=None
+	// +optional
+	GatewayPreference *GatewayPreferenceType `json:"gatewayPreference,omitempty" validate:"omitempty,oneof=None,PreferNodeLocal"`
 }
 
 // DestinationSpec define a destination network that can be reached via an egress gateway
@@ -84,3 +90,11 @@ func NewEgressGatewayPolicy() *EgressGatewayPolicy {
 		},
 	}
 }
+
+// +kubebuilder:validation:Enum=None;PreferNodeLocal
+type GatewayPreferenceType string
+
+const (
+	GatewayPreferenceNone      GatewayPreferenceType = "None"
+	GatewayPreferenceNodeLocal GatewayPreferenceType = "PreferNodeLocal"
+)
