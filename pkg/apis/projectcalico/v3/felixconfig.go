@@ -92,6 +92,22 @@ const (
 	WindowsManageFirewallRulesDisabled WindowsManageFirewallRulesMode = "Disabled"
 )
 
+type BPFHostNetworkedNATType string
+
+const (
+	BPFHostNetworkedNATEnabled  BPFHostNetworkedNATType = "Enabled"
+	BPFHostNetworkedNATDisabled BPFHostNetworkedNATType = "Disabled"
+)
+
+// +kubebuilder:validation:Enum=TCP;Enabled;Disabled
+type BPFConnectTimeLBType string
+
+const (
+	BPFConnectTimeLBTCP      BPFConnectTimeLBType = "TCP"
+	BPFConnectTimeLBEnabled  BPFConnectTimeLBType = "Enabled"
+	BPFConnectTimeLBDisabled BPFConnectTimeLBType = "Disabled"
+)
+
 // FelixConfigurationSpec contains the values of the Felix configuration.
 type FelixConfigurationSpec struct {
 	// UseInternalDataplaneDriver, if true, Felix will use its internal dataplane programming logic.  If false, it
@@ -193,7 +209,7 @@ type FelixConfigurationSpec struct {
 
 	// MetadataAddr is the IP address or domain name of the server that can answer VM queries for
 	// cloud-init metadata. In OpenStack, this corresponds to the machine running nova-api (or in
-	// Ubuntu, nova-api-metadata). A value of none (case insensitive) means that Felix should not
+	// Ubuntu, nova-api-metadata). A value of none (case-insensitive) means that Felix should not
 	// set up any NAT rule for the metadata path. [Default: 127.0.0.1]
 	MetadataAddr string `json:"metadataAddr,omitempty"`
 	// MetadataPort is the port of the metadata server. This, combined with global.MetadataAddr (if
@@ -434,6 +450,12 @@ type FelixConfigurationSpec struct {
 	// +kubebuilder:validation:Type=string
 	// +kubebuilder:validation:Pattern=`^([0-9]+(\\.[0-9]+)?(ms|s|m|h))*$`
 	DebugSimulateDataplaneHangAfter *metav1.Duration `json:"debugSimulateDataplaneHangAfter,omitempty" configv1timescale:"seconds"`
+	// DebugHost is the host IP or hostname to bind the debug port to.  Only used
+	// if DebugPort is set. [Default:localhost]
+	DebugHost *string `json:"debugHost,omitempty"`
+	// DebugPort if set, enables Felix's debug HTTP port, which allows memory and CPU profiles
+	// to be retrieved.  The debug port is not secure, it should not be exposed to the internet.
+	DebugPort *int `json:"debugPort,omitempty" validate:"omitempty,gte=0,lte=65535"`
 
 	IptablesNATOutgoingInterfaceFilter string `json:"iptablesNATOutgoingInterfaceFilter,omitempty" validate:"omitempty,ifaceFilter"`
 
@@ -488,8 +510,16 @@ type FelixConfigurationSpec struct {
 	// BPFConnectTimeLoadBalancingEnabled when in BPF mode, controls whether Felix installs the connection-time load
 	// balancer.  The connect-time load balancer is required for the host to be able to reach Kubernetes services
 	// and it improves the performance of pod-to-service connections.  The only reason to disable it is for debugging
-	// purposes.  [Default: true]
+	// purposes. This will be deprecated. Use BPFConnectTimeLoadBalancing [Default: true]
 	BPFConnectTimeLoadBalancingEnabled *bool `json:"bpfConnectTimeLoadBalancingEnabled,omitempty" validate:"omitempty"`
+	// BPFConnectTimeLoadBalancing when in BPF mode, controls whether Felix installs the connect-time load
+	// balancer. The connect-time load balancer is required for the host to be able to reach Kubernetes services
+	// and it improves the performance of pod-to-service connections.When set to TCP, connect time load balancing
+	// is available only for services with TCP ports. [Default: TCP]
+	BPFConnectTimeLoadBalancing *BPFConnectTimeLBType `json:"bpfConnectTimeLoadBalancing,omitempty" validate:"omitempty,oneof=TCP Enabled Disabled"`
+	// BPFHostNetworkedNATWithoutCTLB when in BPF mode, controls whether Felix does a NAT without CTLB. This along with BPFConnectTimeLoadBalancing
+	// determines the CTLB behavior. [Default: Enabled]
+	BPFHostNetworkedNATWithoutCTLB *BPFHostNetworkedNATType `json:"bpfHostNetworkedNATWithoutCTLB,omitempty" validate:"omitempty,oneof=Enabled Disabled"`
 	// BPFExternalServiceMode in BPF mode, controls how connections from outside the cluster to services (node ports
 	// and cluster IPs) are forwarded to remote workloads.  If set to "Tunnel" then both request and response traffic
 	// is tunneled to the remote node.  If set to "DSR", the request traffic is tunneled but the response traffic
@@ -514,8 +544,9 @@ type FelixConfigurationSpec struct {
 	// +kubebuilder:validation:Type=string
 	// +kubebuilder:validation:Pattern=`^([0-9]+(\\.[0-9]+)?(ms|s|m|h))*$`
 	BPFKubeProxyMinSyncPeriod *metav1.Duration `json:"bpfKubeProxyMinSyncPeriod,omitempty" validate:"omitempty" configv1timescale:"seconds"`
-	// BPFKubeProxyEndpointSlicesEnabled in BPF mode, controls whether Felix's
-	// embedded kube-proxy accepts EndpointSlices or not.
+	// BPFKubeProxyEndpointSlicesEnabled is deprecated and has no effect. BPF
+	// kube-proxy always accepts endpoint slices. This option will be removed in
+	// the next release.
 	BPFKubeProxyEndpointSlicesEnabled *bool `json:"bpfKubeProxyEndpointSlicesEnabled,omitempty" validate:"omitempty"`
 	// BPFPSNATPorts sets the range from which we randomly pick a port if there is a source port
 	// collision. This should be within the ephemeral range as defined by RFC 6056 (1024–65535) and
@@ -567,6 +598,10 @@ type FelixConfigurationSpec struct {
 	// BPFDisableGROForIfaces is a regular expression that controls which interfaces Felix should disable the
 	// Generic Receive Offload [GRO] option.  It should not match the workload interfaces (usually named cali...).
 	BPFDisableGROForIfaces string `json:"bpfDisableGROForIfaces,omitempty" validate:"omitempty,regexp"`
+	// BPFExcludeCIDRsFromNAT is a list of CIDRs that are to be excluded from NAT
+	// resolution so that host can handle them. A typical usecase is node local
+	// DNS cache.
+	BPFExcludeCIDRsFromNAT *[]string `json:"bpfExcludeCIDRsFromNAT,omitempty" validate:"omitempty,cidrs"`
 
 	SyslogReporterNetwork string `json:"syslogReporterNetwork,omitempty"`
 	SyslogReporterAddress string `json:"syslogReporterAddress,omitempty"`
@@ -617,6 +652,9 @@ type FelixConfigurationSpec struct {
 	// When FlowLogsCollectorDebugTrace is set to true, enables the logs in the collector to be
 	// printed in their entirety.
 	FlowLogsCollectorDebugTrace *bool `json:"flowLogsCollectorDebugTrace,omitempty"`
+	// FlowLogsDestDomainsByClient is used to configure if the source IP is used in the mapping of top
+	// level destination domains. [Default: true]
+	FlowLogsDestDomainsByClient *bool `json:"flowLogsDestDomainsByClient,omitempty"`
 	// FlowLogsFileEnabled when set to true, enables logging flow logs to a file. If false no flow logging to file will occur.
 	FlowLogsFileEnabled *bool `json:"flowLogsFileEnabled,omitempty"`
 	// FlowLogsFileMaxFiles sets the number of log files to keep.
