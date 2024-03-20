@@ -49,6 +49,8 @@ type ManagedClusterSpec struct {
 	// The namespace of the managed cluster's operator. This value is used in
 	// the generation of the InstallationManifest.
 	OperatorNamespace string `json:"operatorNamespace,omitempty"`
+	// The certificate used to authenticate the managed cluster to the management cluster.
+	Certificate []byte `json:"certificate,omitempty"`
 }
 
 type ManagedClusterStatus struct {

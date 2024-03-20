@@ -173,9 +173,9 @@ define build_static_cgo_boring_binary
         sh -c '$(GIT_CONFIG_SSH) \
             GOEXPERIMENT=boringcrypto go build -o $(2)  \
             -tags fipsstrict,osusergo,netgo$(if $(BUILD_TAGS),$(comma)$(BUILD_TAGS)) -v -buildvcs=false \
-            -ldflags "$(LDFLAGS) -linkmode external -extldflags -static" \
+            -ldflags "$(LDFLAGS) -s -w -linkmode external -extldflags -static" \
             $(1) \
-            && go tool nm $(2) | grep '_Cfunc__goboringcrypto_' 1> /dev/null'
+            && strings $(2) | grep '_Cfunc__goboringcrypto_' 1>/dev/null'
 endef
 
 # Build a binary with boring crypto support.
@@ -194,9 +194,9 @@ define build_cgo_boring_binary
         sh -c '$(GIT_CONFIG_SSH) \
             GOEXPERIMENT=boringcrypto go build -o $(2)  \
             -tags fipsstrict$(if $(BUILD_TAGS),$(comma)$(BUILD_TAGS)) -v -buildvcs=false \
-            -ldflags "$(LDFLAGS)" \
+            -ldflags "$(LDFLAGS) -s -w" \
             $(1) \
-            && go tool nm $(2) | grep '_Cfunc__goboringcrypto_' 1> /dev/null'
+            && strings $(2) | grep '_Cfunc__goboringcrypto_' 1>/dev/null'
 endef
 
 # Use this when building binaries that need cgo, but have no crypto and therefore would not contain any boring symbols.
@@ -209,18 +209,20 @@ define build_cgo_binary
         sh -c '$(GIT_CONFIG_SSH) \
             go build -o $(2)  \
             -v -buildvcs=false \
-            -ldflags "$(LDFLAGS)" \
+            -ldflags "$(LDFLAGS) -s -w" \
             $(1)'
 endef
 
 # For binaries that do not require boring crypto.
 define build_binary
-	$(DOCKER_RUN) $(GO_BUILD_IMAGE):$(GO_BUILD_VER) \
-		sh -c '$(GIT_CONFIG_SSH) \
-		go build -o $(2)  \
-		-v -buildvcs=false \
-		-ldflags "$(LDFLAGS)" \
-		$(1)'
+    $(DOCKER_RUN) \
+        -e CGO_ENABLED=0 \
+        $(GO_BUILD_IMAGE):$(GO_BUILD_VER) \
+        sh -c '$(GIT_CONFIG_SSH) \
+            go build -o $(2)  \
+            -v -buildvcs=false \
+            -ldflags "$(LDFLAGS) -s -w" \
+            $(1)'
 endef
 
 # Images used in build / test across multiple directories.
@@ -238,7 +240,7 @@ ifeq ($(GIT_USE_SSH),true)
 endif
 
 # Get version from git.
-GIT_VERSION:=$(shell git describe --tags --dirty --always --abbrev=12)
+GIT_VERSION:=$(shell git describe --tags --dirty --long --always --abbrev=12)
 
 # Figure out version information.  To support builds from release tarballs, we default to
 # <unknown> if this isn't a git checkout.
@@ -248,7 +250,7 @@ BUILD_ID:=$(shell git rev-parse HEAD || uuidgen | sed 's/-//g')
 # Lazily set the git version we embed into the binaries we build. We want the
 # git tag at the time we build the binary.
 # Variables elsewhere that depend on this (such as LDFLAGS) must also be lazy.
-GIT_DESCRIPTION=$(shell git describe --tags --dirty --always --abbrev=12 || echo '<unknown>')
+GIT_DESCRIPTION=$(shell git describe --tags --dirty --long --always --abbrev=12 || echo '<unknown>')
 
 # Calculate a timestamp for any build artefacts.
 ifneq ($(OS),Windows_NT)
@@ -321,6 +323,8 @@ DOCKER_RUN := mkdir -p ../.go-pkg-cache bin $(GOMOD_CACHE) && \
 		-e OS=$(BUILDOS) \
 		-e GOOS=$(BUILDOS) \
 		-e GOFLAGS=$(GOFLAGS) \
+		-e ACK_GINKGO_DEPRECATIONS=1.16.5 \
+		-e ACK_GINKGO_RC=true \
 		-v $(REPO_ROOT):/go/src/github.com/projectcalico/calico:rw \
 		-v $(REPO_ROOT)/.go-pkg-cache:/go-cache:rw \
 		-w /go/src/$(PACKAGE_NAME)
@@ -477,8 +481,13 @@ git-commit:
 # different implementation.
 ###############################################################################
 
+ifdef LOCAL_CRANE
+CRANE_CMD         = bash -c $(double_quote)crane
+else
 CRANE_CMD         = docker run -t --entrypoint /bin/sh -v $(DOCKER_CONFIG):/root/.docker/config.json $(CALICO_BUILD) -c \
                     $(double_quote)crane
+endif
+
 GIT_CMD           = git
 DOCKER_CMD        = docker
 
@@ -696,7 +705,6 @@ mod-tidy:
 # project ID.
 SEMAPHORE_API_PROJECT_ID=9625623e-bfc5-435f-9c22-74f9cd8622fc
 SEMAPHORE_API_TIGERA_PROJECT_ID=48d23719-405f-4827-b58a-7de0598a6bf5
-SEMAPHORE_ANOMALY_DETECTION_JOBS_PROJECT_ID=e506a098-3e89-4802-8165-c59b2a95f8ae
 SEMAPHORE_API_SERVER_PROJECT_ID=6e4eb5b2-0150-4624-968d-f96a1cd9c37d
 SEMAPHORE_API_SERVER_OSS_PROJECT_ID=10f6c7c1-7eaa-4e75-a9d1-83e5426158b1
 SEMAPHORE_APP_POLICY_PRIVATE_PROJECT_ID=fa098f05-b2d2-4cf6-ac83-aa1e38e95670
@@ -980,7 +988,7 @@ fetch-all:
 # git-dev-tag retrieves the dev tag for the current commit (the one are dev images are tagged with).
 git-dev-tag = $(shell git describe --tags --long --always --abbrev=12 --match "*dev*")
 # git-release-tag-from-dev-tag gets the release version from the current commits dev tag.
-git-release-tag-from-dev-tag = $(shell echo $(call git-dev-tag) | grep -P -o "^v\d*.\d*.\d*")
+git-release-tag-from-dev-tag = $(shell echo $(call git-dev-tag) | grep -P -o "^v\d*.\d*.\d*(-.*)?(?=-$(DEV_TAG_SUFFIX))")
 # git-release-tag-for-current-commit gets the release tag for the current commit if there is one.
 git-release-tag-for-current-commit = $(shell git describe --tags --exact-match --exclude "*dev*")
 
@@ -1198,6 +1206,7 @@ create-release-branch: var-require-one-of-CONFIRM-DRYRUN var-require-all-DEV_TAG
  		BRANCH=$(call current-branch) NEXT_RELEASE_VERSION=$(NEXT_RELEASE_VERSION) DEV_TAG_SUFFIX=$(DEV_TAG_SUFFIX)
 
 # release-prereqs checks that the environment is configured properly to create a release.
+.PHONY: release-prereqs
 release-prereqs:
 ifndef VERSION
 	$(error VERSION is undefined - run using make release VERSION=vX.Y.Z)
@@ -1324,7 +1333,7 @@ kubectl $(KUBECTL):
 bin/helm:
 	mkdir -p bin
 	$(eval TMP := $(shell mktemp -d))
-	wget -q https://get.helm.sh/helm-v3.11.0-linux-amd64.tar.gz -O $(TMP)/helm3.tar.gz
+	curl -sSf -L --retry 5 -o $(TMP)/helm3.tar.gz https://get.helm.sh/helm-v3.11.0-linux-amd64.tar.gz
 	tar -zxvf $(TMP)/helm3.tar.gz -C $(TMP)
 	mv $(TMP)/linux-amd64/helm bin/helm
 
@@ -1341,7 +1350,7 @@ publish-charts:
 bin/yq:
 	mkdir -p bin
 	$(eval TMP := $(shell mktemp -d))
-	wget https://github.com/mikefarah/yq/releases/download/v4.27.3/yq_linux_$(BUILDARCH).tar.gz -O $(TMP)/yq4.tar.gz
+	curl -sSf -L --retry 5 -o $(TMP)/yq4.tar.gz https://github.com/mikefarah/yq/releases/download/v4.27.3/yq_linux_$(BUILDARCH).tar.gz
 	tar -zxvf $(TMP)/yq4.tar.gz -C $(TMP)
 	mv $(TMP)/yq_linux_$(BUILDARCH) bin/yq
 
@@ -1425,3 +1434,169 @@ stop-elastic:
 	-docker rm -f tigera-elastic
 	rm -rf $(REPO_ROOT)/.elasticsearch.created
 
+###############################################################################
+# Common functions for building windows images.
+###############################################################################
+
+# When running on semaphore, just copy the docker config, otherwise run
+# 'docker-credential-gcr configure-docker' as well.
+ifdef SEMAPHORE
+DOCKER_CREDENTIAL_CMD = cp /root/.docker/config.json_host /root/.docker/config.json
+else
+DOCKER_CREDENTIAL_CMD = cp /root/.docker/config.json_host /root/.docker/config.json && \
+						docker-credential-gcr configure-docker
+endif
+
+# This needs the $(WINDOWS_DIST)/bin/docker-credential-gcr binary in $PATH and
+# also the local ~/.config/gcloud dir to be able to push to gcr.io.  It mounts
+# $(DOCKER_CONFIG) and copies it so that it can be written to on the container,
+# but not have any effect on the host config.
+CRANE_BINDMOUNT_CMD := \
+	docker run --rm \
+		--net=host \
+		--init \
+		--entrypoint /bin/sh \
+		-e LOCAL_USER_ID=$(LOCAL_USER_ID) \
+		-v $(CURDIR):/go/src/$(PACKAGE_NAME):rw \
+		-v $(DOCKER_CONFIG):/root/.docker/config.json_host:ro \
+		-e PATH=$${PATH}:/go/src/$(PACKAGE_NAME)/$(WINDOWS_DIST)/bin \
+		-v $(HOME)/.config/gcloud:/root/.config/gcloud \
+		-w /go/src/$(PACKAGE_NAME) \
+		$(CALICO_BUILD) -c $(double_quote)$(DOCKER_CREDENTIAL_CMD) && crane
+
+DOCKER_MANIFEST_CMD := docker manifest
+
+ifdef CONFIRM
+CRANE_BINDMOUNT = $(CRANE_BINDMOUNT_CMD)
+DOCKER_MANIFEST = $(DOCKER_MANIFEST_CMD)
+else
+CRANE_BINDMOUNT = echo [DRY RUN] $(CRANE_BINDMOUNT_CMD)
+DOCKER_MANIFEST = echo [DRY RUN] $(DOCKER_MANIFEST_CMD)
+endif
+
+# Clean up the docker builder used to create Windows image tarballs.
+.PHONY: clean-windows-builder
+clean-windows-builder:
+	-docker buildx rm calico-windows-builder
+
+# Set up the docker builder used to create Windows image tarballs.
+.PHONY: setup-windows-builder
+setup-windows-builder: clean-windows-builder
+	docker buildx create --name=calico-windows-builder --use --platform windows/amd64
+
+# FIXME: Use WINDOWS_HPC_VERSION and image instead of nanoserver and WINDOWS_VERSIONS when containerd v1.6 is EOL'd
+# .PHONY: image-windows release-windows
+# NOTE: WINDOWS_IMAGE_REQS must be defined with the requirements to build the windows
+# image. These must be added as reqs to 'image-windows' (originally defined in
+# lib.Makefile) on the specific package Makefile otherwise they are not correctly
+# recognized.
+# # Build Windows image with tag and possibly push it to $DEV_REGISTRIES
+# image-windows-with-tag: var-require-all-WINDOWS_IMAGE-WINDOWS_DIST-WINDOWS_IMAGE_REQS-IMAGETAG
+# 	push="$${PUSH:-false}"; \
+# 	for registry in $(DEV_REGISTRIES); do \
+# 		echo Building and pushing Windows image to $${registry}; \
+# 		image="$${registry}/$(WINDOWS_IMAGE):$(IMAGETAG)"; \
+# 		docker buildx build \
+# 			--platform windows/amd64 \
+# 			--output=type=image,push=$${push} \
+# 			-t $${image} \
+# 			--pull \
+# 			--no-cache \
+# 			--build-arg GIT_VERSION=$(GIT_VERSION) \
+# 			--build-arg WINDOWS_HPC_VERSION=$(WINDOWS_HPC_VERSION) \
+# 			-f Dockerfile-windows .; \
+# 	done ;
+
+# image-windows: var-require-all-BRANCH_NAME
+# 	$(MAKE) image-windows-with-tag PUSH=$(PUSH) IMAGETAG=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(BRANCH_NAME)
+# 	$(MAKE) image-windows-with-tag PUSH=$(PUSH) IMAGETAG=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(shell git describe --tags --dirty --long --always --abbrev=12)
+
+# # Build and push Windows image
+# release-windows: var-require-one-of-CONFIRM-DRYRUN release-prereqs clean-windows
+# 	$(MAKE) image-windows PUSH=true
+
+# Windows image pushing is different because we do not build docker images directly.
+# Since the build machine is linux, we output the images to a tarball. (We can
+# produce images but there will be no output because docker images
+# built for Windows cannot be loaded on linux.)
+#
+# The resulting image tarball is then pushed to registries during cd/release.
+# The image tarballs are located in WINDOWS_DIST and have files names
+# with the format 'node-windows-v3.21.0-2-abcdef-20H2.tar'.
+#
+# In addition to pushing the individual images, we also create the manifest
+# directly using 'docker manifest'. This is possible because Semaphore is using
+# a recent enough docker CLI version (20.10.0)
+#
+# - Create the manifest with 'docker manifest create' using the list of all images.
+# - For each windows version, 'docker manifest annotate' its image with "os.image: <windows_version>".
+#   <windows_version> is the version string that looks like, e.g. 10.0.19041.1288.
+#   Setting os.image in the manifest is required for Windows hosts to load the
+#   correct image in manifest.
+# - Finally we push the manifest, "purging" the local manifest.
+
+$(WINDOWS_DIST)/$(WINDOWS_IMAGE)-$(GIT_VERSION)-%.tar: windows-sub-image-$*
+
+DOCKER_CREDENTIAL_VERSION="2.1.18"
+DOCKER_CREDENTIAL_OS="linux"
+DOCKER_CREDENTIAL_ARCH="amd64"
+$(WINDOWS_DIST)/bin/docker-credential-gcr:
+	-mkdir -p $(WINDOWS_DIST)/bin
+	curl -fsSL "https://github.com/GoogleCloudPlatform/docker-credential-gcr/releases/download/v$(DOCKER_CREDENTIAL_VERSION)/docker-credential-gcr_$(DOCKER_CREDENTIAL_OS)_$(DOCKER_CREDENTIAL_ARCH)-$(DOCKER_CREDENTIAL_VERSION).tar.gz" \
+	| tar xz --to-stdout docker-credential-gcr \
+	| tee $(WINDOWS_DIST)/bin/docker-credential-gcr > /dev/null && chmod +x $(WINDOWS_DIST)/bin/docker-credential-gcr
+
+.PHONY: docker-credential-gcr-binary
+docker-credential-gcr-binary: var-require-all-WINDOWS_DIST-DOCKER_CREDENTIAL_VERSION-DOCKER_CREDENTIAL_OS-DOCKER_CREDENTIAL_ARCH $(WINDOWS_DIST)/bin/docker-credential-gcr
+
+# NOTE: WINDOWS_IMAGE_REQS must be defined with the requirements to build the windows
+# image. These must be added as reqs to 'image-windows' (originally defined in
+# lib.Makefile) on the specific package Makefile otherwise they are not correctly
+# recognized.
+windows-sub-image-%: var-require-all-WINDOWS_IMAGE-WINDOWS_DIST-WINDOWS_IMAGE_REQS
+	# ensure dir for windows image tars exits
+	-mkdir -p $(WINDOWS_DIST)
+	docker buildx build \
+		--platform windows/amd64 \
+		--output=type=docker,dest=$(CURDIR)/$(WINDOWS_DIST)/$(WINDOWS_IMAGE)-$(GIT_VERSION)-$*.tar \
+		--pull \
+		-t $(WINDOWS_IMAGE):latest \
+		--build-arg GIT_VERSION=$(GIT_VERSION) \
+		--build-arg=WINDOWS_VERSION=$* \
+		-f Dockerfile-windows .
+
+.PHONY: image-windows release-windows release-windows-with-tag
+image-windows: setup-windows-builder var-require-all-WINDOWS_VERSIONS
+	for version in $(WINDOWS_VERSIONS); do \
+		$(MAKE) windows-sub-image-$${version}; \
+	done;
+
+release-windows-with-tag: var-require-one-of-CONFIRM-DRYRUN var-require-all-IMAGETAG-DEV_REGISTRIES image-windows docker-credential-gcr-binary
+	for registry in $(DEV_REGISTRIES); do \
+		echo Pushing Windows images to $${registry}; \
+		all_images=""; \
+		manifest_image="$${registry}/$(WINDOWS_IMAGE):$(IMAGETAG)"; \
+		for win_ver in $(WINDOWS_VERSIONS); do \
+			image_tar="$(WINDOWS_DIST)/$(WINDOWS_IMAGE)-$(GIT_VERSION)-$${win_ver}.tar"; \
+			image="$${registry}/$(WINDOWS_IMAGE):$(IMAGETAG)-windows-$${win_ver}"; \
+			echo Pushing image $${image} ...; \
+			$(CRANE_BINDMOUNT) push $${image_tar} $${image}$(double_quote) & \
+			all_images="$${all_images} $${image}"; \
+		done; \
+		wait; \
+		$(DOCKER_MANIFEST) create --amend $${manifest_image} $${all_images}; \
+		for win_ver in $(WINDOWS_VERSIONS); do \
+			version=$$(docker manifest inspect mcr.microsoft.com/windows/nanoserver:$${win_ver} | grep "os.version" | head -n 1 | awk -F\" '{print $$4}'); \
+			image="$${registry}/$(WINDOWS_IMAGE):$(IMAGETAG)-windows-$${win_ver}"; \
+			$(DOCKER_MANIFEST) annotate --os windows --arch amd64 --os-version $${version} $${manifest_image} $${image}; \
+		done; \
+		$(DOCKER_MANIFEST) push --purge $${manifest_image}; \
+	done;
+
+release-windows: var-require-one-of-CONFIRM-DRYRUN var-require-all-BRANCH_NAME-DEV_REGISTRIES
+	describe_tag=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(shell git describe --tags --dirty --long --always --abbrev=12); \
+	branch_tag=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(BRANCH_NAME); \
+	$(MAKE) release-windows-with-tag IMAGETAG=$${describe_tag}; \
+	for registry in $(DEV_REGISTRIES); do \
+		$(CRANE_BINDMOUNT) cp $${registry}/$(WINDOWS_IMAGE):$${describe_tag} $${registry}/$(WINDOWS_IMAGE):$${branch_tag}$(double_quote); \
+	done;
