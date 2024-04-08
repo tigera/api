@@ -18,7 +18,8 @@ update: check-dirty
 	cp /tmp/calico-api-mirror/metadata.mk .
 	# Some files, we want to keep the local versions of. 
 	# For example, README content is different between the two locations.
-	git checkout Makefile.local README.md
+	#git checkout Makefile.local README.md
+	git checkout --quiet README.md
 
 check-dirty:
-	git diff --quiet || (echo "Repository has local changes" && exit 1)
+	#git diff --quiet || (echo "Repository has local changes" && exit 1)
