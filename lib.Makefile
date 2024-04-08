@@ -1533,6 +1533,15 @@ docker-credential-gcr-binary: var-require-all-WINDOWS_DIST-DOCKER_CREDENTIAL_VER
 # image. These must be added as reqs to 'image-windows' (originally defined in
 # lib.Makefile) on the specific package Makefile otherwise they are not correctly
 # recognized.
+
+# Translate WINDOWS_VERSIONS defined in metadata.mk to Windows LTSC versions.
+# For some enterprise components like fluentd for windows, we build off ltsc2019
+# but re-tag it to 1809 due to the version number is being used in some old releases.
+# (see version mapping note in https://github.com/tigera/fluentd-base/blob/windows-versions/README.md).
+# FIXME fix the confusing 1809 to ltsc2019 Windows version mapping.
+WINDOWS_LTSC_VERSION_1809 := windows-ltsc2019
+WINDOWS_LTSC_VERSION_ltsc2022 := windows-ltsc2022
+
 windows-sub-image-%: var-require-all-GIT_VERSION-WINDOWS_IMAGE-WINDOWS_DIST-WINDOWS_IMAGE_REQS
 	# ensure dir for windows image tars exits
 	-mkdir -p $(WINDOWS_DIST)
@@ -1542,7 +1551,9 @@ windows-sub-image-%: var-require-all-GIT_VERSION-WINDOWS_IMAGE-WINDOWS_DIST-WIND
 		--pull \
 		-t $(WINDOWS_IMAGE):latest \
 		--build-arg GIT_VERSION=$(GIT_VERSION) \
-		--build-arg=WINDOWS_VERSION=$* \
+		--build-arg THIRD_PARTY_REGISTRY=$(THIRD_PARTY_REGISTRY) \
+		--build-arg WINDOWS_LTSC_VERSION=$(WINDOWS_LTSC_VERSION_$*) \
+		--build-arg WINDOWS_VERSION=$* \
 		-f Dockerfile-windows .
 
 .PHONY: image-windows release-windows release-windows-with-tag
