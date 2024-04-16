@@ -63,3 +63,15 @@ WINDOWS_DIST = dist/windows
 WINDOWS_HPC_VERSION ?= v1.0.0
 # The Windows versions used as base for Calico Windows images
 WINDOWS_VERSIONS ?= 1809 ltsc2022
+
+# THIRD_PARTY_REGISTRY configures the third-party registry that serves intermediate base image
+# for some Calico Enterprise components. They are never released directly to public.
+ifeq ($(SEMAPHORE_GIT_REF_TYPE), branch)
+    # on master and release-calient branches
+    THIRD_PARTY_REGISTRY=gcr.io/unique-caldron-775/cnx/tigera/third-party
+else ifeq ($(SEMAPHORE_GIT_REF_TYPE), pull-request)
+    # on pull requests
+    THIRD_PARTY_REGISTRY=gcr.io/unique-caldron-775/third-party-ci
+else
+    THIRD_PARTY_REGISTRY=gcr.io/tigera-dev/third-party-ci
+endif
