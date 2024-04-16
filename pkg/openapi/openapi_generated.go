@@ -5210,6 +5210,13 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
+					"endpointStatusPathPrefix": {
+						SchemaProps: spec.SchemaProps{
+							Description: "EndpointStatusPathPrefix is the path to the directory where endpoint status will be written. Endpoint status file reporting is disabled if field is left empty.\n\nChosen directory should match the directory used by the CNI for PodStartupDelay. [Default: \"\"]",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"iptablesMarkMask": {
 						SchemaProps: spec.SchemaProps{
 							Description: "IptablesMarkMask is the mask that Felix selects its IPTables Mark bits from. Should be a 32 bit hexadecimal number with at least 8 bits set, none of which clash with any other mark bits in use on the system. [Default: 0xffff0000]",
@@ -5525,6 +5532,11 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
+					"debugSimulateDataplaneApplyDelay": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
 					"debugHost": {
 						SchemaProps: spec.SchemaProps{
 							Description: "DebugHost is the host IP or hostname to bind the debug port to.  Only used if DebugPort is set. [Default:localhost]",
@@ -5806,16 +5818,25 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 							},
 						},
 					},
+					"syslogReporterEnabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SyslogReporterEnabled turns on the feature to write logs to Syslog. Please note that this can incur significant disk space usage when running felix on non-cluster hosts.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 					"syslogReporterNetwork": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "SyslogReporterNetwork is the network to dial to when writing to Syslog. Known networks are \"tcp\", \"tcp4\" (IPv4-only), \"tcp6\" (IPv6-only), \"udp\", \"udp4\" (IPv4-only), \"udp6\" (IPv6-only), \"ip\", \"ip4\" (IPv4-only), \"ip6\" (IPv6-only), \"unix\", \"unixgram\" and \"unixpacket\". For more, see: https://pkg.go.dev/net#Dial",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"syslogReporterAddress": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "SyslogReporterAddress is the address to dial to when writing to Syslog. For TCP and UDP networks, the address has the form \"host:port\". The host must be a literal IP address, or a host name that can be resolved to IP addresses. The port must be a literal port number or a service name. For more, see: https://pkg.go.dev/net#Dial",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"ipsecMode": {
