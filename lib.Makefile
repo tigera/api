@@ -1320,12 +1320,19 @@ bin/helm: bin/.helm-updated-$(HELM_VERSION)
 helm-install-gcs-plugin:
 	bin/helm plugin install https://github.com/viglesiasce/helm-gcs.git
 
+publish-charts: publish-charts-gcs publish-charts-oci
 # Upload to Google tigera-helm-charts storage bucket.
-publish-charts:
+publish-charts-gcs:
 	bin/helm repo add tigera gs://tigera-helm-charts
 	for chart in ./bin/*.tgz; do \
 		bin/helm gcs push $$chart gs://tigera-helm-charts; \
 	done
+
+CHART_REPO?=oci://us-central1-docker.pkg.dev/unique-caldron-775/charts
+publish-charts-oci:
+	# publish charts to the new enterprise oci repo.
+	gcloud auth application-default print-access-token | helm registry login -u oauth2accesstoken --password-stdin https://us-central1-docker.pkg.dev
+	find ./bin -maxdepth 1 -type f -name "*.tgz" -print0 | xargs -0 -I {} bin/helm push {} $(CHART_REPO)
 
 bin/yq:
 	mkdir -p bin
@@ -1533,6 +1540,15 @@ docker-credential-gcr-binary: var-require-all-WINDOWS_DIST-DOCKER_CREDENTIAL_VER
 # image. These must be added as reqs to 'image-windows' (originally defined in
 # lib.Makefile) on the specific package Makefile otherwise they are not correctly
 # recognized.
+
+# Translate WINDOWS_VERSIONS defined in metadata.mk to Windows LTSC versions.
+# For some enterprise components like fluentd for windows, we build off ltsc2019
+# but re-tag it to 1809 due to the version number is being used in some old releases.
+# (see version mapping note in https://github.com/tigera/fluentd-base/blob/windows-versions/README.md).
+# FIXME fix the confusing 1809 to ltsc2019 Windows version mapping.
+WINDOWS_LTSC_VERSION_1809 := windows-ltsc2019
+WINDOWS_LTSC_VERSION_ltsc2022 := windows-ltsc2022
+
 windows-sub-image-%: var-require-all-GIT_VERSION-WINDOWS_IMAGE-WINDOWS_DIST-WINDOWS_IMAGE_REQS
 	# ensure dir for windows image tars exits
 	-mkdir -p $(WINDOWS_DIST)
@@ -1542,7 +1558,9 @@ windows-sub-image-%: var-require-all-GIT_VERSION-WINDOWS_IMAGE-WINDOWS_DIST-WIND
 		--pull \
 		-t $(WINDOWS_IMAGE):latest \
 		--build-arg GIT_VERSION=$(GIT_VERSION) \
-		--build-arg=WINDOWS_VERSION=$* \
+		--build-arg THIRD_PARTY_REGISTRY=$(THIRD_PARTY_REGISTRY) \
+		--build-arg WINDOWS_LTSC_VERSION=$(WINDOWS_LTSC_VERSION_$*) \
+		--build-arg WINDOWS_VERSION=$* \
 		-f Dockerfile-windows .
 
 .PHONY: image-windows release-windows release-windows-with-tag
