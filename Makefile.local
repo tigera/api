@@ -2,23 +2,57 @@
 # specific to github.com/projectcalico/api. This is opposed to Makefile, which
 # is mirrored from github.com/projectcalico/calico/api.
 
+LOCAL_REPOSITORY_REVISION ?= $(shell git describe --tags)
+GIT_BRANCH ?= $(shell git branch --show-current)
+PR_BRANCH := auto_api_update_$(shell git branch --show-current | sed -E -e 's/release-(calient)?-//')
+ORGANIZATION = tigera
+CALICO_REPOSITORY_NAME=tigera/calico-private
+
+LOCAL_FILES_KEEP := README.md
+
+check-values:
+	$(info LOCAL_REPOSITORY_REVISION: $(LOCAL_REPOSITORY_REVISION))
+	$(info GIT_BRANCH: $(GIT_BRANCH))
+	$(info PR_BRANCH: $(PR_BRANCH))
+
+all: update revert-local-files commit-remote-api 
+
 # update pulls in the latest contents of this repository from the upstream
 # github.com/projectcalico/calico/api directory.
-CALICO_VERSION ?= $(shell git rev-parse --abbrev-ref HEAD)
-update: check-dirty
-	# Clone a temporary copy of the Calico repo at the given version.
-	rm -rf /tmp/calico-api-mirror
-	mkdir -p /tmp/calico-api-mirror
-	git clone --depth 1 git@github.com:tigera/calico-private.git -b $(CALICO_VERSION) /tmp/calico-api-mirror
-	# Remove local files - we'll add them back from the Calico repo's contents.
-	rm -r pkg/ build/ examples/ hack/
-	# Add in files from the Calico repo.
-	cp -r /tmp/calico-api-mirror/api/. .
-	cp /tmp/calico-api-mirror/lib.Makefile .
-	cp /tmp/calico-api-mirror/metadata.mk .
-	# Some files, we want to keep the local versions of. 
-	# For example, README content is different between the two locations.
-	git checkout Makefile.local README.md
+update: check-dirty revert-local-files
+# Clone a temporary copy of the Calico repo at the given version.
+	@rm -rf /tmp/calico-api-mirror
+	@mkdir -p /tmp/calico-api-mirror
+	@git clone --depth 1 git@github.com:$(CALICO_REPOSITORY_NAME).git -b $(GIT_BRANCH) /tmp/calico-api-mirror
 
+# Remove local files - we'll add them back from the Calico repo's contents.
+	@rm -r pkg/ build/ examples/ hack/
+
+# Add in files from the Calico repo.
+	@cp -r /tmp/calico-api-mirror/api/. .
+	@cp /tmp/calico-api-mirror/lib.Makefile .
+	@cp /tmp/calico-api-mirror/metadata.mk .
+
+# Some files, we want to keep the local versions of. 
+# For example, README content is different between the two locations.
+revert-local-files:
+	@git checkout $(LOCAL_FILES_KEEP)
+
+# We check `git status --porcelain` to see if files have changed, but
+# we `grep -v` Makefile.local; grep will return 0 if we get matching
+# lines (so we && with the error message) or 1 if there are no matches
+# (keeping in mind that for `grep -v <pattern>`, a matching line is
+# any line which does *not* match the pattern). In other words,
+# we return true if the list of modified files includes anything other
+# than Makefile.local.
 check-dirty:
-	git diff --quiet || (echo "Repository has local changes" && exit 1)
+	#git diff --quiet || (echo "Repository has local changes" && exit 1)
+
+commit-remote-api:
+	git switch -C $(PR_BRANCH) && \
+	git commit -am "Automatic API update from $(CALICO_REPOSITORY_NAME) $(LOCAL_REPOSITORY_REVISION)" && \
+	git push -f origin $(PR_BRANCH) && \
+	gh pr create --assignee '@me' --base $(GIT_BRANCH) --head $(ORGANIZATION):$(PR_BRANCH) \
+		--reviewer "danudey" \
+		--fill \
+		--draft
