@@ -266,7 +266,7 @@ func addConversionFuncs(scheme *runtime.Scheme) error {
 	err = scheme.AddFieldLabelConversionFunc(schema.GroupVersionKind{Group: "projectcalico.org", Version: "v3", Kind: "ManagedCluster"},
 		func(label, value string) (string, string, error) {
 			switch label {
-			case "metadata.name":
+			case "metadata.name", "metadata.namespace":
 				return label, value, nil
 			default:
 				return "", "", fmt.Errorf("field label not supported: %s", label)
