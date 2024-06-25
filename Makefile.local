@@ -97,7 +97,11 @@ check-dirty:
 
 show-pr-url:
 	$(info )
-	$(info ** PR can be viewed at $(shell gh pr list --head auto_api_update_master --json url --jq '.[0].url') **)
+	$(info ** PR can be viewed at $(shell \
+		gh pr list --head $(ORGANIZATION):$(PR_BRANCH) --json url --jq '.[0].url' | \
+		grep -q '.' || \
+		echo '[error: no PR found]' \
+		) **)
 	$(info )
 	true
 
