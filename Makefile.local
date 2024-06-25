@@ -120,7 +120,12 @@ show-pr-url:
 
 # Takes the changes that have been made so far and commits them, pushes
 # them to a remote branch, then creates a PR for them if there isn't one already.
-commit-remote-api: restore-local-files
+#
+# Note that this target does not depend on `restore-local-files`; this is to allow
+# for local changes to be made before being committed (e.g. if you wanted to also
+# update the README.md file in this PR). Be aware that any local changes which exist
+# will be committed here!
+commit-remote-api:
 	$(info Creating new branch $(PR_BRANCH), committing changes to it, and creating a PR for it)
 	echo "* Creating new branch"
 	git switch --quiet -C $(PR_BRANCH)
