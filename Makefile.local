@@ -63,13 +63,23 @@ variables:
 	$(foreach localvar,$(VERBOSE_LOCAL_VARIABLES),$(info $(localvar) = $($(localvar))))
 	true
 
+# Mark all of our rules as PHONY, since they are
 .PHONY: check-dirty commit-remote-api help pr pull-upstream-changes restore-local-files show-pr-url update variables
+
+# .SILENT will cause the Makefile rule not to be echoed as it is run
 .SILENT: check-dirty commit-remote-api help pr pull-upstream-changes restore-local-files show-pr-url update variables
 
 # update pulls in the latest contents of this repository from the upstream
 # github.com/projectcalico/calico/api directory.
 update: check-dirty pull-upstream-changes restore-local-files
 
+# pr runs the above update target (to make sure), then commits the changes
+# to a branch upstream, creates the PR, and shows the URL.
+pr: update commit-remote-api show-pr-url
+
+# Clones the upstream repository (at $(CALICO_REPOSITORY_NAME)) and
+# then pulls in changes from there to this repository. Does not commit
+# any changes.
 pull-upstream-changes:
 	# Clone a temporary copy of the Calico repo at the given version.
 	$(info Cloning git@github.com:$(CALICO_REPOSITORY_NAME).git into $(CALICO_TEMP_DIR))
@@ -85,16 +95,19 @@ pull-upstream-changes:
 	cp $(CALICO_TEMP_DIR)/lib.Makefile .
 	cp $(CALICO_TEMP_DIR)/metadata.mk .
 
+# Restores any files that we want to keep even if they're different
+# upstream. For example, `README.md` is different in this repository
+# than the equivalent file in the upstream repository.
 restore-local-files:
-	# Some files, we want to keep the local versions of.
-	# For example, README content is different between the two locations.
-	# Make sure to call this before anything that commits changes!
 	$(info Restoring locally-kept file(s): $(KEEP_LOCAL_FILES))
 	git checkout --quiet $(KEEP_LOCAL_FILES)
 
+# Validates whether or not the repository is dirty; errors if there are
+# local changes.
 check-dirty:
 	git diff --quiet || (echo "Repository has local changes" && exit 1)
 
+# Shows the URL of the upstream pull request (if it exists, or an error otherwise)
 show-pr-url:
 	$(info )
 	$(info ** PR can be viewed at $(shell \
@@ -105,6 +118,8 @@ show-pr-url:
 	$(info )
 	true
 
+# Takes the changes that have been made so far and commits them, pushes
+# them to a remote branch, then creates a PR for them if there isn't one already.
 commit-remote-api: restore-local-files
 	$(info Creating new branch $(PR_BRANCH), committing changes to it, and creating a PR for it)
 	echo "* Creating new branch"
