@@ -57,13 +57,14 @@ help:
 	$(info * variables:   Print the current, most relevant local variables)
 	$(info * update:      Clone upstream calico and bring their API files in)
 	$(info * pr:          Pulls changes from upstream calico, commits them, and creates a new PR for them.)
-	@true
+	true
 
 variables:
 	$(foreach localvar,$(VERBOSE_LOCAL_VARIABLES),$(info $(localvar) = $($(localvar))))
-	@true
+	true
 
-pr: update restore-local-files commit-remote-api show-pr-url
+.PHONY: check-dirty commit-remote-api help pr pull-upstream-changes restore-local-files show-pr-url update variables
+.SILENT: check-dirty commit-remote-api help pr pull-upstream-changes restore-local-files show-pr-url update variables
 
 # update pulls in the latest contents of this repository from the upstream
 # github.com/projectcalico/calico/api directory.
@@ -72,48 +73,49 @@ update: check-dirty pull-upstream-changes restore-local-files
 pull-upstream-changes:
 	# Clone a temporary copy of the Calico repo at the given version.
 	$(info Cloning git@github.com:$(CALICO_REPOSITORY_NAME).git into $(CALICO_TEMP_DIR))
-	@rm -rf $(CALICO_TEMP_DIR)
-	@mkdir -p $(CALICO_TEMP_DIR)
-	@git clone --quiet --depth 1 git@github.com:$(CALICO_REPOSITORY_NAME).git -b $(GIT_BRANCH) $(CALICO_TEMP_DIR)
+	rm -rf $(CALICO_TEMP_DIR)
+	mkdir -p $(CALICO_TEMP_DIR)
+	git clone --quiet --depth 1 git@github.com:$(CALICO_REPOSITORY_NAME).git -b $(GIT_BRANCH) $(CALICO_TEMP_DIR)
 
 	# Remove local files - we'll add them back from the Calico repo's contents.
-	@rm -r pkg/ build/ examples/ hack/
+	rm -r pkg/ build/ examples/ hack/
 
 	# Add in files from the Calico repo.
-	@cp -r $(CALICO_TEMP_DIR)/api/. .
-	@cp $(CALICO_TEMP_DIR)/lib.Makefile .
-	@cp $(CALICO_TEMP_DIR)/metadata.mk .
+	cp -r $(CALICO_TEMP_DIR)/api/. .
+	cp $(CALICO_TEMP_DIR)/lib.Makefile .
+	cp $(CALICO_TEMP_DIR)/metadata.mk .
 
 restore-local-files:
 	# Some files, we want to keep the local versions of.
 	# For example, README content is different between the two locations.
 	# Make sure to call this before anything that commits changes!
 	$(info Restoring locally-kept file(s): $(KEEP_LOCAL_FILES))
-	@git checkout --quiet $(KEEP_LOCAL_FILES)
+	git checkout --quiet $(KEEP_LOCAL_FILES)
 
 check-dirty:
-	@#git diff --quiet || (echo "Repository has local changes" && exit 1)
+	git diff --quiet || (echo "Repository has local changes" && exit 1)
 
 show-pr-url:
 	$(info )
 	$(info ** PR can be viewed at $(shell gh pr list --head auto_api_update_master --json url --jq '.[0].url') **)
 	$(info )
+	true
 
 commit-remote-api: restore-local-files
 	$(info Creating new branch $(PR_BRANCH), committing changes to it, and creating a PR for it)
-	@echo "* Creating new branch"
-	@git switch --quiet -C $(PR_BRANCH)
-	@git add .
-	@git reset -q Makefile.local
-	@echo "* Committing changes to branch"
-	@git commit --quiet --message="Automatic API update from $(CALICO_REPOSITORY_NAME) $(LOCAL_REPOSITORY_REVISION)"
-	@echo "* Pushing changes"
-	@git push --quiet -f origin $(PR_BRANCH)
-	@echo "* Creating PR (if it does not exist already)"
-	@gh pr create --assignee '@me' --base $(GIT_BRANCH) --head $(ORGANIZATION):$(PR_BRANCH) \
+	echo "* Creating new branch"
+	git switch --quiet -C $(PR_BRANCH)
+	git add .
+	git reset -q Makefile.local
+	echo "* Committing changes to branch"
+	git commit --quiet --message="Automatic API update from $(CALICO_REPOSITORY_NAME) $(LOCAL_REPOSITORY_REVISION)"
+	echo "* Pushing changes"
+	git push --quiet -f origin $(PR_BRANCH)
+	echo "* Creating PR (if it does not exist already)"
+	gh pr create --assignee '@me' --base $(GIT_BRANCH) --head $(ORGANIZATION):$(PR_BRANCH) \
 		--reviewer "danudey" \
 		--fill \
 		--draft || \
 		echo -e "\n** A failure indicating an existing pull request is fine! We will have updated that one instead of creating a new one!" && \
 		true
-	@git switch --quiet $(GIT_BRANCH)
+	git switch --quiet $(GIT_BRANCH)
