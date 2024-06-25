@@ -4,17 +4,50 @@
 
 SHELL = /bin/bash
 
-# These are local variables we use.
+# Local variables
+
+# The revision of the local repository; this is used as a marker for where/when
+# the PR was generated
 LOCAL_REPOSITORY_REVISION ?= $(shell git describe --tags)
+
+# We assume our git branch will match the upstream
+# git branch we're pulling API updates from, but
+# we can override this if we ever need to.
 GIT_BRANCH := $(shell git branch --show-current)
-PR_BRANCH := auto_api_update_$(shell git branch --show-current | sed -E -e 's/release-(calient)?-//')
+
+# The calico version that this branch is for. If we're on
+# master, the sed regex does nothing; otherwise, it will
+# extract the version number from the branch name.
+CALICO_VERSION := $(shell git branch --show-current | sed -E -e 's/release-(calient)?-//')
+
+# We auto-generate the branch name based on the branch we're
+# on now; if we already have a branch for this version, we don't
+# want to create a new branch/PR, just update the current one.
+PR_BRANCH := auto_api_update_$(CALICO_VERSION)
+
+# The organization that we want to push our branch to (for PRs);
+# you can override this to your own account if you have a fork
+# but your repository (and `gh`) need to be configured for it
+# ahead of time.
 ORGANIZATION := tigera
+
+# The upstream repository name (which we're going to pull API
+# files from).
 CALICO_REPOSITORY_NAME := tigera/calico-private
 
+# The temporary directory we're going to clone to. This is going
+# to get removed if it exists already.
 CALICO_TEMP_DIR := /tmp/calico-api-mirror
 
+# List of files that we should keep even if they've changed upstream;
+# At the moment, we keep the README because this repository has
+# its own README; the upstream one isn't relevant to this repository.
 KEEP_LOCAL_FILES := README.md
 
+# A list of variables that we want to print out when we
+# run `make variables`; this is to ensure that users (or
+# automated jobs, down the road) can see clearly
+# what defaults we're using.
 VERBOSE_LOCAL_VARIABLES = LOCAL_REPOSITORY_REVISION GIT_BRANCH PR_BRANCH CALICO_TEMP_DIR CALICO_REPOSITORY_NAME
 
 help:
