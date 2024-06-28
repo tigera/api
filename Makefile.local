@@ -34,7 +34,7 @@ CALICO_REPOSITORY_NAME := tigera/calico-private
 
 # The temporary directory we're going to clone to. This is going
 # to get removed if it exists already.
-CALICO_TEMP_DIR := /tmp/calico-api-mirror
+CALICO_TEMP_DIR := /tmp/tigera-api-mirror
 
 # List of files that we should keep even if they've changed upstream;
 # At the moment, we keep the README because this repository has
