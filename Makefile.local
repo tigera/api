@@ -6,14 +6,11 @@ SHELL = /bin/bash
 
 # Local variables
 
-# The revision of the local repository; this is used as a marker for where/when
-# the PR was generated
-LOCAL_REPOSITORY_REVISION ?= $(shell git describe --tags)
-
 # We assume our git branch will match the upstream
 # git branch we're pulling API updates from, but
 # we can override this if we ever need to.
 GIT_BRANCH := $(shell git branch --show-current)
+CALICO_GIT_REF ?= $(GIT_BRANCH)
 
 # The calico version that this branch is for. If we're on
 # master, the sed regex does nothing; otherwise, it will
@@ -44,11 +41,14 @@ CALICO_TEMP_DIR := /tmp/calico-api-mirror
 # its own README; the upstream one isn't relevant to this repository.
 KEEP_LOCAL_FILES := README.md
 
+# The commit message/PR title to use when we commit our changes
+COMMIT_MESSAGE_TITLE := Automatic API update from $(CALICO_REPOSITORY_NAME) $(CALICO_VERSION)
+
 # A list of variables that we want to print out when we
 # run `make variables`; this is to ensure that users (or
 # automated jobs, down the road) can see clearly
 # what defaults we're using.
-VERBOSE_LOCAL_VARIABLES = LOCAL_REPOSITORY_REVISION GIT_BRANCH PR_BRANCH CALICO_TEMP_DIR CALICO_REPOSITORY_NAME
+VERBOSE_LOCAL_VARIABLES = GIT_BRANCH CALICO_GIT_REF PR_BRANCH CALICO_TEMP_DIR CALICO_REPOSITORY_NAME
 
 help:
 	$(info Calico API local Makefile)
@@ -85,7 +85,7 @@ pull-upstream-changes:
 	$(info Cloning git@github.com:$(CALICO_REPOSITORY_NAME).git into $(CALICO_TEMP_DIR))
 	rm -rf $(CALICO_TEMP_DIR)
 	mkdir -p $(CALICO_TEMP_DIR)
-	git clone --quiet --depth 1 git@github.com:$(CALICO_REPOSITORY_NAME).git -b $(GIT_BRANCH) $(CALICO_TEMP_DIR)
+	git clone --quiet --depth 1 git@github.com:$(CALICO_REPOSITORY_NAME).git -b $(CALICO_GIT_REF) $(CALICO_TEMP_DIR)
 
 	# Remove local files - we'll add them back from the Calico repo's contents.
 	rm -r pkg/ build/ examples/ hack/
@@ -132,7 +132,7 @@ commit-remote-api:
 	git add .
 	git reset -q Makefile.local
 	echo "* Committing changes to branch"
-	git commit --quiet --message="Automatic API update from $(CALICO_REPOSITORY_NAME) $(LOCAL_REPOSITORY_REVISION)"
+	git commit --quiet --message="$(COMMIT_MESSAGE_TITLE)"
 	echo "* Pushing changes"
 	git push --quiet -f origin $(PR_BRANCH)
 	echo "* Creating PR (if it does not exist already)"
