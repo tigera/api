@@ -2653,6 +2653,11 @@ func (in *FelixConfigurationSpec) DeepCopyInto(out *FelixConfigurationSpec) {
 		*out = new(v1.Duration)
 		**out = **in
 	}
+	if in.DebugSimulateDataplaneApplyDelay != nil {
+		in, out := &in.DebugSimulateDataplaneApplyDelay, &out.DebugSimulateDataplaneApplyDelay
+		*out = new(v1.Duration)
+		**out = **in
+	}
 	if in.DebugHost != nil {
 		in, out := &in.DebugHost, &out.DebugHost
 		*out = new(string)
@@ -2810,6 +2815,16 @@ func (in *FelixConfigurationSpec) DeepCopyInto(out *FelixConfigurationSpec) {
 			*out = make([]string, len(*in))
 			copy(*out, *in)
 		}
+	}
+	if in.BPFExportBufferSizeMB != nil {
+		in, out := &in.BPFExportBufferSizeMB, &out.BPFExportBufferSizeMB
+		*out = new(int)
+		**out = **in
+	}
+	if in.SyslogReporterEnabled != nil {
+		in, out := &in.SyslogReporterEnabled, &out.SyslogReporterEnabled
+		*out = new(bool)
+		**out = **in
 	}
 	if in.IPSecAllowUnsecuredTraffic != nil {
 		in, out := &in.IPSecAllowUnsecuredTraffic, &out.IPSecAllowUnsecuredTraffic

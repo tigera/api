@@ -322,6 +322,14 @@ type FelixConfigurationSpec struct {
 	// +kubebuilder:validation:Pattern=`^([0-9]+(\\.[0-9]+)?(ms|s|m|h))*$`
 	EndpointReportingDelay *metav1.Duration `json:"endpointReportingDelay,omitempty" configv1timescale:"seconds" confignamev1:"EndpointReportingDelaySecs"`
 
+	// EndpointStatusPathPrefix is the path to the directory
+	// where endpoint status will be written. Endpoint status
+	// file reporting is disabled if field is left empty.
+	//
+	// Chosen directory should match the directory used by the CNI for PodStartupDelay.
+	// [Default: ""]
+	EndpointStatusPathPrefix string `json:"endpointStatusPathPrefix,omitempty"`
+
 	// IptablesMarkMask is the mask that Felix selects its IPTables Mark bits from. Should be a 32 bit hexadecimal
 	// number with at least 8 bits set, none of which clash with any other mark bits in use on the system.
 	// [Default: 0xffff0000]
@@ -358,19 +366,20 @@ type FelixConfigurationSpec struct {
 	PrometheusMetricsKeyFile  string `json:"prometheusMetricsKeyFile,omitempty"`
 	PrometheusMetricsCAFile   string `json:"prometheusMetricsCAFile,omitempty"`
 
-	// FailsafeInboundHostPorts is a list of UDP/TCP ports and CIDRs that Felix will allow incoming traffic to host endpoints
-	// on irrespective of the security policy. This is useful to avoid accidentally cutting off a host with incorrect configuration.
-	// For back-compatibility, if the protocol is not specified, it defaults to "tcp". If a CIDR is not specified, it will allow
-	// traffic from all addresses. To disable all inbound host ports, use the value none. The default value allows ssh access
-	// and DHCP.
-	// [Default: tcp:22, udp:68, tcp:179, tcp:2379, tcp:2380, tcp:6443, tcp:6666, tcp:6667]
+	// FailsafeInboundHostPorts is a list of PortProto struct objects including UDP/TCP/SCTP ports and CIDRs that Felix will
+	// allow incoming traffic to host endpoints on irrespective of the security policy. This is useful to avoid accidentally
+	// cutting off a host with incorrect configuration. For backwards compatibility, if the protocol is not specified,
+	// it defaults to "tcp". If a CIDR is not specified, it will allow traffic from all addresses. To disable all inbound host ports,
+	// use the value "[]". The default value allows ssh access, DHCP, BGP, etcd and the Kubernetes API.
+	// [Default: tcp:22, udp:68, tcp:179, tcp:2379, tcp:2380, tcp:5473, tcp:6443, tcp:6666, tcp:6667 ]
 	FailsafeInboundHostPorts *[]ProtoPort `json:"failsafeInboundHostPorts,omitempty"`
-	// FailsafeOutboundHostPorts is a list of UDP/TCP ports and CIDRs that Felix will allow outgoing traffic from host endpoints
-	// to irrespective of the security policy. This is useful to avoid accidentally cutting off a host with incorrect configuration.
-	// For back-compatibility, if the protocol is not specified, it defaults to "tcp". If a CIDR is not specified, it will allow
-	// traffic from all addresses. To disable all outbound host ports, use the value none. The default value opens etcd's standard
-	// ports to ensure that Felix does not get cut off from etcd as well as allowing DHCP and DNS.
-	// [Default: tcp:179, tcp:2379, tcp:2380, tcp:6443, tcp:6666, tcp:6667, udp:53, udp:67]
+	// FailsafeOutboundHostPorts is a list of List of PortProto struct objects including UDP/TCP/SCTP ports and CIDRs that Felix
+	// will allow outgoing traffic from host endpoints to irrespective of the security policy. This is useful to avoid accidentally
+	// cutting off a host with incorrect configuration. For backwards compatibility, if the protocol is not specified, it defaults
+	// to "tcp". If a CIDR is not specified, it will allow traffic from all addresses. To disable all outbound host ports,
+	// use the value "[]". The default value opens etcd's standard ports to ensure that Felix does not get cut off from etcd
+	// as well as allowing DHCP, DNS, BGP and the Kubernetes API.
+	// [Default: udp:53, udp:67, tcp:179, tcp:2379, tcp:2380, tcp:5473, tcp:6443, tcp:6666, tcp:6667 ]
 	FailsafeOutboundHostPorts *[]ProtoPort `json:"failsafeOutboundHostPorts,omitempty"`
 
 	// KubeMasqueradeBit should be set to the same value as --iptables-masquerade-bit of kube-proxy
@@ -450,6 +459,9 @@ type FelixConfigurationSpec struct {
 	// +kubebuilder:validation:Type=string
 	// +kubebuilder:validation:Pattern=`^([0-9]+(\\.[0-9]+)?(ms|s|m|h))*$`
 	DebugSimulateDataplaneHangAfter *metav1.Duration `json:"debugSimulateDataplaneHangAfter,omitempty" configv1timescale:"seconds"`
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:Pattern=`^([0-9]+(\\.[0-9]+)?(ms|s|m|h))*$`
+	DebugSimulateDataplaneApplyDelay *metav1.Duration `json:"debugSimulateDataplaneApplyDelay,omitempty" configv1timescale:"seconds"`
 	// DebugHost is the host IP or hostname to bind the debug port to.  Only used
 	// if DebugPort is set. [Default:localhost]
 	DebugHost *string `json:"debugHost,omitempty"`
@@ -602,8 +614,20 @@ type FelixConfigurationSpec struct {
 	// resolution so that host can handle them. A typical usecase is node local
 	// DNS cache.
 	BPFExcludeCIDRsFromNAT *[]string `json:"bpfExcludeCIDRsFromNAT,omitempty" validate:"omitempty,cidrs"`
+	// BPFExportBufferSizeMB in BPF mode, controls the buffer size used for sending BPF events to felix.
+	// [Default: 1]
+	BPFExportBufferSizeMB *int `json:"bpfExportBufferSizeMB,omitempty" validate:"omitempty,cidrs"`
 
+	// SyslogReporterEnabled turns on the feature to write logs to Syslog. Please note that this can incur significant
+	// disk space usage when running felix on non-cluster hosts.
+	SyslogReporterEnabled *bool `json:"syslogReporterEnabled,omitempty" validate:"omitempty"`
+	// SyslogReporterNetwork is the network to dial to when writing to Syslog. Known networks are "tcp", "tcp4"
+	// (IPv4-only), "tcp6" (IPv6-only), "udp", "udp4" (IPv4-only), "udp6" (IPv6-only), "ip", "ip4" (IPv4-only), "ip6"
+	// (IPv6-only), "unix", "unixgram" and "unixpacket". For more, see: https://pkg.go.dev/net#Dial
 	SyslogReporterNetwork string `json:"syslogReporterNetwork,omitempty"`
+	// SyslogReporterAddress is the address to dial to when writing to Syslog. For TCP and UDP networks, the address has
+	// the form "host:port". The host must be a literal IP address, or a host name that can be resolved to IP addresses.
+	// The port must be a literal port number or a service name. For more, see: https://pkg.go.dev/net#Dial
 	SyslogReporterAddress string `json:"syslogReporterAddress,omitempty"`
 
 	// IPSecMode controls which mode IPSec is operating on.
