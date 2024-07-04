@@ -151,7 +151,7 @@ endif
 # the one for the host should contain all the necessary cross-compilation tools
 # we do not need to use the arch since go-build:v0.15 now is multi-arch manifest
 GO_BUILD_IMAGE ?= calico/go-build
-CALICO_BUILD    = $(GO_BUILD_IMAGE):$(GO_BUILD_VER)-$(BUILDARCH)
+CALICO_BUILD    = $(GO_BUILD_IMAGE):$(GO_BUILD_VER)
 
 # Build a binary with boring crypto support.
 # This function expects you to pass in two arguments:
@@ -693,8 +693,6 @@ SEMAPHORE_FELIX_PRIVATE_PROJECT_ID=e439cca4-156c-4d23-b611-002601440ad0
 SEMAPHORE_FELIX_PROJECT_ID=48267e65-4acc-4f27-a88f-c3df0e8e2c3b
 SEMAPHORE_FIREWALL_INTEGRATION_PROJECT_ID=d4307a31-1e46-4622-82e2-886165b77008
 SEMAPHORE_FLUENTD_DOCKER_PROJECT_ID=50383fb9-d234-461a-ae00-23e18b7cd5b8
-SEMAPHORE_HONEYPOD_CONTROLLER_PROJECT_ID=c010a63a-ac85-48b4-9077-06188408eaee
-SEMAPHORE_HONEYPOD_RECOMMENDATION_PROJECT_ID=f07f5fd4-b15a-4ded-ae1e-04801ae4d99a
 SEMAPHORE_INGRESS_COLLECTOR_PROJECT_ID=cf7947e4-a886-404d-ac6a-c3f3ac1a7b93
 SEMAPHORE_INTRUSION_DETECTION_PROJECT_ID=2beffe81-b05a-41e0-90ce-e0d847dee2ee
 SEMAPHORE_KEY_CERT_PROVISIONER_PROJECT_ID=9efb25f3-8c5d-4f22-aab5-4a1f5519bc7c
@@ -1024,7 +1022,7 @@ ifdef EXPECTED_RELEASE_TAG
 		@echo "Failed to verify release tag$(comma) expected release version is $(EXPECTED_RELEASE_TAG)$(comma) actual is $(RELEASE_TAG)."\
 		&& exit 1)
 endif
-	$(eval NEXT_RELEASE_VERSION = $(shell echo "$(call git-release-tag-from-dev-tag)" | awk -F  "." '{print $$1"."$$2"."$$3+1}'))
+	$(eval NEXT_RELEASE_VERSION = $(shell echo "$(call git-release-tag-from-dev-tag)" | awk '{ split($$0,tag,"-"); if (tag[2] ~ /^1\./) { split(tag[2],subver,"."); print tag[1]"-"subver[1]".subver[2]+1" } else { split(tag[1],ver,"."); print ver[1]"."ver[2]"."ver[3]+1 } }'))
 ifndef IMAGE_ONLY
 	$(MAKE) maybe-tag-release maybe-push-release-tag\
 		RELEASE_TAG=$(RELEASE_TAG) BRANCH=$(RELEASE_BRANCH) DEV_TAG=$(DEV_TAG)
@@ -1144,8 +1142,8 @@ release-dev-image-arch-to-registry-%:
 # tag that empty commit with an incremented minor version of the previous dev tag for the next release.
 create-release-branch: var-require-one-of-CONFIRM-DRYRUN var-require-all-DEV_TAG_SUFFIX-RELEASE_BRANCH_PREFIX fetch-all
 	$(if $(filter-out $(RELEASE_BRANCH_BASE),$(call current-branch)),$(error create-release-branch must be called on $(RELEASE_BRANCH_BASE)),)
-	$(eval NEXT_RELEASE_VERSION := $(shell echo "$(call git-release-tag-from-dev-tag)" | awk -F  "." '{print $$1"."$$2+1"."0}'))
-	$(eval RELEASE_BRANCH_VERSION := $(shell echo "$(call git-release-tag-from-dev-tag)" | awk -F  "." '{print $$1"."$$2}'))
+	$(eval NEXT_RELEASE_VERSION := $(shell echo "$(call git-release-tag-from-dev-tag)" | awk '{ split($$0,tag,"-"); if (tag[2] ~ /^1\./) { split(tag[2],subver,"."); print tag[1]"-"subver[1]+1".0" } else { split(tag[1],ver,"."); print ver[1]"."ver[2]+1"."ver[3] } }'))
+	$(eval RELEASE_BRANCH_VERSION = $(shell echo "$(call git-release-tag-from-dev-tag)" | awk '{ split($$0,tag,"-"); split(tag[1],ver,"."); if (tag[2] ~ /^1\./) { split(tag[2],subver,"."); print ver[1]"."ver[2]"-"subver[1] } else { print ver[1]"."ver[2] } }'))
 	git checkout -B $(RELEASE_BRANCH_PREFIX)-$(RELEASE_BRANCH_VERSION) $(GIT_REMOTE)/$(RELEASE_BRANCH_BASE)
 	$(GIT) push $(GIT_REMOTE) $(RELEASE_BRANCH_PREFIX)-$(RELEASE_BRANCH_VERSION)
 	$(MAKE) dev-tag-next-release push-next-release-dev-tag\
@@ -1161,7 +1159,7 @@ endif
 # Check if the codebase is dirty or not.
 check-dirty:
 	@if [ "$$(git --no-pager diff --stat)" != "" ]; then \
-	echo "The following files are dirty"; git --no-pager diff --stat; exit 1; fi
+	echo "The following files are dirty"; git --no-pager diff; exit 1; fi
 
 ###############################################################################
 # Common functions for launching a local Kubernetes control plane.
@@ -1320,12 +1318,19 @@ bin/helm: bin/.helm-updated-$(HELM_VERSION)
 helm-install-gcs-plugin:
 	bin/helm plugin install https://github.com/viglesiasce/helm-gcs.git
 
+publish-charts: publish-charts-gcs publish-charts-oci
 # Upload to Google tigera-helm-charts storage bucket.
-publish-charts:
+publish-charts-gcs:
 	bin/helm repo add tigera gs://tigera-helm-charts
 	for chart in ./bin/*.tgz; do \
 		bin/helm gcs push $$chart gs://tigera-helm-charts; \
 	done
+
+CHART_REPO?=oci://us-central1-docker.pkg.dev/unique-caldron-775/charts
+publish-charts-oci:
+	# publish charts to the new enterprise oci repo.
+	gcloud auth application-default print-access-token | helm registry login -u oauth2accesstoken --password-stdin https://us-central1-docker.pkg.dev
+	find ./bin -maxdepth 1 -type f -name "*.tgz" -print0 | xargs -0 -I {} bin/helm push {} $(CHART_REPO)
 
 bin/yq:
 	mkdir -p bin
@@ -1386,7 +1391,7 @@ help:
 ###############################################################################
 # Common functions for launching a local Elastic instance.
 ###############################################################################
-ELASTIC_IMAGE   ?= docker.elastic.co/elasticsearch/elasticsearch:$(ELASTIC_VERSION)
+ELASTIC_IMAGE   ?= docker.elastic.co/elasticsearch/elasticsearch:$(shell grep -o '^ELASTIC_VERSION=[0-9\.]*' $(REPO_ROOT)/third_party/elasticsearch/Makefile | cut -d "=" -f 2)
 
 ## Run elasticsearch as a container (tigera-elastic)
 .PHONY: run-elastic
@@ -1533,6 +1538,15 @@ docker-credential-gcr-binary: var-require-all-WINDOWS_DIST-DOCKER_CREDENTIAL_VER
 # image. These must be added as reqs to 'image-windows' (originally defined in
 # lib.Makefile) on the specific package Makefile otherwise they are not correctly
 # recognized.
+
+# Translate WINDOWS_VERSIONS defined in metadata.mk to Windows LTSC versions.
+# For some enterprise components like fluentd for windows, we build off ltsc2019
+# but re-tag it to 1809 due to the version number is being used in some old releases.
+# (see version mapping note in https://github.com/tigera/fluentd-base/blob/windows-versions/README.md).
+# FIXME fix the confusing 1809 to ltsc2019 Windows version mapping.
+WINDOWS_LTSC_VERSION_1809 := windows-ltsc2019
+WINDOWS_LTSC_VERSION_ltsc2022 := windows-ltsc2022
+
 windows-sub-image-%: var-require-all-GIT_VERSION-WINDOWS_IMAGE-WINDOWS_DIST-WINDOWS_IMAGE_REQS
 	# ensure dir for windows image tars exits
 	-mkdir -p $(WINDOWS_DIST)
@@ -1542,7 +1556,9 @@ windows-sub-image-%: var-require-all-GIT_VERSION-WINDOWS_IMAGE-WINDOWS_DIST-WIND
 		--pull \
 		-t $(WINDOWS_IMAGE):latest \
 		--build-arg GIT_VERSION=$(GIT_VERSION) \
-		--build-arg=WINDOWS_VERSION=$* \
+		--build-arg THIRD_PARTY_REGISTRY=$(THIRD_PARTY_REGISTRY) \
+		--build-arg WINDOWS_LTSC_VERSION=$(WINDOWS_LTSC_VERSION_$*) \
+		--build-arg WINDOWS_VERSION=$* \
 		-f Dockerfile-windows .
 
 .PHONY: image-windows release-windows release-windows-with-tag
