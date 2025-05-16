@@ -7,11 +7,11 @@ GO_BUILD_VER=v0.89
 
 # Version of Kubernetes to use for tests, bitnami/kubectl, and kubectl binary release in
 # compliance benchmarker, confd, and kube-controllers.
-K8S_VERSION=v1.27.9
+K8S_VERSION=v1.27.12
 
 # Version of various tools used in the build and tests.
 COREDNS_VERSION=1.5.2
-ELASTIC_VERSION=7.17.14
+ELASTIC_VERSION=7.17.18
 ETCD_VERSION=v3.5.6
 # FIXME upgrading to kindest/node newer than v1.24.7 causes Node/kind-cluster and sig-network conformance
 # tests to timeout or fail.
@@ -44,6 +44,9 @@ BIRD_VERSION=v0.3.3-202-g7a77fb73
 # DEV_REGISTRIES configures the container image registries which are built from this
 # repository.
 DEV_REGISTRIES ?= tigera
+
+# The suffix added to development tags (and, by association, images)
+DEV_TAG_SUFFIX ?= calient-0.dev
 
 # RELEASE_REGISTRIES configures the container images registries which are published to
 # as part of an official release.
