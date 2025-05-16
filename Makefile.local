@@ -36,6 +36,13 @@ CALICO_REPOSITORY_NAME := tigera/calico-private
 # to get removed if it exists already.
 CALICO_TEMP_DIR := /tmp/tigera-api-mirror
 
+# If we were given a reference repository, clone using that
+ifdef REFERENCE_REPO
+	CALICO_REFERENCE_PARAMS := --reference-if-able $(REFERENCE_REPO)
+else
+	CALICO_REFERENCE_PARAMS := 
+endif
+
 # List of files that we should keep even if they've changed upstream;
 # At the moment, we keep the README because this repository has
 # its own README; the upstream one isn't relevant to this repository.
@@ -85,7 +92,7 @@ pull-upstream-changes:
 	$(info Cloning git@github.com:$(CALICO_REPOSITORY_NAME).git into $(CALICO_TEMP_DIR))
 	rm -rf $(CALICO_TEMP_DIR)
 	mkdir -p $(CALICO_TEMP_DIR)
-	git clone --quiet --depth 1 git@github.com:$(CALICO_REPOSITORY_NAME).git -b $(CALICO_GIT_REF) $(CALICO_TEMP_DIR)
+	git clone --quiet $(CALICO_REFERENCE_PARAMS) --depth 1 git@github.com:$(CALICO_REPOSITORY_NAME).git -b $(CALICO_GIT_REF) $(CALICO_TEMP_DIR)
 
 	# Remove local files - we'll add them back from the Calico repo's contents.
 	rm -r pkg/ build/ examples/ hack/

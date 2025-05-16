@@ -481,6 +481,11 @@ git-commit:
 # different implementation.
 ###############################################################################
 
+define yq_cmd
+	$(shell yq --version | grep v$1.* >/dev/null && which yq || echo docker run --rm --user="root" -i -v "$(shell pwd)":/workdir mikefarah/yq:$1 $(if $(shell [ $1 -lt 4 ] && echo "true"), yq,))
+endef
+YQ_V4 = $(call yq_cmd,4)
+
 ifdef LOCAL_CRANE
 CRANE_CMD         = bash -c $(double_quote)crane
 else
