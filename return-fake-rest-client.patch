@@ -1,0 +1,20 @@
+diff --git a/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3/fake/fake_projectcalico_client.go b/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3/fake/fake_projectcalico_client.go
+index f08868beb7..aec9ef1048 100644
+--- a/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3/fake/fake_projectcalico_client.go
++++ b/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3/fake/fake_projectcalico_client.go
+@@ -7,6 +7,7 @@ package fake
+ import (
+ 	v3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
+ 	rest "k8s.io/client-go/rest"
++	"k8s.io/client-go/rest/fake"
+ 	testing "k8s.io/client-go/testing"
+ )
+ 
+@@ -181,6 +182,6 @@ func (c *FakeProjectcalicoV3) UISettingsGroups() v3.UISettingsGroupInterface {
+ // RESTClient returns a RESTClient that is used to communicate
+ // with API server by this client implementation.
+ func (c *FakeProjectcalicoV3) RESTClient() rest.Interface {
+-	var ret *rest.RESTClient
++	ret := &fake.RESTClient{}
+ 	return ret
+ }

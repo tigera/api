@@ -1,4 +1,4 @@
-// Copyright (c) 2017, 2021 Tigera, Inc. All rights reserved.
+// Copyright (c) 2024 Tigera, Inc. All rights reserved.
 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -31,10 +31,16 @@ const (
 type Tier struct {
 	metav1.TypeMeta `json:",inline"`
 	// Standard object's metadata.
-	metav1.ObjectMeta `json:"metadata,omitempty"`
+	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 	// Specification of the Tier.
-	Spec TierSpec `json:"spec,omitempty"`
+	Spec TierSpec `json:"spec,omitempty" protobuf:"bytes,2,rep,name=spec"`
 }
+
+const (
+	AdminNetworkPolicyTierOrder         = float64(1_000)      // 1K
+	DefaultTierOrder                    = float64(1_000_000)  // 1Million
+	BaselineAdminNetworkPolicyTierOrder = float64(10_000_000) // 10Million
+)
 
 // TierSpec contains the specification for a security policy tier resource.
 type TierSpec struct {
@@ -43,7 +49,12 @@ type TierSpec struct {
 	// is omitted, it may be considered to be "infinite" - i.e. the tier will be applied
 	// last.  Tiers with identical order will be applied in alphanumerical order based
 	// on the Tier "Name".
-	Order *float64 `json:"order,omitempty"`
+	Order *float64 `json:"order,omitempty" protobuf:"bytes,1,opt,name=order"`
+	// DefaultAction specifies the action applied to workloads selected by a policy in the tier,
+	// but not rule matched the workload's traffic.
+	// [Default: Deny]
+	// +kubebuilder:validation:Enum=Pass;Deny
+	DefaultAction *Action `json:"defaultAction,omitempty" validate:"omitempty,oneof=Deny Pass"`
 }
 
 // +genclient:nonNamespaced
@@ -52,8 +63,8 @@ type TierSpec struct {
 // TierList contains a list of Tier resources.
 type TierList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata"`
-	Items           []Tier `json:"items"`
+	metav1.ListMeta `json:"metadata" protobuf:"bytes,1,opt,name=metadata"`
+	Items           []Tier `json:"items" protobuf:"bytes,2,rep,name=items"`
 }
 
 // NewTier creates a new (zeroed) Tier struct with the TypeMetadata initialised to the current

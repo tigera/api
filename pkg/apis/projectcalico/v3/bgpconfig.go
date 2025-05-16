@@ -15,9 +15,8 @@
 package v3
 
 import (
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-
 	"github.com/tigera/api/pkg/lib/numorstring"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 const (
@@ -111,6 +110,16 @@ type BGPConfigurationSpec struct {
 	// IgnoredInterfaces indicates the network interfaces that needs to be excluded when reading device routes.
 	// +optional
 	IgnoredInterfaces []string `json:"ignoredInterfaces,omitempty" validate:"omitempty,dive,ignoredInterface"`
+
+	// The virtual IPv4 address of the node with which its local workload is expected to peer.
+	// It is recommended to use a link-local address.
+	// +optional
+	LocalWorkloadPeeringIPV4 string `json:"localWorkloadPeeringIPV4,omitempty" validate:"omitempty,ipv4"`
+
+	// The virtual IPv6 address of the node with which its local workload is expected to peer.
+	// It is recommended to use a link-local address.
+	// +optional
+	LocalWorkloadPeeringIPV6 string `json:"localWorkloadPeeringIPV6,omitempty" validate:"omitempty,ipv6"`
 }
 
 // ServiceLoadBalancerIPBlock represents a single allowed LoadBalancer IP CIDR block.
