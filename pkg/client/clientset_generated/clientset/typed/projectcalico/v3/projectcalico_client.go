@@ -47,6 +47,7 @@ type ProjectcalicoV3Interface interface {
 	PolicyRecommendationScopesGetter
 	ProfilesGetter
 	RemoteClusterConfigurationsGetter
+	SecurityEventWebhooksGetter
 	StagedGlobalNetworkPoliciesGetter
 	StagedKubernetesNetworkPoliciesGetter
 	StagedNetworkPoliciesGetter
@@ -190,6 +191,10 @@ func (c *ProjectcalicoV3Client) Profiles() ProfileInterface {
 
 func (c *ProjectcalicoV3Client) RemoteClusterConfigurations() RemoteClusterConfigurationInterface {
 	return newRemoteClusterConfigurations(c)
+}
+
+func (c *ProjectcalicoV3Client) SecurityEventWebhooks() SecurityEventWebhookInterface {
+	return newSecurityEventWebhooks(c)
 }
 
 func (c *ProjectcalicoV3Client) StagedGlobalNetworkPolicies() StagedGlobalNetworkPolicyInterface {

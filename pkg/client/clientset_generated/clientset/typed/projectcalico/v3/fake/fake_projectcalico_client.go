@@ -146,6 +146,10 @@ func (c *FakeProjectcalicoV3) RemoteClusterConfigurations() v3.RemoteClusterConf
 	return &FakeRemoteClusterConfigurations{c}
 }
 
+func (c *FakeProjectcalicoV3) SecurityEventWebhooks() v3.SecurityEventWebhookInterface {
+	return &FakeSecurityEventWebhooks{c}
+}
+
 func (c *FakeProjectcalicoV3) StagedGlobalNetworkPolicies() v3.StagedGlobalNetworkPolicyInterface {
 	return &FakeStagedGlobalNetworkPolicies{c}
 }

@@ -70,6 +70,8 @@ type ProfileExpansion interface{}
 
 type RemoteClusterConfigurationExpansion interface{}
 
+type SecurityEventWebhookExpansion interface{}
+
 type StagedGlobalNetworkPolicyExpansion interface{}
 
 type StagedKubernetesNetworkPolicyExpansion interface{}

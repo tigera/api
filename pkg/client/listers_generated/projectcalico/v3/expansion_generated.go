@@ -152,6 +152,10 @@ type ProfileListerExpansion interface{}
 // RemoteClusterConfigurationLister.
 type RemoteClusterConfigurationListerExpansion interface{}
 
+// SecurityEventWebhookListerExpansion allows custom methods to be added to
+// SecurityEventWebhookLister.
+type SecurityEventWebhookListerExpansion interface{}
+
 // StagedGlobalNetworkPolicyListerExpansion allows custom methods to be added to
 // StagedGlobalNetworkPolicyLister.
 type StagedGlobalNetworkPolicyListerExpansion interface{}

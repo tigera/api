@@ -84,6 +84,14 @@ const (
 	FloatingIPsDisabled FloatingIPType = "Disabled"
 )
 
+// +kubebuilder:validation:Enum=Enabled;Disabled
+type WindowsManageFirewallRulesMode string
+
+const (
+	WindowsManageFirewallRulesEnabled  WindowsManageFirewallRulesMode = "Enabled"
+	WindowsManageFirewallRulesDisabled WindowsManageFirewallRulesMode = "Disabled"
+)
+
 // FelixConfigurationSpec contains the values of the Felix configuration.
 type FelixConfigurationSpec struct {
 	// UseInternalDataplaneDriver, if true, Felix will use its internal dataplane programming logic.  If false, it
@@ -452,6 +460,22 @@ type FelixConfigurationSpec struct {
 	// +optional
 	// +kubebuilder:validation:Pattern=`^(?i)(Off|Info|Debug)?$`
 	BPFLogLevel string `json:"bpfLogLevel,omitempty" validate:"omitempty,bpfLogLevel"`
+	// BPFLogFilters is a map of key=values where the value is
+	// a pcap filter expression and the key is an interface name with 'all'
+	// denoting all interfaces, 'weps' all workload endpoints and 'heps' all host
+	// endpoints.
+	//
+	// When specified as an env var, it accepts a comma-separated list of
+	// key=values.
+	// [Default: unset - means all debug logs are emitted]
+	// +optional
+	BPFLogFilters *map[string]string `json:"bpfLogFilters,omitempty" validate:"omitempty,bpfLogFilters"`
+	// BPFCTLBLogFilter specifies, what is logged by connect time load balancer when BPFLogLevel is
+	// debug. Currently has to be specified as 'all' when BPFLogFilters is set
+	// to see CTLB logs.
+	// [Default: unset - means logs are emitted when BPFLogLevel id debug and BPFLogFilters not set.]
+	// +optional
+	BPFCTLBLogFilter string `json:"bpfCTLBLogFilter,omitempty" validate:"omitempty"`
 	// BPFDataIfacePattern is a regular expression that controls which interfaces Felix should attach BPF programs to
 	// in order to catch traffic to/from the network.  This needs to match the interfaces that Calico workload traffic
 	// flows over as well as any interfaces that handle incoming traffic to nodeports and services from outside the
@@ -534,6 +558,15 @@ type FelixConfigurationSpec struct {
 	// BPFPolicyDebugEnabled when true, Felix records detailed information
 	// about the BPF policy programs, which can be examined with the calico-bpf command-line tool.
 	BPFPolicyDebugEnabled *bool `json:"bpfPolicyDebugEnabled,omitempty"`
+	// BPFForceTrackPacketsFromIfaces in BPF mode, forces traffic from these interfaces
+	// to skip Calico's iptables NOTRACK rule, allowing traffic from those interfaces to be
+	// tracked by Linux conntrack.  Should only be used for interfaces that are not used for
+	// the Calico fabric.  For example, a docker bridge device for non-Calico-networked
+	// containers. [Default: docker+]
+	BPFForceTrackPacketsFromIfaces *[]string `json:"bpfForceTrackPacketsFromIfaces,omitempty" validate:"omitempty,ifaceFilterSlice"`
+	// BPFDisableGROForIfaces is a regular expression that controls which interfaces Felix should disable the
+	// Generic Receive Offload [GRO] option.  It should not match the workload interfaces (usually named cali...).
+	BPFDisableGROForIfaces string `json:"bpfDisableGROForIfaces,omitempty" validate:"omitempty,regexp"`
 
 	SyslogReporterNetwork string `json:"syslogReporterNetwork,omitempty"`
 	SyslogReporterAddress string `json:"syslogReporterAddress,omitempty"`
@@ -993,6 +1026,10 @@ type FelixConfigurationSpec struct {
 	//
 	// +optional
 	FloatingIPs *FloatingIPType `json:"floatingIPs,omitempty" validate:"omitempty"`
+
+	// WindowsManageFirewallRules configures whether or not Felix will program Windows Firewall rules. (to allow inbound access to its own metrics ports) [Default: Disabled]
+	// +optional
+	WindowsManageFirewallRules *WindowsManageFirewallRulesMode `json:"windowsManageFirewallRules,omitempty" validate:"omitempty,oneof=Enabled Disabled"`
 }
 
 type HealthTimeoutOverride struct {
