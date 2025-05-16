@@ -14,13 +14,15 @@ const (
 	KindSecurityEventWebhook     = "SecurityEventWebhook"
 	KindSecurityEventWebhookList = "SecurityEventWebhookList"
 
-	SecurityEventWebhookConsumerSlack   SecurityEventWebhookConsumer = "Slack"
-	SecurityEventWebhookConsumerJira    SecurityEventWebhookConsumer = "Jira"
-	SecurityEventWebhookConsumerGeneric SecurityEventWebhookConsumer = "Generic"
+	SecurityEventWebhookConsumerSlack        SecurityEventWebhookConsumer = "Slack"
+	SecurityEventWebhookConsumerJira         SecurityEventWebhookConsumer = "Jira"
+	SecurityEventWebhookConsumerGeneric      SecurityEventWebhookConsumer = "Generic"
+	SecurityEventWebhookConsumerAlertManager SecurityEventWebhookConsumer = "AlertManager"
 
 	SecurityEventWebhookStateEnabled  SecurityEventWebhookState = "Enabled"
 	SecurityEventWebhookStateDisabled SecurityEventWebhookState = "Disabled"
 	SecurityEventWebhookStateDebug    SecurityEventWebhookState = "Debug"
+	SecurityEventWebhookStateTest     SecurityEventWebhookState = "Test"
 )
 
 // +genclient
@@ -44,10 +46,10 @@ type SecurityEventWebhookList struct {
 }
 
 type SecurityEventWebhookSpec struct {
-	// indicates the SecurityEventWebhook intended consumer, one of: Slack, Jira
-	Consumer SecurityEventWebhookConsumer `json:"consumer" validate:"required,oneof=Slack Jira Generic"`
-	// defines the webhook desired state, one of: Enabled, Disabled or Debug
-	State SecurityEventWebhookState `json:"state" validate:"required,oneof=Enabled Disabled Debug"`
+	// indicates the SecurityEventWebhook intended consumer, one of: Slack, Jira, Generic, AlertManager
+	Consumer SecurityEventWebhookConsumer `json:"consumer" validate:"required,oneof=Slack Jira Generic AlertManager"`
+	// defines the webhook desired state, one of: Enabled, Disabled, Test or Debug
+	State SecurityEventWebhookState `json:"state" validate:"required,oneof=Enabled Disabled Test Debug"`
 	// defines the SecurityEventWebhook query to be executed against fields of SecurityEvents
 	Query string `json:"query" validate:"required"`
 	// contains the SecurityEventWebhook's configuration associated with the intended Consumer
