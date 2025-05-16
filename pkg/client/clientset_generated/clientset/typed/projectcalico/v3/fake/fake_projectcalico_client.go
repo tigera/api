@@ -7,7 +7,6 @@ package fake
 import (
 	v3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
 	rest "k8s.io/client-go/rest"
-	"k8s.io/client-go/rest/fake"
 	testing "k8s.io/client-go/testing"
 )
 
@@ -16,172 +15,172 @@ type FakeProjectcalicoV3 struct {
 }
 
 func (c *FakeProjectcalicoV3) AlertExceptions() v3.AlertExceptionInterface {
-	return newFakeAlertExceptions(c)
+	return &FakeAlertExceptions{c}
 }
 
 func (c *FakeProjectcalicoV3) AuthenticationReviews() v3.AuthenticationReviewInterface {
-	return newFakeAuthenticationReviews(c)
+	return &FakeAuthenticationReviews{c}
 }
 
 func (c *FakeProjectcalicoV3) AuthorizationReviews() v3.AuthorizationReviewInterface {
-	return newFakeAuthorizationReviews(c)
+	return &FakeAuthorizationReviews{c}
 }
 
 func (c *FakeProjectcalicoV3) BFDConfigurations() v3.BFDConfigurationInterface {
-	return newFakeBFDConfigurations(c)
+	return &FakeBFDConfigurations{c}
 }
 
 func (c *FakeProjectcalicoV3) BGPConfigurations() v3.BGPConfigurationInterface {
-	return newFakeBGPConfigurations(c)
+	return &FakeBGPConfigurations{c}
 }
 
 func (c *FakeProjectcalicoV3) BGPFilters() v3.BGPFilterInterface {
-	return newFakeBGPFilters(c)
+	return &FakeBGPFilters{c}
 }
 
 func (c *FakeProjectcalicoV3) BGPPeers() v3.BGPPeerInterface {
-	return newFakeBGPPeers(c)
+	return &FakeBGPPeers{c}
 }
 
 func (c *FakeProjectcalicoV3) BlockAffinities() v3.BlockAffinityInterface {
-	return newFakeBlockAffinities(c)
+	return &FakeBlockAffinities{c}
 }
 
 func (c *FakeProjectcalicoV3) CalicoNodeStatuses() v3.CalicoNodeStatusInterface {
-	return newFakeCalicoNodeStatuses(c)
+	return &FakeCalicoNodeStatuses{c}
 }
 
 func (c *FakeProjectcalicoV3) ClusterInformations() v3.ClusterInformationInterface {
-	return newFakeClusterInformations(c)
+	return &FakeClusterInformations{c}
 }
 
 func (c *FakeProjectcalicoV3) DeepPacketInspections(namespace string) v3.DeepPacketInspectionInterface {
-	return newFakeDeepPacketInspections(c, namespace)
+	return &FakeDeepPacketInspections{c, namespace}
 }
 
 func (c *FakeProjectcalicoV3) EgressGatewayPolicies() v3.EgressGatewayPolicyInterface {
-	return newFakeEgressGatewayPolicies(c)
+	return &FakeEgressGatewayPolicies{c}
 }
 
 func (c *FakeProjectcalicoV3) ExternalNetworks() v3.ExternalNetworkInterface {
-	return newFakeExternalNetworks(c)
+	return &FakeExternalNetworks{c}
 }
 
 func (c *FakeProjectcalicoV3) FelixConfigurations() v3.FelixConfigurationInterface {
-	return newFakeFelixConfigurations(c)
+	return &FakeFelixConfigurations{c}
 }
 
 func (c *FakeProjectcalicoV3) GlobalAlerts() v3.GlobalAlertInterface {
-	return newFakeGlobalAlerts(c)
+	return &FakeGlobalAlerts{c}
 }
 
 func (c *FakeProjectcalicoV3) GlobalAlertTemplates() v3.GlobalAlertTemplateInterface {
-	return newFakeGlobalAlertTemplates(c)
+	return &FakeGlobalAlertTemplates{c}
 }
 
 func (c *FakeProjectcalicoV3) GlobalNetworkPolicies() v3.GlobalNetworkPolicyInterface {
-	return newFakeGlobalNetworkPolicies(c)
+	return &FakeGlobalNetworkPolicies{c}
 }
 
 func (c *FakeProjectcalicoV3) GlobalNetworkSets() v3.GlobalNetworkSetInterface {
-	return newFakeGlobalNetworkSets(c)
+	return &FakeGlobalNetworkSets{c}
 }
 
 func (c *FakeProjectcalicoV3) GlobalReports() v3.GlobalReportInterface {
-	return newFakeGlobalReports(c)
+	return &FakeGlobalReports{c}
 }
 
 func (c *FakeProjectcalicoV3) GlobalReportTypes() v3.GlobalReportTypeInterface {
-	return newFakeGlobalReportTypes(c)
+	return &FakeGlobalReportTypes{c}
 }
 
 func (c *FakeProjectcalicoV3) GlobalThreatFeeds() v3.GlobalThreatFeedInterface {
-	return newFakeGlobalThreatFeeds(c)
+	return &FakeGlobalThreatFeeds{c}
 }
 
 func (c *FakeProjectcalicoV3) HostEndpoints() v3.HostEndpointInterface {
-	return newFakeHostEndpoints(c)
+	return &FakeHostEndpoints{c}
 }
 
 func (c *FakeProjectcalicoV3) IPAMConfigurations() v3.IPAMConfigurationInterface {
-	return newFakeIPAMConfigurations(c)
+	return &FakeIPAMConfigurations{c}
 }
 
 func (c *FakeProjectcalicoV3) IPPools() v3.IPPoolInterface {
-	return newFakeIPPools(c)
+	return &FakeIPPools{c}
 }
 
 func (c *FakeProjectcalicoV3) IPReservations() v3.IPReservationInterface {
-	return newFakeIPReservations(c)
+	return &FakeIPReservations{c}
 }
 
 func (c *FakeProjectcalicoV3) KubeControllersConfigurations() v3.KubeControllersConfigurationInterface {
-	return newFakeKubeControllersConfigurations(c)
+	return &FakeKubeControllersConfigurations{c}
 }
 
 func (c *FakeProjectcalicoV3) LicenseKeys() v3.LicenseKeyInterface {
-	return newFakeLicenseKeys(c)
+	return &FakeLicenseKeys{c}
 }
 
 func (c *FakeProjectcalicoV3) ManagedClusters() v3.ManagedClusterInterface {
-	return newFakeManagedClusters(c)
+	return &FakeManagedClusters{c}
 }
 
 func (c *FakeProjectcalicoV3) NetworkPolicies(namespace string) v3.NetworkPolicyInterface {
-	return newFakeNetworkPolicies(c, namespace)
+	return &FakeNetworkPolicies{c, namespace}
 }
 
 func (c *FakeProjectcalicoV3) NetworkSets(namespace string) v3.NetworkSetInterface {
-	return newFakeNetworkSets(c, namespace)
+	return &FakeNetworkSets{c, namespace}
 }
 
 func (c *FakeProjectcalicoV3) PacketCaptures(namespace string) v3.PacketCaptureInterface {
-	return newFakePacketCaptures(c, namespace)
+	return &FakePacketCaptures{c, namespace}
 }
 
 func (c *FakeProjectcalicoV3) PolicyRecommendationScopes() v3.PolicyRecommendationScopeInterface {
-	return newFakePolicyRecommendationScopes(c)
+	return &FakePolicyRecommendationScopes{c}
 }
 
 func (c *FakeProjectcalicoV3) Profiles() v3.ProfileInterface {
-	return newFakeProfiles(c)
+	return &FakeProfiles{c}
 }
 
 func (c *FakeProjectcalicoV3) RemoteClusterConfigurations() v3.RemoteClusterConfigurationInterface {
-	return newFakeRemoteClusterConfigurations(c)
+	return &FakeRemoteClusterConfigurations{c}
 }
 
 func (c *FakeProjectcalicoV3) SecurityEventWebhooks() v3.SecurityEventWebhookInterface {
-	return newFakeSecurityEventWebhooks(c)
+	return &FakeSecurityEventWebhooks{c}
 }
 
 func (c *FakeProjectcalicoV3) StagedGlobalNetworkPolicies() v3.StagedGlobalNetworkPolicyInterface {
-	return newFakeStagedGlobalNetworkPolicies(c)
+	return &FakeStagedGlobalNetworkPolicies{c}
 }
 
 func (c *FakeProjectcalicoV3) StagedKubernetesNetworkPolicies(namespace string) v3.StagedKubernetesNetworkPolicyInterface {
-	return newFakeStagedKubernetesNetworkPolicies(c, namespace)
+	return &FakeStagedKubernetesNetworkPolicies{c, namespace}
 }
 
 func (c *FakeProjectcalicoV3) StagedNetworkPolicies(namespace string) v3.StagedNetworkPolicyInterface {
-	return newFakeStagedNetworkPolicies(c, namespace)
+	return &FakeStagedNetworkPolicies{c, namespace}
 }
 
 func (c *FakeProjectcalicoV3) Tiers() v3.TierInterface {
-	return newFakeTiers(c)
+	return &FakeTiers{c}
 }
 
 func (c *FakeProjectcalicoV3) UISettings() v3.UISettingsInterface {
-	return newFakeUISettings(c)
+	return &FakeUISettings{c}
 }
 
 func (c *FakeProjectcalicoV3) UISettingsGroups() v3.UISettingsGroupInterface {
-	return newFakeUISettingsGroups(c)
+	return &FakeUISettingsGroups{c}
 }
 
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeProjectcalicoV3) RESTClient() rest.Interface {
-	ret := &fake.RESTClient{}
+	var ret *rest.RESTClient
 	return ret
 }
