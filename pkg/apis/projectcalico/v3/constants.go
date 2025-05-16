@@ -69,18 +69,13 @@ const (
 
 	// Some internally defined resource types that map directly onto the kubernetes resources.  These are only
 	// available through the backend client.
-	KindK8sEndpoints      = "K8sEndpoints"
-	KindK8sService        = "K8sService"
-	KindK8sPod            = "Pod"
-	KindK8sNamespace      = "Namespace"
-	KindK8sServiceAccount = "ServiceAccount"
-	KindFlowPublic        = "Public"
-	KindFlowPrivate       = "Private"
+	KindK8sEndpoints = "K8sEndpoints"
+	KindK8sService   = "K8sService"
+	KindK8sPod       = "Pod"
+	KindFlowPublic   = "Public"
+	KindFlowPrivate  = "Private"
 
 	// Enum options for enable/disable fields
 	Enabled  = "Enabled"
 	Disabled = "Disabled"
-
-	// Host name used for Service LoadBalancer
-	VirtualLoadBalancer = "load-balancer"
 )

@@ -21,6 +21,7 @@ import (
 
 	. "github.com/onsi/ginkgo/extensions/table"
 	. "github.com/onsi/gomega"
+
 	"github.com/tigera/api/pkg/lib/numorstring"
 )
 
