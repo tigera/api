@@ -48,8 +48,3 @@ informer-gen "$@" \
 		--output-pkg "github.com/tigera/api/pkg/client/informers_generated" \
 		--plural-exceptions "UISettings:UISettings" \
 		"github.com/tigera/api/pkg/apis/projectcalico/v3"
-
-# Patch the fake Calico client to return a fake.RESTClient instead of nil.
-# This prevents flakes in some tests where a background goroutine tries to
-# use the REST client.
-git apply -p2 < return-fake-rest-client.patch
