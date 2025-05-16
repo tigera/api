@@ -17,6 +17,7 @@ type ProjectcalicoV3Interface interface {
 	AlertExceptionsGetter
 	AuthenticationReviewsGetter
 	AuthorizationReviewsGetter
+	BFDConfigurationsGetter
 	BGPConfigurationsGetter
 	BGPFiltersGetter
 	BGPPeersGetter
@@ -71,6 +72,10 @@ func (c *ProjectcalicoV3Client) AuthenticationReviews() AuthenticationReviewInte
 
 func (c *ProjectcalicoV3Client) AuthorizationReviews() AuthorizationReviewInterface {
 	return newAuthorizationReviews(c)
+}
+
+func (c *ProjectcalicoV3Client) BFDConfigurations() BFDConfigurationInterface {
+	return newBFDConfigurations(c)
 }
 
 func (c *ProjectcalicoV3Client) BGPConfigurations() BGPConfigurationInterface {

@@ -26,6 +26,10 @@ func (c *FakeProjectcalicoV3) AuthorizationReviews() v3.AuthorizationReviewInter
 	return &FakeAuthorizationReviews{c}
 }
 
+func (c *FakeProjectcalicoV3) BFDConfigurations() v3.BFDConfigurationInterface {
+	return &FakeBFDConfigurations{c}
+}
+
 func (c *FakeProjectcalicoV3) BGPConfigurations() v3.BGPConfigurationInterface {
 	return &FakeBGPConfigurations{c}
 }

@@ -45,6 +45,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().AuthenticationReviews().Informer()}, nil
 	case v3.SchemeGroupVersion.WithResource("authorizationreviews"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().AuthorizationReviews().Informer()}, nil
+	case v3.SchemeGroupVersion.WithResource("bfdconfigurations"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().BFDConfigurations().Informer()}, nil
 	case v3.SchemeGroupVersion.WithResource("bgpconfigurations"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Projectcalico().V3().BGPConfigurations().Informer()}, nil
 	case v3.SchemeGroupVersion.WithResource("bgpfilters"):

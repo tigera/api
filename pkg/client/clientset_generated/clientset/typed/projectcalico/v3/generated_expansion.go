@@ -10,6 +10,8 @@ type AuthenticationReviewExpansion interface{}
 
 type AuthorizationReviewExpansion interface{}
 
+type BFDConfigurationExpansion interface{}
+
 type BGPConfigurationExpansion interface{}
 
 type BGPFilterExpansion interface{}

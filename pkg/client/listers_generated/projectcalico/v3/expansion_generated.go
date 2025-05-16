@@ -16,6 +16,10 @@ type AuthenticationReviewListerExpansion interface{}
 // AuthorizationReviewLister.
 type AuthorizationReviewListerExpansion interface{}
 
+// BFDConfigurationListerExpansion allows custom methods to be added to
+// BFDConfigurationLister.
+type BFDConfigurationListerExpansion interface{}
+
 // BGPConfigurationListerExpansion allows custom methods to be added to
 // BGPConfigurationLister.
 type BGPConfigurationListerExpansion interface{}

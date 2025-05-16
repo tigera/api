@@ -21,6 +21,7 @@ const (
 	SecurityEventWebhookStateEnabled  SecurityEventWebhookState = "Enabled"
 	SecurityEventWebhookStateDisabled SecurityEventWebhookState = "Disabled"
 	SecurityEventWebhookStateDebug    SecurityEventWebhookState = "Debug"
+	SecurityEventWebhookStateTest     SecurityEventWebhookState = "Test"
 )
 
 // +genclient
@@ -47,7 +48,7 @@ type SecurityEventWebhookSpec struct {
 	// indicates the SecurityEventWebhook intended consumer, one of: Slack, Jira
 	Consumer SecurityEventWebhookConsumer `json:"consumer" validate:"required,oneof=Slack Jira Generic"`
 	// defines the webhook desired state, one of: Enabled, Disabled or Debug
-	State SecurityEventWebhookState `json:"state" validate:"required,oneof=Enabled Disabled Debug"`
+	State SecurityEventWebhookState `json:"state" validate:"required,oneof=Enabled Disabled Test Debug"`
 	// defines the SecurityEventWebhook query to be executed against fields of SecurityEvents
 	Query string `json:"query" validate:"required"`
 	// contains the SecurityEventWebhook's configuration associated with the intended Consumer

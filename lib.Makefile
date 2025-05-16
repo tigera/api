@@ -223,8 +223,8 @@ ifeq ($(GIT_USE_SSH),true)
 	GIT_CONFIG_SSH ?= git config --global url."ssh://git@github.com/".insteadOf "https://github.com/";
 endif
 
-# Get version from git.
-GIT_VERSION:=$(shell git describe --tags --dirty --always --abbrev=12)
+# Get version from git. We allow setting this manually for the hashrelease process.
+GIT_VERSION ?= $(shell git describe --first-parent --tags --dirty --always --abbrev=12)
 
 # Figure out version information.  To support builds from release tarballs, we default to
 # <unknown> if this isn't a git checkout.
@@ -234,7 +234,7 @@ BUILD_ID:=$(shell git rev-parse HEAD || uuidgen | sed 's/-//g')
 # Lazily set the git version we embed into the binaries we build. We want the
 # git tag at the time we build the binary.
 # Variables elsewhere that depend on this (such as LDFLAGS) must also be lazy.
-GIT_DESCRIPTION=$(shell git describe --tags --dirty --always --abbrev=12 || echo '<unknown>')
+GIT_DESCRIPTION=$(shell git describe --first-parent --tags --dirty --always --abbrev=12 || echo '<unknown>')
 
 # Calculate a timestamp for any build artifacts.
 ifneq ($(OS),Windows_NT)
@@ -307,6 +307,54 @@ DOCKER_RUN := mkdir -p $(REPO_ROOT)/.go-pkg-cache bin $(GOMOD_CACHE) && \
 		-w /go/src/$(PACKAGE_NAME)
 
 DOCKER_GO_BUILD := $(DOCKER_RUN) $(CALICO_BUILD)
+
+# Host native build images
+HOST_NATIVE_BUILD_IMAGE ?= calico/host-native-build
+
+.PHONY: host-native-build
+host-native-build: $(wildcard $(REPO_DIR)/third_party/host-native/Dockerfile.*)
+	cd $(REPO_DIR)/third_party/host-native && \
+		docker buildx bake --load --pull \
+		-f $(REPO_DIR)/third_party/host-native/host-native-build-bake.hcl
+
+DOCKER_HOST_NATIVE_RUN := docker run --rm \
+	--net=host \
+	--init \
+	--user $(LOCAL_USER_ID):$(LOCAL_GROUP_ID) \
+	$(EXTRA_DOCKER_ARGS) \
+	-v $(REPO_ROOT):/go/src/github.com/projectcalico/calico:rw \
+	-w /go/src/$(PACKAGE_NAME)
+
+# This function normalizes versions to be compatible with rpm build system
+# and builds the rpm package.
+#
+# For Calico components:
+# * Official release: v3.20.1 -> v3.20.1-1
+# * Early preview release: v3.20.0-1.1-calient-0.dev-4-gc210c47321cf -> v3.20.0~pre1.1-4.20240823gitc210c47321cf
+#
+# For third-party components built by us:
+# * Official release: v3.1.6 -> v3.1.6-1
+# * Early preview release: v3.1.6 -> v3.1.6~pre1.1-4.20240823gitc210c47321cf
+GIT_DESCRIBE_0 = $(shell git describe --first-parent --tags --abbrev=0)
+define host_native_rpm_build
+	$(eval version := $(firstword $(subst -calient, ,$(subst v,,$(3)))))
+	$(eval release := '1')
+	$(ifeq ($(findstring -,$(GIT_DESCRIBE_0)),-) \
+		$(eval hash := $(subst $(GIT_DESCRIBE_0)-,,$(shell git describe --first-parent --tags)))
+		$(eval version := $(subst -,~pre,$(version))) \
+		$(eval release := $(subst -g,.$(shell date -u +'%Y%m%d')git,$(hash))) \
+	endif)
+
+	sed 's/@VERSION@/$(version)/g' rhel/$(2).spec.in > rhel/$(2).spec
+	sed -i 's/@RELEASE@/$(release)/g' rhel/$(2).spec
+
+	mkdir -p package/$(1) && $(DOCKER_HOST_NATIVE_RUN) \
+		$(HOST_NATIVE_BUILD_IMAGE):$(1) \
+			sh -c 'rpmbuild \
+				--define "_topdir $$PWD/package/$(1)" \
+				--define "_sourcedir $$PWD" \
+				-ba rhel/$(2).spec'
+endef
 
 # A target that does nothing but it always stale, used to force a rebuild on certain targets based on some non-file criteria.
 .PHONY: force-rebuild
@@ -602,7 +650,7 @@ fix go-fmt goimports:
 
 check-fmt:
 	@echo "Checking code formatting.  Any listed files don't match goimports:"
-	$(DOCKER_RUN) $(CALICO_BUILD) bash -c 'exec 5>&1; ! [[ `find . -iname "*.go" ! -wholename "./vendor/*" | xargs goimports -l -local github.com/projectcalico/calico/ | tee >(cat >&5)` ]]'
+	$(DOCKER_RUN) $(CALICO_BUILD) bash -c 'exec 5>&1; ! [[ `find . -iname "*.go" ! -wholename "./vendor/*" ! -wholename "./package/*" | xargs goimports -l -local github.com/projectcalico/calico/ | tee >(cat >&5)` ]]'
 
 .PHONY: pre-commit
 pre-commit:
@@ -610,7 +658,7 @@ pre-commit:
 
 .PHONY: install-git-hooks
 install-git-hooks:
-	$(REPO_DIR)/install-git-hooks
+	${install_hooks}
 
 .PHONY: check-module-path-tigera-api
 check-module-path-tigera-api:
@@ -930,11 +978,11 @@ fetch-all:
 	git fetch --all -q
 
 # git-dev-tag retrieves the dev tag for the current commit (the one are dev images are tagged with).
-git-dev-tag = $(shell git describe --tags --long --always --abbrev=12 --match "*dev*")
+git-dev-tag = $(shell git describe --first-parent --tags --long --always --abbrev=12 --match "*dev*")
 # git-release-tag-from-dev-tag gets the release version from the current commits dev tag.
 git-release-tag-from-dev-tag = $(shell echo $(call git-dev-tag) | grep -P -o "^v\d*.\d*.\d*(-.*)?(?=-$(DEV_TAG_SUFFIX))")
 # git-release-tag-for-current-commit gets the release tag for the current commit if there is one.
-git-release-tag-for-current-commit = $(shell git describe --tags --exact-match --exclude "*dev*")
+git-release-tag-for-current-commit = $(shell git describe --first-parent --tags --exact-match --exclude "*dev*")
 
 # release-branch-for-tag finds the latest branch that corresponds to the given tag.
 release-branch-for-tag = $(firstword $(shell git --no-pager branch --format='%(refname:short)' --contains $1 | grep -P "^release"))
@@ -1022,7 +1070,7 @@ ifdef EXPECTED_RELEASE_TAG
 		@echo "Failed to verify release tag$(comma) expected release version is $(EXPECTED_RELEASE_TAG)$(comma) actual is $(RELEASE_TAG)."\
 		&& exit 1)
 endif
-	$(eval NEXT_RELEASE_VERSION = $(shell echo "$(call git-release-tag-from-dev-tag)" | awk '{ split($$0,tag,"-"); if (tag[2] ~ /^1\./) { split(tag[2],subver,"."); print tag[1]"-"subver[1]".subver[2]+1" } else { split(tag[1],ver,"."); print ver[1]"."ver[2]"."ver[3]+1 } }'))
+	$(eval NEXT_RELEASE_VERSION := $(shell echo "$(call git-release-tag-from-dev-tag)" | awk '{ split($$0,tag,"-"); if (tag[2] ~ /^1\./) { split(tag[2],subver,"."); print tag[1]"-"subver[1]+1".0" } else { split(tag[1],ver,"."); print ver[1]"."ver[2]+1"."ver[3] } }'))
 ifndef IMAGE_ONLY
 	$(MAKE) maybe-tag-release maybe-push-release-tag\
 		RELEASE_TAG=$(RELEASE_TAG) BRANCH=$(RELEASE_BRANCH) DEV_TAG=$(DEV_TAG)
@@ -1283,7 +1331,7 @@ $(KIND): $(KIND_DIR)/.kind-updated-$(KIND_VERSION)
 
 $(KUBECTL)-$(K8S_VERSION):
 	mkdir -p $(KIND_DIR)
-	curl -L https://storage.googleapis.com/kubernetes-release/release/$(K8S_VERSION)/bin/linux/$(ARCH)/kubectl -o $@
+	curl -fsSL --retry 5 https://dl.k8s.io/release/$(K8S_VERSION)/bin/linux/$(ARCH)/kubectl -o $@
 	chmod +x $@
 
 $(KIND_DIR)/.kubectl-updated-$(K8S_VERSION): $(KUBECTL)-$(K8S_VERSION)

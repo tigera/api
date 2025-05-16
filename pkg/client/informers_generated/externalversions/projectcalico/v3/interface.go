@@ -16,6 +16,8 @@ type Interface interface {
 	AuthenticationReviews() AuthenticationReviewInformer
 	// AuthorizationReviews returns a AuthorizationReviewInformer.
 	AuthorizationReviews() AuthorizationReviewInformer
+	// BFDConfigurations returns a BFDConfigurationInformer.
+	BFDConfigurations() BFDConfigurationInformer
 	// BGPConfigurations returns a BGPConfigurationInformer.
 	BGPConfigurations() BGPConfigurationInformer
 	// BGPFilters returns a BGPFilterInformer.
@@ -116,6 +118,11 @@ func (v *version) AuthenticationReviews() AuthenticationReviewInformer {
 // AuthorizationReviews returns a AuthorizationReviewInformer.
 func (v *version) AuthorizationReviews() AuthorizationReviewInformer {
 	return &authorizationReviewInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// BFDConfigurations returns a BFDConfigurationInformer.
+func (v *version) BFDConfigurations() BFDConfigurationInformer {
+	return &bFDConfigurationInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // BGPConfigurations returns a BGPConfigurationInformer.

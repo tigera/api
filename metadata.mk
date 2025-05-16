@@ -3,21 +3,21 @@
 #################################################################################################
 
 # The version of github.com/projectcalico/go-build to use.
-GO_BUILD_VER=v0.91
+GO_BUILD_VER=v0.92
 # Env var to ACK Ginkgo deprecation warnings, may need updating with go-build.
 ACK_GINKGO=ACK_GINKGO_DEPRECATIONS=1.16.5
 
 # Version of Kubernetes to use for tests, bitnami/kubectl, and kubectl binary release in
 # compliance benchmarker, confd, and kube-controllers.
-K8S_VERSION=v1.28.12
+K8S_VERSION=v1.29.10
 
 # Version of various tools used in the build and tests.
 COREDNS_VERSION=1.5.2
 ETCD_VERSION=v3.5.6
 HELM_VERSION=v3.11.3
-KINDEST_NODE_VERSION=v1.27.11
+KINDEST_NODE_VERSION=v1.29.8
 KINDEST_NODE_VERSION_DUAL_TOR=v1.24.7
-KIND_VERSION=v0.22.0
+KIND_VERSION=v0.24.0
 PROTOC_VER=v0.1
 UBI8_VERSION=8.10
 UBI9_VERSION=9.4
@@ -42,7 +42,7 @@ GIT_USE_SSH = true
 EXTRA_DOCKER_ARGS += -e GOPRIVATE=github.com/tigera/*
 
 # The version of BIRD to use for calico/node builds and confd tests.
-BIRD_VERSION=v0.3.3-208-g1e2ff99d
+BIRD_VERSION=v0.3.3-211-g9111ec3c
 
 # DEV_REGISTRIES configures the container image registries which are built from this
 # repository.
@@ -63,6 +63,11 @@ WINDOWS_DIST = dist/windows
 WINDOWS_HPC_VERSION ?= v1.0.0
 # The Windows versions used as base for Calico Windows images
 WINDOWS_VERSIONS ?= 1809 ltsc2022
+
+# The CNI plugin and flannel code that will be cloned and rebuilt with this repo's go-build image
+# whenever the cni-plugin image is created.
+CNI_VERSION=master
+FLANNEL_VERSION=main
 
 # THIRD_PARTY_REGISTRY configures the third-party registry that serves intermediate base image
 # for some Calico Enterprise components. They are never released directly to public.
