@@ -39,7 +39,7 @@ GIT_USE_SSH = true
 EXTRA_DOCKER_ARGS += -e GOPRIVATE=github.com/tigera/*
 
 # The version of BIRD to use for calico/node builds and confd tests.
-BIRD_VERSION=v0.3.3-202-g7a77fb73
+BIRD_VERSION=v0.3.3-208-g1e2ff99d
 
 # DEV_REGISTRIES configures the container image registries which are built from this
 # repository.
@@ -60,3 +60,7 @@ WINDOWS_DIST = dist/windows
 WINDOWS_HPC_VERSION ?= v1.0.0
 # The Windows versions used as base for Calico Windows images
 WINDOWS_VERSIONS ?= 1809 ltsc2022
+
+# The CNI plugin and flannel code that will be cloned and rebuilt with this repo's go-build image
+# whenever the cni-plugin image is created.
+CNI_VERSION=master
