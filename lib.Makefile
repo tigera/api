@@ -325,29 +325,12 @@ DOCKER_HOST_NATIVE_RUN := docker run --rm \
 	-v $(REPO_ROOT):/go/src/github.com/projectcalico/calico:rw \
 	-w /go/src/$(PACKAGE_NAME)
 
-# This function normalizes versions to be compatible with rpm build system
-# and builds the rpm package.
-#
-# For Calico components:
-# * Official release: v3.20.1 -> v3.20.1-1
-# * Early preview release: v3.20.0-1.1-calient-0.dev-4-gc210c47321cf -> v3.20.0~pre1.1-4.20240823gitc210c47321cf
-#
-# For third-party components built by us:
-# * Official release: v3.1.6 -> v3.1.6-1
-# * Early preview release: v3.1.6 -> v3.1.6~pre1.1-4.20240823gitc210c47321cf
-GIT_DESCRIBE_0 = $(shell git describe --first-parent --tags --abbrev=0)
+# This function replaces the version string in the spec template and builds the rpm package.
 define host_native_rpm_build
-	$(eval version := $(firstword $(subst -calient, ,$(subst v,,$(3)))))
-	$(eval release := '1')
-	$(ifeq ($(findstring -,$(GIT_DESCRIBE_0)),-) \
-		$(eval hash := $(subst $(GIT_DESCRIBE_0)-,,$(shell git describe --first-parent --tags)))
-		$(eval version := $(subst -,~pre,$(version))) \
-		$(eval release := $(subst -g,.$(shell date -u +'%Y%m%d')git,$(hash))) \
-	endif)
+	$(eval version := $(shell $(REPO_ROOT)/hack/generate-rpm-version.sh $(REPO_ROOT) $(3)))
 
 	sed 's/@VERSION@/$(version)/g' rhel/$(2).spec.in > rhel/$(2).spec
-	sed -i 's/@RELEASE@/$(release)/g' rhel/$(2).spec
-
+	
 	mkdir -p package/$(1) && $(DOCKER_HOST_NATIVE_RUN) \
 		$(HOST_NATIVE_BUILD_IMAGE):$(1) \
 			sh -c 'rpmbuild \
@@ -650,7 +633,7 @@ fix go-fmt goimports:
 
 check-fmt:
 	@echo "Checking code formatting.  Any listed files don't match goimports:"
-	$(DOCKER_RUN) $(CALICO_BUILD) bash -c 'exec 5>&1; ! [[ `find . -iname "*.go" ! -wholename "./vendor/*" ! -wholename "./package/*" | xargs goimports -l -local github.com/projectcalico/calico/ | tee >(cat >&5)` ]]'
+	$(DOCKER_RUN) $(CALICO_BUILD) bash -c 'exec 5>&1; ! [[ `find . -iname "*.go" ! -wholename "./containernetworking-plugins/*" ! -wholename "./vendor/*" ! -wholename "./package/*" | xargs goimports -l -local github.com/projectcalico/calico/ | tee >(cat >&5)` ]]'
 
 .PHONY: pre-commit
 pre-commit:
@@ -1383,7 +1366,7 @@ publish-charts-oci:
 bin/yq:
 	mkdir -p bin
 	$(eval TMP := $(shell mktemp -d))
-	curl -sSf -L --retry 5 -o $(TMP)/yq4.tar.gz https://github.com/mikefarah/yq/releases/download/v4.27.3/yq_linux_$(BUILDARCH).tar.gz
+	curl -sSf -L --retry 5 -o $(TMP)/yq4.tar.gz https://github.com/mikefarah/yq/releases/download/v4.44.5/yq_linux_$(BUILDARCH).tar.gz
 	tar -zxvf $(TMP)/yq4.tar.gz -C $(TMP)
 	mv $(TMP)/yq_linux_$(BUILDARCH) bin/yq
 

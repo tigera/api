@@ -29,19 +29,22 @@ client-gen "$@" \
 		--plural-exceptions "UISettings:UISettings" \
 		--input-base "github.com/tigera/api/pkg/apis/" \
 		--input "projectcalico/v3" \
+		--output-dir "${REPO_ROOT}/pkg/client/clientset_generated" \
 		--clientset-path "github.com/tigera/api/pkg/client/clientset_generated/" \
 		--clientset-name "clientset"
 # generate lister
 lister-gen "$@" \
 		--go-header-file "${REPO_ROOT}/hack/boilerplate/boilerplate.go.txt" \
+		--output-dir "${REPO_ROOT}/pkg/client/listers_generated" \
+		--output-pkg "github.com/tigera/api/pkg/client/listers_generated" \
 		--plural-exceptions "UISettings:UISettings" \
-		--input-dirs="github.com/tigera/api/pkg/apis/projectcalico/v3" \
-		--output-package "github.com/tigera/api/pkg/client/listers_generated"
+		"github.com/tigera/api/pkg/apis/projectcalico/v3"
 # generate informer
 informer-gen "$@" \
 		--go-header-file "${REPO_ROOT}/hack/boilerplate/boilerplate.go.txt" \
-		--plural-exceptions "UISettings:UISettings" \
-		--input-dirs "github.com/tigera/api/pkg/apis/projectcalico/v3" \
 		--versioned-clientset-package "github.com/tigera/api/pkg/client/clientset_generated/clientset" \
 		--listers-package "github.com/tigera/api/pkg/client/listers_generated" \
-		--output-package "github.com/tigera/api/pkg/client/informers_generated"
+		--output-dir "${REPO_ROOT}/pkg/client/informers_generated" \
+		--output-pkg "github.com/tigera/api/pkg/client/informers_generated" \
+		--plural-exceptions "UISettings:UISettings" \
+		"github.com/tigera/api/pkg/apis/projectcalico/v3"
