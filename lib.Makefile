@@ -151,8 +151,7 @@ endif
 # the one for the host should contain all the necessary cross-compilation tools
 # we do not need to use the arch since go-build:v0.15 now is multi-arch manifest
 GO_BUILD_IMAGE ?= calico/go-build
-CALICO_BUILD    = $(GO_BUILD_IMAGE):$(GO_BUILD_VER)-$(BUILDARCH)
-CALICO_BUILD_THIRD_PARTY    = $(GO_BUILD_IMAGE):$(GO_BUILD_THIRD_PARTY_VER)-$(BUILDARCH)
+CALICO_BUILD    = $(GO_BUILD_IMAGE):$(GO_BUILD_VER)
 
 # Build a binary with boring crypto support.
 # This function expects you to pass in two arguments:
@@ -308,7 +307,6 @@ DOCKER_RUN := mkdir -p $(REPO_ROOT)/.go-pkg-cache bin $(GOMOD_CACHE) && \
 		-w /go/src/$(PACKAGE_NAME)
 
 DOCKER_GO_BUILD := $(DOCKER_RUN) $(CALICO_BUILD)
-DOCKER_GO_THIRD_PARTY_BUILD := $(DOCKER_RUN) $(CALICO_BUILD_THIRD_PARTY)
 
 # A target that does nothing but it always stale, used to force a rebuild on certain targets based on some non-file criteria.
 .PHONY: force-rebuild

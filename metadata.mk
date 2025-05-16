@@ -3,26 +3,25 @@
 #################################################################################################
 
 # The version of github.com/projectcalico/go-build to use.
-GO_BUILD_VER=v0.91
-GO_BUILD_THIRD_PARTY_VER=v0.93
+GO_BUILD_VER=v0.93
 # Env var to ACK Ginkgo deprecation warnings, may need updating with go-build.
 ACK_GINKGO=ACK_GINKGO_DEPRECATIONS=1.16.5
 
-# Version of Kubernetes to use for tests, bitnami/kubectl, and kubectl binary release in
-# compliance benchmarker, confd, and kube-controllers.
-K8S_VERSION=v1.28.15
+# Version of Kubernetes to use for tests and kubectl binary release.
+K8S_VERSION=v1.29.15
+BITNAMI_K8S_VERSION=v1.29.11
 
 # Version of various tools used in the build and tests.
 COREDNS_VERSION=1.5.2
 ELASTIC_VERSION=7.17.22
 ETCD_VERSION=v3.5.6
 HELM_VERSION=v3.11.3
-KINDEST_NODE_VERSION=v1.27.11
+KINDEST_NODE_VERSION=v1.29.8
 KINDEST_NODE_VERSION_DUAL_TOR=v1.24.7
-KIND_VERSION=v0.22.0
+KIND_VERSION=v0.24.0
 PROTOC_VER=v0.1
 UBI8_VERSION=8.10
-UBI9_VERSION=9.4
+UBI9_VERSION=9.5
 
 # Configuration for Semaphore integration.
 ORGANIZATION=tigera
