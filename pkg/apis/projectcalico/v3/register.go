@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2024 Tigera, Inc. All rights reserved.
+// Copyright (c) 2019-2023 Tigera, Inc. All rights reserved.
 
 package v3
 
@@ -12,10 +12,8 @@ import (
 const GroupName = "projectcalico.org"
 
 // SchemeGroupVersion is group version used to register these objects
-var (
-	SchemeGroupVersion         = schema.GroupVersion{Group: GroupName, Version: "v3"}
-	SchemeGroupVersionInternal = schema.GroupVersion{Group: GroupName, Version: runtime.APIVersionInternal}
-)
+var SchemeGroupVersion = schema.GroupVersion{Group: GroupName, Version: "v3"}
+var SchemeGroupVersionInternal = schema.GroupVersion{Group: GroupName, Version: runtime.APIVersionInternal}
 
 var (
 	SchemeBuilder      runtime.SchemeBuilder
@@ -56,8 +54,6 @@ var (
 		&IPAMConfigurationList{},
 		&BlockAffinity{},
 		&BlockAffinityList{},
-		&Tier{},
-		&TierList{},
 
 		// Enterprise-only types.
 		&AlertException{},
@@ -96,6 +92,8 @@ var (
 		&StagedKubernetesNetworkPolicyList{},
 		&StagedNetworkPolicy{},
 		&StagedNetworkPolicyList{},
+		&Tier{},
+		&TierList{},
 		&UISettingsGroup{},
 		&UISettingsGroupList{},
 		&UISettings{},
@@ -104,8 +102,6 @@ var (
 		&ExternalNetworkList{},
 		&SecurityEventWebhook{},
 		&SecurityEventWebhookList{},
-		&BFDConfiguration{},
-		&BFDConfigurationList{},
 	}
 )
 
