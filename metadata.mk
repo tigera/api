@@ -4,6 +4,7 @@
 
 # The version of github.com/projectcalico/go-build to use.
 GO_BUILD_VER=v0.91
+GO_BUILD_THIRD_PARTY_VER=v0.93
 # Env var to ACK Ginkgo deprecation warnings, may need updating with go-build.
 ACK_GINKGO=ACK_GINKGO_DEPRECATIONS=1.16.5
 
@@ -64,6 +65,10 @@ WINDOWS_DIST = dist/windows
 WINDOWS_HPC_VERSION ?= v1.0.0
 # The Windows versions used as base for Calico Windows images
 WINDOWS_VERSIONS ?= 1809 ltsc2022
+
+# The CNI plugin and flannel code that will be cloned and rebuilt with this repo's go-build image
+# whenever the cni-plugin image is created.
+CNI_VERSION=master
 
 # THIRD_PARTY_REGISTRY configures the third-party registry that serves intermediate base image
 # for some Calico Enterprise components. They are never released directly to public.
