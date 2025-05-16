@@ -79,6 +79,9 @@ ifeq ($(ARCH),x86_64)
 	override ARCH=amd64
 endif
 
+# The list of sub-projects which build non-cluster host RPMs
+NON_CLUSTER_HOST_SUBDIRS := selinux fluent-bit node
+
 # detect the local outbound ip address
 LOCAL_IP_ENV?=$(shell ip route get 8.8.8.8 | head -1 | awk '{print $$7}')
 
@@ -224,7 +227,7 @@ ifeq ($(GIT_USE_SSH),true)
 endif
 
 # Get version from git. We allow setting this manually for the hashrelease process.
-GIT_VERSION ?= $(shell git describe --first-parent --tags --dirty --always --abbrev=12)
+GIT_VERSION ?= $(shell git describe --tags --dirty --always --abbrev=12)
 
 # Figure out version information.  To support builds from release tarballs, we default to
 # <unknown> if this isn't a git checkout.
@@ -234,7 +237,7 @@ BUILD_ID:=$(shell git rev-parse HEAD || uuidgen | sed 's/-//g')
 # Lazily set the git version we embed into the binaries we build. We want the
 # git tag at the time we build the binary.
 # Variables elsewhere that depend on this (such as LDFLAGS) must also be lazy.
-GIT_DESCRIPTION=$(shell git describe --first-parent --tags --dirty --always --abbrev=12 || echo '<unknown>')
+GIT_DESCRIPTION=$(shell git describe --tags --dirty --always --abbrev=12 || echo '<unknown>')
 
 # Calculate a timestamp for any build artifacts.
 ifneq ($(OS),Windows_NT)
@@ -279,6 +282,9 @@ GOARCH_FLAGS :=-e GOARCH=$(ARCH)
 REPO_ROOT := $(shell git rev-parse --show-toplevel)
 CERTS_PATH := $(REPO_ROOT)/hack/test/certs
 
+# TODO Remove once CALICO_BASE is updated to UBI9
+CALICO_BASE_UBI9 ?= calico/base:$(CALICO_BASE_UBI9_VER)
+
 QEMU_IMAGE ?= calico/qemu-user-static:latest
 
 # DOCKER_BUILD is the base build command used for building all images.
@@ -286,7 +292,8 @@ DOCKER_BUILD=docker buildx build --load --platform=linux/$(ARCH) --pull \
 	--build-arg QEMU_IMAGE=$(QEMU_IMAGE) \
 	--build-arg UBI8_IMAGE=$(UBI8_IMAGE) \
 	--build-arg UBI9_IMAGE=$(UBI9_IMAGE) \
-	--build-arg GIT_VERSION=$(GIT_VERSION)
+	--build-arg GIT_VERSION=$(GIT_VERSION) \
+	--build-arg CALICO_BASE_UBI9=$(CALICO_BASE_UBI9)
 
 DOCKER_RUN := mkdir -p $(REPO_ROOT)/.go-pkg-cache bin $(GOMOD_CACHE) && \
 	docker run --rm \
@@ -330,7 +337,7 @@ define host_native_rpm_build
 	$(eval version := $(shell $(REPO_ROOT)/hack/generate-rpm-version.sh $(REPO_ROOT) $(3)))
 
 	sed 's/@VERSION@/$(version)/g' rhel/$(2).spec.in > rhel/$(2).spec
-	
+
 	mkdir -p package/$(1) && $(DOCKER_HOST_NATIVE_RUN) \
 		$(HOST_NATIVE_BUILD_IMAGE):$(1) \
 			sh -c 'rpmbuild \
@@ -961,11 +968,11 @@ fetch-all:
 	git fetch --all -q
 
 # git-dev-tag retrieves the dev tag for the current commit (the one are dev images are tagged with).
-git-dev-tag = $(shell git describe --first-parent --tags --long --always --abbrev=12 --match "*dev*")
+git-dev-tag = $(shell git describe --tags --long --always --abbrev=12 --match "*dev*")
 # git-release-tag-from-dev-tag gets the release version from the current commits dev tag.
 git-release-tag-from-dev-tag = $(shell echo $(call git-dev-tag) | grep -P -o "^v\d*.\d*.\d*(-.*)?(?=-$(DEV_TAG_SUFFIX))")
 # git-release-tag-for-current-commit gets the release tag for the current commit if there is one.
-git-release-tag-for-current-commit = $(shell git describe --first-parent --tags --exact-match --exclude "*dev*")
+git-release-tag-for-current-commit = $(shell git describe --tags --exact-match --exclude "*dev*")
 
 # release-branch-for-tag finds the latest branch that corresponds to the given tag.
 release-branch-for-tag = $(firstword $(shell git --no-pager branch --format='%(refname:short)' --contains $1 | grep -P "^release"))

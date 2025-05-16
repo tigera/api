@@ -4,12 +4,14 @@
 
 # The version of github.com/projectcalico/go-build to use.
 GO_BUILD_VER=v0.94
+# TODO Remove once CALICO_BASE is updated to UBI9
+CALICO_BASE_UBI9_VER=ubi9-1739912267
 # Env var to ACK Ginkgo deprecation warnings, may need updating with go-build.
 ACK_GINKGO=ACK_GINKGO_DEPRECATIONS=1.16.5
 
 # Version of Kubernetes to use for tests and kubectl binary release in
 # compliance benchmarker, confd, and kube-controllers.
-K8S_VERSION=v1.30.9
+K8S_VERSION=v1.30.11
 
 # Version of various tools used in the build and tests.
 # k8s versions below are only used in tests.
@@ -23,9 +25,7 @@ KIND_VERSION=v0.24.0
 PROTOC_VER=v0.1
 UBI8_VERSION=8.10
 UBI9_VERSION=9.4
-
-# Configuration for Semaphore integration.
-ORGANIZATION=tigera
+GITHUB_CLI_VERSION=2.65.0
 
 # The Semaphore calico-private ID, used when making calls to the Semaphore API.
 SEMAPHORE_PROJECT_ID=8a309869-f767-49dc-924f-fa927edbf657
@@ -36,6 +36,15 @@ ifneq ("$(wildcard $(HOME)/.banzai/secrets)","")
 else
     SECRETS_PATH ?= $(HOME)/secrets
 endif
+
+# Configuration for Semaphore/Github integration.  This needs to be set
+# differently for a forked repo.
+ORGANIZATION = tigera
+GIT_REPO = calico-private
+
+# Part of the git remote that is common to git and HTTP representations.
+# Used to auto-detect the right remote.
+GIT_REPO_SLUG ?= $(ORGANIZATION)/$(GIT_REPO)
 
 # Configure git to access repositories using SSH.
 GIT_USE_SSH = true
