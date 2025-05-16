@@ -93,10 +93,6 @@ type IPPoolSpec struct {
 	// using an IP pool that is backed by a subnet that belongs to another availability zone. If AWSSubnetID
 	// is specified, then the CIDR of the IP pool must be contained within the specified AWS subnet.
 	AWSSubnetID string `json:"awsSubnetID,omitempty" validate:"omitempty"`
-
-	// Determines the mode how IP addresses should be assigned from this pool
-	// +optional
-	AssignmentMode *AssignmentMode `json:"assignmentMode,omitempty" validate:"omitempty,assignmentMode"`
 }
 
 type IPPoolAllowedUse string
@@ -105,7 +101,6 @@ const (
 	IPPoolAllowedUseWorkload      IPPoolAllowedUse = "Workload"
 	IPPoolAllowedUseTunnel        IPPoolAllowedUse = "Tunnel"
 	IPPoolAllowedUseHostSecondary IPPoolAllowedUse = "HostSecondaryInterface"
-	IPPoolAllowedUseLoadBalancer  IPPoolAllowedUse = "LoadBalancer"
 )
 
 type VXLANMode string
@@ -132,14 +127,6 @@ const (
 	Undefined   EncapMode = ""
 	Always      EncapMode = "always"
 	CrossSubnet EncapMode = "cross-subnet"
-)
-
-// +kubebuilder:validation:Enum=Automatic;Manual
-type AssignmentMode string
-
-const (
-	Automatic AssignmentMode = "Automatic"
-	Manual    AssignmentMode = "Manual"
 )
 
 const DefaultMode = Always

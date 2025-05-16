@@ -87,9 +87,6 @@ type ControllersConfig struct {
 
 	// FederatedServices enables and configures the federatedservices controller. Disabled by default.
 	FederatedServices *FederatedServicesControllerConfig `json:"federatedServices,omitempty"`
-
-	// LoadBalancer enables and configures the LoadBalancer controller. Enabled by default, set to nil to disable.
-	LoadBalancer *LoadBalancerControllerConfig `json:"loadBalancer,omitempty"`
 }
 
 // NodeControllerConfig configures the node controller, which automatically cleans up configuration
@@ -113,32 +110,6 @@ type NodeControllerConfig struct {
 type AutoHostEndpointConfig struct {
 	// AutoCreate enables automatic creation of host endpoints for every node. [Default: Disabled]
 	AutoCreate string `json:"autoCreate,omitempty" validate:"omitempty,oneof=Enabled Disabled"`
-
-	CreateDefaultHostEndpoint DefaultHostEndpointMode `json:"createDefaultHostEndpoint,omitempty" validate:"omitempty,createDefaultHostEndpoint"`
-
-	// Templates contains definition for creating AutoHostEndpoints
-	Templates []Template `json:"templates,omitempty" validate:"omitempty"`
-}
-
-type DefaultHostEndpointMode string
-
-const (
-	DefaultHostEndpointsEnabled  DefaultHostEndpointMode = "Enabled"
-	DefaultHostEndpointsDisabled DefaultHostEndpointMode = "Disabled"
-)
-
-type Template struct {
-	// GenerateName is appended to the end of the generated AutoHostEndpoint name
-	GenerateName string `json:"generateName,omitempty" validate:"omitempty,name"`
-
-	// InterfaceCIDRs contains a list of CIRDs used for matching nodeIPs to the AutoHostEndpoint
-	InterfaceCIDRs []string `json:"interfaceCIDRs,omitempty" validate:"cidrs"`
-
-	// Labels adds the specified labels to the generated AutoHostEndpoint, labels from node with the same name will be overwritten by values from the template label
-	Labels map[string]string `json:"labels,omitempty" validate:"omitempty,labels"`
-
-	// NodeSelector allows the AutoHostEndpoint to be created only for specific nodes
-	NodeSelector string `json:"nodeSelector,omitempty" validate:"omitempty,selector"`
 }
 
 // PolicyControllerConfig configures the network policy controller, which syncs Kubernetes policies
@@ -175,17 +146,6 @@ type FederatedServicesControllerConfig struct {
 	// ReconcilerPeriod is the period to perform reconciliation. [Default: 5m]
 	ReconcilerPeriod *metav1.Duration `json:"reconcilerPeriod,omitempty" validate:"omitempty"`
 }
-
-type LoadBalancerControllerConfig struct {
-	AssignIPs AssignIPs `json:"assignIPs,omitempty" validate:"omitempty,assignIPs"`
-}
-
-type AssignIPs string
-
-const (
-	AllServices           AssignIPs = "AllServices"
-	RequestedServicesOnly AssignIPs = "RequestedServicesOnly"
-)
 
 // KubeControllersConfigurationStatus represents the status of the configuration. It's useful for admins to
 // be able to see the actual config that was applied, which can be modified by environment variables on the
