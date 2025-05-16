@@ -15,11 +15,9 @@
 package v3
 
 import (
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-
-	k8sv1 "k8s.io/api/core/v1"
-
 	"github.com/tigera/api/pkg/lib/numorstring"
+	k8sv1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 const (
@@ -144,6 +142,11 @@ type BGPPeerSpec struct {
 	// ReachableBy contains the address of the gateway which peer can be reached by.
 	// +optional
 	ReachableBy string `json:"reachableBy,omitempty" validate:"omitempty,reachableBy"`
+
+	// Selector for the local workload that the node should peer with. When this is set, the peerSelector and peerIP fields must be empty,
+	// and the ASNumber must not be empty.
+	// +optional
+	LocalWorkloadSelector string `json:"localWorkloadSelector,omitempty" validate:"omitempty,selector"`
 }
 
 type SourceAddress string

@@ -19,10 +19,9 @@ import (
 	"flag"
 	"fmt"
 
+	"github.com/tigera/api/pkg/client/clientset_generated/clientset"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/tools/clientcmd"
-
-	"github.com/tigera/api/pkg/client/clientset_generated/clientset"
 )
 
 func main() {

@@ -48,6 +48,21 @@ type AuthorizationReviewSpec struct {
 	// The set of resource attributes that are being checked. Each resource attribute is expanded into individual
 	// kind/resource and verbs.
 	ResourceAttributes []AuthorizationReviewResourceAttributes `json:"resourceAttributes,omitempty" validate:"omitempty"`
+
+	// User is the user you're testing for.
+	// If you specify "User" but not "Groups", then is it interpreted as "What if User were not a member of any groups"
+	// +optional
+	User string `json:"user,omitempty" validate:"omitempty"`
+	// Groups is the groups you're testing for.
+	// +optional
+	Groups []string `json:"groups,omitempty" validate:"omitempty"`
+	// Extra corresponds to the user.Info.GetExtra() method from the authenticator.  Since that is input to the authorizer
+	// it needs a reflection here.
+	// +optional
+	Extra map[string][]string `json:"extra,omitempty" validate:"omitempty"`
+	// UID information about the requesting user.
+	// +optional
+	UID string `json:"uid,omitempty" validate:"omitempty"`
 }
 
 type AuthorizationReviewResourceAttributes struct {
