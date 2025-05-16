@@ -15,8 +15,9 @@
 package v3
 
 import (
-	"github.com/tigera/api/pkg/lib/numorstring"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
+	"github.com/tigera/api/pkg/lib/numorstring"
 )
 
 const (

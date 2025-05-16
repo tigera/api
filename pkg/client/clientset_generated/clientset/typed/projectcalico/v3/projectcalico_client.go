@@ -5,10 +5,10 @@
 package v3
 
 import (
-	http "net/http"
+	"net/http"
 
-	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	scheme "github.com/tigera/api/pkg/client/clientset_generated/clientset/scheme"
+	v3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
+	"github.com/tigera/api/pkg/client/clientset_generated/clientset/scheme"
 	rest "k8s.io/client-go/rest"
 )
 
@@ -271,10 +271,10 @@ func New(c rest.Interface) *ProjectcalicoV3Client {
 }
 
 func setConfigDefaults(config *rest.Config) error {
-	gv := projectcalicov3.SchemeGroupVersion
+	gv := v3.SchemeGroupVersion
 	config.GroupVersion = &gv
 	config.APIPath = "/apis"
-	config.NegotiatedSerializer = rest.CodecFactoryForGeneratedClient(scheme.Scheme, scheme.Codecs).WithoutConversion()
+	config.NegotiatedSerializer = scheme.Codecs.WithoutConversion()
 
 	if config.UserAgent == "" {
 		config.UserAgent = rest.DefaultKubernetesUserAgent()
