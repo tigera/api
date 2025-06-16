@@ -5,15 +5,14 @@
 package v3
 
 import (
-	"context"
-	"time"
+	context "context"
 
-	v3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
+	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
 	scheme "github.com/tigera/api/pkg/client/clientset_generated/clientset/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
-	rest "k8s.io/client-go/rest"
+	gentype "k8s.io/client-go/gentype"
 )
 
 // SecurityEventWebhooksGetter has a method to return a SecurityEventWebhookInterface.
@@ -24,147 +23,34 @@ type SecurityEventWebhooksGetter interface {
 
 // SecurityEventWebhookInterface has methods to work with SecurityEventWebhook resources.
 type SecurityEventWebhookInterface interface {
-	Create(ctx context.Context, securityEventWebhook *v3.SecurityEventWebhook, opts v1.CreateOptions) (*v3.SecurityEventWebhook, error)
-	Update(ctx context.Context, securityEventWebhook *v3.SecurityEventWebhook, opts v1.UpdateOptions) (*v3.SecurityEventWebhook, error)
-	UpdateStatus(ctx context.Context, securityEventWebhook *v3.SecurityEventWebhook, opts v1.UpdateOptions) (*v3.SecurityEventWebhook, error)
+	Create(ctx context.Context, securityEventWebhook *projectcalicov3.SecurityEventWebhook, opts v1.CreateOptions) (*projectcalicov3.SecurityEventWebhook, error)
+	Update(ctx context.Context, securityEventWebhook *projectcalicov3.SecurityEventWebhook, opts v1.UpdateOptions) (*projectcalicov3.SecurityEventWebhook, error)
+	// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
+	UpdateStatus(ctx context.Context, securityEventWebhook *projectcalicov3.SecurityEventWebhook, opts v1.UpdateOptions) (*projectcalicov3.SecurityEventWebhook, error)
 	Delete(ctx context.Context, name string, opts v1.DeleteOptions) error
 	DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error
-	Get(ctx context.Context, name string, opts v1.GetOptions) (*v3.SecurityEventWebhook, error)
-	List(ctx context.Context, opts v1.ListOptions) (*v3.SecurityEventWebhookList, error)
+	Get(ctx context.Context, name string, opts v1.GetOptions) (*projectcalicov3.SecurityEventWebhook, error)
+	List(ctx context.Context, opts v1.ListOptions) (*projectcalicov3.SecurityEventWebhookList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
-	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v3.SecurityEventWebhook, err error)
+	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *projectcalicov3.SecurityEventWebhook, err error)
 	SecurityEventWebhookExpansion
 }
 
 // securityEventWebhooks implements SecurityEventWebhookInterface
 type securityEventWebhooks struct {
-	client rest.Interface
+	*gentype.ClientWithList[*projectcalicov3.SecurityEventWebhook, *projectcalicov3.SecurityEventWebhookList]
 }
 
 // newSecurityEventWebhooks returns a SecurityEventWebhooks
 func newSecurityEventWebhooks(c *ProjectcalicoV3Client) *securityEventWebhooks {
 	return &securityEventWebhooks{
-		client: c.RESTClient(),
+		gentype.NewClientWithList[*projectcalicov3.SecurityEventWebhook, *projectcalicov3.SecurityEventWebhookList](
+			"securityeventwebhooks",
+			c.RESTClient(),
+			scheme.ParameterCodec,
+			"",
+			func() *projectcalicov3.SecurityEventWebhook { return &projectcalicov3.SecurityEventWebhook{} },
+			func() *projectcalicov3.SecurityEventWebhookList { return &projectcalicov3.SecurityEventWebhookList{} },
+		),
 	}
-}
-
-// Get takes name of the securityEventWebhook, and returns the corresponding securityEventWebhook object, and an error if there is any.
-func (c *securityEventWebhooks) Get(ctx context.Context, name string, options v1.GetOptions) (result *v3.SecurityEventWebhook, err error) {
-	result = &v3.SecurityEventWebhook{}
-	err = c.client.Get().
-		Resource("securityeventwebhooks").
-		Name(name).
-		VersionedParams(&options, scheme.ParameterCodec).
-		Do(ctx).
-		Into(result)
-	return
-}
-
-// List takes label and field selectors, and returns the list of SecurityEventWebhooks that match those selectors.
-func (c *securityEventWebhooks) List(ctx context.Context, opts v1.ListOptions) (result *v3.SecurityEventWebhookList, err error) {
-	var timeout time.Duration
-	if opts.TimeoutSeconds != nil {
-		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
-	}
-	result = &v3.SecurityEventWebhookList{}
-	err = c.client.Get().
-		Resource("securityeventwebhooks").
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Timeout(timeout).
-		Do(ctx).
-		Into(result)
-	return
-}
-
-// Watch returns a watch.Interface that watches the requested securityEventWebhooks.
-func (c *securityEventWebhooks) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	var timeout time.Duration
-	if opts.TimeoutSeconds != nil {
-		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
-	}
-	opts.Watch = true
-	return c.client.Get().
-		Resource("securityeventwebhooks").
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Timeout(timeout).
-		Watch(ctx)
-}
-
-// Create takes the representation of a securityEventWebhook and creates it.  Returns the server's representation of the securityEventWebhook, and an error, if there is any.
-func (c *securityEventWebhooks) Create(ctx context.Context, securityEventWebhook *v3.SecurityEventWebhook, opts v1.CreateOptions) (result *v3.SecurityEventWebhook, err error) {
-	result = &v3.SecurityEventWebhook{}
-	err = c.client.Post().
-		Resource("securityeventwebhooks").
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Body(securityEventWebhook).
-		Do(ctx).
-		Into(result)
-	return
-}
-
-// Update takes the representation of a securityEventWebhook and updates it. Returns the server's representation of the securityEventWebhook, and an error, if there is any.
-func (c *securityEventWebhooks) Update(ctx context.Context, securityEventWebhook *v3.SecurityEventWebhook, opts v1.UpdateOptions) (result *v3.SecurityEventWebhook, err error) {
-	result = &v3.SecurityEventWebhook{}
-	err = c.client.Put().
-		Resource("securityeventwebhooks").
-		Name(securityEventWebhook.Name).
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Body(securityEventWebhook).
-		Do(ctx).
-		Into(result)
-	return
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *securityEventWebhooks) UpdateStatus(ctx context.Context, securityEventWebhook *v3.SecurityEventWebhook, opts v1.UpdateOptions) (result *v3.SecurityEventWebhook, err error) {
-	result = &v3.SecurityEventWebhook{}
-	err = c.client.Put().
-		Resource("securityeventwebhooks").
-		Name(securityEventWebhook.Name).
-		SubResource("status").
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Body(securityEventWebhook).
-		Do(ctx).
-		Into(result)
-	return
-}
-
-// Delete takes name of the securityEventWebhook and deletes it. Returns an error if one occurs.
-func (c *securityEventWebhooks) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	return c.client.Delete().
-		Resource("securityeventwebhooks").
-		Name(name).
-		Body(&opts).
-		Do(ctx).
-		Error()
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *securityEventWebhooks) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	var timeout time.Duration
-	if listOpts.TimeoutSeconds != nil {
-		timeout = time.Duration(*listOpts.TimeoutSeconds) * time.Second
-	}
-	return c.client.Delete().
-		Resource("securityeventwebhooks").
-		VersionedParams(&listOpts, scheme.ParameterCodec).
-		Timeout(timeout).
-		Body(&opts).
-		Do(ctx).
-		Error()
-}
-
-// Patch applies the patch and returns the patched securityEventWebhook.
-func (c *securityEventWebhooks) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v3.SecurityEventWebhook, err error) {
-	result = &v3.SecurityEventWebhook{}
-	err = c.client.Patch(pt).
-		Resource("securityeventwebhooks").
-		Name(name).
-		SubResource(subresources...).
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Body(data).
-		Do(ctx).
-		Into(result)
-	return
 }

@@ -2,30 +2,28 @@
 # This file contains Makefile configuration parameters and metadata for this branch.
 #################################################################################################
 
-# The version of github.com/projectcalico/go-build to use.
-GO_BUILD_VER=v0.94
+# The version of calico/go-build and calico/base to use.
+GO_BUILD_VER=1.24.3-llvm18.1.8-k8s1.32.5
+CALICO_BASE_VER=ubi8-1744398299
+# TODO Remove once CALICO_BASE is updated to UBI9
+CALICO_BASE_UBI9_VER=ubi9-1744398299
+
 # Env var to ACK Ginkgo deprecation warnings, may need updating with go-build.
 ACK_GINKGO=ACK_GINKGO_DEPRECATIONS=1.16.5
 
-# Version of Kubernetes to use for tests and kubectl binary release in
+# Version of Kubernetes to use for tests, bitnami/kubectl, and kubectl binary release in
 # compliance benchmarker, confd, and kube-controllers.
-K8S_VERSION=v1.30.9
+K8S_VERSION=v1.33.1
 
 # Version of various tools used in the build and tests.
-# k8s versions below are only used in tests.
 COREDNS_VERSION=1.5.2
 ETCD_VERSION=v3.5.6
-HELM_VERSION=v3.11.3
-BITNAMI_K8S_VERSION=v1.30.7
-KINDEST_NODE_VERSION=v1.30.8
+GHR_VERSION=v0.17.0
+GITHUB_CLI_VERSION=2.65.0
+HELM_VERSION=v3.16.4
+KINDEST_NODE_VERSION=v1.31.4
 KINDEST_NODE_VERSION_DUAL_TOR=v1.24.7
-KIND_VERSION=v0.24.0
-PROTOC_VER=v0.1
-UBI8_VERSION=8.10
-UBI9_VERSION=9.4
-
-# Configuration for Semaphore integration.
-ORGANIZATION=tigera
+KIND_VERSION=v0.25.0
 
 # The Semaphore calico-private ID, used when making calls to the Semaphore API.
 SEMAPHORE_PROJECT_ID=8a309869-f767-49dc-924f-fa927edbf657
@@ -92,12 +90,15 @@ else
     THIRD_PARTY_REGISTRY=gcr.io/tigera-dev/third-party-ci
 endif
 
+# The bpftool image to use; this is the output of the https://github.com/projectcalico/bpftool repo.
+BPFTOOL_IMAGE=calico/bpftool:v7.5.0
+
 # The default branch for semaphore
-DEFAULT_BRANCH_OVERRIDE ?= release-calient-v3.21-1
+DEFAULT_BRANCH_OVERRIDE ?= release-calient-v3.21
 # Default branch prefix for release branches
 RELEASE_BRANCH_PREFIX ?= release-calient
 # The operator branch corresponding to this branch.
-OPERATOR_BRANCH=release-v1.37
+OPERATOR_BRANCH=release-v1.38
 
 # The libbpf version to use
 LIBBPF_VERSION=v1.4.6

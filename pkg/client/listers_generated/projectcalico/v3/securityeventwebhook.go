@@ -5,10 +5,10 @@
 package v3
 
 import (
-	v3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // SecurityEventWebhookLister helps list SecurityEventWebhooks.
@@ -16,39 +16,19 @@ import (
 type SecurityEventWebhookLister interface {
 	// List lists all SecurityEventWebhooks in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v3.SecurityEventWebhook, err error)
+	List(selector labels.Selector) (ret []*projectcalicov3.SecurityEventWebhook, err error)
 	// Get retrieves the SecurityEventWebhook from the index for a given name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v3.SecurityEventWebhook, error)
+	Get(name string) (*projectcalicov3.SecurityEventWebhook, error)
 	SecurityEventWebhookListerExpansion
 }
 
 // securityEventWebhookLister implements the SecurityEventWebhookLister interface.
 type securityEventWebhookLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*projectcalicov3.SecurityEventWebhook]
 }
 
 // NewSecurityEventWebhookLister returns a new SecurityEventWebhookLister.
 func NewSecurityEventWebhookLister(indexer cache.Indexer) SecurityEventWebhookLister {
-	return &securityEventWebhookLister{indexer: indexer}
-}
-
-// List lists all SecurityEventWebhooks in the indexer.
-func (s *securityEventWebhookLister) List(selector labels.Selector) (ret []*v3.SecurityEventWebhook, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v3.SecurityEventWebhook))
-	})
-	return ret, err
-}
-
-// Get retrieves the SecurityEventWebhook from the index for a given name.
-func (s *securityEventWebhookLister) Get(name string) (*v3.SecurityEventWebhook, error) {
-	obj, exists, err := s.indexer.GetByKey(name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v3.Resource("securityeventwebhook"), name)
-	}
-	return obj.(*v3.SecurityEventWebhook), nil
+	return &securityEventWebhookLister{listers.New[*projectcalicov3.SecurityEventWebhook](indexer, projectcalicov3.Resource("securityeventwebhook"))}
 }

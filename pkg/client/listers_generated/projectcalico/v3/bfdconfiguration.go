@@ -5,10 +5,10 @@
 package v3
 
 import (
-	v3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // BFDConfigurationLister helps list BFDConfigurations.
@@ -16,39 +16,19 @@ import (
 type BFDConfigurationLister interface {
 	// List lists all BFDConfigurations in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v3.BFDConfiguration, err error)
+	List(selector labels.Selector) (ret []*projectcalicov3.BFDConfiguration, err error)
 	// Get retrieves the BFDConfiguration from the index for a given name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v3.BFDConfiguration, error)
+	Get(name string) (*projectcalicov3.BFDConfiguration, error)
 	BFDConfigurationListerExpansion
 }
 
 // bFDConfigurationLister implements the BFDConfigurationLister interface.
 type bFDConfigurationLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*projectcalicov3.BFDConfiguration]
 }
 
 // NewBFDConfigurationLister returns a new BFDConfigurationLister.
 func NewBFDConfigurationLister(indexer cache.Indexer) BFDConfigurationLister {
-	return &bFDConfigurationLister{indexer: indexer}
-}
-
-// List lists all BFDConfigurations in the indexer.
-func (s *bFDConfigurationLister) List(selector labels.Selector) (ret []*v3.BFDConfiguration, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v3.BFDConfiguration))
-	})
-	return ret, err
-}
-
-// Get retrieves the BFDConfiguration from the index for a given name.
-func (s *bFDConfigurationLister) Get(name string) (*v3.BFDConfiguration, error) {
-	obj, exists, err := s.indexer.GetByKey(name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v3.Resource("bfdconfiguration"), name)
-	}
-	return obj.(*v3.BFDConfiguration), nil
+	return &bFDConfigurationLister{listers.New[*projectcalicov3.BFDConfiguration](indexer, projectcalicov3.Resource("bfdconfiguration"))}
 }

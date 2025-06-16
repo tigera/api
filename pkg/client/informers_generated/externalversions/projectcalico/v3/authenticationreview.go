@@ -5,13 +5,13 @@
 package v3
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
+	apisprojectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
 	clientset "github.com/tigera/api/pkg/client/clientset_generated/clientset"
 	internalinterfaces "github.com/tigera/api/pkg/client/informers_generated/externalversions/internalinterfaces"
-	v3 "github.com/tigera/api/pkg/client/listers_generated/projectcalico/v3"
+	projectcalicov3 "github.com/tigera/api/pkg/client/listers_generated/projectcalico/v3"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -22,7 +22,7 @@ import (
 // AuthenticationReviews.
 type AuthenticationReviewInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v3.AuthenticationReviewLister
+	Lister() projectcalicov3.AuthenticationReviewLister
 }
 
 type authenticationReviewInformer struct {
@@ -56,7 +56,7 @@ func NewFilteredAuthenticationReviewInformer(client clientset.Interface, resyncP
 				return client.ProjectcalicoV3().AuthenticationReviews().Watch(context.TODO(), options)
 			},
 		},
-		&projectcalicov3.AuthenticationReview{},
+		&apisprojectcalicov3.AuthenticationReview{},
 		resyncPeriod,
 		indexers,
 	)
@@ -67,9 +67,9 @@ func (f *authenticationReviewInformer) defaultInformer(client clientset.Interfac
 }
 
 func (f *authenticationReviewInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&projectcalicov3.AuthenticationReview{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisprojectcalicov3.AuthenticationReview{}, f.defaultInformer)
 }
 
-func (f *authenticationReviewInformer) Lister() v3.AuthenticationReviewLister {
-	return v3.NewAuthenticationReviewLister(f.Informer().GetIndexer())
+func (f *authenticationReviewInformer) Lister() projectcalicov3.AuthenticationReviewLister {
+	return projectcalicov3.NewAuthenticationReviewLister(f.Informer().GetIndexer())
 }

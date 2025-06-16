@@ -5,13 +5,13 @@
 package v3
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
+	apisprojectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
 	clientset "github.com/tigera/api/pkg/client/clientset_generated/clientset"
 	internalinterfaces "github.com/tigera/api/pkg/client/informers_generated/externalversions/internalinterfaces"
-	v3 "github.com/tigera/api/pkg/client/listers_generated/projectcalico/v3"
+	projectcalicov3 "github.com/tigera/api/pkg/client/listers_generated/projectcalico/v3"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -22,7 +22,7 @@ import (
 // SecurityEventWebhooks.
 type SecurityEventWebhookInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v3.SecurityEventWebhookLister
+	Lister() projectcalicov3.SecurityEventWebhookLister
 }
 
 type securityEventWebhookInformer struct {
@@ -56,7 +56,7 @@ func NewFilteredSecurityEventWebhookInformer(client clientset.Interface, resyncP
 				return client.ProjectcalicoV3().SecurityEventWebhooks().Watch(context.TODO(), options)
 			},
 		},
-		&projectcalicov3.SecurityEventWebhook{},
+		&apisprojectcalicov3.SecurityEventWebhook{},
 		resyncPeriod,
 		indexers,
 	)
@@ -67,9 +67,9 @@ func (f *securityEventWebhookInformer) defaultInformer(client clientset.Interfac
 }
 
 func (f *securityEventWebhookInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&projectcalicov3.SecurityEventWebhook{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisprojectcalicov3.SecurityEventWebhook{}, f.defaultInformer)
 }
 
-func (f *securityEventWebhookInformer) Lister() v3.SecurityEventWebhookLister {
-	return v3.NewSecurityEventWebhookLister(f.Informer().GetIndexer())
+func (f *securityEventWebhookInformer) Lister() projectcalicov3.SecurityEventWebhookLister {
+	return projectcalicov3.NewSecurityEventWebhookLister(f.Informer().GetIndexer())
 }

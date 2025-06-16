@@ -5,13 +5,13 @@
 package v3
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
+	apisprojectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
 	clientset "github.com/tigera/api/pkg/client/clientset_generated/clientset"
 	internalinterfaces "github.com/tigera/api/pkg/client/informers_generated/externalversions/internalinterfaces"
-	v3 "github.com/tigera/api/pkg/client/listers_generated/projectcalico/v3"
+	projectcalicov3 "github.com/tigera/api/pkg/client/listers_generated/projectcalico/v3"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -22,7 +22,7 @@ import (
 // ManagedClusters.
 type ManagedClusterInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v3.ManagedClusterLister
+	Lister() projectcalicov3.ManagedClusterLister
 }
 
 type managedClusterInformer struct {
@@ -56,7 +56,7 @@ func NewFilteredManagedClusterInformer(client clientset.Interface, resyncPeriod 
 				return client.ProjectcalicoV3().ManagedClusters().Watch(context.TODO(), options)
 			},
 		},
-		&projectcalicov3.ManagedCluster{},
+		&apisprojectcalicov3.ManagedCluster{},
 		resyncPeriod,
 		indexers,
 	)
@@ -67,9 +67,9 @@ func (f *managedClusterInformer) defaultInformer(client clientset.Interface, res
 }
 
 func (f *managedClusterInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&projectcalicov3.ManagedCluster{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisprojectcalicov3.ManagedCluster{}, f.defaultInformer)
 }
 
-func (f *managedClusterInformer) Lister() v3.ManagedClusterLister {
-	return v3.NewManagedClusterLister(f.Informer().GetIndexer())
+func (f *managedClusterInformer) Lister() projectcalicov3.ManagedClusterLister {
+	return projectcalicov3.NewManagedClusterLister(f.Informer().GetIndexer())
 }

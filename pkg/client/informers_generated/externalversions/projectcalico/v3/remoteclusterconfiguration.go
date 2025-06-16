@@ -5,13 +5,13 @@
 package v3
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
+	apisprojectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
 	clientset "github.com/tigera/api/pkg/client/clientset_generated/clientset"
 	internalinterfaces "github.com/tigera/api/pkg/client/informers_generated/externalversions/internalinterfaces"
-	v3 "github.com/tigera/api/pkg/client/listers_generated/projectcalico/v3"
+	projectcalicov3 "github.com/tigera/api/pkg/client/listers_generated/projectcalico/v3"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -22,7 +22,7 @@ import (
 // RemoteClusterConfigurations.
 type RemoteClusterConfigurationInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v3.RemoteClusterConfigurationLister
+	Lister() projectcalicov3.RemoteClusterConfigurationLister
 }
 
 type remoteClusterConfigurationInformer struct {
@@ -56,7 +56,7 @@ func NewFilteredRemoteClusterConfigurationInformer(client clientset.Interface, r
 				return client.ProjectcalicoV3().RemoteClusterConfigurations().Watch(context.TODO(), options)
 			},
 		},
-		&projectcalicov3.RemoteClusterConfiguration{},
+		&apisprojectcalicov3.RemoteClusterConfiguration{},
 		resyncPeriod,
 		indexers,
 	)
@@ -67,9 +67,9 @@ func (f *remoteClusterConfigurationInformer) defaultInformer(client clientset.In
 }
 
 func (f *remoteClusterConfigurationInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&projectcalicov3.RemoteClusterConfiguration{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisprojectcalicov3.RemoteClusterConfiguration{}, f.defaultInformer)
 }
 
-func (f *remoteClusterConfigurationInformer) Lister() v3.RemoteClusterConfigurationLister {
-	return v3.NewRemoteClusterConfigurationLister(f.Informer().GetIndexer())
+func (f *remoteClusterConfigurationInformer) Lister() projectcalicov3.RemoteClusterConfigurationLister {
+	return projectcalicov3.NewRemoteClusterConfigurationLister(f.Informer().GetIndexer())
 }

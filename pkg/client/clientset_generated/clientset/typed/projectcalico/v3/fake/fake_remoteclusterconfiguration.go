@@ -5,103 +5,34 @@
 package fake
 
 import (
-	"context"
-
 	v3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	projectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeRemoteClusterConfigurations implements RemoteClusterConfigurationInterface
-type FakeRemoteClusterConfigurations struct {
+// fakeRemoteClusterConfigurations implements RemoteClusterConfigurationInterface
+type fakeRemoteClusterConfigurations struct {
+	*gentype.FakeClientWithList[*v3.RemoteClusterConfiguration, *v3.RemoteClusterConfigurationList]
 	Fake *FakeProjectcalicoV3
 }
 
-var remoteclusterconfigurationsResource = v3.SchemeGroupVersion.WithResource("remoteclusterconfigurations")
-
-var remoteclusterconfigurationsKind = v3.SchemeGroupVersion.WithKind("RemoteClusterConfiguration")
-
-// Get takes name of the remoteClusterConfiguration, and returns the corresponding remoteClusterConfiguration object, and an error if there is any.
-func (c *FakeRemoteClusterConfigurations) Get(ctx context.Context, name string, options v1.GetOptions) (result *v3.RemoteClusterConfiguration, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(remoteclusterconfigurationsResource, name), &v3.RemoteClusterConfiguration{})
-	if obj == nil {
-		return nil, err
+func newFakeRemoteClusterConfigurations(fake *FakeProjectcalicoV3) projectcalicov3.RemoteClusterConfigurationInterface {
+	return &fakeRemoteClusterConfigurations{
+		gentype.NewFakeClientWithList[*v3.RemoteClusterConfiguration, *v3.RemoteClusterConfigurationList](
+			fake.Fake,
+			"",
+			v3.SchemeGroupVersion.WithResource("remoteclusterconfigurations"),
+			v3.SchemeGroupVersion.WithKind("RemoteClusterConfiguration"),
+			func() *v3.RemoteClusterConfiguration { return &v3.RemoteClusterConfiguration{} },
+			func() *v3.RemoteClusterConfigurationList { return &v3.RemoteClusterConfigurationList{} },
+			func(dst, src *v3.RemoteClusterConfigurationList) { dst.ListMeta = src.ListMeta },
+			func(list *v3.RemoteClusterConfigurationList) []*v3.RemoteClusterConfiguration {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v3.RemoteClusterConfigurationList, items []*v3.RemoteClusterConfiguration) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v3.RemoteClusterConfiguration), err
-}
-
-// List takes label and field selectors, and returns the list of RemoteClusterConfigurations that match those selectors.
-func (c *FakeRemoteClusterConfigurations) List(ctx context.Context, opts v1.ListOptions) (result *v3.RemoteClusterConfigurationList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(remoteclusterconfigurationsResource, remoteclusterconfigurationsKind, opts), &v3.RemoteClusterConfigurationList{})
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v3.RemoteClusterConfigurationList{ListMeta: obj.(*v3.RemoteClusterConfigurationList).ListMeta}
-	for _, item := range obj.(*v3.RemoteClusterConfigurationList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested remoteClusterConfigurations.
-func (c *FakeRemoteClusterConfigurations) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewRootWatchAction(remoteclusterconfigurationsResource, opts))
-}
-
-// Create takes the representation of a remoteClusterConfiguration and creates it.  Returns the server's representation of the remoteClusterConfiguration, and an error, if there is any.
-func (c *FakeRemoteClusterConfigurations) Create(ctx context.Context, remoteClusterConfiguration *v3.RemoteClusterConfiguration, opts v1.CreateOptions) (result *v3.RemoteClusterConfiguration, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(remoteclusterconfigurationsResource, remoteClusterConfiguration), &v3.RemoteClusterConfiguration{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v3.RemoteClusterConfiguration), err
-}
-
-// Update takes the representation of a remoteClusterConfiguration and updates it. Returns the server's representation of the remoteClusterConfiguration, and an error, if there is any.
-func (c *FakeRemoteClusterConfigurations) Update(ctx context.Context, remoteClusterConfiguration *v3.RemoteClusterConfiguration, opts v1.UpdateOptions) (result *v3.RemoteClusterConfiguration, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(remoteclusterconfigurationsResource, remoteClusterConfiguration), &v3.RemoteClusterConfiguration{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v3.RemoteClusterConfiguration), err
-}
-
-// Delete takes name of the remoteClusterConfiguration and deletes it. Returns an error if one occurs.
-func (c *FakeRemoteClusterConfigurations) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteActionWithOptions(remoteclusterconfigurationsResource, name, opts), &v3.RemoteClusterConfiguration{})
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeRemoteClusterConfigurations) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(remoteclusterconfigurationsResource, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v3.RemoteClusterConfigurationList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched remoteClusterConfiguration.
-func (c *FakeRemoteClusterConfigurations) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v3.RemoteClusterConfiguration, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(remoteclusterconfigurationsResource, name, pt, data, subresources...), &v3.RemoteClusterConfiguration{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v3.RemoteClusterConfiguration), err
 }

@@ -5,13 +5,13 @@
 package v3
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
+	apisprojectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
 	clientset "github.com/tigera/api/pkg/client/clientset_generated/clientset"
 	internalinterfaces "github.com/tigera/api/pkg/client/informers_generated/externalversions/internalinterfaces"
-	v3 "github.com/tigera/api/pkg/client/listers_generated/projectcalico/v3"
+	projectcalicov3 "github.com/tigera/api/pkg/client/listers_generated/projectcalico/v3"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -22,7 +22,7 @@ import (
 // EgressGatewayPolicies.
 type EgressGatewayPolicyInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v3.EgressGatewayPolicyLister
+	Lister() projectcalicov3.EgressGatewayPolicyLister
 }
 
 type egressGatewayPolicyInformer struct {
@@ -56,7 +56,7 @@ func NewFilteredEgressGatewayPolicyInformer(client clientset.Interface, resyncPe
 				return client.ProjectcalicoV3().EgressGatewayPolicies().Watch(context.TODO(), options)
 			},
 		},
-		&projectcalicov3.EgressGatewayPolicy{},
+		&apisprojectcalicov3.EgressGatewayPolicy{},
 		resyncPeriod,
 		indexers,
 	)
@@ -67,9 +67,9 @@ func (f *egressGatewayPolicyInformer) defaultInformer(client clientset.Interface
 }
 
 func (f *egressGatewayPolicyInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&projectcalicov3.EgressGatewayPolicy{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisprojectcalicov3.EgressGatewayPolicy{}, f.defaultInformer)
 }
 
-func (f *egressGatewayPolicyInformer) Lister() v3.EgressGatewayPolicyLister {
-	return v3.NewEgressGatewayPolicyLister(f.Informer().GetIndexer())
+func (f *egressGatewayPolicyInformer) Lister() projectcalicov3.EgressGatewayPolicyLister {
+	return projectcalicov3.NewEgressGatewayPolicyLister(f.Informer().GetIndexer())
 }
