@@ -5,15 +5,14 @@
 package v3
 
 import (
-	"context"
-	"time"
+	context "context"
 
-	v3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
+	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
 	scheme "github.com/tigera/api/pkg/client/clientset_generated/clientset/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
-	rest "k8s.io/client-go/rest"
+	gentype "k8s.io/client-go/gentype"
 )
 
 // DeepPacketInspectionsGetter has a method to return a DeepPacketInspectionInterface.
@@ -24,158 +23,34 @@ type DeepPacketInspectionsGetter interface {
 
 // DeepPacketInspectionInterface has methods to work with DeepPacketInspection resources.
 type DeepPacketInspectionInterface interface {
-	Create(ctx context.Context, deepPacketInspection *v3.DeepPacketInspection, opts v1.CreateOptions) (*v3.DeepPacketInspection, error)
-	Update(ctx context.Context, deepPacketInspection *v3.DeepPacketInspection, opts v1.UpdateOptions) (*v3.DeepPacketInspection, error)
-	UpdateStatus(ctx context.Context, deepPacketInspection *v3.DeepPacketInspection, opts v1.UpdateOptions) (*v3.DeepPacketInspection, error)
+	Create(ctx context.Context, deepPacketInspection *projectcalicov3.DeepPacketInspection, opts v1.CreateOptions) (*projectcalicov3.DeepPacketInspection, error)
+	Update(ctx context.Context, deepPacketInspection *projectcalicov3.DeepPacketInspection, opts v1.UpdateOptions) (*projectcalicov3.DeepPacketInspection, error)
+	// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
+	UpdateStatus(ctx context.Context, deepPacketInspection *projectcalicov3.DeepPacketInspection, opts v1.UpdateOptions) (*projectcalicov3.DeepPacketInspection, error)
 	Delete(ctx context.Context, name string, opts v1.DeleteOptions) error
 	DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error
-	Get(ctx context.Context, name string, opts v1.GetOptions) (*v3.DeepPacketInspection, error)
-	List(ctx context.Context, opts v1.ListOptions) (*v3.DeepPacketInspectionList, error)
+	Get(ctx context.Context, name string, opts v1.GetOptions) (*projectcalicov3.DeepPacketInspection, error)
+	List(ctx context.Context, opts v1.ListOptions) (*projectcalicov3.DeepPacketInspectionList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
-	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v3.DeepPacketInspection, err error)
+	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *projectcalicov3.DeepPacketInspection, err error)
 	DeepPacketInspectionExpansion
 }
 
 // deepPacketInspections implements DeepPacketInspectionInterface
 type deepPacketInspections struct {
-	client rest.Interface
-	ns     string
+	*gentype.ClientWithList[*projectcalicov3.DeepPacketInspection, *projectcalicov3.DeepPacketInspectionList]
 }
 
 // newDeepPacketInspections returns a DeepPacketInspections
 func newDeepPacketInspections(c *ProjectcalicoV3Client, namespace string) *deepPacketInspections {
 	return &deepPacketInspections{
-		client: c.RESTClient(),
-		ns:     namespace,
+		gentype.NewClientWithList[*projectcalicov3.DeepPacketInspection, *projectcalicov3.DeepPacketInspectionList](
+			"deeppacketinspections",
+			c.RESTClient(),
+			scheme.ParameterCodec,
+			namespace,
+			func() *projectcalicov3.DeepPacketInspection { return &projectcalicov3.DeepPacketInspection{} },
+			func() *projectcalicov3.DeepPacketInspectionList { return &projectcalicov3.DeepPacketInspectionList{} },
+		),
 	}
-}
-
-// Get takes name of the deepPacketInspection, and returns the corresponding deepPacketInspection object, and an error if there is any.
-func (c *deepPacketInspections) Get(ctx context.Context, name string, options v1.GetOptions) (result *v3.DeepPacketInspection, err error) {
-	result = &v3.DeepPacketInspection{}
-	err = c.client.Get().
-		Namespace(c.ns).
-		Resource("deeppacketinspections").
-		Name(name).
-		VersionedParams(&options, scheme.ParameterCodec).
-		Do(ctx).
-		Into(result)
-	return
-}
-
-// List takes label and field selectors, and returns the list of DeepPacketInspections that match those selectors.
-func (c *deepPacketInspections) List(ctx context.Context, opts v1.ListOptions) (result *v3.DeepPacketInspectionList, err error) {
-	var timeout time.Duration
-	if opts.TimeoutSeconds != nil {
-		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
-	}
-	result = &v3.DeepPacketInspectionList{}
-	err = c.client.Get().
-		Namespace(c.ns).
-		Resource("deeppacketinspections").
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Timeout(timeout).
-		Do(ctx).
-		Into(result)
-	return
-}
-
-// Watch returns a watch.Interface that watches the requested deepPacketInspections.
-func (c *deepPacketInspections) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	var timeout time.Duration
-	if opts.TimeoutSeconds != nil {
-		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
-	}
-	opts.Watch = true
-	return c.client.Get().
-		Namespace(c.ns).
-		Resource("deeppacketinspections").
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Timeout(timeout).
-		Watch(ctx)
-}
-
-// Create takes the representation of a deepPacketInspection and creates it.  Returns the server's representation of the deepPacketInspection, and an error, if there is any.
-func (c *deepPacketInspections) Create(ctx context.Context, deepPacketInspection *v3.DeepPacketInspection, opts v1.CreateOptions) (result *v3.DeepPacketInspection, err error) {
-	result = &v3.DeepPacketInspection{}
-	err = c.client.Post().
-		Namespace(c.ns).
-		Resource("deeppacketinspections").
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Body(deepPacketInspection).
-		Do(ctx).
-		Into(result)
-	return
-}
-
-// Update takes the representation of a deepPacketInspection and updates it. Returns the server's representation of the deepPacketInspection, and an error, if there is any.
-func (c *deepPacketInspections) Update(ctx context.Context, deepPacketInspection *v3.DeepPacketInspection, opts v1.UpdateOptions) (result *v3.DeepPacketInspection, err error) {
-	result = &v3.DeepPacketInspection{}
-	err = c.client.Put().
-		Namespace(c.ns).
-		Resource("deeppacketinspections").
-		Name(deepPacketInspection.Name).
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Body(deepPacketInspection).
-		Do(ctx).
-		Into(result)
-	return
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *deepPacketInspections) UpdateStatus(ctx context.Context, deepPacketInspection *v3.DeepPacketInspection, opts v1.UpdateOptions) (result *v3.DeepPacketInspection, err error) {
-	result = &v3.DeepPacketInspection{}
-	err = c.client.Put().
-		Namespace(c.ns).
-		Resource("deeppacketinspections").
-		Name(deepPacketInspection.Name).
-		SubResource("status").
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Body(deepPacketInspection).
-		Do(ctx).
-		Into(result)
-	return
-}
-
-// Delete takes name of the deepPacketInspection and deletes it. Returns an error if one occurs.
-func (c *deepPacketInspections) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	return c.client.Delete().
-		Namespace(c.ns).
-		Resource("deeppacketinspections").
-		Name(name).
-		Body(&opts).
-		Do(ctx).
-		Error()
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *deepPacketInspections) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	var timeout time.Duration
-	if listOpts.TimeoutSeconds != nil {
-		timeout = time.Duration(*listOpts.TimeoutSeconds) * time.Second
-	}
-	return c.client.Delete().
-		Namespace(c.ns).
-		Resource("deeppacketinspections").
-		VersionedParams(&listOpts, scheme.ParameterCodec).
-		Timeout(timeout).
-		Body(&opts).
-		Do(ctx).
-		Error()
-}
-
-// Patch applies the patch and returns the patched deepPacketInspection.
-func (c *deepPacketInspections) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v3.DeepPacketInspection, err error) {
-	result = &v3.DeepPacketInspection{}
-	err = c.client.Patch(pt).
-		Namespace(c.ns).
-		Resource("deeppacketinspections").
-		Name(name).
-		SubResource(subresources...).
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Body(data).
-		Do(ctx).
-		Into(result)
-	return
 }

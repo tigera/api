@@ -5,13 +5,13 @@
 package v3
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
+	apisprojectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
 	clientset "github.com/tigera/api/pkg/client/clientset_generated/clientset"
 	internalinterfaces "github.com/tigera/api/pkg/client/informers_generated/externalversions/internalinterfaces"
-	v3 "github.com/tigera/api/pkg/client/listers_generated/projectcalico/v3"
+	projectcalicov3 "github.com/tigera/api/pkg/client/listers_generated/projectcalico/v3"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -22,7 +22,7 @@ import (
 // ExternalNetworks.
 type ExternalNetworkInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v3.ExternalNetworkLister
+	Lister() projectcalicov3.ExternalNetworkLister
 }
 
 type externalNetworkInformer struct {
@@ -56,7 +56,7 @@ func NewFilteredExternalNetworkInformer(client clientset.Interface, resyncPeriod
 				return client.ProjectcalicoV3().ExternalNetworks().Watch(context.TODO(), options)
 			},
 		},
-		&projectcalicov3.ExternalNetwork{},
+		&apisprojectcalicov3.ExternalNetwork{},
 		resyncPeriod,
 		indexers,
 	)
@@ -67,9 +67,9 @@ func (f *externalNetworkInformer) defaultInformer(client clientset.Interface, re
 }
 
 func (f *externalNetworkInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&projectcalicov3.ExternalNetwork{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisprojectcalicov3.ExternalNetwork{}, f.defaultInformer)
 }
 
-func (f *externalNetworkInformer) Lister() v3.ExternalNetworkLister {
-	return v3.NewExternalNetworkLister(f.Informer().GetIndexer())
+func (f *externalNetworkInformer) Lister() projectcalicov3.ExternalNetworkLister {
+	return projectcalicov3.NewExternalNetworkLister(f.Informer().GetIndexer())
 }

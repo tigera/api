@@ -5,13 +5,13 @@
 package v3
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
+	apisprojectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
 	clientset "github.com/tigera/api/pkg/client/clientset_generated/clientset"
 	internalinterfaces "github.com/tigera/api/pkg/client/informers_generated/externalversions/internalinterfaces"
-	v3 "github.com/tigera/api/pkg/client/listers_generated/projectcalico/v3"
+	projectcalicov3 "github.com/tigera/api/pkg/client/listers_generated/projectcalico/v3"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -22,7 +22,7 @@ import (
 // DeepPacketInspections.
 type DeepPacketInspectionInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v3.DeepPacketInspectionLister
+	Lister() projectcalicov3.DeepPacketInspectionLister
 }
 
 type deepPacketInspectionInformer struct {
@@ -57,7 +57,7 @@ func NewFilteredDeepPacketInspectionInformer(client clientset.Interface, namespa
 				return client.ProjectcalicoV3().DeepPacketInspections(namespace).Watch(context.TODO(), options)
 			},
 		},
-		&projectcalicov3.DeepPacketInspection{},
+		&apisprojectcalicov3.DeepPacketInspection{},
 		resyncPeriod,
 		indexers,
 	)
@@ -68,9 +68,9 @@ func (f *deepPacketInspectionInformer) defaultInformer(client clientset.Interfac
 }
 
 func (f *deepPacketInspectionInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&projectcalicov3.DeepPacketInspection{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisprojectcalicov3.DeepPacketInspection{}, f.defaultInformer)
 }
 
-func (f *deepPacketInspectionInformer) Lister() v3.DeepPacketInspectionLister {
-	return v3.NewDeepPacketInspectionLister(f.Informer().GetIndexer())
+func (f *deepPacketInspectionInformer) Lister() projectcalicov3.DeepPacketInspectionLister {
+	return projectcalicov3.NewDeepPacketInspectionLister(f.Informer().GetIndexer())
 }

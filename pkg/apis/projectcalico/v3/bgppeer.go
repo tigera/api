@@ -142,6 +142,11 @@ type BGPPeerSpec struct {
 	// ReachableBy contains the address of the gateway which peer can be reached by.
 	// +optional
 	ReachableBy string `json:"reachableBy,omitempty" validate:"omitempty,reachableBy"`
+
+	// Selector for the local workload that the node should peer with. When this is set, the peerSelector and peerIP fields must be empty,
+	// and the ASNumber must not be empty.
+	// +optional
+	LocalWorkloadSelector string `json:"localWorkloadSelector,omitempty" validate:"omitempty,selector"`
 }
 
 type SourceAddress string

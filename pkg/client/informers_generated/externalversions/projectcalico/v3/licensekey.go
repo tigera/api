@@ -5,13 +5,13 @@
 package v3
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
+	apisprojectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
 	clientset "github.com/tigera/api/pkg/client/clientset_generated/clientset"
 	internalinterfaces "github.com/tigera/api/pkg/client/informers_generated/externalversions/internalinterfaces"
-	v3 "github.com/tigera/api/pkg/client/listers_generated/projectcalico/v3"
+	projectcalicov3 "github.com/tigera/api/pkg/client/listers_generated/projectcalico/v3"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -22,7 +22,7 @@ import (
 // LicenseKeys.
 type LicenseKeyInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v3.LicenseKeyLister
+	Lister() projectcalicov3.LicenseKeyLister
 }
 
 type licenseKeyInformer struct {
@@ -56,7 +56,7 @@ func NewFilteredLicenseKeyInformer(client clientset.Interface, resyncPeriod time
 				return client.ProjectcalicoV3().LicenseKeys().Watch(context.TODO(), options)
 			},
 		},
-		&projectcalicov3.LicenseKey{},
+		&apisprojectcalicov3.LicenseKey{},
 		resyncPeriod,
 		indexers,
 	)
@@ -67,9 +67,9 @@ func (f *licenseKeyInformer) defaultInformer(client clientset.Interface, resyncP
 }
 
 func (f *licenseKeyInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&projectcalicov3.LicenseKey{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisprojectcalicov3.LicenseKey{}, f.defaultInformer)
 }
 
-func (f *licenseKeyInformer) Lister() v3.LicenseKeyLister {
-	return v3.NewLicenseKeyLister(f.Informer().GetIndexer())
+func (f *licenseKeyInformer) Lister() projectcalicov3.LicenseKeyLister {
+	return projectcalicov3.NewLicenseKeyLister(f.Informer().GetIndexer())
 }

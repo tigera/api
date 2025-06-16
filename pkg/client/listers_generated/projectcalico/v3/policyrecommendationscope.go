@@ -5,10 +5,10 @@
 package v3
 
 import (
-	v3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // PolicyRecommendationScopeLister helps list PolicyRecommendationScopes.
@@ -16,39 +16,19 @@ import (
 type PolicyRecommendationScopeLister interface {
 	// List lists all PolicyRecommendationScopes in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v3.PolicyRecommendationScope, err error)
+	List(selector labels.Selector) (ret []*projectcalicov3.PolicyRecommendationScope, err error)
 	// Get retrieves the PolicyRecommendationScope from the index for a given name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v3.PolicyRecommendationScope, error)
+	Get(name string) (*projectcalicov3.PolicyRecommendationScope, error)
 	PolicyRecommendationScopeListerExpansion
 }
 
 // policyRecommendationScopeLister implements the PolicyRecommendationScopeLister interface.
 type policyRecommendationScopeLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*projectcalicov3.PolicyRecommendationScope]
 }
 
 // NewPolicyRecommendationScopeLister returns a new PolicyRecommendationScopeLister.
 func NewPolicyRecommendationScopeLister(indexer cache.Indexer) PolicyRecommendationScopeLister {
-	return &policyRecommendationScopeLister{indexer: indexer}
-}
-
-// List lists all PolicyRecommendationScopes in the indexer.
-func (s *policyRecommendationScopeLister) List(selector labels.Selector) (ret []*v3.PolicyRecommendationScope, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v3.PolicyRecommendationScope))
-	})
-	return ret, err
-}
-
-// Get retrieves the PolicyRecommendationScope from the index for a given name.
-func (s *policyRecommendationScopeLister) Get(name string) (*v3.PolicyRecommendationScope, error) {
-	obj, exists, err := s.indexer.GetByKey(name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v3.Resource("policyrecommendationscope"), name)
-	}
-	return obj.(*v3.PolicyRecommendationScope), nil
+	return &policyRecommendationScopeLister{listers.New[*projectcalicov3.PolicyRecommendationScope](indexer, projectcalicov3.Resource("policyrecommendationscope"))}
 }
