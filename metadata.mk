@@ -11,7 +11,7 @@ ACK_GINKGO=ACK_GINKGO_DEPRECATIONS=1.16.5
 
 # Version of Kubernetes to use for tests and kubectl binary release in
 # compliance benchmarker, confd, and kube-controllers.
-K8S_VERSION=v1.30.11
+K8S_VERSION=v1.30.13
 
 # Version of various tools used in the build and tests.
 # k8s versions below are only used in tests.
@@ -19,7 +19,7 @@ COREDNS_VERSION=1.5.2
 ETCD_VERSION=v3.5.6
 HELM_VERSION=v3.11.3
 BITNAMI_K8S_VERSION=v1.30.7
-KINDEST_NODE_VERSION=v1.30.8
+KINDEST_NODE_VERSION=v1.30.10
 KINDEST_NODE_VERSION_DUAL_TOR=v1.24.7
 KIND_VERSION=v0.24.0
 PROTOC_VER=v0.1
