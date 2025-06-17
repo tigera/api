@@ -8,7 +8,7 @@ GO_BUILD_VER=v0.93
 ACK_GINKGO=ACK_GINKGO_DEPRECATIONS=1.16.5
 
 # Version of Kubernetes to use for tests and kubectl binary release.
-K8S_VERSION=v1.29.15
+K8S_VERSION=v1.30.13
 BITNAMI_K8S_VERSION=v1.29.11
 
 # Version of various tools used in the build and tests.
@@ -80,3 +80,8 @@ else ifeq ($(SEMAPHORE_GIT_REF_TYPE), pull-request)
 else
     THIRD_PARTY_REGISTRY=gcr.io/tigera-dev/third-party-ci
 endif
+
+# Default branch prefix for release branches
+RELEASE_BRANCH_PREFIX ?= release-calient
+# The operator branch corresponding to this branch.
+OPERATOR_BRANCH=release-v1.34
