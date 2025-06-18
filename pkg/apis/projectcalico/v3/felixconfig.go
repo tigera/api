@@ -78,13 +78,14 @@ const (
 	AWSSecondaryIPEnabledENIPerWorkload = "EnabledENIPerWorkload"
 )
 
-// +kubebuilder:validation:Enum=NoDelay;DelayDeniedPacket;DelayDNSResponse
+// +kubebuilder:validation:Enum=NoDelay;DelayDeniedPacket;DelayDNSResponse;Inline
 type DNSPolicyMode string
 
 const (
 	DNSPolicyModeNoDelay           DNSPolicyMode = "NoDelay"
 	DNSPolicyModeDelayDeniedPacket DNSPolicyMode = "DelayDeniedPacket"
 	DNSPolicyModeDelayDNSResponse  DNSPolicyMode = "DelayDNSResponse"
+	DNSPolicyModeInline            DNSPolicyMode = "Inline"
 )
 
 type BPFDNSPolicyMode string
@@ -92,6 +93,15 @@ type BPFDNSPolicyMode string
 const (
 	BPFDNSPolicyModeNoDelay BPFDNSPolicyMode = "NoDelay"
 	BPFDNSPolicyModeInline  BPFDNSPolicyMode = "Inline"
+)
+
+// +kubebuilder:validation:Enum=NoDelay;DelayDeniedPacket;DelayDNSResponse
+type NFTablesDNSPolicyMode string
+
+const (
+	NFTablesDNSPolicyModeNoDelay           NFTablesDNSPolicyMode = "NoDelay"
+	NFTablesDNSPolicyModeDelayDeniedPacket NFTablesDNSPolicyMode = "DelayDeniedPacket"
+	NFTablesDNSPolicyModeDelayDNSResponse  NFTablesDNSPolicyMode = "DelayDNSResponse"
 )
 
 // +kubebuilder:validation:Enum=Enabled;Disabled
@@ -133,6 +143,14 @@ type WindowsManageFirewallRulesMode string
 const (
 	WindowsManageFirewallRulesEnabled  WindowsManageFirewallRulesMode = "Enabled"
 	WindowsManageFirewallRulesDisabled WindowsManageFirewallRulesMode = "Disabled"
+)
+
+// +kubebuilder:validation:Enum=OnNewConnection;Continuous
+type FlowLogsPolicyEvaluationModeType string
+
+const (
+	FlowLogsPolicyEvaluationModeOnNewConnection FlowLogsPolicyEvaluationModeType = "OnNewConnection"
+	FlowLogsPolicyEvaluationModeContinuous      FlowLogsPolicyEvaluationModeType = "Continuous"
 )
 
 // FelixConfigurationSpec contains the values of the Felix configuration.
@@ -403,7 +421,7 @@ type FelixConfigurationSpec struct {
 	// file reporting is disabled if field is left empty.
 	//
 	// Chosen directory should match the directory used by the CNI plugin for PodStartupDelay.
-	// [Default: ""]
+	// [Default: /var/run/calico]
 	EndpointStatusPathPrefix string `json:"endpointStatusPathPrefix,omitempty"`
 
 	// IptablesMarkMask is the mask that Felix selects its IPTables Mark bits from. Should be a 32 bit hexadecimal
@@ -673,6 +691,19 @@ type FelixConfigurationSpec struct {
 	// [Default: Auto]
 	BPFConntrackCleanupMode *BPFConntrackMode `json:"bpfConntrackMode,omitempty" validate:"omitempty,oneof=Auto Userspace BPFProgram"`
 
+	// BPFConntrackTimers overrides the default values for the specified conntrack timer if
+	// set. Each value can be either a duration or `Auto` to pick the value from
+	// a Linux conntrack timeout.
+	//
+	// Configurable timers are: CreationGracePeriod, TCPSynSent,
+	// TCPEstablished, TCPFinsSeen, TCPResetSeen, UDPTimeout, GenericTimeout,
+	// ICMPTimeout.
+	//
+	// Unset values are replaced by the default values with a warning log for
+	// incorrect values.
+	// +optional
+	BPFConntrackTimeouts *BPFConntrackTimeouts `json:"bpfConntrackTimeouts,omitempty" validate:"omitempty"`
+
 	// BPFLogFilters is a map of key=values where the value is
 	// a pcap filter expression and the key is an interface name with 'all'
 	// denoting all interfaces, 'weps' all workload endpoints and 'heps' all host
@@ -694,7 +725,8 @@ type FelixConfigurationSpec struct {
 	// BPFDataIfacePattern is a regular expression that controls which interfaces Felix should attach BPF programs to
 	// in order to catch traffic to/from the network.  This needs to match the interfaces that Calico workload traffic
 	// flows over as well as any interfaces that handle incoming traffic to nodeports and services from outside the
-	// cluster.  It should not match the workload interfaces (usually named cali...).
+	// cluster.  It should not match the workload interfaces (usually named cali...) or any other special device managed
+	// by Calico itself (e.g., tunnels).
 	BPFDataIfacePattern string `json:"bpfDataIfacePattern,omitempty" validate:"omitempty,regexp"`
 
 	// BPFL3IfacePattern is a regular expression that allows to list tunnel devices like wireguard or vxlan (i.e., L3 devices)
@@ -784,6 +816,19 @@ type FelixConfigurationSpec struct {
 	// BPFMapSizeConntrack sets the size for the conntrack map.  This map must be large enough to hold
 	// an entry for each active connection.  Warning: changing the size of the conntrack map can cause disruption.
 	BPFMapSizeConntrack *int `json:"bpfMapSizeConntrack,omitempty"`
+
+	// BPFMapSizePerCPUConntrack determines the size of conntrack map based on the number of CPUs. If set to a
+	// non-zero value, overrides BPFMapSizeConntrack with `BPFMapSizePerCPUConntrack * (Number of CPUs)`.
+	// This map must be large enough to hold an entry for each active connection.  Warning: changing the size of the
+	// conntrack map can cause disruption.
+	BPFMapSizePerCPUConntrack *int `json:"bpfMapSizePerCpuConntrack,omitempty"`
+
+	// BPFMapSizeConntrackScaling controls whether and how we scale the conntrack map size depending
+	// on its usage. 'Disabled' make the size stay at the default or whatever is set by
+	// BPFMapSizeConntrack*. 'DoubleIfFull' doubles the size when the map is pretty much full even
+	// after cleanups. [Default: DoubleIfFull]
+	// +kubebuilder:validation:Pattern=`^(?i)(Disabled|DoubleIfFull)?$`
+	BPFMapSizeConntrackScaling string `json:"bpfMapSizeConntrackScaling,omitempty"`
 
 	// BPFMapSizeConntrackCleanupQueue sets the size for the map used to hold NAT conntrack entries that are queued
 	// for cleanup.  This should be big enough to hold all the NAT entries that expire within one cleanup interval.
@@ -890,9 +935,22 @@ type FelixConfigurationSpec struct {
 	// When FlowLogsCollectorDebugTrace is set to true, enables the logs in the collector to be
 	// printed in their entirety.
 	FlowLogsCollectorDebugTrace *bool `json:"flowLogsCollectorDebugTrace,omitempty"`
+
+	// FlowLogGoldmaneServer is the flow server endpoint to which flow data should be published.
+	FlowLogsGoldmaneServer *string `json:"flowLogsGoldmaneServer,omitempty"`
+
 	// FlowLogsDestDomainsByClient is used to configure if the source IP is used in the mapping of top
 	// level destination domains. [Default: true]
 	FlowLogsDestDomainsByClient *bool `json:"flowLogsDestDomainsByClient,omitempty"`
+	// FlowLogsPolicyEvaluationMode defines how policies are evaluated and reflected in flow logs.
+	// OnNewConnection - In this mode, staged policies are only evaluated when new connections are
+	// made in the dataplane. Staged/active policy changes will not be reflected in the
+	// `pending_policies` field of flow logs for long lived connections.
+	// Continuous - Felix evaluates active flows on a regular basis to determine the rule
+	// traces in the flow logs. Any policy updates that impact a flow will be reflected in the
+	// pending_policies field, offering a near-real-time view of policy changes across flows.
+	// [Default: Continuous]
+	FlowLogsPolicyEvaluationMode *string `json:"flowLogsPolicyEvaluationMode,omitempty"`
 	// FlowLogsFileEnabled when set to true, enables logging flow logs to a file. If false no flow logging to file will occur.
 	FlowLogsFileEnabled *bool `json:"flowLogsFileEnabled,omitempty"`
 	// FlowLogsFileMaxFiles sets the number of log files to keep.
@@ -1042,12 +1100,16 @@ type FelixConfigurationSpec struct {
 	// the first packet traverses the policy rules. Client applications need to handle reconnection attempts if initial
 	// connection attempts fail. This may be problematic for some applications or for very low DNS TTLs.
 	//
+	// Inline - Parses DNS response inline with DNS response packet processing within IPTables.
+	// This guarantees the DNS rules reflect any change immediately.
+	// This mode works for iptables only and matches the same mode for BPFDNSPolicyMode.
 	// This setting is ignored on Windows and "NoDelay" is always used.
 	//
 	// This setting is ignored by eBPF and BPFDNSPolicyMode is used instead.
 	//
-	// [Default: DelayDeniedPacket]
-	DNSPolicyMode *DNSPolicyMode `json:"dnsPolicyMode,omitempty" validate:"omitempty,oneof=NoDelay DelayDeniedPacket DelayDNSResponse"`
+	// This field has no effect in NFTables mode. Please use NFTablesDNSPolicyMode instead.
+	// [Default: Inline]
+	DNSPolicyMode *DNSPolicyMode `json:"dnsPolicyMode,omitempty" validate:"omitempty,oneof=NoDelay DelayDeniedPacket DelayDNSResponse Inline"`
 	// BPFDNSPolicyMode specifies how DNS policy programming will be handled.
 	// Inline - BPF parses DNS response inline with DNS response packet
 	// processing. This guarantees the DNS rules reflect any change immediately.
@@ -1056,6 +1118,18 @@ type FelixConfigurationSpec struct {
 	// connection attempts fail. This may be problematic for some applications or for very low DNS TTLs.
 	// [Default: Inline]
 	BPFDNSPolicyMode *BPFDNSPolicyMode `json:"bpfDNSPolicyMode,omitempty" validate:"omitempty,oneof=NoDelay Inline"`
+	// NFTablesDNSPolicyMode specifies how DNS policy programming will be handled for NFTables.
+	// DelayDeniedPacket - Felix delays any denied packet that traversed a policy that included egress domain matches,
+	// but did not match. The packet is released after a fixed time, or after the destination IP address was programmed.
+	// DelayDNSResponse - Felix delays any DNS response until related IPSets are programmed. This introduces some
+	// latency to all DNS packets (even when no IPSet programming is required), but it ensures policy hit statistics
+	// are accurate. This is the recommended setting when you are making use of staged policies or policy rule hit
+	// statistics.
+	// NoDelay - Felix does not introduce any delay to the packets. DNS rules may not have been programmed by the time
+	// the first packet traverses the policy rules. Client applications need to handle reconnection attempts if initial
+	// connection attempts fail. This may be problematic for some applications or for very low DNS TTLs.
+	// [Default: DelayDeniedPacket]
+	NFTablesDNSPolicyMode *NFTablesDNSPolicyMode `json:"nftablesDNSPolicyMode,omitempty" validate:"omitempty,oneof=NoDelay DelayDeniedPacket DelayDNSResponse"`
 	// DNSPolicyNfqueueID is the NFQUEUE ID to use for DNS Policy re-evaluation when the domains IP hasn't been programmed
 	// to ipsets yet. Used when DNSPolicyMode is DelayDeniedPacket. [Default: 100]
 	DNSPolicyNfqueueID *int `json:"dnsPolicyNfqueueID,omitempty" validate:"omitempty,gte=0,lte=65535"`
@@ -1160,6 +1234,24 @@ type FelixConfigurationSpec struct {
 	// flushes the buffered L7 logs. A value of 0 means no limit. [Default: 1500]
 	L7LogsFilePerNodeLimit *int `json:"l7LogsFilePerNodeLimit,omitempty"`
 
+	// WAFEventLogsFlushInterval configures the interval at which Felix exports WAFEvent logs.
+	// [Default: 15s]
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:Pattern=`^([0-9]+(\\.[0-9]+)?(ms|s|m|h))*$`
+	WAFEventLogsFlushInterval *metav1.Duration `json:"wafEventLogsFlushInterval,omitempty" configv1timescale:"seconds"`
+	// WAFEventLogsFileEnabled controls logging WAFEvent logs to a file. If false no WAFEvent logging to file will occur.
+	// [Default: false]
+	WAFEventLogsFileEnabled *bool `json:"wafEventLogsFileEnabled,omitempty"`
+	// WAFEventLogsFileDirectory sets the directory where WAFEvent log files are stored.
+	// [Default: /var/log/calico/waf]
+	WAFEventLogsFileDirectory *string `json:"wafEventLogsFileDirectory,omitempty"`
+	// WAFEventLogsFileMaxFiles sets the number of WAFEvent log files to keep.
+	// [Default: 5]
+	WAFEventLogsFileMaxFiles *int `json:"wafEventLogsFileMaxFiles,omitempty"`
+	// WAFEventLogsFileMaxFileSizeMB sets the max size in MB of WAFEvent log files before rotation.
+	// [Default: 100]
+	WAFEventLogsFileMaxFileSizeMB *int `json:"wafEventLogsFileMaxFileSizeMB,omitempty"`
+
 	// WindowsNetworkName specifies which Windows HNS networks Felix should operate on.  The default is to match
 	// networks that start with "calico".  Supports regular expression syntax.
 	WindowsNetworkName *string `json:"windowsNetworkName,omitempty"`
@@ -1173,6 +1265,11 @@ type FelixConfigurationSpec struct {
 	// Use Enabled with caution. [Default: Disabled]
 	// +kubebuilder:validation:Enum=Enabled;Disabled;L2Only
 	BPFRedirectToPeer string `json:"bpfRedirectToPeer,omitempty"`
+
+	// BPFProfiling controls profiling of BPF programs. At the monent, it can be
+	// Disabled or Enabled. [Default: Disabled]
+	//+kubebuilder:validation:Enum=Enabled;Disabled
+	BPFProfiling string `json:"bpfProfiling,omitempty"`
 
 	// RouteSource configures where Felix gets its routing information.
 	// - WorkloadIPs: use workload endpoints to construct routes.
@@ -1231,7 +1328,12 @@ type FelixConfigurationSpec struct {
 
 	// WireguardEnabledV6 controls whether Wireguard is enabled for IPv6 (encapsulating IPv6 traffic over an IPv6 underlay network). [Default: false]
 	WireguardEnabledV6 *bool `json:"wireguardEnabledV6,omitempty"`
-	// WireguardThreadingEnabled controls whether Wireguard has NAPI threading enabled. [Default: false]
+	// WireguardThreadingEnabled controls whether Wireguard has Threaded NAPI enabled. [Default: false]
+	// This increases the maximum number of packets a Wireguard interface can process.
+	// Consider threaded NAPI only if you have high packets per second workloads that are causing dropping packets due to a saturated `softirq` CPU core.
+	// There is a [known issue](https://lore.kernel.org/netdev/CALrw=nEoT2emQ0OAYCjM1d_6Xe_kNLSZ6dhjb5FxrLFYh4kozA@mail.gmail.com/T/) with this setting
+	// that may cause NAPI to get stuck holding the global `rtnl_mutex` when a peer is removed.
+	// Workaround: Make sure your Linux kernel [includes this patch](https://github.com/torvalds/linux/commit/56364c910691f6d10ba88c964c9041b9ab777bd6) to unwedge NAPI.
 	WireguardThreadingEnabled *bool `json:"wireguardThreadingEnabled,omitempty"`
 	// WireguardListeningPort controls the listening port used by IPv4 Wireguard. [Default: 51820]
 	WireguardListeningPort *int `json:"wireguardListeningPort,omitempty" validate:"omitempty,gt=0,lte=65535"`
@@ -1407,6 +1509,56 @@ type ProtoPort struct {
 	Port     uint16 `json:"port"`
 	// +optional
 	Net string `json:"net,omitempty"`
+}
+
+// +kubebuilder:validation:Pattern=`^(([0-9]*(\.[0-9]*)?(ms|s|h|m|us)+)+|Auto)$`
+type BPFConntrackTimeout string
+
+type BPFConntrackTimeouts struct {
+	//  CreationGracePeriod gives a generic grace period to new connection
+	//  before they are considered for cleanup [Default: 10s].
+	// +optional
+	CreationGracePeriod *BPFConntrackTimeout `json:"creationGracePeriod,omitempty"`
+	// TCPSynSent controls how long it takes before considering this entry for
+	// cleanup after the last SYN without a response. If set to 'Auto', the
+	// value from nf_conntrack_tcp_timeout_syn_sent is used. If nil, Calico uses
+	// its own default value. [Default: 20s].
+	// +optional
+	TCPSynSent *BPFConntrackTimeout `json:"tcpSynSent,omitempty"`
+	// TCPEstablished controls how long it takes before considering this entry for
+	// cleanup after the connection became idle. If set to 'Auto', the
+	// value from nf_conntrack_tcp_timeout_established is used. If nil, Calico uses
+	// its own default value. [Default: 1h].
+	// +optional
+	TCPEstablished *BPFConntrackTimeout `json:"tcpEstablished,omitempty"`
+	// TCPFinsSeen controls how long it takes before considering this entry for
+	// cleanup after the connection was closed gracefully. If set to 'Auto', the
+	// value from nf_conntrack_tcp_timeout_time_wait is used. If nil, Calico uses
+	// its own default value. [Default: Auto].
+	// +optional
+	TCPFinsSeen *BPFConntrackTimeout `json:"tcpFinsSeen,omitempty"`
+	// TCPResetSeen controls how long it takes before considering this entry for
+	// cleanup after the connection was aborted. If nil, Calico uses its own
+	// default value. [Default: 40s].
+	// +optional
+	TCPResetSeen *BPFConntrackTimeout `json:"tcpResetSeen,omitempty"`
+	// UDPTimeout controls how long it takes before considering this entry for
+	// cleanup after the connection became idle. If nil, Calico uses its own
+	// default value. [Default: 60s].
+	// +optional
+	UDPTimeout *BPFConntrackTimeout `json:"udpTimeout,omitempty"`
+	// GenericTimeout controls how long it takes before considering this
+	// entry for cleanup after the connection became idle. If set to 'Auto', the
+	// value from nf_conntrack_generic_timeout is used. If nil, Calico uses its
+	// own default value. [Default: 10m].
+	// +optional
+	GenericTimeout *BPFConntrackTimeout `json:"genericTimeout,omitempty"`
+	// ICMPTimeout controls how long it takes before considering this
+	// entry for cleanup after the connection became idle. If set to 'Auto', the
+	// value from nf_conntrack_icmp_timeout is used. If nil, Calico uses its
+	// own default value. [Default: 5s].
+	// +optional
+	ICMPTimeout *BPFConntrackTimeout `json:"icmpTimeout,omitempty"`
 }
 
 // New FelixConfiguration creates a new (zeroed) FelixConfiguration struct with the TypeMetadata

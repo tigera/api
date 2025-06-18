@@ -5,13 +5,13 @@
 package v3
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
+	apisprojectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
 	clientset "github.com/tigera/api/pkg/client/clientset_generated/clientset"
 	internalinterfaces "github.com/tigera/api/pkg/client/informers_generated/externalversions/internalinterfaces"
-	v3 "github.com/tigera/api/pkg/client/listers_generated/projectcalico/v3"
+	projectcalicov3 "github.com/tigera/api/pkg/client/listers_generated/projectcalico/v3"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -22,7 +22,7 @@ import (
 // GlobalThreatFeeds.
 type GlobalThreatFeedInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v3.GlobalThreatFeedLister
+	Lister() projectcalicov3.GlobalThreatFeedLister
 }
 
 type globalThreatFeedInformer struct {
@@ -56,7 +56,7 @@ func NewFilteredGlobalThreatFeedInformer(client clientset.Interface, resyncPerio
 				return client.ProjectcalicoV3().GlobalThreatFeeds().Watch(context.TODO(), options)
 			},
 		},
-		&projectcalicov3.GlobalThreatFeed{},
+		&apisprojectcalicov3.GlobalThreatFeed{},
 		resyncPeriod,
 		indexers,
 	)
@@ -67,9 +67,9 @@ func (f *globalThreatFeedInformer) defaultInformer(client clientset.Interface, r
 }
 
 func (f *globalThreatFeedInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&projectcalicov3.GlobalThreatFeed{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisprojectcalicov3.GlobalThreatFeed{}, f.defaultInformer)
 }
 
-func (f *globalThreatFeedInformer) Lister() v3.GlobalThreatFeedLister {
-	return v3.NewGlobalThreatFeedLister(f.Informer().GetIndexer())
+func (f *globalThreatFeedInformer) Lister() projectcalicov3.GlobalThreatFeedLister {
+	return projectcalicov3.NewGlobalThreatFeedLister(f.Informer().GetIndexer())
 }

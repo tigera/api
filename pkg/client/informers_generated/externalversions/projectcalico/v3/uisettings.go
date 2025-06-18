@@ -5,13 +5,13 @@
 package v3
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
+	apisprojectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
 	clientset "github.com/tigera/api/pkg/client/clientset_generated/clientset"
 	internalinterfaces "github.com/tigera/api/pkg/client/informers_generated/externalversions/internalinterfaces"
-	v3 "github.com/tigera/api/pkg/client/listers_generated/projectcalico/v3"
+	projectcalicov3 "github.com/tigera/api/pkg/client/listers_generated/projectcalico/v3"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -22,7 +22,7 @@ import (
 // UISettings.
 type UISettingsInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v3.UISettingsLister
+	Lister() projectcalicov3.UISettingsLister
 }
 
 type uISettingsInformer struct {
@@ -56,7 +56,7 @@ func NewFilteredUISettingsInformer(client clientset.Interface, resyncPeriod time
 				return client.ProjectcalicoV3().UISettings().Watch(context.TODO(), options)
 			},
 		},
-		&projectcalicov3.UISettings{},
+		&apisprojectcalicov3.UISettings{},
 		resyncPeriod,
 		indexers,
 	)
@@ -67,9 +67,9 @@ func (f *uISettingsInformer) defaultInformer(client clientset.Interface, resyncP
 }
 
 func (f *uISettingsInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&projectcalicov3.UISettings{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisprojectcalicov3.UISettings{}, f.defaultInformer)
 }
 
-func (f *uISettingsInformer) Lister() v3.UISettingsLister {
-	return v3.NewUISettingsLister(f.Informer().GetIndexer())
+func (f *uISettingsInformer) Lister() projectcalicov3.UISettingsLister {
+	return projectcalicov3.NewUISettingsLister(f.Informer().GetIndexer())
 }

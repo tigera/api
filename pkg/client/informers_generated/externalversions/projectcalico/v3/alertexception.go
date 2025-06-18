@@ -5,13 +5,13 @@
 package v3
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
+	apisprojectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
 	clientset "github.com/tigera/api/pkg/client/clientset_generated/clientset"
 	internalinterfaces "github.com/tigera/api/pkg/client/informers_generated/externalversions/internalinterfaces"
-	v3 "github.com/tigera/api/pkg/client/listers_generated/projectcalico/v3"
+	projectcalicov3 "github.com/tigera/api/pkg/client/listers_generated/projectcalico/v3"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -22,7 +22,7 @@ import (
 // AlertExceptions.
 type AlertExceptionInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v3.AlertExceptionLister
+	Lister() projectcalicov3.AlertExceptionLister
 }
 
 type alertExceptionInformer struct {
@@ -56,7 +56,7 @@ func NewFilteredAlertExceptionInformer(client clientset.Interface, resyncPeriod 
 				return client.ProjectcalicoV3().AlertExceptions().Watch(context.TODO(), options)
 			},
 		},
-		&projectcalicov3.AlertException{},
+		&apisprojectcalicov3.AlertException{},
 		resyncPeriod,
 		indexers,
 	)
@@ -67,9 +67,9 @@ func (f *alertExceptionInformer) defaultInformer(client clientset.Interface, res
 }
 
 func (f *alertExceptionInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&projectcalicov3.AlertException{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisprojectcalicov3.AlertException{}, f.defaultInformer)
 }
 
-func (f *alertExceptionInformer) Lister() v3.AlertExceptionLister {
-	return v3.NewAlertExceptionLister(f.Informer().GetIndexer())
+func (f *alertExceptionInformer) Lister() projectcalicov3.AlertExceptionLister {
+	return projectcalicov3.NewAlertExceptionLister(f.Informer().GetIndexer())
 }

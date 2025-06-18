@@ -5,13 +5,13 @@
 package v3
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
+	apisprojectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
 	clientset "github.com/tigera/api/pkg/client/clientset_generated/clientset"
 	internalinterfaces "github.com/tigera/api/pkg/client/informers_generated/externalversions/internalinterfaces"
-	v3 "github.com/tigera/api/pkg/client/listers_generated/projectcalico/v3"
+	projectcalicov3 "github.com/tigera/api/pkg/client/listers_generated/projectcalico/v3"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -22,7 +22,7 @@ import (
 // GlobalReportTypes.
 type GlobalReportTypeInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v3.GlobalReportTypeLister
+	Lister() projectcalicov3.GlobalReportTypeLister
 }
 
 type globalReportTypeInformer struct {
@@ -56,7 +56,7 @@ func NewFilteredGlobalReportTypeInformer(client clientset.Interface, resyncPerio
 				return client.ProjectcalicoV3().GlobalReportTypes().Watch(context.TODO(), options)
 			},
 		},
-		&projectcalicov3.GlobalReportType{},
+		&apisprojectcalicov3.GlobalReportType{},
 		resyncPeriod,
 		indexers,
 	)
@@ -67,9 +67,9 @@ func (f *globalReportTypeInformer) defaultInformer(client clientset.Interface, r
 }
 
 func (f *globalReportTypeInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&projectcalicov3.GlobalReportType{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisprojectcalicov3.GlobalReportType{}, f.defaultInformer)
 }
 
-func (f *globalReportTypeInformer) Lister() v3.GlobalReportTypeLister {
-	return v3.NewGlobalReportTypeLister(f.Informer().GetIndexer())
+func (f *globalReportTypeInformer) Lister() projectcalicov3.GlobalReportTypeLister {
+	return projectcalicov3.NewGlobalReportTypeLister(f.Informer().GetIndexer())
 }

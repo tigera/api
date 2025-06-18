@@ -5,13 +5,13 @@
 package v3
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
+	apisprojectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
 	clientset "github.com/tigera/api/pkg/client/clientset_generated/clientset"
 	internalinterfaces "github.com/tigera/api/pkg/client/informers_generated/externalversions/internalinterfaces"
-	v3 "github.com/tigera/api/pkg/client/listers_generated/projectcalico/v3"
+	projectcalicov3 "github.com/tigera/api/pkg/client/listers_generated/projectcalico/v3"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -22,7 +22,7 @@ import (
 // GlobalAlertTemplates.
 type GlobalAlertTemplateInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v3.GlobalAlertTemplateLister
+	Lister() projectcalicov3.GlobalAlertTemplateLister
 }
 
 type globalAlertTemplateInformer struct {
@@ -56,7 +56,7 @@ func NewFilteredGlobalAlertTemplateInformer(client clientset.Interface, resyncPe
 				return client.ProjectcalicoV3().GlobalAlertTemplates().Watch(context.TODO(), options)
 			},
 		},
-		&projectcalicov3.GlobalAlertTemplate{},
+		&apisprojectcalicov3.GlobalAlertTemplate{},
 		resyncPeriod,
 		indexers,
 	)
@@ -67,9 +67,9 @@ func (f *globalAlertTemplateInformer) defaultInformer(client clientset.Interface
 }
 
 func (f *globalAlertTemplateInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&projectcalicov3.GlobalAlertTemplate{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisprojectcalicov3.GlobalAlertTemplate{}, f.defaultInformer)
 }
 
-func (f *globalAlertTemplateInformer) Lister() v3.GlobalAlertTemplateLister {
-	return v3.NewGlobalAlertTemplateLister(f.Informer().GetIndexer())
+func (f *globalAlertTemplateInformer) Lister() projectcalicov3.GlobalAlertTemplateLister {
+	return projectcalicov3.NewGlobalAlertTemplateLister(f.Informer().GetIndexer())
 }
