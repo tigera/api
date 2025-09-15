@@ -153,6 +153,14 @@ const (
 	FlowLogsPolicyEvaluationModeContinuous      FlowLogsPolicyEvaluationModeType = "Continuous"
 )
 
+// +kubebuilder:validation:Enum=AllPolicies;EndpointPolicies
+type FlowLogsPolicyScopeType string
+
+const (
+	FlowLogsAllPolicies      FlowLogsPolicyScopeType = "AllPolicies"
+	FlowLogsEndpointPolicies FlowLogsPolicyScopeType = "EndpointPolicies"
+)
+
 // FelixConfigurationSpec contains the values of the Felix configuration.
 type FelixConfigurationSpec struct {
 	// UseInternalDataplaneDriver, if true, Felix will use its internal dataplane programming logic.  If false, it
@@ -951,6 +959,14 @@ type FelixConfigurationSpec struct {
 	// pending_policies field, offering a near-real-time view of policy changes across flows.
 	// [Default: Continuous]
 	FlowLogsPolicyEvaluationMode *string `json:"flowLogsPolicyEvaluationMode,omitempty"`
+	// FlowLogsPolicyScope controls which policies are included in flow logs.
+	// AllPolicies - Processes both transit policies for the local node and
+	// endpoint policies derived from packet source/destination IPs. Provides comprehensive
+	// visibility into all policy evaluations but increases log volume.
+	// EndpointPolicies - Processes only policies for endpoints identified as the source
+	// or destination of the packet (whether workload or host endpoints).
+	// [Default: EndpointPolicies]
+	FlowLogsPolicyScope *string `json:"flowLogsPolicyScope,omitempty"`
 	// FlowLogsFileEnabled when set to true, enables logging flow logs to a file. If false no flow logging to file will occur.
 	FlowLogsFileEnabled *bool `json:"flowLogsFileEnabled,omitempty"`
 	// FlowLogsFileMaxFiles sets the number of log files to keep.
@@ -1116,7 +1132,7 @@ type FelixConfigurationSpec struct {
 	// NoDelay - Felix does not introduce any delay to the packets. DNS rules may not have been programmed by the time
 	// the first packet traverses the policy rules. Client applications need to handle reconnection attempts if initial
 	// connection attempts fail. This may be problematic for some applications or for very low DNS TTLs.
-	// [Default: Inline]
+	// [Default: DelayDeniedPacket]
 	BPFDNSPolicyMode *BPFDNSPolicyMode `json:"bpfDNSPolicyMode,omitempty" validate:"omitempty,oneof=NoDelay Inline"`
 	// NFTablesDNSPolicyMode specifies how DNS policy programming will be handled for NFTables.
 	// DelayDeniedPacket - Felix delays any denied packet that traversed a policy that included egress domain matches,

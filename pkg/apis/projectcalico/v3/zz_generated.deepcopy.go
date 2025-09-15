@@ -1058,6 +1058,11 @@ func (in *BGPPeerSpec) DeepCopyInto(out *BGPPeerSpec) {
 			(*out)[key] = val
 		}
 	}
+	if in.NextHopMode != nil {
+		in, out := &in.NextHopMode, &out.NextHopMode
+		*out = new(NextHopMode)
+		**out = **in
+	}
 	if in.Password != nil {
 		in, out := &in.Password, &out.Password
 		*out = new(BGPPassword)
@@ -3195,6 +3200,11 @@ func (in *FelixConfigurationSpec) DeepCopyInto(out *FelixConfigurationSpec) {
 	}
 	if in.FlowLogsPolicyEvaluationMode != nil {
 		in, out := &in.FlowLogsPolicyEvaluationMode, &out.FlowLogsPolicyEvaluationMode
+		*out = new(string)
+		**out = **in
+	}
+	if in.FlowLogsPolicyScope != nil {
+		in, out := &in.FlowLogsPolicyScope, &out.FlowLogsPolicyScope
 		*out = new(string)
 		**out = **in
 	}

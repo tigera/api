@@ -2378,8 +2378,15 @@ func schema_pkg_apis_projectcalico_v3_BGPPeerSpec(ref common.ReferenceCallback) 
 					},
 					"keepOriginalNextHop": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Option to keep the original nexthop field when routes are sent to a BGP Peer. Setting \"true\" configures the selected BGP Peers node to use the \"next hop keep;\" instead of \"next hop self;\"(default) in the specific branch of the Node on \"bird.cfg\".",
+							Description: "Option to keep the original nexthop field when routes are sent to a BGP Peer. Setting \"true\" configures the selected BGP Peers node to use the \"next hop keep;\" instead of \"next hop self;\"(default) in the specific branch of the Node on \"bird.cfg\". Note: that this field is deprecated. Users should use the NextHopMode field to control the next hop attribute for a BGP peer.",
 							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"nextHopMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "NextHopMode defines the method of calculating the next hop attribute for received routes. This replaces and expands the deprecated KeepOriginalNextHop field. Users should use this setting to control the next hop attribute for a BGP peer. When this is set, the value of the KeepOriginalNextHop field is ignored. if neither keepOriginalNextHop or nextHopMode is specified, BGP's default behaviour is used. Set it to “Auto” to apply BGP’s default behaviour. Set it to \"Self\" to configure \"next hop self;\" in \"bird.cfg\". Set it to \"Keep\" to configure \"next hop keep;\" in \"bird.cfg\".",
+							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
@@ -6497,6 +6504,13 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 							Format:      "",
 						},
 					},
+					"flowLogsPolicyScope": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FlowLogsPolicyScope controls which policies are included in flow logs. AllPolicies - Processes both transit policies for the local node and endpoint policies derived from packet source/destination IPs. Provides comprehensive visibility into all policy evaluations but increases log volume. EndpointPolicies - Processes only policies for endpoints identified as the source or destination of the packet (whether workload or host endpoints). [Default: EndpointPolicies]",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"flowLogsFileEnabled": {
 						SchemaProps: spec.SchemaProps{
 							Description: "FlowLogsFileEnabled when set to true, enables logging flow logs to a file. If false no flow logging to file will occur.",
@@ -6769,7 +6783,7 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 					},
 					"bpfDNSPolicyMode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "BPFDNSPolicyMode specifies how DNS policy programming will be handled. Inline - BPF parses DNS response inline with DNS response packet processing. This guarantees the DNS rules reflect any change immediately. NoDelay - Felix does not introduce any delay to the packets. DNS rules may not have been programmed by the time the first packet traverses the policy rules. Client applications need to handle reconnection attempts if initial connection attempts fail. This may be problematic for some applications or for very low DNS TTLs. [Default: Inline]",
+							Description: "BPFDNSPolicyMode specifies how DNS policy programming will be handled. Inline - BPF parses DNS response inline with DNS response packet processing. This guarantees the DNS rules reflect any change immediately. NoDelay - Felix does not introduce any delay to the packets. DNS rules may not have been programmed by the time the first packet traverses the policy rules. Client applications need to handle reconnection attempts if initial connection attempts fail. This may be problematic for some applications or for very low DNS TTLs. [Default: DelayDeniedPacket]",
 							Type:        []string{"string"},
 							Format:      "",
 						},
