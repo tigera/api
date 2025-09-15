@@ -3,17 +3,17 @@
 #################################################################################################
 
 # The version of calico/go-build and calico/base to use.
-GO_BUILD_VER=1.24.3-llvm18.1.8-k8s1.32.5
-CALICO_BASE_VER=ubi8-1744398299
+GO_BUILD_VER=1.24.6-llvm18.1.8-k8s1.32.7
+CALICO_BASE_VER=ubi8-1754512227
 # TODO Remove once CALICO_BASE is updated to UBI9
 CALICO_BASE_UBI9_VER=ubi9-1744398299
 
 # Env var to ACK Ginkgo deprecation warnings, may need updating with go-build.
 ACK_GINKGO=ACK_GINKGO_DEPRECATIONS=1.16.5
 
-# Version of Kubernetes to use for tests, bitnami/kubectl, and kubectl binary release in
+# Version of Kubernetes to use for tests, rancher/kubectl, and kubectl binary release in
 # compliance benchmarker, confd, and kube-controllers.
-K8S_VERSION=v1.33.1
+K8S_VERSION=v1.32.7
 
 # Version of various tools used in the build and tests.
 COREDNS_VERSION=1.5.2
@@ -77,18 +77,6 @@ WINDOWS_VERSIONS ?= 1809 ltsc2022
 # whenever the cni-plugin image is created.
 CNI_VERSION=master
 FLANNEL_VERSION=main
-
-# THIRD_PARTY_REGISTRY configures the third-party registry that serves intermediate base image
-# for some Calico Enterprise components. They are never released directly to public.
-ifeq ($(SEMAPHORE_GIT_REF_TYPE), branch)
-    # on master and release-calient branches
-    THIRD_PARTY_REGISTRY=gcr.io/unique-caldron-775/cnx/tigera/third-party
-else ifeq ($(SEMAPHORE_GIT_REF_TYPE), pull-request)
-    # on pull requests
-    THIRD_PARTY_REGISTRY=gcr.io/unique-caldron-775/third-party-ci
-else
-    THIRD_PARTY_REGISTRY=gcr.io/tigera-dev/third-party-ci
-endif
 
 # The bpftool image to use; this is the output of the https://github.com/projectcalico/bpftool repo.
 BPFTOOL_IMAGE=calico/bpftool:v7.5.0
