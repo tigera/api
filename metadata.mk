@@ -3,17 +3,17 @@
 #################################################################################################
 
 # The version of calico/go-build and calico/base to use.
-GO_BUILD_VER=1.24.5-llvm18.1.8-k8s1.32.6
-CALICO_BASE_VER=ubi8-1744398299
+GO_BUILD_VER=1.24.6-llvm18.1.8-k8s1.32.7
+CALICO_BASE_VER=ubi8-1754512227
 # TODO Remove once CALICO_BASE is updated to UBI9
 CALICO_BASE_UBI9_VER=ubi9-1744398299
 
 # Env var to ACK Ginkgo deprecation warnings, may need updating with go-build.
 ACK_GINKGO=ACK_GINKGO_DEPRECATIONS=1.16.5
 
-# Version of Kubernetes to use for tests, bitnami/kubectl, and kubectl binary release in
+# Version of Kubernetes to use for tests, rancher/kubectl, and kubectl binary release in
 # compliance benchmarker, confd, and kube-controllers.
-K8S_VERSION=v1.32.6
+K8S_VERSION=v1.32.7
 
 # Version of various tools used in the build and tests.
 COREDNS_VERSION=1.5.2
@@ -24,7 +24,6 @@ HELM_VERSION=v3.16.4
 KINDEST_NODE_VERSION=v1.31.4
 KINDEST_NODE_VERSION_DUAL_TOR=v1.24.7
 KIND_VERSION=v0.25.0
-BITNAMI_K8S_VERSION=v1.33.2
 
 # The Semaphore calico-private ID, used when making calls to the Semaphore API.
 SEMAPHORE_PROJECT_ID=8a309869-f767-49dc-924f-fa927edbf657
