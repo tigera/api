@@ -3,11 +3,11 @@
 package v3
 
 // The contents of this file create the model for performing authorization determination based on authorization header
-// exchanges with the tigera-apiserver. No storage is required for achieving this and no libcalico client code will be
+// exchanges with the calico-apiserver. No storage is required for achieving this and no libcalico client code will be
 // created for the purpose of doing so.
-// The tigera-apiserver will expose a create method just like k8s has for the TokenReviews api. A call to this endpoint
+// The calico-apiserver will expose a create method just like k8s has for the TokenReviews api. A call to this endpoint
 // will only reach the api-server if a valid authorization header is added to the request, otherwise the k8s api-server
-// will respond directly with a 40x. If the request header is valid, the tigera-apiserver obtains the user information
+// will respond directly with a 40x. If the request header is valid, the calico-apiserver obtains the user information
 // automatically from the k8s-apiserver and then performs an RBAC calculation based on the request data in the Spec.
 // Since the response is based on the authorization header, the generated client may not very suitable for
 // interacting with this api, depending on whether the client is handling requests for multiple users or not.
