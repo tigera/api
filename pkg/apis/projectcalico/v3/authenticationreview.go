@@ -2,12 +2,12 @@
 
 package v3
 
-// The contents of this file create the model for how to do authorization header exchanges with the tigera-apiserver for
+// The contents of this file create the model for how to do authorization header exchanges with the calico-apiserver for
 // the purpose of authentication and obtaining user info. However, no storage is required for achieving this and no
 // libcalico client code will be created for the purpose of doing so.
-// The tigera-apiserver will expose a create method just like k8s has for the TokenReviews api. A call to this endpoint
+// The calico-apiserver will expose a create method just like k8s has for the TokenReviews api. A call to this endpoint
 // will only reach the api-server if a valid authorization header is added to the request, otherwise the k8s api-server
-// will respond directly with a 40x. If the request header is valid, the tigera-apiserver obtains the user information
+// will respond directly with a 40x. If the request header is valid, the calico-apiserver obtains the user information
 // automatically from the k8s-apiserver and then return it in the AuthenticationReviewStatus.
 // Since the response is entirely based on the authorization header, the generated client is not very suitable for
 // interacting with this api. It would mean a new client config has to be created for each incoming request. By creating

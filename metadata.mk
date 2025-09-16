@@ -3,27 +3,32 @@
 #################################################################################################
 
 # The version of calico/go-build and calico/base to use.
-GO_BUILD_VER=1.24.2-llvm18.1.8-k8s1.32.3
-CALICO_BASE_VER=ubi8-1744398299
-# TODO Remove once CALICO_BASE is updated to UBI9
-CALICO_BASE_UBI9_VER=ubi9-1744398299
+GO_BUILD_VER=1.24.6-llvm18.1.8-k8s1.32.8
+CALICO_BASE_VER=ubi9-1754517943
 
 # Env var to ACK Ginkgo deprecation warnings, may need updating with go-build.
 ACK_GINKGO=ACK_GINKGO_DEPRECATIONS=1.16.5
 
-# Version of Kubernetes to use for tests, bitnami/kubectl, and kubectl binary release in
+# Version of Kubernetes to use for tests, rancher/kubectl, and kubectl binary release in
 # compliance benchmarker, confd, and kube-controllers.
-K8S_VERSION=v1.32.4
+K8S_VERSION=v1.32.7
 
 # Version of various tools used in the build and tests.
 COREDNS_VERSION=1.5.2
+CRANE_VERSION := v0.20.6
 ETCD_VERSION=v3.5.6
 GHR_VERSION=v0.17.0
-GITHUB_CLI_VERSION=2.65.0
+GITHUB_CLI_VERSION=2.76.2
+GOTESTSUM_VERSION=v1.12.3
 HELM_VERSION=v3.16.4
 KINDEST_NODE_VERSION=v1.31.4
 KINDEST_NODE_VERSION_DUAL_TOR=v1.24.7
 KIND_VERSION=v0.25.0
+
+# This gets embedded into node as the Calico version, the Enterprise release
+# is based off of. This should be updated everytime a new opensource Calico
+# release is merged into node-private.
+CALICO_VERSION=v3.30.1
 
 # The Semaphore calico-private ID, used when making calls to the Semaphore API.
 SEMAPHORE_PROJECT_ID=8a309869-f767-49dc-924f-fa927edbf657
@@ -62,7 +67,10 @@ DEV_TAG_SUFFIX ?= calient-0.dev
 
 # RELEASE_REGISTRIES configures the container images registries which are published to
 # as part of an official release.
-RELEASE_REGISTRIES = quay.io/tigera
+RELEASE_REGISTRIES ?= quay.io/tigera
+
+# Archive bucket
+ARTIFACTS_BUCKET ?= tigera-public/ee
 
 # The directory for windows image tarballs
 WINDOWS_DIST = dist/windows
@@ -78,25 +86,20 @@ WINDOWS_VERSIONS ?= 1809 ltsc2022
 CNI_VERSION=master
 FLANNEL_VERSION=main
 
-# THIRD_PARTY_REGISTRY configures the third-party registry that serves intermediate base image
-# for some Calico Enterprise components. They are never released directly to public.
-ifeq ($(SEMAPHORE_GIT_REF_TYPE), branch)
-    # on master and release-calient branches
-    THIRD_PARTY_REGISTRY=gcr.io/unique-caldron-775/cnx/tigera/third-party
-else ifeq ($(SEMAPHORE_GIT_REF_TYPE), pull-request)
-    # on pull requests
-    THIRD_PARTY_REGISTRY=gcr.io/unique-caldron-775/third-party-ci
-else
-    THIRD_PARTY_REGISTRY=gcr.io/tigera-dev/third-party-ci
-endif
-
 # The bpftool image to use; this is the output of the https://github.com/projectcalico/bpftool repo.
 BPFTOOL_IMAGE=calico/bpftool:v7.5.0
 
+# The default branch for semaphore
+DEFAULT_BRANCH_OVERRIDE ?= master
 # Default branch prefix for release branches
 RELEASE_BRANCH_PREFIX ?= release-calient
 # The operator branch corresponding to this branch.
 OPERATOR_BRANCH=master
+# The manager branch corresponding to this branch.
+MANAGER_BRANCH ?= master
 
 # The libbpf version to use
 LIBBPF_VERSION=v1.4.6
+
+# quay.io expiry time for hashrelease/dev images
+QUAY_EXPIRE_DAYS=90

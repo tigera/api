@@ -121,6 +121,29 @@ DEV_REGISTRY ?= $(firstword $(DEV_REGISTRIES))
 # remove from the list to push to manifest any registries that do not support multi-arch
 MANIFEST_REGISTRIES         ?= $(DEV_REGISTRIES)
 
+# The registry when running CI/CD pipelines.
+THIRD_PARTY_REGISTRY_CI=gcr.io/unique-caldron-775/third-party-ci
+THIRD_PARTY_REGISTRY_CD=gcr.io/unique-caldron-775/cnx/tigera/third-party
+# THIRD_PARTY_REGISTRY configures the third-party registry that serves intermediate base image
+# for some Calico Enterprise components. They are never released directly to public.
+THIRD_PARTY_RELEASE_BRANCH ?= $(if $(SEMAPHORE_GIT_BRANCH),$(SEMAPHORE_GIT_BRANCH),master)
+ifeq ($(SEMAPHORE_GIT_REF_TYPE), branch)
+    # on master and release-calient branches
+    THIRD_PARTY_REGISTRY?=$(THIRD_PARTY_REGISTRY_CD)
+else ifeq ($(SEMAPHORE_GIT_REF_TYPE), pull-request)
+    # on pull requests
+    THIRD_PARTY_REGISTRY?=$(THIRD_PARTY_REGISTRY_CI)
+else
+    THIRD_PARTY_REGISTRY?=gcr.io/tigera-dev/third-party-ci
+endif
+
+THIRD_PARTY_BASE_IMAGES_TO_RETAG = elasticsearch fluentd-base kibana snort3
+release-retag-third-party-base-images: var-require-one-of-CONFIRM-DRYRUN var-require-all-RELEASE_BRANCH
+	$(MAKE) $(addprefix release-retag-third-party-base-images-,$(THIRD_PARTY_BASE_IMAGES_TO_RETAG))
+
+release-retag-third-party-base-images-%: var-require-one-of-CONFIRM-DRYRUN var-require-all-RELEASE_BRANCH
+	$(MAKE) -C third_party/$* release-retag-image
+
 PUSH_MANIFEST_IMAGES := $(foreach registry,$(MANIFEST_REGISTRIES),$(foreach image,$(BUILD_IMAGES),$(call filter-registry,$(registry))$(image)))
 
 # location of docker credentials to push manifests
@@ -219,12 +242,7 @@ ifeq ($(BUILDARCH),amd64)
 	ETCD_IMAGE = quay.io/coreos/etcd:$(ETCD_VERSION)
 endif
 
-# calico/node continues to use UBI 8 as its base, and our toolchain is also built on RHEL/UBI 8.
-# Meanwhile other components (e.g. third_party/envoy-proxy) use UBI 9.  While it may be possible to
-# update calico/base to UBI 9, fully transitioning to UBI 9 would require dropping support for RHEL
-# 8.
-UBI_IMAGE ?= registry.access.redhat.com/ubi8/ubi-minimal:latest
-UBI9_IMAGE ?= registry.access.redhat.com/ubi9/ubi-minimal:latest
+UBI_IMAGE ?= registry.access.redhat.com/ubi9/ubi-minimal:latest
 
 ifeq ($(GIT_USE_SSH),true)
 	GIT_CONFIG_SSH ?= git config --global url."ssh://git@github.com/".insteadOf "https://github.com/";
@@ -242,10 +260,29 @@ BUILD_ID:=$(shell git rev-parse HEAD || uuidgen | sed 's/-//g')
 # git tag at the time we build the binary.
 # Variables elsewhere that depend on this (such as LDFLAGS) must also be lazy.
 GIT_DESCRIPTION=$(shell git describe --tags --dirty --always --abbrev=12 || echo '<unknown>')
+ENTERPRISE_VERSION?=$(call git-release-tag-from-dev-tag)
 
 # Calculate a timestamp for any build artifacts.
 ifneq ($(OS),Windows_NT)
 DATE:=$(shell date -u +'%FT%T%z')
+endif
+
+# Common linker flags.
+#
+# We use -X to insert the version information into the placeholder variables
+# in the buildinfo package.
+LDFLAGS=-X github.com/projectcalico/calico/pkg/buildinfo.Version=$(GIT_DESCRIPTION) \
+	-X github.com/projectcalico/calico/pkg/buildinfo.BuildDate=$(DATE) \
+	-X github.com/projectcalico/calico/pkg/buildinfo.GitRevision=$(GIT_COMMIT)
+
+# Add in flags that are not used in OSS builds.
+LDFLAGS+=-X github.com/projectcalico/calico/pkg/buildinfo.EnterpriseReleaseVersion=$(ENTERPRISE_VERSION)
+LDFLAGS+=-X github.com/projectcalico/calico/pkg/buildinfo.OpenSourceBaseVersion=$(CALICO_VERSION)
+
+# We use -B to insert a build ID note into the executable, without which, the
+# RPM build tools complain.
+ifneq ($(BUILDOS),darwin)
+	LDFLAGS+=-B 0x$(BUILD_ID)
 endif
 
 # Figure out the users UID/GID.  These are needed to run docker containers
@@ -279,23 +316,23 @@ endif
 
 EXTRA_DOCKER_ARGS += -v $(GOMOD_CACHE):/go/pkg/mod:rw
 
-# Define go architecture flags to support arm variants
+# Define go architecture flags
 GOARCH_FLAGS :=-e GOARCH=$(ARCH)
+
+ifeq ($(ARCH),amd64)
+GOARCH_FLAGS += -e GOAMD64=v2
+endif
 
 # Location of certificates used in UTs.
 REPO_ROOT := $(shell git rev-parse --show-toplevel)
 CERTS_PATH := $(REPO_ROOT)/hack/test/certs
 
 # The image to use for building calico/base-dependent modules (e.g. apiserver, typha).
-ifdef USE_UBI8_AS_CALICO_BASE
+ifdef USE_UBI_AS_CALICO_BASE
 CALICO_BASE ?= $(UBI_IMAGE)
-else ifdef USE_UBI9_AS_CALICO_BASE
-CALICO_BASE ?= $(UBI9_IMAGE)
 else
 CALICO_BASE ?= calico/base:$(CALICO_BASE_VER)
 endif
-# TODO Remove once CALICO_BASE is updated to UBI9
-CALICO_BASE_UBI9 ?= calico/base:$(CALICO_BASE_UBI9_VER)
 
 ifndef NO_DOCKER_PULL
 DOCKER_PULL = --pull
@@ -306,11 +343,13 @@ endif
 # DOCKER_BUILD is the base build command used for building all images.
 DOCKER_BUILD=docker buildx build --load --platform=linux/$(ARCH) $(DOCKER_PULL)\
 	--build-arg UBI_IMAGE=$(UBI_IMAGE) \
-	--build-arg UBI9_IMAGE=$(UBI9_IMAGE) \
 	--build-arg GIT_VERSION=$(GIT_VERSION) \
 	--build-arg CALICO_BASE=$(CALICO_BASE) \
-	--build-arg CALICO_BASE_UBI9=$(CALICO_BASE_UBI9) \
 	--build-arg BPFTOOL_IMAGE=$(BPFTOOL_IMAGE)
+
+DOCKER_BUILD_THIRD_PARTY = $(DOCKER_BUILD) \
+	--build-arg THIRD_PARTY_REGISTRY=$(THIRD_PARTY_REGISTRY) \
+	--build-arg THIRD_PARTY_RELEASE_BRANCH=$(THIRD_PARTY_RELEASE_BRANCH)
 
 DOCKER_RUN := mkdir -p $(REPO_ROOT)/.go-pkg-cache bin $(GOMOD_CACHE) && \
 	docker run --rm \
@@ -323,7 +362,7 @@ DOCKER_RUN := mkdir -p $(REPO_ROOT)/.go-pkg-cache bin $(GOMOD_CACHE) && \
 		-e GOPATH=/go \
 		-e OS=$(BUILDOS) \
 		-e GOOS=$(BUILDOS) \
-		-e GOFLAGS=$(GOFLAGS) \
+		-e "GOFLAGS=$(GOFLAGS)" \
 		-e ACK_GINKGO_DEPRECATIONS=1.16.5 \
 		-e ACK_GINKGO_RC=true \
 		-v $(REPO_ROOT):/go/src/github.com/projectcalico/calico:rw \
@@ -440,7 +479,7 @@ endef
 
 # update_calico_base_pin updates the CALICO_BASE_VER in metadata.mk.
 define update_calico_base_pin
-	$(eval new_ver := $(shell curl -s "https://hub.docker.com/v2/repositories/calico/base/tags/?page_size=100" | jq -r '.results[].name' | grep -E "^ubi8-[0-9]+$$" | sort -r | head -n 1))
+	$(eval new_ver := $(shell curl -s "https://hub.docker.com/v2/repositories/calico/base/tags/?page_size=100" | jq -r '.results[].name' | grep -E "^ubi9-[0-9]+$$" | sort -r | head -n 1))
 	$(eval old_ver := $(shell grep -E "^CALICO_BASE_VER" $(1) | cut -d'=' -f2 | xargs))
 
 	@echo "current CALICO_BASE_VER=$(old_ver)"
@@ -550,18 +589,31 @@ CRANE_CMD         = docker run -t --entrypoint /bin/sh -v $(DOCKER_CONFIG):/root
                     $(double_quote)crane
 endif
 
+ifdef LOCAL_PYTHON
+PYTHON3_CMD       = python3
+else
+PYTHON3_CMD       = docker run --rm -e QUAY_API_TOKEN -v $(REPO_ROOT):$(REPO_ROOT) -w $(REPO_ROOT) python:3.13 python3.13
+endif
+
 GIT_CMD           = git
 DOCKER_CMD        = docker
 
+
+# RELEASE_PY3 is for Python invocations used for releasing,
+# where we want to be able to DRY_RUN them.
 ifdef CONFIRM
 CRANE         = $(CRANE_CMD)
 GIT           = $(GIT_CMD)
 DOCKER        = $(DOCKER_CMD)
+RELEASE_PY3   = $(PYTHON3_CMD)
 else
-CRANE         = echo [DRY RUN] $(CRANE_CMD)
-GIT           = echo [DRY RUN] $(GIT_CMD)
-DOCKER        = echo [DRY RUN] $(DOCKER_CMD)
+CRANE         = @echo [DRY RUN] $(CRANE_CMD)
+GIT           = @echo [DRY RUN] $(GIT_CMD)
+DOCKER        = @echo [DRY RUN] $(DOCKER_CMD)
+RELEASE_PY3   = @echo [DRY RUN] $(PYTHON3_CMD)
 endif
+
+QUAY_SET_EXPIRY_SCRIPT = $(REPO_ROOT)/hack/set_quay_expiry.py
 
 commit-and-push-pr:
 	$(GIT) add $(GIT_COMMIT_FILES)
@@ -700,12 +752,23 @@ REPO_REL_DIR=$(shell if [ -e hack/format-changed-files.sh ]; then echo '.'; else
 .PHONY: fix-changed go-fmt-changed goimports-changed
 # Format changed files only.
 fix-changed go-fmt-changed goimports-changed:
-	$(DOCKER_RUN) -e release_prefix=$(RELEASE_BRANCH_PREFIX)-v \
-	              -e git_repo_slug=$(GIT_REPO_SLUG) $(CALICO_BUILD) $(REPO_REL_DIR)/hack/format-changed-files.sh
+	if [ "$(SKIP_FIX_CHANGED)" != "true" ]; then \
+	  $(DOCKER_RUN) -e release_prefix=$(RELEASE_BRANCH_PREFIX)-v \
+	                -e git_repo_slug=$(GIT_REPO_SLUG) \
+	                -e parent_branch=$(shell git_repo_slug=$(GIT_REPO_SLUG) $(REPO_REL_DIR)/hack/find-parent-release-branch.sh) \
+	                $(CALICO_BUILD) $(REPO_REL_DIR)/hack/format-changed-files.sh; \
+	fi
 
 .PHONY: fix-all go-fmt-all goimports-all
 fix-all go-fmt-all goimports-all:
 	$(DOCKER_RUN) $(CALICO_BUILD) $(REPO_REL_DIR)/hack/format-all-files.sh
+
+GOMODDER=./hack/cmd/gomodder/main.go
+
+.PHONY: verify-go-mods
+verify-go-mods:
+	# FIXME needs to be fixed up for calico-private repo.
+	#$(DOCKER_RUN) $(CALICO_BUILD) go run $(GOMODDER)
 
 .PHONY: pre-commit
 pre-commit:
@@ -969,8 +1032,22 @@ push-images-to-registry-%:
 
 # push-image-to-registry-% pushes the build / arch images specified by $* and VALIDARCHES to the registry
 # specified by REGISTRY.
+#
+# We also build a list of all of the iamges we're going to be pushing and then, once we're done, we set the expiry
+# on those images, either adding an expiry for normal pushes or removing it for releases, if we're pushing to quay.io
+# that is.
 push-image-to-registry-%:
-	$(MAKE) $(addprefix push-image-arch-to-registry-,$(VALIDARCHES)) BUILD_IMAGE=$(call unescapefs,$*)
+	$(eval BUILD_IMAGE=$(call unescapefs,$*))
+	$(eval EXPIRY_IMAGES_LIST=$(REGISTRY)/$(BUILD_IMAGE):$(IMAGETAG) $(addprefix $(REGISTRY)/$(BUILD_IMAGE):$(IMAGETAG)-,$(VALIDARCHES)))
+
+	$(MAKE) -j6 $(addprefix push-image-arch-to-registry-,$(VALIDARCHES)) BUILD_IMAGE=$(BUILD_IMAGE)
+
+ifeq ($(findstring quay.io,$(REGISTRY)),quay.io)
+	$(if $(RELEASE), \
+		-$(RELEASE_PY3) $(QUAY_SET_EXPIRY_SCRIPT) remove $(EXPIRY_IMAGES_LIST), \
+		-$(RELEASE_PY3) $(QUAY_SET_EXPIRY_SCRIPT) add --expiry-days=$(QUAY_EXPIRE_DAYS) $(EXPIRY_IMAGES_LIST) \
+	)
+endif
 
 # push-image-arch-to-registry-% pushes the build / arch image specified by $* and BUILD_IMAGE to the registry
 # specified by REGISTRY.
@@ -1069,13 +1146,13 @@ var-require: $(addprefix var-set-,$(subst -, ,$(REQUIRED_VARS)))
 # there isn't a non empty variable for each given value. For instance, to require FOO and BAR both must be set you would
 # call var-require-all-FOO-BAR.
 var-require-all-%:
-	$(MAKE) var-require REQUIRED_VARS=$* FAIL_NOT_SET=true
+	@$(MAKE) --quiet --no-print-directory var-require REQUIRED_VARS=$* FAIL_NOT_SET=true
 
 # var-require-one-of-% checks if the there are non empty variables set for the hyphen separated values in %, and fails
 # there isn't a non empty variable for at least one of the given values. For instance, to require either FOO or BAR both
 # must be set you would call var-require-all-FOO-BAR.
 var-require-one-of-%:
-	$(MAKE) var-require REQUIRED_VARS=$*
+	@$(MAKE) --quiet --no-print-directory var-require REQUIRED_VARS=$*
 
 # sem-cut-release triggers the cut-release pipeline (or test-cut-release if CONFIRM is not specified) in semaphore to
 # cut the release. The pipeline is triggered for the current commit, and the branch it's triggered on is calculated
@@ -1262,6 +1339,24 @@ endif
 check-dirty:
 	@if [ "$$(git --no-pager diff --stat)" != "" ]; then \
 	echo "The following files are dirty"; git --no-pager diff; exit 1; fi
+
+# This setup is used to download and install the 'crane' binary into the local bin/ directory.
+# The binary will be placed at: ./bin/crane
+# Normalize architecture for go-containerregistry filenames
+CRANE_BUILDARCH := $(shell uname -m | sed 's/amd64/x86_64/;s/x86_64/x86_64/;s/aarch64/arm64/')
+ifeq ($(CRANE_BUILDARCH),)
+  $(error Unsupported or unknown architecture: $(shell uname -m))
+endif
+CRANE_FILENAME := go-containerregistry_Linux_$(CRANE_BUILDARCH).tar.gz
+CRANE_URL := https://github.com/google/go-containerregistry/releases/download/$(CRANE_VERSION)/$(CRANE_FILENAME)
+
+# Install crane binary into bin/
+bin/crane:
+	mkdir -p bin
+	$(eval CRANE_TMP := $(shell mktemp -d))
+	curl -sSfL --retry 5 -o $(CRANE_TMP)/crane.tar.gz $(CRANE_URL)
+	tar -xzf $(CRANE_TMP)/crane.tar.gz -C $(CRANE_TMP) crane
+	mv $(CRANE_TMP)/crane bin/crane
 
 ###############################################################################
 # Common functions for launching a local Kubernetes control plane.
@@ -1664,6 +1759,7 @@ windows-sub-image-%: var-require-all-GIT_VERSION-WINDOWS_IMAGE-WINDOWS_DIST-WIND
 		-t $(WINDOWS_IMAGE):latest \
 		--build-arg GIT_VERSION=$(GIT_VERSION) \
 		--build-arg THIRD_PARTY_REGISTRY=$(THIRD_PARTY_REGISTRY) \
+		--build-arg THIRD_PARTY_RELEASE_BRANCH=$(THIRD_PARTY_RELEASE_BRANCH) \
 		--build-arg WINDOWS_LTSC_VERSION=$(WINDOWS_LTSC_VERSION_$*) \
 		--build-arg WINDOWS_VERSION=$* \
 		-f Dockerfile-windows .
@@ -1694,6 +1790,7 @@ release-windows-with-tag: var-require-one-of-CONFIRM-DRYRUN var-require-all-IMAG
 			$(DOCKER_MANIFEST) annotate --os windows --arch amd64 --os-version $${version} $${manifest_image} $${image}; \
 		done; \
 		$(DOCKER_MANIFEST) push --purge $${manifest_image}; \
+		$(RELEASE_PY3) $(QUAY_SET_EXPIRY_SCRIPT) add --expiry-days=$(QUAY_EXPIRE_DAYS) $${manifest_image} $${all_images} || true; \
 	done;
 
 release-windows: var-require-one-of-CONFIRM-DRYRUN var-require-all-DEV_REGISTRIES-WINDOWS_IMAGE var-require-one-of-VERSION-BRANCH_NAME
