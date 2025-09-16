@@ -104,6 +104,14 @@ const (
 	NFTablesDNSPolicyModeDelayDNSResponse  NFTablesDNSPolicyMode = "DelayDNSResponse"
 )
 
+// +kubebuilder:validation:Enum=TC;TCX
+type BPFAttachOption string
+
+const (
+	BPFAttachOptionTC  BPFAttachOption = "TC"
+	BPFAttachOptionTCX BPFAttachOption = "TCX"
+)
+
 // +kubebuilder:validation:Enum=Enabled;Disabled
 type FloatingIPType string
 
@@ -151,6 +159,22 @@ type FlowLogsPolicyEvaluationModeType string
 const (
 	FlowLogsPolicyEvaluationModeOnNewConnection FlowLogsPolicyEvaluationModeType = "OnNewConnection"
 	FlowLogsPolicyEvaluationModeContinuous      FlowLogsPolicyEvaluationModeType = "Continuous"
+)
+
+// +kubebuilder:validation:Enum=AllPolicies;EndpointPolicies
+type FlowLogsPolicyScopeType string
+
+const (
+	FlowLogsAllPolicies      FlowLogsPolicyScopeType = "AllPolicies"
+	FlowLogsEndpointPolicies FlowLogsPolicyScopeType = "EndpointPolicies"
+)
+
+// +kubebuilder:validation:Enum=IPPoolsOnly;IPPoolsAndHostIPs
+type NATOutgoingExclusionsType string
+
+const (
+	NATOutgoingExclusionsIPPoolsOnly       NATOutgoingExclusionsType = "IPPoolsOnly"
+	NATOutgoingExclusionsIPPoolsAndHostIPs NATOutgoingExclusionsType = "IPPoolsAndHostIPs"
 )
 
 // FelixConfigurationSpec contains the values of the Felix configuration.
@@ -342,16 +366,16 @@ type FelixConfigurationSpec struct {
 	LogFilePath string `json:"logFilePath,omitempty"`
 
 	// LogSeverityFile is the log severity above which logs are sent to the log file. [Default: Info]
-	// +kubebuilder:validation:Pattern=`^(?i)(Debug|Info|Warning|Error|Fatal)?$`
+	// +kubebuilder:validation:Pattern=`^(?i)(Trace|Debug|Info|Warning|Error|Fatal)?$`
 	LogSeverityFile string `json:"logSeverityFile,omitempty" validate:"omitempty,logLevel"`
 
 	// LogSeverityScreen is the log severity above which logs are sent to the stdout. [Default: Info]
-	// +kubebuilder:validation:Pattern=`^(?i)(Debug|Info|Warning|Error|Fatal)?$`
+	// +kubebuilder:validation:Pattern=`^(?i)(Trace|Debug|Info|Warning|Error|Fatal)?$`
 	LogSeverityScreen string `json:"logSeverityScreen,omitempty" validate:"omitempty,logLevel"`
 
 	// LogSeveritySys is the log severity above which logs are sent to the syslog. Set to None for no logging to syslog.
 	// [Default: Info]
-	// +kubebuilder:validation:Pattern=`^(?i)(Debug|Info|Warning|Error|Fatal)?$`
+	// +kubebuilder:validation:Pattern=`^(?i)(Trace|Debug|Info|Warning|Error|Fatal)?$`
 	LogSeveritySys string `json:"logSeveritySys,omitempty" validate:"omitempty,logLevel"`
 
 	// LogDebugFilenameRegex controls which source code files have their Debug log output included in the logs.
@@ -527,6 +551,13 @@ type FelixConfigurationSpec struct {
 	// (i.e. it uses the iptables MASQUERADE target).
 	NATOutgoingAddress string `json:"natOutgoingAddress,omitempty"`
 
+	// When a IP pool setting `natOutgoing` is true, packets sent from Calico networked containers in this IP pool to destinations will be masqueraded.
+	// Configure which type of destinations is excluded from being masqueraded.
+	// - IPPoolsOnly: destinations outside of this IP pool will be masqueraded.
+	// - IPPoolsAndHostIPs: destinations outside of this IP pool and all hosts will be masqueraded.
+	// [Default: IPPoolsOnly]
+	NATOutgoingExclusions *NATOutgoingExclusionsType `json:"natOutgoingExclusions,omitempty" validate:"omitempty,oneof=IPPoolsOnly IPPoolsAndHostIPs"`
+
 	// DeviceRouteSourceAddress IPv4 address to set as the source hint for routes programmed by Felix. When not set
 	// the source address for local traffic from host to workload will be determined by the kernel.
 	DeviceRouteSourceAddress string `json:"deviceRouteSourceAddress,omitempty"`
@@ -543,6 +574,11 @@ type FelixConfigurationSpec struct {
 	// always clean up expected routes that use the configured DeviceRouteProtocol.  To add your own routes, you must
 	// use a distinct protocol (in addition to setting this field to false).
 	RemoveExternalRoutes *bool `json:"removeExternalRoutes,omitempty"`
+
+	// ProgramClusterRoutes specifies whether Felix should program IPIP routes instead of BIRD.
+	// Felix always programs VXLAN routes. [Default: Disabled]
+	// +kubebuilder:validation:Enum=Enabled;Disabled
+	ProgramClusterRoutes *string `json:"programClusterRoutes,omitempty"`
 
 	// IPForwarding controls whether Felix sets the host sysctls to enable IP forwarding.  IP forwarding is required
 	// when using Calico for workload networking.  This should be disabled only on hosts where Calico is used solely for
@@ -688,7 +724,10 @@ type FelixConfigurationSpec struct {
 	// BPFConntrackCleanupMode controls how BPF conntrack entries are cleaned up.  `Auto` will use a BPF program if supported,
 	// falling back to userspace if not.  `Userspace` will always use the userspace cleanup code.  `BPFProgram` will
 	// always use the BPF program (failing if not supported).
-	// [Default: Auto]
+	//
+	///To be deprecated in future versions as conntrack map type changed to
+	// lru_hash and userspace cleanup is the only mode that is supported.
+	// [Default: Userspace]
 	BPFConntrackCleanupMode *BPFConntrackMode `json:"bpfConntrackMode,omitempty" validate:"omitempty,oneof=Auto Userspace BPFProgram"`
 
 	// BPFConntrackTimers overrides the default values for the specified conntrack timer if
@@ -910,6 +949,12 @@ type FelixConfigurationSpec struct {
 	// +kubebuilder:validation:Pattern=`^([0-9]+(\\.[0-9]+)?(ms|s|m|h))*$`
 	IPSecPolicyRefreshInterval *metav1.Duration `json:"ipsecPolicyRefreshInterval,omitempty" configv1timescale:"seconds"`
 
+	// BPFAttachType controls how are the BPF programs at the network interfaces attached.
+	// By default `TCX` is used where available to enable easier coexistence with 3rd party programs.
+	// `TC` can force the legacy method of attaching via a qdisc. `TCX` falls back to `TC` if `TCX` is not available.
+	// [Default: TCX]
+	BPFAttachType *BPFAttachOption `json:"bpfAttachType,omitempty" validate:"omitempty,oneof=TC TCX"`
+
 	// FlowLogsFlushInterval configures the interval at which Felix exports flow logs.
 	// +kubebuilder:validation:Type=string
 	// +kubebuilder:validation:Pattern=`^([0-9]+(\\.[0-9]+)?(ms|s|m|h))*$`
@@ -939,6 +984,10 @@ type FelixConfigurationSpec struct {
 	// FlowLogGoldmaneServer is the flow server endpoint to which flow data should be published.
 	FlowLogsGoldmaneServer *string `json:"flowLogsGoldmaneServer,omitempty"`
 
+	// FlowLogsLocalReporter configures local unix socket for reporting flow data from each node. [Default: Disabled]
+	// +kubebuilder:validation:Enum=Disabled;Enabled
+	FlowLogsLocalReporter *string `json:"flowLogsLocalReporter,omitempty"`
+
 	// FlowLogsDestDomainsByClient is used to configure if the source IP is used in the mapping of top
 	// level destination domains. [Default: true]
 	FlowLogsDestDomainsByClient *bool `json:"flowLogsDestDomainsByClient,omitempty"`
@@ -951,6 +1000,14 @@ type FelixConfigurationSpec struct {
 	// pending_policies field, offering a near-real-time view of policy changes across flows.
 	// [Default: Continuous]
 	FlowLogsPolicyEvaluationMode *string `json:"flowLogsPolicyEvaluationMode,omitempty"`
+	// FlowLogsPolicyScope controls which policies are included in flow logs.
+	// AllPolicies - Processes both transit policies for the local node and
+	// endpoint policies derived from packet source/destination IPs. Provides comprehensive
+	// visibility into all policy evaluations but increases log volume.
+	// EndpointPolicies - Processes only policies for endpoints identified as the source
+	// or destination of the packet (whether workload or host endpoints).
+	// [Default: EndpointPolicies]
+	FlowLogsPolicyScope *string `json:"flowLogsPolicyScope,omitempty"`
 	// FlowLogsFileEnabled when set to true, enables logging flow logs to a file. If false no flow logging to file will occur.
 	FlowLogsFileEnabled *bool `json:"flowLogsFileEnabled,omitempty"`
 	// FlowLogsFileMaxFiles sets the number of log files to keep.
@@ -1116,7 +1173,7 @@ type FelixConfigurationSpec struct {
 	// NoDelay - Felix does not introduce any delay to the packets. DNS rules may not have been programmed by the time
 	// the first packet traverses the policy rules. Client applications need to handle reconnection attempts if initial
 	// connection attempts fail. This may be problematic for some applications or for very low DNS TTLs.
-	// [Default: Inline]
+	// [Default: DelayDeniedPacket]
 	BPFDNSPolicyMode *BPFDNSPolicyMode `json:"bpfDNSPolicyMode,omitempty" validate:"omitempty,oneof=NoDelay Inline"`
 	// NFTablesDNSPolicyMode specifies how DNS policy programming will be handled for NFTables.
 	// DelayDeniedPacket - Felix delays any denied packet that traversed a policy that included egress domain matches,
@@ -1475,6 +1532,10 @@ type FelixConfigurationSpec struct {
 	// [Default: -1]
 	// +optional
 	GoMaxProcs *int `json:"goMaxProcs,omitempty" validate:"omitempty,gte=-1"`
+
+	// RequireMTUFile specifies whether mtu file is required to start the felix.
+	// Optional as to keep the same as previous behavior. [Default: false]
+	RequireMTUFile *bool `json:"requireMTUFile,omitempty"`
 }
 
 type HealthTimeoutOverride struct {

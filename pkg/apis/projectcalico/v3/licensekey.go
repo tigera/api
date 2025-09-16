@@ -37,7 +37,7 @@ const (
 // +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// LicenseKey contains the Tigera CNX license key for the cluster.
+// LicenseKey contains the Calico Enterprise license key for the cluster.
 type LicenseKey struct {
 	metav1.TypeMeta `json:",inline"`
 	// Standard object's metadata.  This resource is a singleton, always named "default".

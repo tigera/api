@@ -88,6 +88,17 @@ type HTTPMatch struct {
 	// - prefix: /bar
 	// NOTE: Each entry may ONLY specify either a `exact` or a `prefix` match. The validator will check for it.
 	Paths []HTTPPath `json:"paths,omitempty" validate:"omitempty"`
+	// Headers is an optional field that restricts the rule to apply to HTTP headers.
+	// Multiple headers criteria are AND'd together.
+	// Criteria within a single headers rule ar OR'd together.
+	Headers []HTTPHeaderCriteria `json:"headers,omitempty" validate:"omitempty"`
+}
+
+// HTTPHeaderCriteria structure defines optional HTTP headers criterion for ALP.
+type HTTPHeaderCriteria struct {
+	Header   string   `json:"header" validate:"required"`
+	Operator string   `json:"operator" validate:"required,oneof=Exists DoesNotExist HasPrefix HasSuffix In NotIn MatchesRegex"`
+	Values   []string `json:"values" validate:"required"`
 }
 
 // ICMPFields defines structure for ICMP and NotICMP sub-struct for ICMP code and type

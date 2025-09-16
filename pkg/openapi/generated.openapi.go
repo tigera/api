@@ -143,6 +143,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalThreatFeedSpec":                     schema_pkg_apis_projectcalico_v3_GlobalThreatFeedSpec(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalThreatFeedStatus":                   schema_pkg_apis_projectcalico_v3_GlobalThreatFeedStatus(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.HTTPHeader":                               schema_pkg_apis_projectcalico_v3_HTTPHeader(ref),
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.HTTPHeaderCriteria":                       schema_pkg_apis_projectcalico_v3_HTTPHeaderCriteria(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.HTTPHeaderSource":                         schema_pkg_apis_projectcalico_v3_HTTPHeaderSource(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.HTTPMatch":                                schema_pkg_apis_projectcalico_v3_HTTPMatch(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.HTTPPath":                                 schema_pkg_apis_projectcalico_v3_HTTPPath(ref),
@@ -262,6 +263,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.UISettingsList":                           schema_pkg_apis_projectcalico_v3_UISettingsList(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.UISettingsSpec":                           schema_pkg_apis_projectcalico_v3_UISettingsSpec(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.WorkloadEndpointControllerConfig":         schema_pkg_apis_projectcalico_v3_WorkloadEndpointControllerConfig(ref),
+		"github.com/tigera/api/pkg/lib/numorstring.DSCP":                                           schema_api_pkg_lib_numorstring_DSCP(ref),
 		"github.com/tigera/api/pkg/lib/numorstring.Port":                                           schema_api_pkg_lib_numorstring_Port(ref),
 		"github.com/tigera/api/pkg/lib/numorstring.Protocol":                                       schema_api_pkg_lib_numorstring_Protocol(ref),
 		"github.com/tigera/api/pkg/lib/numorstring.Uint8OrString":                                  schema_api_pkg_lib_numorstring_Uint8OrString(ref),
@@ -1757,6 +1759,13 @@ func schema_pkg_apis_projectcalico_v3_BGPConfigurationSpec(ref common.ReferenceC
 							},
 						},
 					},
+					"serviceLoadBalancerAggregation": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ServiceLoadBalancerAggregation controls how LoadBalancer service IPs are advertised. When set to \"Disabled\", individual /32 routes are advertised for each service instead of the full CIDR range. This is useful for anycast failover mechanisms where failed service routes need to be withdrawn. [Default: Enabled]",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"communities": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Communities is a list of BGP community values and their arbitrary names for tagging routes.",
@@ -2353,6 +2362,13 @@ func schema_pkg_apis_projectcalico_v3_BGPPeerSpec(ref common.ReferenceCallback) 
 							Format:      "int64",
 						},
 					},
+					"localASNumber": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The optional Local AS Number to use when peering with this remote peer. If not specified, the AS Number defined in default BGPConfiguration will be used.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
 					"extensions": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Extensions is a mapping of keys to values that can be used in custom BGP templates",
@@ -2378,8 +2394,15 @@ func schema_pkg_apis_projectcalico_v3_BGPPeerSpec(ref common.ReferenceCallback) 
 					},
 					"keepOriginalNextHop": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Option to keep the original nexthop field when routes are sent to a BGP Peer. Setting \"true\" configures the selected BGP Peers node to use the \"next hop keep;\" instead of \"next hop self;\"(default) in the specific branch of the Node on \"bird.cfg\".",
+							Description: "Option to keep the original nexthop field when routes are sent to a BGP Peer. Setting \"true\" configures the selected BGP Peers node to use the \"next hop keep;\" instead of \"next hop self;\"(default) in the specific branch of the Node on \"bird.cfg\". Note: that this field is deprecated. Users should use the NextHopMode field to control the next hop attribute for a BGP peer.",
 							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"nextHopMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "NextHopMode defines the method of calculating the next hop attribute for received routes. This replaces and expands the deprecated KeepOriginalNextHop field. Users should use this setting to control the next hop attribute for a BGP peer. When this is set, the value of the KeepOriginalNextHop field is ignored. if neither keepOriginalNextHop or nextHopMode is specified, BGP's default behaviour is used. Set it to “Auto” to apply BGP’s default behaviour. Set it to \"Self\" to configure \"next hop self;\" in \"bird.cfg\". Set it to \"Keep\" to configure \"next hop keep;\" in \"bird.cfg\".",
+							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
@@ -2469,6 +2492,13 @@ func schema_pkg_apis_projectcalico_v3_BGPPeerSpec(ref common.ReferenceCallback) 
 					"localWorkloadSelector": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Selector for the local workload that the node should peer with. When this is set, the peerSelector and peerIP fields must be empty, and the ASNumber must not be empty.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"reversePeering": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ReversePeering, for peerings between Calico nodes controls whether the reverse peering from nodes selected by peerSelector is generated automatically. If set to Manual, a separate BGPPeer must be created for the reverse peering. [Default: Auto]",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -3678,7 +3708,14 @@ func schema_pkg_apis_projectcalico_v3_ClusterInformationSpec(ref common.Referenc
 					},
 					"cnxVersion": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CNXVersion is the version of CNX that the cluster is running",
+							Description: "CNXVersion is the version of Calico Enterprise that the cluster is running Deprecated: Use CalicoEnterpriseVersion instead.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"calicoEnterpriseVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "CalicoEnterpriseVersion is the version of Calico Enterprise that the cluster is running",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -5841,6 +5878,13 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 							Format:      "",
 						},
 					},
+					"natOutgoingExclusions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "When a IP pool setting `natOutgoing` is true, packets sent from Calico networked containers in this IP pool to destinations will be masqueraded. Configure which type of destinations is excluded from being masqueraded. - IPPoolsOnly: destinations outside of this IP pool will be masqueraded. - IPPoolsAndHostIPs: destinations outside of this IP pool and all hosts will be masqueraded. [Default: IPPoolsOnly]",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"deviceRouteSourceAddress": {
 						SchemaProps: spec.SchemaProps{
 							Description: "DeviceRouteSourceAddress IPv4 address to set as the source hint for routes programmed by Felix. When not set the source address for local traffic from host to workload will be determined by the kernel.",
@@ -5866,6 +5910,13 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 						SchemaProps: spec.SchemaProps{
 							Description: "RemoveExternalRoutes Controls whether Felix will remove unexpected routes to workload interfaces. Felix will always clean up expected routes that use the configured DeviceRouteProtocol.  To add your own routes, you must use a distinct protocol (in addition to setting this field to false).",
 							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"programClusterRoutes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ProgramClusterRoutes specifies whether Felix should program IPIP routes instead of BIRD. Felix always programs VXLAN routes. [Default: Disabled]",
+							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
@@ -6100,7 +6151,7 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 					},
 					"bpfConntrackMode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "BPFConntrackCleanupMode controls how BPF conntrack entries are cleaned up.  `Auto` will use a BPF program if supported, falling back to userspace if not.  `Userspace` will always use the userspace cleanup code.  `BPFProgram` will always use the BPF program (failing if not supported). [Default: Auto]",
+							Description: "BPFConntrackCleanupMode controls how BPF conntrack entries are cleaned up.  `Auto` will use a BPF program if supported, falling back to userspace if not.  `Userspace` will always use the userspace cleanup code.  `BPFProgram` will always use the BPF program (failing if not supported).\n\n/To be deprecated in future versions as conntrack map type changed to lru_hash and userspace cleanup is the only mode that is supported. [Default: Userspace]",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -6421,6 +6472,13 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
+					"bpfAttachType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "BPFAttachType controls how are the BPF programs at the network interfaces attached. By default `TCX` is used where available to enable easier coexistence with 3rd party programs. `TC` can force the legacy method of attaching via a qdisc. `TCX` falls back to `TC` if `TCX` is not available. [Default: TCX]",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"flowLogsFlushInterval": {
 						SchemaProps: spec.SchemaProps{
 							Description: "FlowLogsFlushInterval configures the interval at which Felix exports flow logs.",
@@ -6483,6 +6541,13 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 							Format:      "",
 						},
 					},
+					"flowLogsLocalReporter": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FlowLogsLocalReporter configures local unix socket for reporting flow data from each node. [Default: Disabled]",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"flowLogsDestDomainsByClient": {
 						SchemaProps: spec.SchemaProps{
 							Description: "FlowLogsDestDomainsByClient is used to configure if the source IP is used in the mapping of top level destination domains. [Default: true]",
@@ -6493,6 +6558,13 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 					"flowLogsPolicyEvaluationMode": {
 						SchemaProps: spec.SchemaProps{
 							Description: "FlowLogsPolicyEvaluationMode defines how policies are evaluated and reflected in flow logs. OnNewConnection - In this mode, staged policies are only evaluated when new connections are made in the dataplane. Staged/active policy changes will not be reflected in the `pending_policies` field of flow logs for long lived connections. Continuous - Felix evaluates active flows on a regular basis to determine the rule traces in the flow logs. Any policy updates that impact a flow will be reflected in the pending_policies field, offering a near-real-time view of policy changes across flows. [Default: Continuous]",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"flowLogsPolicyScope": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FlowLogsPolicyScope controls which policies are included in flow logs. AllPolicies - Processes both transit policies for the local node and endpoint policies derived from packet source/destination IPs. Provides comprehensive visibility into all policy evaluations but increases log volume. EndpointPolicies - Processes only policies for endpoints identified as the source or destination of the packet (whether workload or host endpoints). [Default: EndpointPolicies]",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -6769,7 +6841,7 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 					},
 					"bpfDNSPolicyMode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "BPFDNSPolicyMode specifies how DNS policy programming will be handled. Inline - BPF parses DNS response inline with DNS response packet processing. This guarantees the DNS rules reflect any change immediately. NoDelay - Felix does not introduce any delay to the packets. DNS rules may not have been programmed by the time the first packet traverses the policy rules. Client applications need to handle reconnection attempts if initial connection attempts fail. This may be problematic for some applications or for very low DNS TTLs. [Default: Inline]",
+							Description: "BPFDNSPolicyMode specifies how DNS policy programming will be handled. Inline - BPF parses DNS response inline with DNS response packet processing. This guarantees the DNS rules reflect any change immediately. NoDelay - Felix does not introduce any delay to the packets. DNS rules may not have been programmed by the time the first packet traverses the policy rules. Client applications need to handle reconnection attempts if initial connection attempts fail. This may be problematic for some applications or for very low DNS TTLs. [Default: DelayDeniedPacket]",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -7276,6 +7348,13 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 							Description: "GoMaxProcs sets the maximum number of CPUs that the Go runtime will use concurrently.  A value of -1 means \"use the system default\"; typically the number of real CPUs on the system.\n\nthis setting is overridden by the GOMAXPROCS environment variable.\n\n[Default: -1]",
 							Type:        []string{"integer"},
 							Format:      "int32",
+						},
+					},
+					"requireMTUFile": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RequireMTUFile specifies whether mtu file is required to start the felix. Optional as to keep the same as previous behavior. [Default: false]",
+							Type:        []string{"boolean"},
+							Format:      "",
 						},
 					},
 				},
@@ -8531,6 +8610,48 @@ func schema_pkg_apis_projectcalico_v3_HTTPHeader(ref common.ReferenceCallback) c
 	}
 }
 
+func schema_pkg_apis_projectcalico_v3_HTTPHeaderCriteria(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "HTTPHeaderCriteria structure defines optional HTTP headers criterion for ALP.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"header": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"operator": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"values": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"header", "operator", "values"},
+			},
+		},
+	}
+}
+
 func schema_pkg_apis_projectcalico_v3_HTTPHeaderSource(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -8593,11 +8714,25 @@ func schema_pkg_apis_projectcalico_v3_HTTPMatch(ref common.ReferenceCallback) co
 							},
 						},
 					},
+					"headers": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Headers is an optional field that restricts the rule to apply to HTTP headers. Multiple headers criteria are AND'd together. Criteria within a single headers rule ar OR'd together.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.HTTPHeaderCriteria"),
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.HTTPPath"},
+			"github.com/tigera/api/pkg/apis/projectcalico/v3.HTTPHeaderCriteria", "github.com/tigera/api/pkg/apis/projectcalico/v3.HTTPPath"},
 	}
 }
 
@@ -9611,7 +9746,7 @@ func schema_pkg_apis_projectcalico_v3_LicenseKey(ref common.ReferenceCallback) c
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "LicenseKey contains the Tigera CNX license key for the cluster.",
+				Description: "LicenseKey contains the Calico Enterprise license key for the cluster.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
@@ -13134,7 +13269,7 @@ func schema_pkg_apis_projectcalico_v3_Template(ref common.ReferenceCallback) com
 					},
 					"interfaceCIDRs": {
 						SchemaProps: spec.SchemaProps{
-							Description: "InterfaceCIDRs contains a list of CIRDs used for matching nodeIPs to the AutoHostEndpoint",
+							Description: "InterfaceCIDRs contains a list of CIDRs used for matching nodeIPs to the AutoHostEndpoint. If specified, only addresses within these CIDRs will be included in the expected IPs. At least one of InterfaceCIDRs and InterfaceSelector must be specified.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -13145,6 +13280,13 @@ func schema_pkg_apis_projectcalico_v3_Template(ref common.ReferenceCallback) com
 									},
 								},
 							},
+						},
+					},
+					"interfaceSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "InterfaceSelector contains a regex string to match Node interface names. If specified, a HostEndpoint will be created for each matching interface on each selected node. At least one of InterfaceCIDRs and InterfaceSelector must be specified.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"labels": {
@@ -14005,6 +14147,17 @@ func schema_pkg_apis_projectcalico_v3_WorkloadEndpointControllerConfig(ref commo
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
+	}
+}
+
+func schema_api_pkg_lib_numorstring_DSCP(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type:   numorstring.DSCP{}.OpenAPISchemaType(),
+				Format: numorstring.DSCP{}.OpenAPISchemaFormat(),
+			},
+		},
 	}
 }
 
