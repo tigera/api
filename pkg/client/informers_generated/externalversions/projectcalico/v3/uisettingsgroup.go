@@ -47,13 +47,25 @@ func NewFilteredUISettingsGroupInformer(client clientset.Interface, resyncPeriod
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ProjectcalicoV3().UISettingsGroups().List(context.TODO(), options)
+				return client.ProjectcalicoV3().UISettingsGroups().List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ProjectcalicoV3().UISettingsGroups().Watch(context.TODO(), options)
+				return client.ProjectcalicoV3().UISettingsGroups().Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.ProjectcalicoV3().UISettingsGroups().List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.ProjectcalicoV3().UISettingsGroups().Watch(ctx, options)
 			},
 		},
 		&apisprojectcalicov3.UISettingsGroup{},

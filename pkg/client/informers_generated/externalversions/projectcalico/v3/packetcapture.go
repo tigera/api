@@ -48,13 +48,25 @@ func NewFilteredPacketCaptureInformer(client clientset.Interface, namespace stri
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ProjectcalicoV3().PacketCaptures(namespace).List(context.TODO(), options)
+				return client.ProjectcalicoV3().PacketCaptures(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ProjectcalicoV3().PacketCaptures(namespace).Watch(context.TODO(), options)
+				return client.ProjectcalicoV3().PacketCaptures(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.ProjectcalicoV3().PacketCaptures(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.ProjectcalicoV3().PacketCaptures(namespace).Watch(ctx, options)
 			},
 		},
 		&apisprojectcalicov3.PacketCapture{},

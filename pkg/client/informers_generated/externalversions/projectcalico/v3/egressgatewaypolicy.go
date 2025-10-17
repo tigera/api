@@ -47,13 +47,25 @@ func NewFilteredEgressGatewayPolicyInformer(client clientset.Interface, resyncPe
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ProjectcalicoV3().EgressGatewayPolicies().List(context.TODO(), options)
+				return client.ProjectcalicoV3().EgressGatewayPolicies().List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ProjectcalicoV3().EgressGatewayPolicies().Watch(context.TODO(), options)
+				return client.ProjectcalicoV3().EgressGatewayPolicies().Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.ProjectcalicoV3().EgressGatewayPolicies().List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.ProjectcalicoV3().EgressGatewayPolicies().Watch(ctx, options)
 			},
 		},
 		&apisprojectcalicov3.EgressGatewayPolicy{},

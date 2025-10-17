@@ -145,6 +145,14 @@ const (
 	BPFConntrackModeBPFProgram BPFConntrackMode = "BPFProgram"
 )
 
+// +kubebuilder:validation:Enum=Auto;Strict
+type BPFJITHardeningType string
+
+const (
+	BPFJITHardeningAuto   BPFJITHardeningType = "Auto"
+	BPFJITHardeningStrict BPFJITHardeningType = "Strict"
+)
+
 // +kubebuilder:validation:Enum=Enabled;Disabled
 type WindowsManageFirewallRulesMode string
 
@@ -175,6 +183,16 @@ type NATOutgoingExclusionsType string
 const (
 	NATOutgoingExclusionsIPPoolsOnly       NATOutgoingExclusionsType = "IPPoolsOnly"
 	NATOutgoingExclusionsIPPoolsAndHostIPs NATOutgoingExclusionsType = "IPPoolsAndHostIPs"
+)
+
+// +kubebuilder:validation:enum=RequireAndVerifyClientCert;RequireAnyClientCert;VerifyClientCertIfGiven;NoClientCert
+type PrometheusMetricsClientAuthType string
+
+const (
+	RequireAndVerifyClientCert PrometheusMetricsClientAuthType = "RequireAndVerifyClientCert"
+	RequireAnyClientCert       PrometheusMetricsClientAuthType = "RequireAnyClientCert"
+	VerifyClientCertIfGiven    PrometheusMetricsClientAuthType = "VerifyClientCertIfGiven"
+	NoClientCert               PrometheusMetricsClientAuthType = "NoClientCert"
 )
 
 // FelixConfigurationSpec contains the values of the Felix configuration.
@@ -474,12 +492,6 @@ type FelixConfigurationSpec struct {
 	// PrometheusMetricsEnabled enables the Prometheus metrics server in Felix if set to true. [Default: false]
 	PrometheusMetricsEnabled *bool `json:"prometheusMetricsEnabled,omitempty"`
 
-	// PrometheusMetricsHost is the host that the Prometheus metrics server should bind to. [Default: empty]
-	PrometheusMetricsHost string `json:"prometheusMetricsHost,omitempty" validate:"omitempty,prometheusHost"`
-
-	// PrometheusMetricsPort is the TCP port that the Prometheus metrics server should bind to. [Default: 9091]
-	PrometheusMetricsPort *int `json:"prometheusMetricsPort,omitempty"`
-
 	// PrometheusGoMetricsEnabled disables Go runtime metrics collection, which the Prometheus client does by default, when
 	// set to false. This reduces the number of metrics reported, reducing Prometheus load. [Default: true]
 	PrometheusGoMetricsEnabled *bool `json:"prometheusGoMetricsEnabled,omitempty"`
@@ -492,12 +504,27 @@ type FelixConfigurationSpec struct {
 	// set to false. This reduces the number of metrics reported, reducing Prometheus load. [Default: true]
 	PrometheusWireGuardMetricsEnabled *bool `json:"prometheusWireGuardMetricsEnabled,omitempty"`
 
-	// PrometheusMetricsCertFile is the path to the TLS certificate file for the Prometheus metrics server. [Default: empty]
-	PrometheusMetricsCertFile string `json:"prometheusMetricsCertFile,omitempty"`
-	// PrometheusMetricsKeyFile is the path to the TLS private key file for the Prometheus metrics server. [Default: empty]
-	PrometheusMetricsKeyFile string `json:"prometheusMetricsKeyFile,omitempty"`
-	// PrometheusMetricsCAFile is the path to the TLS CA file for the Prometheus metrics server. [Default: empty]
-	PrometheusMetricsCAFile string `json:"prometheusMetricsCAFile,omitempty"`
+	// PrometheusMetricsHost is the host that the Prometheus metrics server should bind to. [Default: empty]
+	PrometheusMetricsHost string `json:"prometheusMetricsHost,omitempty" validate:"omitempty,prometheusHost"`
+
+	// PrometheusMetricsPort is the TCP port that the Prometheus metrics server should bind to. [Default: 9091]
+	PrometheusMetricsPort *int `json:"prometheusMetricsPort,omitempty"`
+
+	// PrometheusMetricsCAFile defines the absolute path to the TLS CA certificate file used for securing the /metrics endpoint.
+	// This certificate must be valid and accessible by the calico-node process.
+	PrometheusMetricsCAFile *string `json:"prometheusMetricsCAFile,omitempty"`
+
+	// PrometheusMetricsCertFile defines the absolute path to the TLS certificate file used for securing the /metrics endpoint.
+	// This certificate must be valid and accessible by the calico-node process.
+	PrometheusMetricsCertFile *string `json:"prometheusMetricsCertFile,omitempty"`
+
+	// PrometheusMetricsKeyFile defines the absolute path to the private key file corresponding to the TLS certificate
+	// used for securing the /metrics endpoint. The private key must be valid and accessible by the calico-node process.
+	PrometheusMetricsKeyFile *string `json:"prometheusMetricsKeyFile,omitempty"`
+
+	// PrometheusMetricsClientAuth specifies the client authentication type for the /metrics endpoint.
+	// This determines how the server validates client certificates. Default is "RequireAndVerifyClientCert".
+	PrometheusMetricsClientAuth *PrometheusMetricsClientAuthType `json:"prometheusMetricsClientAuth,omitempty" validate:"omitempty,oneof=RequireAndVerifyClientCert RequireAnyClientCert VerifyClientCertIfGiven NoClientCert"`
 
 	// FailsafeInboundHostPorts is a list of ProtoPort struct objects including UDP/TCP/SCTP ports and CIDRs that Felix will
 	// allow incoming traffic to host endpoints on irrespective of the security policy. This is useful to avoid accidentally
@@ -707,6 +734,12 @@ type FelixConfigurationSpec struct {
 	// cannot insert their own BPF programs to interfere with Calico's. [Default: true]
 	BPFDisableUnprivileged *bool `json:"bpfDisableUnprivileged,omitempty" validate:"omitempty"`
 
+	// BPFJITHardening controls BPF JIT hardening. When set to "Auto", Felix will set JIT hardening to 1
+	// if it detects the current value is 2 (strict mode that hurts performance). When set to "Strict",
+	// Felix will not modify the JIT hardening setting. [Default: Auto]
+	// +kubebuilder:validation:Enum=Auto;Strict
+	BPFJITHardening *BPFJITHardeningType `json:"bpfJITHardening,omitempty" validate:"omitempty,oneof=Auto Strict"`
+
 	// BPFLogLevel controls the log level of the BPF programs when in BPF dataplane mode.  One of "Off", "Info", or
 	// "Debug".  The logs are emitted to the BPF trace pipe, accessible with the command `tc exec bpf debug`.
 	// [Default: Off].
@@ -820,6 +853,10 @@ type FelixConfigurationSpec struct {
 	// +kubebuilder:validation:Pattern=`^([0-9]+(\\.[0-9]+)?(ms|s|m|h))*$`
 	BPFKubeProxyMinSyncPeriod *metav1.Duration `json:"bpfKubeProxyMinSyncPeriod,omitempty" validate:"omitempty" configv1timescale:"seconds"`
 
+	// BPFKubeProxyHealtzPort, in BPF mode, controls the port that Felix's embedded kube-proxy health check server binds to.
+	// The health check server is used by external load balancers to determine if this node should receive traffic.  [Default: 10256]
+	BPFKubeProxyHealtzPort *int `json:"bpfKubeProxyHealtzPort,omitempty" validate:"omitempty,gte=1,lte=65535" confignamev1:"BPFKubeProxyHealtzPort"`
+
 	// BPFKubeProxyEndpointSlicesEnabled is deprecated and has no effect. BPF
 	// kube-proxy always accepts endpoint slices. This option will be removed in
 	// the next release.
@@ -915,6 +952,9 @@ type FelixConfigurationSpec struct {
 	// BPFExportBufferSizeMB in BPF mode, controls the buffer size used for sending BPF events to felix.
 	// [Default: 1]
 	BPFExportBufferSizeMB *int `json:"bpfExportBufferSizeMB,omitempty" validate:"omitempty,cidrs"`
+
+	// CgroupV2Path overrides the default location where to find the cgroup hierarchy.
+	CgroupV2Path string `json:"cgroupV2Path,omitempty"`
 
 	// SyslogReporterEnabled turns on the feature to write logs to Syslog. Please note that this can incur significant
 	// disk space usage when running felix on non-cluster hosts.
@@ -1556,7 +1596,7 @@ type RouteTableIDRange struct {
 type RouteTableRanges []RouteTableIDRange
 
 func (r RouteTableRanges) NumDesignatedTables() int {
-	var len int = 0
+	len := 0
 	for _, rng := range r {
 		len += (rng.Max - rng.Min) + 1 // add one, since range is inclusive
 	}
