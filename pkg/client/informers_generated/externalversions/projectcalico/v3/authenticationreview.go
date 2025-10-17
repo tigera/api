@@ -47,13 +47,25 @@ func NewFilteredAuthenticationReviewInformer(client clientset.Interface, resyncP
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ProjectcalicoV3().AuthenticationReviews().List(context.TODO(), options)
+				return client.ProjectcalicoV3().AuthenticationReviews().List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ProjectcalicoV3().AuthenticationReviews().Watch(context.TODO(), options)
+				return client.ProjectcalicoV3().AuthenticationReviews().Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.ProjectcalicoV3().AuthenticationReviews().List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.ProjectcalicoV3().AuthenticationReviews().Watch(ctx, options)
 			},
 		},
 		&apisprojectcalicov3.AuthenticationReview{},

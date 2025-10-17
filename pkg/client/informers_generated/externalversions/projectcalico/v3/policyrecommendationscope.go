@@ -47,13 +47,25 @@ func NewFilteredPolicyRecommendationScopeInformer(client clientset.Interface, re
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ProjectcalicoV3().PolicyRecommendationScopes().List(context.TODO(), options)
+				return client.ProjectcalicoV3().PolicyRecommendationScopes().List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ProjectcalicoV3().PolicyRecommendationScopes().Watch(context.TODO(), options)
+				return client.ProjectcalicoV3().PolicyRecommendationScopes().Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.ProjectcalicoV3().PolicyRecommendationScopes().List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.ProjectcalicoV3().PolicyRecommendationScopes().Watch(ctx, options)
 			},
 		},
 		&apisprojectcalicov3.PolicyRecommendationScope{},

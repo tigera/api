@@ -67,6 +67,13 @@ const (
 	// can be made for tiers.
 	LabelTier = "projectcalico.org/tier"
 
+	// LabelHostnameHash is applied to BlockAffinity resources for efficient lookups.
+	LabelHostnameHash = "projectcalico.org/hostname-hash"
+	// LabelAffinityType is applied to BlockAffinity resources for efficient lookups.
+	LabelAffinityType = "projectcalico.org/affinity-type"
+	// LabelIPVersion is applied to BlockAffinity resources for efficient lookups.
+	LabelIPVersion = "projectcalico.org/ip-version"
+
 	// Some internally defined resource types that map directly onto the kubernetes resources.  These are only
 	// available through the backend client.
 	KindK8sEndpoints      = "K8sEndpoints"
