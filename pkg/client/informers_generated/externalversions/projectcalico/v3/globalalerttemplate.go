@@ -47,13 +47,25 @@ func NewFilteredGlobalAlertTemplateInformer(client clientset.Interface, resyncPe
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ProjectcalicoV3().GlobalAlertTemplates().List(context.TODO(), options)
+				return client.ProjectcalicoV3().GlobalAlertTemplates().List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ProjectcalicoV3().GlobalAlertTemplates().Watch(context.TODO(), options)
+				return client.ProjectcalicoV3().GlobalAlertTemplates().Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.ProjectcalicoV3().GlobalAlertTemplates().List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.ProjectcalicoV3().GlobalAlertTemplates().Watch(ctx, options)
 			},
 		},
 		&apisprojectcalicov3.GlobalAlertTemplate{},

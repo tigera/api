@@ -47,13 +47,25 @@ func NewFilteredGlobalThreatFeedInformer(client clientset.Interface, resyncPerio
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ProjectcalicoV3().GlobalThreatFeeds().List(context.TODO(), options)
+				return client.ProjectcalicoV3().GlobalThreatFeeds().List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ProjectcalicoV3().GlobalThreatFeeds().Watch(context.TODO(), options)
+				return client.ProjectcalicoV3().GlobalThreatFeeds().Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.ProjectcalicoV3().GlobalThreatFeeds().List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.ProjectcalicoV3().GlobalThreatFeeds().Watch(ctx, options)
 			},
 		},
 		&apisprojectcalicov3.GlobalThreatFeed{},

@@ -47,13 +47,25 @@ func NewFilteredGlobalReportTypeInformer(client clientset.Interface, resyncPerio
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ProjectcalicoV3().GlobalReportTypes().List(context.TODO(), options)
+				return client.ProjectcalicoV3().GlobalReportTypes().List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ProjectcalicoV3().GlobalReportTypes().Watch(context.TODO(), options)
+				return client.ProjectcalicoV3().GlobalReportTypes().Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.ProjectcalicoV3().GlobalReportTypes().List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.ProjectcalicoV3().GlobalReportTypes().Watch(ctx, options)
 			},
 		},
 		&apisprojectcalicov3.GlobalReportType{},
