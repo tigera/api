@@ -90,4 +90,9 @@ const (
 
 	// Host name used for Service LoadBalancer
 	VirtualLoadBalancer = "load-balancer"
+
+	// Tigera Istio Labels
+	LabelIstioDataplaneMode        = "istio.io/dataplane-mode"
+	LabelIstioDataplaneModeAmbient = "ambient"
+	LabelIstioDataplaneModeNone    = "none"
 )

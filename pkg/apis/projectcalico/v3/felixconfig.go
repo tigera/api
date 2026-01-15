@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2022 Tigera, Inc. All rights reserved.
+// Copyright (c) 2017-2026 Tigera, Inc. All rights reserved.
 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -55,12 +55,12 @@ const (
 )
 
 // NFTablesMode is the enum used to enable/disable nftables mode.
-// +enum
+// +kubebuilder:validation:Enum=Disabled;Enabled
 type NFTablesMode string
 
 const (
-	NFTablesModeEnabled  = "Enabled"
-	NFTablesModeDisabled = "Disabled"
+	NFTablesModeEnabled  NFTablesMode = "Enabled"
+	NFTablesModeDisabled NFTablesMode = "Disabled"
 )
 
 // +kubebuilder:validation:Enum=DoNothing;Enable;Disable
@@ -243,23 +243,8 @@ type FelixConfigurationSpec struct {
 	// +kubebuilder:validation:Pattern=`^([0-9]+(\\.[0-9]+)?(ms|s|m|h))*$`
 	IptablesPostWriteCheckInterval *metav1.Duration `json:"iptablesPostWriteCheckInterval,omitempty" configv1timescale:"seconds" confignamev1:"IptablesPostWriteCheckIntervalSecs"`
 
-	// IptablesLockFilePath is the location of the iptables lock file. You may need to change this
-	// if the lock file is not in its standard location (for example if you have mapped it into Felix's
-	// container at a different path). [Default: /run/xtables.lock]
-	IptablesLockFilePath string `json:"iptablesLockFilePath,omitempty"`
-
-	// IptablesLockTimeout is the time that Felix itself will wait for the iptables lock (rather than delegating the
-	// lock handling to the `iptables` command).
-	//
-	// Deprecated: `iptables-restore` v1.8+ always takes the lock, so enabling this feature results in deadlock.
-	// [Default: 0s disabled]
-	// +kubebuilder:validation:Type=string
-	// +kubebuilder:validation:Pattern=`^([0-9]+(\\.[0-9]+)?(ms|s|m|h))*$`
-	IptablesLockTimeout *metav1.Duration `json:"iptablesLockTimeout,omitempty" configv1timescale:"seconds" confignamev1:"IptablesLockTimeoutSecs"`
-
-	// IptablesLockProbeInterval when IptablesLockTimeout is enabled: the time that Felix will wait between
-	// attempts to acquire the iptables lock if it is not available. Lower values make Felix more
-	// responsive when the lock is contended, but use more CPU. [Default: 50ms]
+	// IptablesLockProbeInterval configures the interval between attempts to claim
+	// the xtables lock.  Shorter intervals are more responsive but use more CPU.  [Default: 50ms]
 	// +kubebuilder:validation:Type=string
 	// +kubebuilder:validation:Pattern=`^([0-9]+(\\.[0-9]+)?(ms|s|m|h))*$`
 	IptablesLockProbeInterval *metav1.Duration `json:"iptablesLockProbeInterval,omitempty" configv1timescale:"milliseconds" confignamev1:"IptablesLockProbeIntervalMillis"`
@@ -374,11 +359,30 @@ type FelixConfigurationSpec struct {
 	// +kubebuilder:validation:Pattern=`^(?i)(Drop|Reject)?$`
 	IptablesFilterDenyAction string `json:"iptablesFilterDenyAction,omitempty" validate:"omitempty,dropReject"`
 
-	// LogPrefix is the log prefix that Felix uses when rendering LOG rules. [Default: calico-packet]
+	// LogPrefix is the log prefix that Felix uses when rendering LOG rules. It is possible to use the following specifiers
+	// to include extra information in the log prefix.
+	// - %t: Tier name.
+	// - %k: Kind (short names).
+	// - %n: Policy or profile name.
+	// - %p: Policy or profile name (namespace/name for namespaced kinds or just name for non namespaced kinds).
+	// [Default: calico-packet]
+	// +kubebuilder:validation:Pattern=`^([a-zA-Z0-9%: /_-])*$`
 	LogPrefix string `json:"logPrefix,omitempty"`
 
 	// LogDropActionOverride specifies whether or not to include the DropActionOverride in the logs when it is triggered.
 	LogDropActionOverride *bool `json:"logDropActionOverride,omitempty"`
+
+	// LogActionRateLimit sets the rate of hitting a Log action. The value must be in the format "N/unit",
+	// where N is a number and unit is one of: second, minute, hour, or day. For example: "10/second" or "100/hour".
+	// +optional
+	// +kubebuilder:validation:Pattern=`^[1-9]\d{0,3}/(?:second|minute|hour|day)$`
+	LogActionRateLimit *string `json:"logActionRateLimit,omitempty"`
+
+	// LogActionRateLimitBurst sets the rate limit burst of hitting a Log action when LogActionRateLimit is enabled.
+	// +optional
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=9999
+	LogActionRateLimitBurst *int `json:"logActionRateLimitBurst,omitempty"`
 
 	// LogFilePath is the full path to the Felix log. Set to none to disable file logging. [Default: /var/log/calico/felix.log]
 	LogFilePath string `json:"logFilePath,omitempty"`
@@ -698,7 +702,6 @@ type FelixConfigurationSpec struct {
 	GenericXDPEnabled *bool `json:"genericXDPEnabled,omitempty" confignamev1:"GenericXDPEnabled"`
 
 	// NFTablesMode configures nftables support in Felix. [Default: Disabled]
-	// +kubebuilder:validation:Enum=Disabled;Enabled;Auto
 	NFTablesMode *NFTablesMode `json:"nftablesMode,omitempty"`
 
 	// NftablesRefreshInterval controls the interval at which Felix periodically refreshes the nftables rules. [Default: 90s]
@@ -853,14 +856,9 @@ type FelixConfigurationSpec struct {
 	// +kubebuilder:validation:Pattern=`^([0-9]+(\\.[0-9]+)?(ms|s|m|h))*$`
 	BPFKubeProxyMinSyncPeriod *metav1.Duration `json:"bpfKubeProxyMinSyncPeriod,omitempty" validate:"omitempty" configv1timescale:"seconds"`
 
-	// BPFKubeProxyHealtzPort, in BPF mode, controls the port that Felix's embedded kube-proxy health check server binds to.
+	// BPFKubeProxyHealthzPort, in BPF mode, controls the port that Felix's embedded kube-proxy health check server binds to.
 	// The health check server is used by external load balancers to determine if this node should receive traffic.  [Default: 10256]
-	BPFKubeProxyHealtzPort *int `json:"bpfKubeProxyHealtzPort,omitempty" validate:"omitempty,gte=1,lte=65535" confignamev1:"BPFKubeProxyHealtzPort"`
-
-	// BPFKubeProxyEndpointSlicesEnabled is deprecated and has no effect. BPF
-	// kube-proxy always accepts endpoint slices. This option will be removed in
-	// the next release.
-	BPFKubeProxyEndpointSlicesEnabled *bool `json:"bpfKubeProxyEndpointSlicesEnabled,omitempty" validate:"omitempty"`
+	BPFKubeProxyHealthzPort *int `json:"bpfKubeProxyHealthzPort,omitempty" validate:"omitempty,gte=1,lte=65535" confignamev1:"BPFKubeProxyHealthzPort"`
 
 	// BPFPSNATPorts sets the range from which we randomly pick a port if there is a source port
 	// collision. This should be within the ephemeral range as defined by RFC 6056 (1024–65535) and
@@ -952,6 +950,17 @@ type FelixConfigurationSpec struct {
 	// BPFExportBufferSizeMB in BPF mode, controls the buffer size used for sending BPF events to felix.
 	// [Default: 1]
 	BPFExportBufferSizeMB *int `json:"bpfExportBufferSizeMB,omitempty" validate:"omitempty,cidrs"`
+
+	// IstioAmbientMode configures Felix to work together with Tigera's Istio distribution.
+	// [Default: Disabled]
+	// +optional
+	IstioAmbientMode *IstioAmbientMode `json:"istioAmbientMode,omitempty"`
+
+	// IstioDSCPMark sets the value to use when directing traffic to Istio ZTunnel, when Istio is enabled. The mark is set only on
+	// SYN packets at the final hop to avoid interference with other protocols. This value is reserved by Calico and must not be used
+	// with other Istio installation. [Default: 23]
+	// +optional
+	IstioDSCPMark *numorstring.DSCP `json:"istioDSCPMark,omitempty"`
 
 	// CgroupV2Path overrides the default location where to find the cgroup hierarchy.
 	CgroupV2Path string `json:"cgroupV2Path,omitempty"`
@@ -1349,18 +1358,34 @@ type FelixConfigurationSpec struct {
 	// [Default: 100]
 	WAFEventLogsFileMaxFileSizeMB *int `json:"wafEventLogsFileMaxFileSizeMB,omitempty"`
 
+	// PolicyActivityLogsFlushInterval configures the interval at which Felix exports policy activity logs.
+	// [Default: 15s]
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:Pattern=`^([0-9]+(\\.[0-9]+)?(ms|s|m|h))*$`
+	PolicyActivityLogsFlushInterval *metav1.Duration `json:"policyActivityLogsFlushInterval,omitempty" configv1timescale:"seconds"`
+	// PolicyActivityLogsFileEnabled controls logging policy activity logs to a file. If false no policy activity logging to file will occur.
+	// [Default: true]
+	PolicyActivityLogsFileEnabled *bool `json:"policyActivityLogsFileEnabled,omitempty"`
+	// PolicyActivityLogsFileDirectory sets the directory where policy activity log files are stored.
+	// [Default: /var/log/calico/policy]
+	PolicyActivityLogsFileDirectory *string `json:"policyActivityLogsFileDirectory,omitempty"`
+	// PolicyActivityLogsFileMaxFiles sets the number of policy activity log files to keep.
+	// [Default: 5]
+	PolicyActivityLogsFileMaxFiles *int `json:"policyActivityLogsFileMaxFiles,omitempty"`
+	// PolicyActivityLogsFileMaxFileSizeMB sets the max size in MB of policy activity log files before rotation.
+	// [Default: 100]
+	PolicyActivityLogsFileMaxFileSizeMB *int `json:"policyActivityLogsFileMaxFileSizeMB,omitempty"`
+
 	// WindowsNetworkName specifies which Windows HNS networks Felix should operate on.  The default is to match
 	// networks that start with "calico".  Supports regular expression syntax.
 	WindowsNetworkName *string `json:"windowsNetworkName,omitempty"`
 
-	// BPFRedirectToPeer controls which whether it is allowed to forward straight to the
-	// peer side of the workload devices. It is allowed for any host L2 devices by default
-	// (L2Only), but it breaks TCP dump on the host side of workload device as it bypasses
-	// it on ingress. Value of Enabled also allows redirection from L3 host devices like
-	// IPIP tunnel or Wireguard directly to the peer side of the workload's device. This
-	// makes redirection faster, however, it breaks tools like tcpdump on the peer side.
-	// Use Enabled with caution. [Default: Disabled]
-	// +kubebuilder:validation:Enum=Enabled;Disabled;L2Only
+	// BPFRedirectToPeer controls whether traffic may be forwarded directly to the peer side of a workload’s device.
+	// Note that the legacy "L2Only" option is now deprecated and if set it is treated like "Enabled".
+	// Setting this option to "Enabled" allows direct redirection (including from L3 host devices such as IPIP tunnels or WireGuard),
+	// which can improve redirection performance but causes the redirected packets to bypass the host‑side ingress path.
+	// As a result, packet‑capture tools on the host side of the workload device (for example, tcpdump) will not see that traffic. [Default: Disabled]
+	// +kubebuilder:validation:Enum=Enabled;Disabled
 	BPFRedirectToPeer string `json:"bpfRedirectToPeer,omitempty"`
 
 	// BPFProfiling controls profiling of BPF programs. At the monent, it can be
@@ -1407,6 +1432,14 @@ type FelixConfigurationSpec struct {
 	// EgressGatewayPollFailureCount is the minimum number of poll failures before a remote Egress Gateway is considered
 	// to have failed.
 	EgressGatewayPollFailureCount *int `json:"egressGatewayPollFailureCount,omitempty" validate:"omitempty,gt=0"`
+
+	// EgressIPHostIfacePattern is a comma-separated list of interface names which might send and receive egress traffic
+	// across the cluster boundary, after it has left an Egress Gateway pod. Felix will ensure `src_valid_mark` sysctl flags
+	// are set correctly for matching interfaces.
+	// To target multiple interfaces with a single string, the list supports regular expressions.
+	// For regular expressions, wrap the value with `/`.
+	// Example: `/^bond/,eth0` will match all interfaces that begin with `bond` and also the interface `eth0`. [Default: ""]
+	EgressIPHostIfacePattern string `json:"egressIPHostIfacePattern,omitempty"`
 
 	// RouteSyncDisabled will disable all operations performed on the route table. Set to true to
 	// run in network-policy mode only.
@@ -1576,6 +1609,23 @@ type FelixConfigurationSpec struct {
 	// RequireMTUFile specifies whether mtu file is required to start the felix.
 	// Optional as to keep the same as previous behavior. [Default: false]
 	RequireMTUFile *bool `json:"requireMTUFile,omitempty"`
+
+	// BPFMaglevMaxEndpointsPerService is the maximum number of endpoints
+	// expected to be part of a single Maglev-enabled service.
+	//
+	// Influences the size of the per-service Maglev lookup-tables generated by Felix
+	// and thus the amount of memory reserved.
+	//
+	// [Default: 100]
+	// +optional
+	BPFMaglevMaxEndpointsPerService *int `json:"bpfMaglevMaxEndpointsPerService,omitempty" validate:"omitempty,gt=0,lte=3000"`
+
+	// BPFMaglevMaxServices is the maximum number of expected Maglev-enabled
+	// services that Felix will allocate lookup-tables for.
+	//
+	// [Default: 100]
+	// +optional
+	BPFMaglevMaxServices *int `json:"bpfMaglevMaxServices,omitempty" validate:"omitempty,gt=0,lte=3000"`
 }
 
 type HealthTimeoutOverride struct {
@@ -1661,6 +1711,15 @@ type BPFConntrackTimeouts struct {
 	// +optional
 	ICMPTimeout *BPFConntrackTimeout `json:"icmpTimeout,omitempty"`
 }
+
+// IstioAmbientMode is the enum used to enable/disable Tigera Istio mode.
+// +kubebuilder:validation:Enum=Enabled;Disabled
+type IstioAmbientMode string
+
+const (
+	IstioAmbientModeEnabled  IstioAmbientMode = "Enabled"
+	IstioAmbientModeDisabled IstioAmbientMode = "Disabled"
+)
 
 // New FelixConfiguration creates a new (zeroed) FelixConfiguration struct with the TypeMetadata
 // initialized to the current version.
