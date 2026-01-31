@@ -55,12 +55,13 @@ const (
 )
 
 // NFTablesMode is the enum used to enable/disable nftables mode.
-// +kubebuilder:validation:Enum=Disabled;Enabled
+// +kubebuilder:validation:Enum=Disabled;Enabled;Auto
 type NFTablesMode string
 
 const (
 	NFTablesModeEnabled  NFTablesMode = "Enabled"
 	NFTablesModeDisabled NFTablesMode = "Disabled"
+	NFTablesModeAuto     NFTablesMode = "Auto"
 )
 
 // +kubebuilder:validation:Enum=DoNothing;Enable;Disable
@@ -365,6 +366,8 @@ type FelixConfigurationSpec struct {
 	// - %k: Kind (short names).
 	// - %n: Policy or profile name.
 	// - %p: Policy or profile name (namespace/name for namespaced kinds or just name for non namespaced kinds).
+	// Calico includes ": " characters at the end of the generated log prefix.
+	// Note that iptables shows up to 29 characters for the log prefix and nftables up to 127 characters. Extra characters are truncated.
 	// [Default: calico-packet]
 	// +kubebuilder:validation:Pattern=`^([a-zA-Z0-9%: /_-])*$`
 	LogPrefix string `json:"logPrefix,omitempty"`
@@ -701,7 +704,8 @@ type FelixConfigurationSpec struct {
 	// iptables. [Default: false]
 	GenericXDPEnabled *bool `json:"genericXDPEnabled,omitempty" confignamev1:"GenericXDPEnabled"`
 
-	// NFTablesMode configures nftables support in Felix. [Default: Disabled]
+	// NFTablesMode configures nftables support in Felix. [Default: Auto]
+	// +kubebuilder:default=Auto
 	NFTablesMode *NFTablesMode `json:"nftablesMode,omitempty"`
 
 	// NftablesRefreshInterval controls the interval at which Felix periodically refreshes the nftables rules. [Default: 90s]
