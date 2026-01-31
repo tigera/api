@@ -3,19 +3,19 @@
 #################################################################################################
 
 # Calico toolchain versions and the calico/base image to use.
-GO_BUILD_VER=1.25.5-llvm18.1.8-k8s1.34.2
+GO_BUILD_VER=1.25.6-llvm18.1.8-k8s1.34.3
 RUST_BUILD_VER=1.91.1
 
 # Calico Enterprise shipping images now builds on UBI 10. For Calico OSS to Enterprise merges,
 # please don't downgrade the base image back to UBI 9.
-CALICO_BASE_VER=ubi10-1765220429
+CALICO_BASE_VER=ubi10-1769122535
 
 # Env var to ACK Ginkgo deprecation warnings, may need updating with go-build.
 ACK_GINKGO=ACK_GINKGO_DEPRECATIONS=1.16.5
 
 # Version of Kubernetes to use for tests, rancher/kubectl, and kubectl binary release in
 # confd and kube-controllers.
-K8S_VERSION=v1.34.2
+K8S_VERSION=v1.34.3
 
 # Version of various tools used in the build and tests.
 COREDNS_VERSION=1.5.2
@@ -25,7 +25,7 @@ GHR_VERSION=v0.17.0
 GITHUB_CLI_VERSION=2.76.2
 GOTESTSUM_VERSION=v1.12.3
 HELM_VERSION=v3.16.4
-KINDEST_NODE_VERSION=v1.34.2
+KINDEST_NODE_VERSION=v1.34.3
 KINDEST_NODE_VERSION_DUAL_TOR=v1.24.7
 KIND_VERSION=v0.29.0
 
@@ -94,7 +94,7 @@ FLANNEL_VERSION=main
 BPFTOOL_IMAGE=calico/bpftool:v7.5.0
 
 # The operator branch corresponding to this branch.
-OPERATOR_BRANCH       ?= master
+OPERATOR_BRANCH ?= master
 OPERATOR_ORGANIZATION ?= tigera
 OPERATOR_GIT_REPO     ?= operator
 # The manager branch corresponding to this branch.
