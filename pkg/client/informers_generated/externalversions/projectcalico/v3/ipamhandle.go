@@ -18,70 +18,71 @@ import (
 	cache "k8s.io/client-go/tools/cache"
 )
 
-// AuthenticationReviewInformer provides access to a shared informer and lister for
-// AuthenticationReviews.
-type AuthenticationReviewInformer interface {
+// IPAMHandleInformer provides access to a shared informer and lister for
+// IPAMHandles.
+type IPAMHandleInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() projectcalicov3.AuthenticationReviewLister
+	Lister() projectcalicov3.IPAMHandleLister
 }
 
-type authenticationReviewInformer struct {
+type iPAMHandleInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
 	tweakListOptions internalinterfaces.TweakListOptionsFunc
+	namespace        string
 }
 
-// NewAuthenticationReviewInformer constructs a new informer for AuthenticationReview type.
+// NewIPAMHandleInformer constructs a new informer for IPAMHandle type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewAuthenticationReviewInformer(client clientset.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
-	return NewFilteredAuthenticationReviewInformer(client, resyncPeriod, indexers, nil)
+func NewIPAMHandleInformer(client clientset.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
+	return NewFilteredIPAMHandleInformer(client, namespace, resyncPeriod, indexers, nil)
 }
 
-// NewFilteredAuthenticationReviewInformer constructs a new informer for AuthenticationReview type.
+// NewFilteredIPAMHandleInformer constructs a new informer for IPAMHandle type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewFilteredAuthenticationReviewInformer(client clientset.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
+func NewFilteredIPAMHandleInformer(client clientset.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
 	return cache.NewSharedIndexInformer(
 		&cache.ListWatch{
 			ListFunc: func(options v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ProjectcalicoV3().AuthenticationReviews().List(context.Background(), options)
+				return client.ProjectcalicoV3().IPAMHandles(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ProjectcalicoV3().AuthenticationReviews().Watch(context.Background(), options)
+				return client.ProjectcalicoV3().IPAMHandles(namespace).Watch(context.Background(), options)
 			},
 			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ProjectcalicoV3().AuthenticationReviews().List(ctx, options)
+				return client.ProjectcalicoV3().IPAMHandles(namespace).List(ctx, options)
 			},
 			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ProjectcalicoV3().AuthenticationReviews().Watch(ctx, options)
+				return client.ProjectcalicoV3().IPAMHandles(namespace).Watch(ctx, options)
 			},
 		},
-		&apisprojectcalicov3.AuthenticationReview{},
+		&apisprojectcalicov3.IPAMHandle{},
 		resyncPeriod,
 		indexers,
 	)
 }
 
-func (f *authenticationReviewInformer) defaultInformer(client clientset.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewFilteredAuthenticationReviewInformer(client, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
+func (f *iPAMHandleInformer) defaultInformer(client clientset.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
+	return NewFilteredIPAMHandleInformer(client, f.namespace, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
 }
 
-func (f *authenticationReviewInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apisprojectcalicov3.AuthenticationReview{}, f.defaultInformer)
+func (f *iPAMHandleInformer) Informer() cache.SharedIndexInformer {
+	return f.factory.InformerFor(&apisprojectcalicov3.IPAMHandle{}, f.defaultInformer)
 }
 
-func (f *authenticationReviewInformer) Lister() projectcalicov3.AuthenticationReviewLister {
-	return projectcalicov3.NewAuthenticationReviewLister(f.Informer().GetIndexer())
+func (f *iPAMHandleInformer) Lister() projectcalicov3.IPAMHandleLister {
+	return projectcalicov3.NewIPAMHandleLister(f.Informer().GetIndexer())
 }

@@ -8,10 +8,6 @@ package v3
 // AlertExceptionLister.
 type AlertExceptionListerExpansion interface{}
 
-// AuthenticationReviewListerExpansion allows custom methods to be added to
-// AuthenticationReviewLister.
-type AuthenticationReviewListerExpansion interface{}
-
 // AuthorizationReviewListerExpansion allows custom methods to be added to
 // AuthorizationReviewLister.
 type AuthorizationReviewListerExpansion interface{}
@@ -96,9 +92,21 @@ type GlobalThreatFeedListerExpansion interface{}
 // HostEndpointLister.
 type HostEndpointListerExpansion interface{}
 
+// IPAMBlockListerExpansion allows custom methods to be added to
+// IPAMBlockLister.
+type IPAMBlockListerExpansion interface{}
+
 // IPAMConfigurationListerExpansion allows custom methods to be added to
 // IPAMConfigurationLister.
 type IPAMConfigurationListerExpansion interface{}
+
+// IPAMHandleListerExpansion allows custom methods to be added to
+// IPAMHandleLister.
+type IPAMHandleListerExpansion interface{}
+
+// IPAMHandleNamespaceListerExpansion allows custom methods to be added to
+// IPAMHandleNamespaceLister.
+type IPAMHandleNamespaceListerExpansion interface{}
 
 // IPPoolListerExpansion allows custom methods to be added to
 // IPPoolLister.
