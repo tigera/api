@@ -35,23 +35,30 @@ const (
 
 // +genclient
 // +genclient:nonNamespaced
+// +kubebuilder:resource:scope=Cluster
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="Expiry",type="string",JSONPath=".status.expiry"
+// +kubebuilder:printcolumn:name="Grace-Period",type="string",JSONPath=".status.gracePeriod"
+// +kubebuilder:printcolumn:name="Max-Nodes",type="integer",JSONPath=".status.maxnodes"
+// +kubebuilder:printcolumn:name="Valid",type="string",JSONPath=".status.conditions[?(@.type=='Valid')].status"
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 
 // LicenseKey contains the Calico Enterprise license key for the cluster.
 type LicenseKey struct {
-	metav1.TypeMeta `json:",inline"`
-	// Standard object's metadata.  This resource is a singleton, always named "default".
-	metav1.ObjectMeta `json:"metadata,omitempty"`
-	// Specification of the LicenseKey.
-	Spec LicenseKeySpec `json:"spec,omitempty"`
-	// Status of the LicenseKey.
-	Status LicenseKeyStatus `json:"status,omitempty"`
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata"`
+	Spec              LicenseKeySpec `json:"spec"`
+
+	// +optional
+	Status LicenseKeyStatus `json:"status"`
 }
 
 // LicenseKeySpec contains the license key itself.
 type LicenseKeySpec struct {
 	// Token is the JWT containing the license claims
 	Token string `json:"token" yaml:"token"`
+
 	// Certificate is used to validate the token.
 	Certificate string `json:"certificate,omitempty" yaml:"certificate" validate:"omitempty"`
 }
@@ -60,16 +67,42 @@ type LicenseKeySpec struct {
 type LicenseKeyStatus struct {
 	// Expiry is the expiry date of License
 	// +nullable
-	Expiry metav1.Time `json:"expiry,omitempty" yaml:"expiry"`
+	// +optional
+	Expiry metav1.Time `json:"expiry" yaml:"expiry"`
+
+	// GracePeriod is how long after expiry the license remains functional (e.g. "90d")
+	// +optional
+	GracePeriod string `json:"gracePeriod,omitempty" yaml:"gracePeriod" validate:"omitempty"`
+
 	// Maximum Number of Allowed Nodes
+	// +optional
 	MaxNodes int `json:"maxnodes,omitempty" yaml:"maxnodes" validate:"omitempty"`
+
 	// License package defines type of Calico license that is being enforced
+	// +optional
 	Package LicensePackageType `json:"package,omitempty" yaml:"package" validate:"omitempty"`
+
 	// List of features that are available via the applied license
+	// +optional
 	Features []string `json:"features,omitempty" yaml:"features" validate:"omitempty"`
+
+	// Conditions is a list of conditions related to the license key. This can be used to indicate if the license is valid, expired, etc.
+	// +optional
+	Conditions []metav1.Condition `json:"conditions,omitempty" yaml:"conditions" validate:"omitempty"`
 }
 
+const (
+	LicenseKeyConditionValid = "Valid"
+)
+
+const (
+	LicenseKeyReasonValidLicense   = "ValidLicense"
+	LicenseKeyReasonExpiredLicense = "ExpiredLicense"
+	LicenseKeyReasonInvalidLicense = "InvalidLicense"
+)
+
 // +genclient:nonNamespaced
+// +kubebuilder:resource:scope=Cluster
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // LicenseKeyList contains a list of LicenseKey resources

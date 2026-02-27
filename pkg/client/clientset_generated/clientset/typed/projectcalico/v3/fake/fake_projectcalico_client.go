@@ -19,10 +19,6 @@ func (c *FakeProjectcalicoV3) AlertExceptions() v3.AlertExceptionInterface {
 	return newFakeAlertExceptions(c)
 }
 
-func (c *FakeProjectcalicoV3) AuthenticationReviews() v3.AuthenticationReviewInterface {
-	return newFakeAuthenticationReviews(c)
-}
-
 func (c *FakeProjectcalicoV3) AuthorizationReviews() v3.AuthorizationReviewInterface {
 	return newFakeAuthorizationReviews(c)
 }
@@ -103,8 +99,16 @@ func (c *FakeProjectcalicoV3) HostEndpoints() v3.HostEndpointInterface {
 	return newFakeHostEndpoints(c)
 }
 
+func (c *FakeProjectcalicoV3) IPAMBlocks() v3.IPAMBlockInterface {
+	return newFakeIPAMBlocks(c)
+}
+
 func (c *FakeProjectcalicoV3) IPAMConfigurations() v3.IPAMConfigurationInterface {
 	return newFakeIPAMConfigurations(c)
+}
+
+func (c *FakeProjectcalicoV3) IPAMHandles(namespace string) v3.IPAMHandleInterface {
+	return newFakeIPAMHandles(c, namespace)
 }
 
 func (c *FakeProjectcalicoV3) IPPools() v3.IPPoolInterface {
