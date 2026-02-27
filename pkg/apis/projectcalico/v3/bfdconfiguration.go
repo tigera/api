@@ -24,25 +24,25 @@ const (
 )
 
 // +genclient:nonNamespaced
+// +kubebuilder:resource:scope=Cluster
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // BFDConfigurationList is a list of BFDConfiguration resources.
 type BFDConfigurationList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
-
-	Items []BFDConfiguration `json:"items" protobuf:"bytes,2,rep,name=items"`
+	metav1.ListMeta `json:"metadata" protobuf:"bytes,1,opt,name=metadata"`
+	Items           []BFDConfiguration `json:"items" protobuf:"bytes,2,rep,name=items"`
 }
 
 // +genclient
 // +genclient:nonNamespaced
+// +kubebuilder:resource:scope=Cluster
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 type BFDConfiguration struct {
 	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
-
-	Spec BFDConfigurationSpec `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
+	metav1.ObjectMeta `json:"metadata" protobuf:"bytes,1,opt,name=metadata"`
+	Spec              BFDConfigurationSpec `json:"spec" protobuf:"bytes,2,opt,name=spec"`
 }
 
 // BFDConfigurationSpec contains the specification for a BFDConfiguration resource.

@@ -26,16 +26,17 @@ const (
 
 // +genclient
 // +genclient:nonNamespaced
+// +kubebuilder:resource:scope=Cluster
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // GlobalReport contains the configuration for a non-namespaced Report.
 type GlobalReport struct {
-	metav1.TypeMeta `json:",inline"`
-	// Standard object's metadata.
-	metav1.ObjectMeta `json:"metadata,omitempty"`
-	// Specification of the GlobalReport.
-	Spec   ReportSpec   `json:"spec,omitempty"`
-	Status ReportStatus `json:"status,omitempty"`
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata"`
+	Spec              ReportSpec `json:"spec"`
+
+	// +optional
+	Status ReportStatus `json:"status"`
 }
 
 // ReportSpec contains the values of the GlobalReport.
@@ -174,6 +175,7 @@ type NamesAndLabelsMatch struct {
 }
 
 // +genclient:nonNamespaced
+// +kubebuilder:resource:scope=Cluster
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // GlobalReportList contains a list of GlobalReport resources.
