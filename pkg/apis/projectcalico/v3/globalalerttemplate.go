@@ -25,17 +25,17 @@ const (
 
 // +genclient
 // +genclient:nonNamespaced
+// +kubebuilder:resource:scope=Cluster
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 type GlobalAlertTemplate struct {
-	metav1.TypeMeta `json:",inline"`
-	// Standard object's metadata.
-	metav1.ObjectMeta `json:"metadata,omitempty"`
-	// Specification of the GlobalAlert.
-	Spec GlobalAlertSpec `json:"spec,omitempty"`
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata"`
+	Spec              GlobalAlertSpec `json:"spec"`
 }
 
 // +genclient:nonNamespaced
+// +kubebuilder:resource:scope=Cluster
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // GlobalAlertList contains a list of GlobalAlert resources.
