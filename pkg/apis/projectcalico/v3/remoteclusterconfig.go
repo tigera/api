@@ -14,15 +14,14 @@ const (
 
 // +genclient
 // +genclient:nonNamespaced
+// +kubebuilder:resource:scope=Cluster
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // RemoteClusterConfiguration contains the configuration for remote clusters.
 type RemoteClusterConfiguration struct {
-	metav1.TypeMeta `json:",inline"`
-	// Standard object's metadata.
-	metav1.ObjectMeta `json:"metadata,omitempty"`
-	// Specification of the RemoteClusterConfiguration.
-	Spec RemoteClusterConfigurationSpec `json:"spec,omitempty"`
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata"`
+	Spec              RemoteClusterConfigurationSpec `json:"spec"`
 }
 
 // It's desirable to keep the list of things configurable here in sync with the other mechanism in apiconfig.go
@@ -105,6 +104,7 @@ type KubeConfig struct {
 }
 
 // +genclient:nonNamespaced
+// +kubebuilder:resource:scope=Cluster
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // RemoteClusterConfigurationList contains a list of RemoteClusterConfiguration resources
