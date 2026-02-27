@@ -24,25 +24,25 @@ const (
 )
 
 // +genclient:nonNamespaced
+// +kubebuilder:resource:scope=Cluster
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // EgressGatewayPolicyList is a list of EgressGatewayPolicy resources.
 type EgressGatewayPolicyList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
-
-	Items []EgressGatewayPolicy `json:"items" protobuf:"bytes,2,rep,name=items"`
+	metav1.ListMeta `json:"metadata" protobuf:"bytes,1,opt,name=metadata"`
+	Items           []EgressGatewayPolicy `json:"items" protobuf:"bytes,2,rep,name=items"`
 }
 
 // +genclient
 // +genclient:nonNamespaced
+// +kubebuilder:resource:scope=Cluster
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 type EgressGatewayPolicy struct {
 	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
-
-	Spec EgressGatewayPolicySpec `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
+	metav1.ObjectMeta `json:"metadata" protobuf:"bytes,1,opt,name=metadata"`
+	Spec              EgressGatewayPolicySpec `json:"spec" protobuf:"bytes,2,opt,name=spec"`
 }
 
 // EgressGatewayPolicySpec contains the egress policy rules for each destination network
