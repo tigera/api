@@ -22,12 +22,10 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.AlertExceptionList":                       schema_pkg_apis_projectcalico_v3_AlertExceptionList(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.AlertExceptionSpec":                       schema_pkg_apis_projectcalico_v3_AlertExceptionSpec(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.AlertExceptionStatus":                     schema_pkg_apis_projectcalico_v3_AlertExceptionStatus(ref),
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.AllocationAttribute":                      schema_pkg_apis_projectcalico_v3_AllocationAttribute(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.AuditEventsSelection":                     schema_pkg_apis_projectcalico_v3_AuditEventsSelection(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.AuditResource":                            schema_pkg_apis_projectcalico_v3_AuditResource(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.AuditSummary":                             schema_pkg_apis_projectcalico_v3_AuditSummary(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.AuthenticationReview":                     schema_pkg_apis_projectcalico_v3_AuthenticationReview(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.AuthenticationReviewList":                 schema_pkg_apis_projectcalico_v3_AuthenticationReviewList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.AuthenticationReviewStatus":               schema_pkg_apis_projectcalico_v3_AuthenticationReviewStatus(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.AuthorizationReview":                      schema_pkg_apis_projectcalico_v3_AuthorizationReview(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.AuthorizationReviewList":                  schema_pkg_apis_projectcalico_v3_AuthorizationReviewList(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.AuthorizationReviewResourceAttributes":    schema_pkg_apis_projectcalico_v3_AuthorizationReviewResourceAttributes(ref),
@@ -153,13 +151,20 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.HostEndpointList":                         schema_pkg_apis_projectcalico_v3_HostEndpointList(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.HostEndpointSpec":                         schema_pkg_apis_projectcalico_v3_HostEndpointSpec(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.ICMPFields":                               schema_pkg_apis_projectcalico_v3_ICMPFields(ref),
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.IPAMBlock":                                schema_pkg_apis_projectcalico_v3_IPAMBlock(ref),
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.IPAMBlockList":                            schema_pkg_apis_projectcalico_v3_IPAMBlockList(ref),
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.IPAMBlockSpec":                            schema_pkg_apis_projectcalico_v3_IPAMBlockSpec(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.IPAMConfiguration":                        schema_pkg_apis_projectcalico_v3_IPAMConfiguration(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.IPAMConfigurationList":                    schema_pkg_apis_projectcalico_v3_IPAMConfigurationList(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.IPAMConfigurationSpec":                    schema_pkg_apis_projectcalico_v3_IPAMConfigurationSpec(ref),
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.IPAMHandle":                               schema_pkg_apis_projectcalico_v3_IPAMHandle(ref),
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.IPAMHandleList":                           schema_pkg_apis_projectcalico_v3_IPAMHandleList(ref),
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.IPAMHandleSpec":                           schema_pkg_apis_projectcalico_v3_IPAMHandleSpec(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.IPIPConfiguration":                        schema_pkg_apis_projectcalico_v3_IPIPConfiguration(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.IPPool":                                   schema_pkg_apis_projectcalico_v3_IPPool(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.IPPoolList":                               schema_pkg_apis_projectcalico_v3_IPPoolList(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.IPPoolSpec":                               schema_pkg_apis_projectcalico_v3_IPPoolSpec(ref),
+		"github.com/tigera/api/pkg/apis/projectcalico/v3.IPPoolStatus":                             schema_pkg_apis_projectcalico_v3_IPPoolStatus(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.IPReservation":                            schema_pkg_apis_projectcalico_v3_IPReservation(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.IPReservationList":                        schema_pkg_apis_projectcalico_v3_IPReservationList(ref),
 		"github.com/tigera/api/pkg/apis/projectcalico/v3.IPReservationSpec":                        schema_pkg_apis_projectcalico_v3_IPReservationSpec(ref),
@@ -636,6 +641,7 @@ func schema_pkg_apis_projectcalico_v3_AlertException(ref common.ReferenceCallbac
 						},
 					},
 				},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{
@@ -742,6 +748,39 @@ func schema_pkg_apis_projectcalico_v3_AlertExceptionStatus(ref common.ReferenceC
 			SchemaProps: spec.SchemaProps{
 				Description: "AlertExceptionStatus contains the status of an alert exception.",
 				Type:        []string{"object"},
+			},
+		},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_AllocationAttribute(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"handle_id": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"secondary": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
 			},
 		},
 	}
@@ -864,155 +903,6 @@ func schema_pkg_apis_projectcalico_v3_AuditSummary(ref common.ReferenceCallback)
 	}
 }
 
-func schema_pkg_apis_projectcalico_v3_AuthenticationReview(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
-						},
-					},
-					"status": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.AuthenticationReviewStatus"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.AuthenticationReviewStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
-	}
-}
-
-func schema_pkg_apis_projectcalico_v3_AuthenticationReviewList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "AuthenticationReviewList is a list of AuthenticationReview objects.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
-						},
-					},
-					"items": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.AuthenticationReview"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"items"},
-			},
-		},
-		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.AuthenticationReview", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
-	}
-}
-
-func schema_pkg_apis_projectcalico_v3_AuthenticationReviewStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"name": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"uid": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"groups": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
-						},
-					},
-					"extra": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"object"},
-							AdditionalProperties: &spec.SchemaOrBool{
-								Allows: true,
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Type: []string{"array"},
-										Items: &spec.SchemaOrArray{
-											Schema: &spec.Schema{
-												SchemaProps: spec.SchemaProps{
-													Default: "",
-													Type:    []string{"string"},
-													Format:  "",
-												},
-											},
-										},
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-	}
-}
-
 func schema_pkg_apis_projectcalico_v3_AuthorizationReview(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -1052,6 +942,7 @@ func schema_pkg_apis_projectcalico_v3_AuthorizationReview(ref common.ReferenceCa
 						},
 					},
 				},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{
@@ -1100,7 +991,7 @@ func schema_pkg_apis_projectcalico_v3_AuthorizationReviewList(ref common.Referen
 						},
 					},
 				},
-				Required: []string{"items"},
+				Required: []string{"metadata", "items"},
 			},
 		},
 		Dependencies: []string{
@@ -1396,7 +1287,7 @@ func schema_pkg_apis_projectcalico_v3_AutoHostEndpointConfig(ref common.Referenc
 				Properties: map[string]spec.Schema{
 					"autoCreate": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AutoCreate enables automatic creation of host endpoints for every node. [Default: Disabled]",
+							Description: "AutoCreate enables automatic creation of host endpoints for every node. [Default: Disabled] Valid values are: \"Enabled\", \"Disabled\".",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -1462,6 +1353,7 @@ func schema_pkg_apis_projectcalico_v3_BFDConfiguration(ref common.ReferenceCallb
 						},
 					},
 				},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{
@@ -1510,7 +1402,7 @@ func schema_pkg_apis_projectcalico_v3_BFDConfigurationList(ref common.ReferenceC
 						},
 					},
 				},
-				Required: []string{"items"},
+				Required: []string{"metadata", "items"},
 			},
 		},
 		Dependencies: []string{
@@ -1633,6 +1525,7 @@ func schema_pkg_apis_projectcalico_v3_BGPConfiguration(ref common.ReferenceCallb
 						},
 					},
 				},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{
@@ -1681,7 +1574,7 @@ func schema_pkg_apis_projectcalico_v3_BGPConfigurationList(ref common.ReferenceC
 						},
 					},
 				},
-				Required: []string{"items"},
+				Required: []string{"metadata", "items"},
 			},
 		},
 		Dependencies: []string{
@@ -1698,7 +1591,7 @@ func schema_pkg_apis_projectcalico_v3_BGPConfigurationSpec(ref common.ReferenceC
 				Properties: map[string]spec.Schema{
 					"logSeverityScreen": {
 						SchemaProps: spec.SchemaProps{
-							Description: "LogSeverityScreen is the log severity above which logs are sent to the stdout. [Default: INFO]",
+							Description: "LogSeverityScreen is the log severity above which logs are sent to the stdout. [Default: Info]",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -1734,6 +1627,11 @@ func schema_pkg_apis_projectcalico_v3_BGPConfigurationSpec(ref common.ReferenceC
 						},
 					},
 					"serviceLoadBalancerIPs": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "ServiceLoadBalancerIPs are the CIDR blocks for Kubernetes Service LoadBalancer IPs. Kubernetes Service status.LoadBalancer.Ingress IPs will only be advertised if they are within one of these blocks.",
 							Type:        []string{"array"},
@@ -1748,6 +1646,11 @@ func schema_pkg_apis_projectcalico_v3_BGPConfigurationSpec(ref common.ReferenceC
 						},
 					},
 					"serviceExternalIPs": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "ServiceExternalIPs are the CIDR blocks for Kubernetes Service External IPs. Kubernetes Service ExternalIPs will only be advertised if they are within one of these blocks.",
 							Type:        []string{"array"},
@@ -1762,6 +1665,11 @@ func schema_pkg_apis_projectcalico_v3_BGPConfigurationSpec(ref common.ReferenceC
 						},
 					},
 					"serviceClusterIPs": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "ServiceClusterIPs are the CIDR blocks from which service cluster IPs are allocated. If specified, Calico will advertise these blocks, as well as any cluster IPs within them.",
 							Type:        []string{"array"},
@@ -1783,6 +1691,11 @@ func schema_pkg_apis_projectcalico_v3_BGPConfigurationSpec(ref common.ReferenceC
 						},
 					},
 					"communities": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "Communities is a list of BGP community values and their arbitrary names for tagging routes.",
 							Type:        []string{"array"},
@@ -1797,6 +1710,11 @@ func schema_pkg_apis_projectcalico_v3_BGPConfigurationSpec(ref common.ReferenceC
 						},
 					},
 					"prefixAdvertisements": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "PrefixAdvertisements contains per-prefix advertisement configuration.",
 							Type:        []string{"array"},
@@ -1837,6 +1755,11 @@ func schema_pkg_apis_projectcalico_v3_BGPConfigurationSpec(ref common.ReferenceC
 						},
 					},
 					"ignoredInterfaces": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "IgnoredInterfaces indicates the network interfaces that needs to be excluded when reading device routes.",
 							Type:        []string{"array"},
@@ -1954,6 +1877,7 @@ func schema_pkg_apis_projectcalico_v3_BGPFilter(ref common.ReferenceCallback) co
 						},
 					},
 				},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{
@@ -2002,7 +1926,7 @@ func schema_pkg_apis_projectcalico_v3_BGPFilterList(ref common.ReferenceCallback
 						},
 					},
 				},
-				Required: []string{"items"},
+				Required: []string{"metadata", "items"},
 			},
 		},
 		Dependencies: []string{
@@ -2030,6 +1954,11 @@ func schema_pkg_apis_projectcalico_v3_BGPFilterPrefixLengthV4(ref common.Referen
 					},
 				},
 			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-map-type": "atomic",
+				},
+			},
 		},
 	}
 }
@@ -2052,6 +1981,11 @@ func schema_pkg_apis_projectcalico_v3_BGPFilterPrefixLengthV6(ref common.Referen
 							Format: "int32",
 						},
 					},
+				},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-map-type": "atomic",
 				},
 			},
 		},
@@ -2104,6 +2038,11 @@ func schema_pkg_apis_projectcalico_v3_BGPFilterRuleV4(ref common.ReferenceCallba
 				},
 				Required: []string{"action"},
 			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-map-type": "atomic",
+				},
+			},
 		},
 		Dependencies: []string{
 			"github.com/tigera/api/pkg/apis/projectcalico/v3.BGPFilterPrefixLengthV4"},
@@ -2155,6 +2094,11 @@ func schema_pkg_apis_projectcalico_v3_BGPFilterRuleV6(ref common.ReferenceCallba
 					},
 				},
 				Required: []string{"action"},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-map-type": "atomic",
+				},
 			},
 		},
 		Dependencies: []string{
@@ -2287,6 +2231,7 @@ func schema_pkg_apis_projectcalico_v3_BGPPeer(ref common.ReferenceCallback) comm
 						},
 					},
 				},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{
@@ -2335,7 +2280,7 @@ func schema_pkg_apis_projectcalico_v3_BGPPeerList(ref common.ReferenceCallback) 
 						},
 					},
 				},
-				Required: []string{"items"},
+				Required: []string{"metadata", "items"},
 			},
 		},
 		Dependencies: []string{
@@ -2624,19 +2569,18 @@ func schema_pkg_apis_projectcalico_v3_BlockAffinity(ref common.ReferenceCallback
 					},
 					"metadata": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Standard object's metadata.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
 						},
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specification of the BlockAffinity.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.BlockAffinitySpec"),
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.BlockAffinitySpec"),
 						},
 					},
 				},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{
@@ -2716,6 +2660,13 @@ func schema_pkg_apis_projectcalico_v3_BlockAffinitySpec(ref common.ReferenceCall
 							Format:      "",
 						},
 					},
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The type of affinity.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"cidr": {
 						SchemaProps: spec.SchemaProps{
 							Description: "The CIDR range this block affinity references.",
@@ -2727,12 +2678,13 @@ func schema_pkg_apis_projectcalico_v3_BlockAffinitySpec(ref common.ReferenceCall
 					"deleted": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Deleted indicates whether or not this block affinity is disabled and is used as part of race-condition prevention. When set to true, clients should treat this block as if it does not exist.",
+							Default:     false,
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
 					},
 				},
-				Required: []string{"state", "node", "cidr"},
+				Required: []string{"state", "node", "cidr", "deleted"},
 			},
 		},
 	}
@@ -3471,6 +3423,7 @@ func schema_pkg_apis_projectcalico_v3_CalicoNodeStatus(ref common.ReferenceCallb
 						},
 					},
 				},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{
@@ -3519,7 +3472,7 @@ func schema_pkg_apis_projectcalico_v3_CalicoNodeStatusList(ref common.ReferenceC
 						},
 					},
 				},
-				Required: []string{"items"},
+				Required: []string{"metadata", "items"},
 			},
 		},
 		Dependencies: []string{
@@ -3644,6 +3597,7 @@ func schema_pkg_apis_projectcalico_v3_ClusterInformation(ref common.ReferenceCal
 						},
 					},
 				},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{
@@ -3692,7 +3646,7 @@ func schema_pkg_apis_projectcalico_v3_ClusterInformationList(ref common.Referenc
 						},
 					},
 				},
-				Required: []string{"items"},
+				Required: []string{"metadata", "items"},
 			},
 		},
 		Dependencies: []string{
@@ -3783,6 +3737,11 @@ func schema_pkg_apis_projectcalico_v3_Community(ref common.ReferenceCallback) co
 							Format:      "",
 						},
 					},
+				},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-map-type": "atomic",
 				},
 			},
 		},
@@ -4322,6 +4281,7 @@ func schema_pkg_apis_projectcalico_v3_EgressGatewayPolicy(ref common.ReferenceCa
 						},
 					},
 				},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{
@@ -4390,7 +4350,7 @@ func schema_pkg_apis_projectcalico_v3_EgressGatewayPolicyList(ref common.Referen
 						},
 					},
 				},
-				Required: []string{"items"},
+				Required: []string{"metadata", "items"},
 			},
 		},
 		Dependencies: []string{
@@ -4939,6 +4899,11 @@ func schema_pkg_apis_projectcalico_v3_EntityRule(ref common.ReferenceCallback) c
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"nets": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "Nets is an optional field that restricts the rule to only apply to traffic that originates from (or terminates at) IP addresses in any of the given subnets.",
 							Type:        []string{"array"},
@@ -5003,7 +4968,7 @@ func schema_pkg_apis_projectcalico_v3_EntityRule(ref common.ReferenceCallback) c
 					},
 					"notNets": {
 						SchemaProps: spec.SchemaProps{
-							Description: "NotNets is the negated version of the Nets field.",
+							Description: "NotNets is the negated version of the Nets field. listType=set",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -5183,6 +5148,7 @@ func schema_pkg_apis_projectcalico_v3_ExternalNetwork(ref common.ReferenceCallba
 						},
 					},
 				},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{
@@ -5231,7 +5197,7 @@ func schema_pkg_apis_projectcalico_v3_ExternalNetworkList(ref common.ReferenceCa
 						},
 					},
 				},
-				Required: []string{"items"},
+				Required: []string{"metadata", "items"},
 			},
 		},
 		Dependencies: []string{
@@ -5314,6 +5280,7 @@ func schema_pkg_apis_projectcalico_v3_FelixConfiguration(ref common.ReferenceCal
 						},
 					},
 				},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{
@@ -5362,7 +5329,7 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationList(ref common.Referenc
 						},
 					},
 				},
-				Required: []string{"items"},
+				Required: []string{"metadata", "items"},
 			},
 		},
 		Dependencies: []string{
@@ -6117,9 +6084,10 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 					},
 					"nftablesMode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "NFTablesMode configures nftables support in Felix. [Default: Auto]",
+							Description: "NFTablesMode configures nftables support in Felix. [Default: Auto]\n\nPossible enum values:\n - `\"Auto\"`\n - `\"Disabled\"`\n - `\"Enabled\"`",
 							Type:        []string{"string"},
 							Format:      "",
+							Enum:        []interface{}{"Auto", "Disabled", "Enabled"},
 						},
 					},
 					"nftablesRefreshInterval": {
@@ -7547,16 +7515,14 @@ func schema_pkg_apis_projectcalico_v3_GlobalAlert(ref common.ReferenceCallback) 
 					},
 					"metadata": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Standard object's metadata.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
 						},
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specification of the GlobalAlert.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalAlertSpec"),
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalAlertSpec"),
 						},
 					},
 					"status": {
@@ -7566,6 +7532,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalAlert(ref common.ReferenceCallback) 
 						},
 					},
 				},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{
@@ -7870,19 +7837,18 @@ func schema_pkg_apis_projectcalico_v3_GlobalAlertTemplate(ref common.ReferenceCa
 					},
 					"metadata": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Standard object's metadata.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
 						},
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specification of the GlobalAlert.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalAlertSpec"),
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalAlertSpec"),
 						},
 					},
 				},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{
@@ -7972,6 +7938,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalNetworkPolicy(ref common.ReferenceCa
 						},
 					},
 				},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{
@@ -8020,7 +7987,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalNetworkPolicyList(ref common.Referen
 						},
 					},
 				},
-				Required: []string{"items"},
+				Required: []string{"metadata", "items"},
 			},
 		},
 		Dependencies: []string{
@@ -8084,6 +8051,11 @@ func schema_pkg_apis_projectcalico_v3_GlobalNetworkPolicySpec(ref common.Referen
 						},
 					},
 					"types": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "Types indicates whether this policy applies to ingress, or to egress, or to both.  When not explicitly specified (and so the value on creation is empty or nil), Calico defaults Types according to what Ingress and Egress rules are present in the policy.  The default is:\n\n- [ PolicyTypeIngress ], if there are no Egress rules (including the case where there are\n  also no Ingress rules)\n\n- [ PolicyTypeEgress ], if there are Egress rules but no Ingress rules\n\n- [ PolicyTypeIngress, PolicyTypeEgress ], if there are both Ingress and Egress rules.\n\nWhen the policy is read back again, Types will always be one of these values, never empty or nil.",
 							Type:        []string{"array"},
@@ -8190,6 +8162,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalNetworkSet(ref common.ReferenceCallb
 						},
 					},
 				},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{
@@ -8238,7 +8211,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalNetworkSetList(ref common.ReferenceC
 						},
 					},
 				},
-				Required: []string{"items"},
+				Required: []string{"metadata", "items"},
 			},
 		},
 		Dependencies: []string{
@@ -8254,6 +8227,11 @@ func schema_pkg_apis_projectcalico_v3_GlobalNetworkSetSpec(ref common.ReferenceC
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"nets": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "The list of IP networks that belong to this set.",
 							Type:        []string{"array"},
@@ -8339,16 +8317,14 @@ func schema_pkg_apis_projectcalico_v3_GlobalReport(ref common.ReferenceCallback)
 					},
 					"metadata": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Standard object's metadata.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
 						},
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specification of the GlobalReport.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ReportSpec"),
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ReportSpec"),
 						},
 					},
 					"status": {
@@ -8358,6 +8334,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalReport(ref common.ReferenceCallback)
 						},
 					},
 				},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{
@@ -8437,19 +8414,18 @@ func schema_pkg_apis_projectcalico_v3_GlobalReportType(ref common.ReferenceCallb
 					},
 					"metadata": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Standard object's metadata.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
 						},
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specification of the GlobalReport.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ReportTypeSpec"),
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ReportTypeSpec"),
 						},
 					},
 				},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{
@@ -8529,16 +8505,14 @@ func schema_pkg_apis_projectcalico_v3_GlobalThreatFeed(ref common.ReferenceCallb
 					},
 					"metadata": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Standard object's metadata.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
 						},
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specification of the GlobalThreatFeed.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalThreatFeedSpec"),
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalThreatFeedSpec"),
 						},
 					},
 					"status": {
@@ -8548,6 +8522,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalThreatFeed(ref common.ReferenceCallb
 						},
 					},
 				},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{
@@ -8979,6 +8954,7 @@ func schema_pkg_apis_projectcalico_v3_HostEndpoint(ref common.ReferenceCallback)
 						},
 					},
 				},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{
@@ -9027,7 +9003,7 @@ func schema_pkg_apis_projectcalico_v3_HostEndpointList(ref common.ReferenceCallb
 						},
 					},
 				},
-				Required: []string{"items"},
+				Required: []string{"metadata", "items"},
 			},
 		},
 		Dependencies: []string{
@@ -9057,6 +9033,11 @@ func schema_pkg_apis_projectcalico_v3_HostEndpointSpec(ref common.ReferenceCallb
 						},
 					},
 					"expectedIPs": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "The expected IP addresses (IPv4 and IPv6) of the endpoint. If \"InterfaceName\" is not present, Calico will look for an interface matching any of the IPs in the list and apply policy to that. Note:\n\tWhen using the selector match criteria in an ingress or egress security Policy\n\tor Profile, Calico converts the selector into a set of IP addresses. For host\n\tendpoints, the ExpectedIPs field is used for that purpose. (If only the interface\n\tname is specified, Calico does not learn the IPs of the interface for use in match\n\tcriteria.)",
 							Type:        []string{"array"},
@@ -9072,6 +9053,11 @@ func schema_pkg_apis_projectcalico_v3_HostEndpointSpec(ref common.ReferenceCallb
 						},
 					},
 					"profiles": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "A list of identifiers of security Profile objects that apply to this endpoint. Each profile is applied in the order that they appear in this list.  Profile rules are applied after the selector-based security policy.",
 							Type:        []string{"array"},
@@ -9135,6 +9121,216 @@ func schema_pkg_apis_projectcalico_v3_ICMPFields(ref common.ReferenceCallback) c
 	}
 }
 
+func schema_pkg_apis_projectcalico_v3_IPAMBlock(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.IPAMBlockSpec"),
+						},
+					},
+				},
+				Required: []string{"metadata", "spec"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/tigera/api/pkg/apis/projectcalico/v3.IPAMBlockSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_IPAMBlockList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "IPAMBlockList contains a list of IPAMBlock resources.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.IPAMBlock"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata", "items"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/tigera/api/pkg/apis/projectcalico/v3.IPAMBlock", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_IPAMBlockSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "IPAMBlockSpec contains the specification for an IPAMBlock resource.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"cidr": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The block's CIDR.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"affinity": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Affinity of the block, if this block has one. If set, it will be of the form \"host:<hostname>\" or \"virtual:<hostname>\". If not set, this block is not affine to a host.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"affinityClaimTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Time at which affinity was claimed.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"allocations": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Array of allocations in-use within this block. nil entries mean the allocation is free. For non-nil entries at index i, the index is the ordinal of the allocation within this block and the value is the index of the associated attributes in the Attributes array.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type:   []string{"integer"},
+										Format: "int32",
+									},
+								},
+							},
+						},
+					},
+					"unallocated": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Unallocated is an ordered list of allocations which are free in the block.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: 0,
+										Type:    []string{"integer"},
+										Format:  "int32",
+									},
+								},
+							},
+						},
+					},
+					"attributes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Attributes is an array of arbitrary metadata associated with allocations in the block. To find attributes for a given allocation, use the value of the allocation's entry in the Allocations array as the index of the element in this array.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.AllocationAttribute"),
+									},
+								},
+							},
+						},
+					},
+					"sequenceNumber": {
+						SchemaProps: spec.SchemaProps{
+							Description: "We store a sequence number that is updated each time the block is written. Each allocation will also store the sequence number of the block at the time of its creation. When releasing an IP, passing the sequence number associated with the allocation allows us to protect against a race condition and ensure the IP hasn't been released and re-allocated since the release request.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"sequenceNumberForAllocation": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Map of allocated ordinal within the block to sequence number of the block at the time of allocation. Kubernetes does not allow numerical keys for maps, so the key is cast to a string.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: 0,
+										Type:    []string{"integer"},
+										Format:  "int64",
+									},
+								},
+							},
+						},
+					},
+					"deleted": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Deleted is an internal boolean used to workaround a limitation in the Kubernetes API whereby deletion will not return a conflict error if the block has been updated. It should not be set manually.",
+							Default:     false,
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"strictAffinity": {
+						SchemaProps: spec.SchemaProps{
+							Description: "StrictAffinity on the IPAMBlock is deprecated and no longer used by the code. Use IPAMConfig StrictAffinity instead.",
+							Default:     false,
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"cidr", "allocations", "unallocated", "attributes", "strictAffinity"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/tigera/api/pkg/apis/projectcalico/v3.AllocationAttribute", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
 func schema_pkg_apis_projectcalico_v3_IPAMConfiguration(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -9169,6 +9365,7 @@ func schema_pkg_apis_projectcalico_v3_IPAMConfiguration(ref common.ReferenceCall
 						},
 					},
 				},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{
@@ -9217,7 +9414,7 @@ func schema_pkg_apis_projectcalico_v3_IPAMConfigurationList(ref common.Reference
 						},
 					},
 				},
-				Required: []string{"items"},
+				Required: []string{"metadata", "items"},
 			},
 		},
 		Dependencies: []string{
@@ -9229,7 +9426,7 @@ func schema_pkg_apis_projectcalico_v3_IPAMConfigurationSpec(ref common.Reference
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "IPAMConfigurationSpec contains the specification for an IPPool resource.",
+				Description: "IPAMConfigurationSpec contains the specification for an IPAMConfiguration resource.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"strictAffinity": {
@@ -9247,8 +9444,149 @@ func schema_pkg_apis_projectcalico_v3_IPAMConfigurationSpec(ref common.Reference
 							Format:      "int32",
 						},
 					},
+					"autoAllocateBlocks": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Whether or not to auto allocate blocks to hosts.",
+							Default:     false,
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 				},
-				Required: []string{"strictAffinity"},
+				Required: []string{"strictAffinity", "autoAllocateBlocks"},
+			},
+		},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_IPAMHandle(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.IPAMHandleSpec"),
+						},
+					},
+				},
+				Required: []string{"metadata", "spec"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/tigera/api/pkg/apis/projectcalico/v3.IPAMHandleSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_IPAMHandleList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "IPAMHandleList contains a list of IPAMHandle resources.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.IPAMHandle"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata", "items"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/tigera/api/pkg/apis/projectcalico/v3.IPAMHandle", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_IPAMHandleSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "IPAMHandleSpec contains the specification for an IPAMHandle resource.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"handleID": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"block": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: 0,
+										Type:    []string{"integer"},
+										Format:  "int32",
+									},
+								},
+							},
+						},
+					},
+					"deleted": {
+						SchemaProps: spec.SchemaProps{
+							Default: false,
+							Type:    []string{"boolean"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"handleID", "block"},
 			},
 		},
 	}
@@ -9312,11 +9650,17 @@ func schema_pkg_apis_projectcalico_v3_IPPool(ref common.ReferenceCallback) commo
 							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.IPPoolSpec"),
 						},
 					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("github.com/tigera/api/pkg/apis/projectcalico/v3.IPPoolStatus"),
+						},
+					},
 				},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.IPPoolSpec", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+			"github.com/tigera/api/pkg/apis/projectcalico/v3.IPPoolSpec", "github.com/tigera/api/pkg/apis/projectcalico/v3.IPPoolStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -9361,7 +9705,7 @@ func schema_pkg_apis_projectcalico_v3_IPPoolList(ref common.ReferenceCallback) c
 						},
 					},
 				},
-				Required: []string{"items"},
+				Required: []string{"metadata", "items"},
 			},
 		},
 		Dependencies: []string{
@@ -9386,14 +9730,14 @@ func schema_pkg_apis_projectcalico_v3_IPPoolSpec(ref common.ReferenceCallback) c
 					},
 					"vxlanMode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Contains configuration for VXLAN tunneling for this pool. If not specified, then this is defaulted to \"Never\" (i.e. VXLAN tunneling is disabled).",
+							Description: "Contains configuration for VXLAN tunneling for this pool.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"ipipMode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Contains configuration for IPIP tunneling for this pool. If not specified, then this is defaulted to \"Never\" (i.e. IPIP tunneling is disabled).",
+							Description: "Contains configuration for IPIP tunneling for this pool. For IPv6 pools, IPIP tunneling must be disabled.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -9421,7 +9765,7 @@ func schema_pkg_apis_projectcalico_v3_IPPoolSpec(ref common.ReferenceCallback) c
 					},
 					"blockSize": {
 						SchemaProps: spec.SchemaProps{
-							Description: "The block size to use for IP address assignments from this pool. Defaults to 26 for IPv4 and 122 for IPv6.",
+							Description: "The block size to use for IP address assignments from this pool. Defaults to 26 for IPv4 and 122 for IPv6. The block size must be between 0 and 32 for IPv4 and between 0 and 128 for IPv6. It must also be smaller than or equal to the size of the pool CIDR.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -9440,20 +9784,12 @@ func schema_pkg_apis_projectcalico_v3_IPPoolSpec(ref common.ReferenceCallback) c
 							Format:      "",
 						},
 					},
-					"ipip": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Deprecated: this field is only used for APIv1 backwards compatibility. Setting this field is not allowed, this field is for internal use only.",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.IPIPConfiguration"),
-						},
-					},
-					"nat-outgoing": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Deprecated: this field is only used for APIv1 backwards compatibility. Setting this field is not allowed, this field is for internal use only.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
 					"allowedUses": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "AllowedUse controls what the IP pool will be used for.  If not specified or empty, defaults to [\"Tunnel\", \"Workload\"] for back-compatibility",
 							Type:        []string{"array"},
@@ -9486,8 +9822,33 @@ func schema_pkg_apis_projectcalico_v3_IPPoolSpec(ref common.ReferenceCallback) c
 				Required: []string{"cidr"},
 			},
 		},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_IPPoolStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"conditions": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.IPIPConfiguration"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
 	}
 }
 
@@ -9525,6 +9886,7 @@ func schema_pkg_apis_projectcalico_v3_IPReservation(ref common.ReferenceCallback
 						},
 					},
 				},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{
@@ -9573,7 +9935,7 @@ func schema_pkg_apis_projectcalico_v3_IPReservationList(ref common.ReferenceCall
 						},
 					},
 				},
-				Required: []string{"items"},
+				Required: []string{"metadata", "items"},
 			},
 		},
 		Dependencies: []string{
@@ -9589,6 +9951,11 @@ func schema_pkg_apis_projectcalico_v3_IPReservationSpec(ref common.ReferenceCall
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"reservedCIDRs": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "ReservedCIDRs is a list of CIDRs and/or IP addresses that Calico IPAM will exclude from new allocations.",
 							Type:        []string{"array"},
@@ -9715,6 +10082,7 @@ func schema_pkg_apis_projectcalico_v3_KubeControllersConfiguration(ref common.Re
 						},
 					},
 				},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{
@@ -9763,7 +10131,7 @@ func schema_pkg_apis_projectcalico_v3_KubeControllersConfigurationList(ref commo
 						},
 					},
 				},
-				Required: []string{"items"},
+				Required: []string{"metadata", "items"},
 			},
 		},
 		Dependencies: []string{
@@ -9780,14 +10148,14 @@ func schema_pkg_apis_projectcalico_v3_KubeControllersConfigurationSpec(ref commo
 				Properties: map[string]spec.Schema{
 					"logSeverityScreen": {
 						SchemaProps: spec.SchemaProps{
-							Description: "LogSeverityScreen is the log severity above which logs are sent to the stdout. [Default: Info]",
+							Description: "LogSeverityScreen is the log severity above which logs are sent to the stdout. [Default: Info] Valid values are: \"None\", \"Debug\", \"Info\", \"Warning\", \"Error\", \"Fatal\", \"Panic\".",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"healthChecks": {
 						SchemaProps: spec.SchemaProps{
-							Description: "HealthChecks enables or disables support for health checks [Default: Enabled]",
+							Description: "HealthChecks enables or disables support for health checks [Default: Enabled] Valid values are: \"Enabled\", \"Disabled\".",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -9800,7 +10168,7 @@ func schema_pkg_apis_projectcalico_v3_KubeControllersConfigurationSpec(ref commo
 					},
 					"prometheusMetricsPort": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PrometheusMetricsPort is the TCP port that the Prometheus metrics server should bind to. Set to 0 to disable. [Default: 9094]",
+							Description: "PrometheusMetricsPort is the TCP port that the Prometheus metrics server should bind to. Set to 0 to disable. [Default: 9094] Valid values are: 0-65535.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -9814,7 +10182,7 @@ func schema_pkg_apis_projectcalico_v3_KubeControllersConfigurationSpec(ref commo
 					},
 					"debugProfilePort": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DebugProfilePort configures the port to serve memory and cpu profiles on. If not specified, profiling is disabled.",
+							Description: "DebugProfilePort configures the port to serve memory and cpu profiles on. If not specified, profiling is disabled. Valid values are: 0-65535.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -9838,7 +10206,6 @@ func schema_pkg_apis_projectcalico_v3_KubeControllersConfigurationStatus(ref com
 					"runningConfig": {
 						SchemaProps: spec.SchemaProps{
 							Description: "RunningConfig contains the effective config that is running in the kube-controllers pod, after merging the API resource with any environment variables.",
-							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.KubeControllersConfigurationSpec"),
 						},
 					},
@@ -9889,26 +10256,24 @@ func schema_pkg_apis_projectcalico_v3_LicenseKey(ref common.ReferenceCallback) c
 					},
 					"metadata": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Standard object's metadata.  This resource is a singleton, always named \"default\".",
-							Default:     map[string]interface{}{},
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
 						},
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specification of the LicenseKey.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.LicenseKeySpec"),
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.LicenseKeySpec"),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Status of the LicenseKey.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.LicenseKeyStatus"),
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.LicenseKeyStatus"),
 						},
 					},
 				},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{
@@ -10007,6 +10372,13 @@ func schema_pkg_apis_projectcalico_v3_LicenseKeyStatus(ref common.ReferenceCallb
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
 						},
 					},
+					"gracePeriod": {
+						SchemaProps: spec.SchemaProps{
+							Description: "GracePeriod is how long after expiry the license remains functional (e.g. \"90d\")",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"maxnodes": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Maximum Number of Allowed Nodes",
@@ -10036,11 +10408,25 @@ func schema_pkg_apis_projectcalico_v3_LicenseKeyStatus(ref common.ReferenceCallb
 							},
 						},
 					},
+					"conditions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Conditions is a list of conditions related to the license key. This can be used to indicate if the license is valid, expired, etc.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -10086,26 +10472,24 @@ func schema_pkg_apis_projectcalico_v3_ManagedCluster(ref common.ReferenceCallbac
 					},
 					"metadata": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Standard object's metadata.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
 						},
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specification of the ManagedCluster.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ManagedClusterSpec"),
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ManagedClusterSpec"),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Status of the ManagedCluster",
-							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ManagedClusterStatus"),
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ManagedClusterStatus"),
 						},
 					},
 				},
+				Required: []string{"metadata", "spec", "status"},
 			},
 		},
 		Dependencies: []string{
@@ -10399,6 +10783,7 @@ func schema_pkg_apis_projectcalico_v3_NetworkPolicy(ref common.ReferenceCallback
 						},
 					},
 				},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{
@@ -10447,7 +10832,7 @@ func schema_pkg_apis_projectcalico_v3_NetworkPolicyList(ref common.ReferenceCall
 						},
 					},
 				},
-				Required: []string{"items"},
+				Required: []string{"metadata", "items"},
 			},
 		},
 		Dependencies: []string{
@@ -10511,6 +10896,11 @@ func schema_pkg_apis_projectcalico_v3_NetworkPolicySpec(ref common.ReferenceCall
 						},
 					},
 					"types": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "Types indicates whether this policy applies to ingress, or to egress, or to both.  When not explicitly specified (and so the value on creation is empty or nil), Calico defaults Types according to what Ingress and Egress are present in the policy.  The default is:\n\n- [ PolicyTypeIngress ], if there are no Egress rules (including the case where there are\n  also no Ingress rules)\n\n- [ PolicyTypeEgress ], if there are Egress rules but no Ingress rules\n\n- [ PolicyTypeIngress, PolicyTypeEgress ], if there are both Ingress and Egress rules.\n\nWhen the policy is read back again, Types will always be one of these values, never empty or nil.",
 							Type:        []string{"array"},
@@ -10588,6 +10978,7 @@ func schema_pkg_apis_projectcalico_v3_NetworkSet(ref common.ReferenceCallback) c
 						},
 					},
 				},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{
@@ -10636,7 +11027,7 @@ func schema_pkg_apis_projectcalico_v3_NetworkSetList(ref common.ReferenceCallbac
 						},
 					},
 				},
-				Required: []string{"items"},
+				Required: []string{"metadata", "items"},
 			},
 		},
 		Dependencies: []string{
@@ -10652,6 +11043,11 @@ func schema_pkg_apis_projectcalico_v3_NetworkSetSpec(ref common.ReferenceCallbac
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"nets": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "The list of IP networks that belong to this set.",
 							Type:        []string{"array"},
@@ -10702,7 +11098,7 @@ func schema_pkg_apis_projectcalico_v3_NodeControllerConfig(ref common.ReferenceC
 					},
 					"syncLabels": {
 						SchemaProps: spec.SchemaProps{
-							Description: "SyncLabels controls whether to copy Kubernetes node labels to Calico nodes. [Default: Enabled]",
+							Description: "SyncLabels controls whether to copy Kubernetes node labels to Calico nodes. [Default: Enabled] Valid values are: \"Enabled\", \"Disabled\".",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -11044,6 +11440,7 @@ func schema_pkg_apis_projectcalico_v3_PolicyRecommendationScope(ref common.Refer
 						},
 					},
 				},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{
@@ -11336,6 +11733,11 @@ func schema_pkg_apis_projectcalico_v3_PrefixAdvertisement(ref common.ReferenceCa
 					},
 				},
 			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-map-type": "atomic",
+				},
+			},
 		},
 	}
 }
@@ -11373,6 +11775,7 @@ func schema_pkg_apis_projectcalico_v3_Profile(ref common.ReferenceCallback) comm
 						},
 					},
 				},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{
@@ -11421,7 +11824,7 @@ func schema_pkg_apis_projectcalico_v3_ProfileList(ref common.ReferenceCallback) 
 						},
 					},
 				},
-				Required: []string{"items"},
+				Required: []string{"metadata", "items"},
 			},
 		},
 		Dependencies: []string{
@@ -11576,19 +11979,18 @@ func schema_pkg_apis_projectcalico_v3_RemoteClusterConfiguration(ref common.Refe
 					},
 					"metadata": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Standard object's metadata.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
 						},
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specification of the RemoteClusterConfiguration.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.RemoteClusterConfigurationSpec"),
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.RemoteClusterConfigurationSpec"),
 						},
 					},
 				},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{
@@ -12484,6 +12886,12 @@ func schema_pkg_apis_projectcalico_v3_SecurityEventWebhook(ref common.ReferenceC
 							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
 						},
 					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.SecurityEventWebhookSpec"),
+						},
+					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
 							Type: []string{"array"},
@@ -12497,14 +12905,8 @@ func schema_pkg_apis_projectcalico_v3_SecurityEventWebhook(ref common.ReferenceC
 							},
 						},
 					},
-					"spec": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.SecurityEventWebhookSpec"),
-						},
-					},
 				},
-				Required: []string{"spec"},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{
@@ -12698,6 +13100,11 @@ func schema_pkg_apis_projectcalico_v3_ServiceAccountMatch(ref common.ReferenceCa
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"names": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "Names is an optional field that restricts the rule to only apply to traffic that originates from (or terminates at) a pod running as a service account whose name is in the list.",
 							Type:        []string{"array"},
@@ -12740,6 +13147,11 @@ func schema_pkg_apis_projectcalico_v3_ServiceClusterIPBlock(ref common.Reference
 					},
 				},
 			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-map-type": "atomic",
+				},
+			},
 		},
 	}
 }
@@ -12759,6 +13171,11 @@ func schema_pkg_apis_projectcalico_v3_ServiceExternalIPBlock(ref common.Referenc
 					},
 				},
 			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-map-type": "atomic",
+				},
+			},
 		},
 	}
 }
@@ -12776,6 +13193,11 @@ func schema_pkg_apis_projectcalico_v3_ServiceLoadBalancerIPBlock(ref common.Refe
 							Format: "",
 						},
 					},
+				},
+			},
+			VendorExtensible: spec.VendorExtensible{
+				Extensions: spec.Extensions{
+					"x-kubernetes-map-type": "atomic",
 				},
 			},
 		},
@@ -12831,19 +13253,18 @@ func schema_pkg_apis_projectcalico_v3_StagedGlobalNetworkPolicy(ref common.Refer
 					},
 					"metadata": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Standard object's metadata.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
 						},
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specification of the Policy.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.StagedGlobalNetworkPolicySpec"),
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.StagedGlobalNetworkPolicySpec"),
 						},
 					},
 				},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{
@@ -12963,6 +13384,11 @@ func schema_pkg_apis_projectcalico_v3_StagedGlobalNetworkPolicySpec(ref common.R
 						},
 					},
 					"types": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "Types indicates whether this policy applies to ingress, or to egress, or to both.  When not explicitly specified (and so the value on creation is empty or nil), Calico defaults Types according to what Ingress and Egress rules are present in the policy.  The default is:\n\n- [ PolicyTypeIngress ], if there are no Egress rules (including the case where there are\n  also no Ingress rules)\n\n- [ PolicyTypeEgress ], if there are Egress rules but no Ingress rules\n\n- [ PolicyTypeIngress, PolicyTypeEgress ], if there are both Ingress and Egress rules.\n\nWhen the policy is read back again, Types will always be one of these values, never empty or nil.",
 							Type:        []string{"array"},
@@ -13058,19 +13484,18 @@ func schema_pkg_apis_projectcalico_v3_StagedKubernetesNetworkPolicy(ref common.R
 					},
 					"metadata": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Standard object's metadata.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
 						},
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specification of the Policy.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.StagedKubernetesNetworkPolicySpec"),
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.StagedKubernetesNetworkPolicySpec"),
 						},
 					},
 				},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{
@@ -13176,6 +13601,11 @@ func schema_pkg_apis_projectcalico_v3_StagedKubernetesNetworkPolicySpec(ref comm
 						},
 					},
 					"policyTypes": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "List of rule types that the NetworkPolicy relates to. Valid options are Ingress, Egress, or Ingress,Egress. If this field is not specified, it will default based on the existence of Ingress or Egress rules; policies that contain an Egress section are assumed to affect Egress, and all policies (whether or not they contain an Ingress section) are assumed to affect Ingress. If you want to write an egress-only policy, you must explicitly specify policyTypes [ \"Egress\" ]. Likewise, if you want to write a policy that specifies that no egress is allowed, you must specify a policyTypes value that include \"Egress\" (since such a policy would not include an Egress section and would otherwise default to just [ \"Ingress\" ]). This field is beta-level in 1.8",
 							Type:        []string{"array"},
@@ -13222,19 +13652,18 @@ func schema_pkg_apis_projectcalico_v3_StagedNetworkPolicy(ref common.ReferenceCa
 					},
 					"metadata": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Standard object's metadata.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
 						},
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specification of the Policy.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.StagedNetworkPolicySpec"),
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.StagedNetworkPolicySpec"),
 						},
 					},
 				},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{
@@ -13354,6 +13783,11 @@ func schema_pkg_apis_projectcalico_v3_StagedNetworkPolicySpec(ref common.Referen
 						},
 					},
 					"types": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "Types indicates whether this policy applies to ingress, or to egress, or to both.  When not explicitly specified (and so the value on creation is empty or nil), Calico defaults Types according to what Ingress and Egress are present in the policy.  The default is:\n\n- [ PolicyTypeIngress ], if there are no Egress rules (including the case where there are\n  also no Ingress rules)\n\n- [ PolicyTypeEgress ], if there are Egress rules but no Ingress rules\n\n- [ PolicyTypeIngress, PolicyTypeEgress ], if there are both Ingress and Egress rules.\n\nWhen the policy is read back again, Types will always be one of these values, never empty or nil.",
 							Type:        []string{"array"},
@@ -13412,6 +13846,11 @@ func schema_pkg_apis_projectcalico_v3_Template(ref common.ReferenceCallback) com
 						},
 					},
 					"interfaceCIDRs": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
 							Description: "InterfaceCIDRs contains a list of CIDRs used for matching nodeIPs to the AutoHostEndpoint. If specified, only addresses within these CIDRs will be included in the expected IPs. At least one of InterfaceCIDRs and InterfacePattern must be specified.",
 							Type:        []string{"array"},
@@ -14025,19 +14464,18 @@ func schema_pkg_apis_projectcalico_v3_UISettings(ref common.ReferenceCallback) c
 					},
 					"metadata": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Standard object's metadata.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
 						},
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specification of the UISettings.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.UISettingsSpec"),
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.UISettingsSpec"),
 						},
 					},
 				},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{
@@ -14068,19 +14506,18 @@ func schema_pkg_apis_projectcalico_v3_UISettingsGroup(ref common.ReferenceCallba
 					},
 					"metadata": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Standard object's metadata.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
 						},
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specification of the UISettingsGroup.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.UISettingsGroupSpec"),
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.UISettingsGroupSpec"),
 						},
 					},
 				},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{

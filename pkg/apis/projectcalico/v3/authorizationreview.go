@@ -22,26 +22,28 @@ const (
 )
 
 // +genclient:nonNamespaced
+// +kubebuilder:resource:scope=Cluster
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // AuthorizationReviewList is a list of AuthorizationReview objects.
 type AuthorizationReviewList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty"`
-
-	Items []AuthorizationReview `json:"items"`
+	metav1.ListMeta `json:"metadata"`
+	Items           []AuthorizationReview `json:"items"`
 }
 
 // +genclient
 // +genclient:nonNamespaced
+// +kubebuilder:resource:scope=Cluster
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 type AuthorizationReview struct {
 	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty"`
+	metav1.ObjectMeta `json:"metadata"`
+	Spec              AuthorizationReviewSpec `json:"spec"`
 
-	Spec   AuthorizationReviewSpec   `json:"spec,omitempty"`
-	Status AuthorizationReviewStatus `json:"status,omitempty"`
+	// +optional
+	Status AuthorizationReviewStatus `json:"status"`
 }
 
 type AuthorizationReviewSpec struct {
