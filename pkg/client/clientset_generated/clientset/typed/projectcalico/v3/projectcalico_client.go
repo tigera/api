@@ -15,7 +15,6 @@ import (
 type ProjectcalicoV3Interface interface {
 	RESTClient() rest.Interface
 	AlertExceptionsGetter
-	AuthenticationReviewsGetter
 	AuthorizationReviewsGetter
 	BFDConfigurationsGetter
 	BGPConfigurationsGetter
@@ -36,7 +35,9 @@ type ProjectcalicoV3Interface interface {
 	GlobalReportTypesGetter
 	GlobalThreatFeedsGetter
 	HostEndpointsGetter
+	IPAMBlocksGetter
 	IPAMConfigurationsGetter
+	IPAMHandlesGetter
 	IPPoolsGetter
 	IPReservationsGetter
 	KubeControllersConfigurationsGetter
@@ -64,10 +65,6 @@ type ProjectcalicoV3Client struct {
 
 func (c *ProjectcalicoV3Client) AlertExceptions() AlertExceptionInterface {
 	return newAlertExceptions(c)
-}
-
-func (c *ProjectcalicoV3Client) AuthenticationReviews() AuthenticationReviewInterface {
-	return newAuthenticationReviews(c)
 }
 
 func (c *ProjectcalicoV3Client) AuthorizationReviews() AuthorizationReviewInterface {
@@ -150,8 +147,16 @@ func (c *ProjectcalicoV3Client) HostEndpoints() HostEndpointInterface {
 	return newHostEndpoints(c)
 }
 
+func (c *ProjectcalicoV3Client) IPAMBlocks() IPAMBlockInterface {
+	return newIPAMBlocks(c)
+}
+
 func (c *ProjectcalicoV3Client) IPAMConfigurations() IPAMConfigurationInterface {
 	return newIPAMConfigurations(c)
+}
+
+func (c *ProjectcalicoV3Client) IPAMHandles(namespace string) IPAMHandleInterface {
+	return newIPAMHandles(c, namespace)
 }
 
 func (c *ProjectcalicoV3Client) IPPools() IPPoolInterface {
