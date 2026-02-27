@@ -12,15 +12,17 @@ const (
 
 // +genclient
 // +genclient:nonNamespaced
+// +kubebuilder:resource:scope=Cluster
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // +kubebuilder:subresource:status
 type PolicyRecommendationScope struct {
 	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	metav1.ObjectMeta `json:"metadata" protobuf:"bytes,1,opt,name=metadata"`
+	Spec              PolicyRecommendationScopeSpec `json:"spec"`
 
-	Spec   PolicyRecommendationScopeSpec   `json:"spec,omitempty"`
-	Status PolicyRecommendationScopeStatus `json:"status,omitempty"`
+	// +optional
+	Status PolicyRecommendationScopeStatus `json:"status"`
 }
 
 type PolicyRecommendationScopeSpec struct {
@@ -62,8 +64,10 @@ type PolicyRecommendationScopeStatus struct {
 	Conditions []PolicyRecommendationScopeStatusCondition `json:"conditions,omitempty"`
 }
 
-type PolicyRecommendationScopeStatusType string
-type PolicyRecommendationScopeStatusValue string
+type (
+	PolicyRecommendationScopeStatusType  string
+	PolicyRecommendationScopeStatusValue string
+)
 
 // Condition contains various status information
 type PolicyRecommendationScopeStatusCondition struct {
@@ -100,6 +104,7 @@ const (
 )
 
 // +genclient:nonNamespaced
+// +kubebuilder:resource:scope=Cluster
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // PolicyRecommendationList contains a list of Monitor
