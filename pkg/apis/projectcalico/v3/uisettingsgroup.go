@@ -16,17 +16,16 @@ const (
 
 // +genclient
 // +genclient:nonNamespaced
+// +kubebuilder:resource:scope=Cluster
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // UISettingsGroup contains the settings that dictate how many UI settings may be created for a
 // specific cluster/user combination. UI settings may only be persisted if there is a
 // corresponding UISettingsGroup resource.
 type UISettingsGroup struct {
-	metav1.TypeMeta `json:",inline"`
-	// Standard object's metadata.
-	metav1.ObjectMeta `json:"metadata,omitempty"`
-	// Specification of the UISettingsGroup.
-	Spec UISettingsGroupSpec `json:"spec,omitempty"`
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata"`
+	Spec              UISettingsGroupSpec `json:"spec"`
 }
 
 // UISettingsGroupSpec contains the specification for a UISettingsGroup resource.
@@ -59,6 +58,7 @@ type UISettingsGroupSpec struct {
 
 // +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +kubebuilder:resource:scope=Cluster
 
 // UISettingsGroupList contains a list of UISettingsGroup resources.
 type UISettingsGroupList struct {
