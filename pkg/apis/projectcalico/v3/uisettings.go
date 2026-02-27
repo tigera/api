@@ -12,14 +12,13 @@ const (
 // +genclient
 // +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +kubebuilder:resource:scope=Cluster
 
 // UISettings contains UI settings.
 type UISettings struct {
-	metav1.TypeMeta `json:",inline"`
-	// Standard object's metadata.
-	metav1.ObjectMeta `json:"metadata,omitempty"`
-	// Specification of the UISettings.
-	Spec UISettingsSpec `json:"spec,omitempty"`
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata"`
+	Spec              UISettingsSpec `json:"spec"`
 }
 
 // UISettingsSpec contains the specification for a UISettings resource.
@@ -202,6 +201,7 @@ type DashboardLayout struct {
 
 // +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +kubebuilder:resource:scope=Cluster
 
 // UISettingsList contains a list of UISettings resources.
 type UISettingsList struct {

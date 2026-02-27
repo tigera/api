@@ -11,8 +11,10 @@ const (
 	KindManagedClusterList = "ManagedClusterList"
 )
 
-type ManagedClusterStatusType string
-type ManagedClusterStatusValue string
+type (
+	ManagedClusterStatusType  string
+	ManagedClusterStatusValue string
+)
 
 const (
 	// Status for Type ManagedClusterConnected will be Unknown when ManagedCluster is created,
@@ -26,19 +28,17 @@ const (
 
 // +genclient
 // +genclient:nonNamespaced
+// +kubebuilder:resource:scope=Cluster
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // ManagedCluster represents a cluster that is being managed by the multi-cluster
 // management plane. This object configures how Tigera multi-cluster management
 // components communicate with the corresponding cluster.
 type ManagedCluster struct {
-	metav1.TypeMeta `json:",inline"`
-	// Standard object's metadata.
-	metav1.ObjectMeta `json:"metadata,omitempty"`
-	// Specification of the ManagedCluster.
-	Spec ManagedClusterSpec `json:"spec,omitempty"`
-	// Status of the ManagedCluster
-	Status ManagedClusterStatus `json:"status,omitempty"`
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata"`
+	Spec              ManagedClusterSpec   `json:"spec"`
+	Status            ManagedClusterStatus `json:"status"`
 }
 
 // ManagedClusterSpec contains the specification of a ManagedCluster resource.
@@ -66,6 +66,7 @@ type ManagedClusterStatusCondition struct {
 }
 
 // +genclient:nonNamespaced
+// +kubebuilder:resource:scope=Cluster
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // ManagedClusterList contains a list of ManagedCluster resources.
