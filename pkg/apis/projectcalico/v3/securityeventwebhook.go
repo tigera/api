@@ -7,8 +7,10 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-type SecurityEventWebhookConsumer string
-type SecurityEventWebhookState string
+type (
+	SecurityEventWebhookConsumer string
+	SecurityEventWebhookState    string
+)
 
 const (
 	KindSecurityEventWebhook     = "SecurityEventWebhook"
@@ -27,16 +29,20 @@ const (
 
 // +genclient
 // +genclient:nonNamespaced
+// +kubebuilder:resource:scope=Cluster
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 type SecurityEventWebhook struct {
 	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Status            []metav1.Condition       `json:"status,omitempty" validate:"omitempty"`
+	metav1.ObjectMeta `json:"metadata"`
 	Spec              SecurityEventWebhookSpec `json:"spec" validate:"required"`
+
+	// +optional
+	Status []metav1.Condition `json:"status,omitempty" validate:"omitempty"`
 }
 
 // +genclient:nonNamespaced
+// +kubebuilder:resource:scope=Cluster
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 type SecurityEventWebhookList struct {

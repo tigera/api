@@ -28,15 +28,14 @@ const (
 
 // +genclient
 // +genclient:nonNamespaced
+// +kubebuilder:resource:scope=Cluster
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // GlobalReportType contains the configuration for a non-namespaced report type.
 type GlobalReportType struct {
-	metav1.TypeMeta `json:",inline"`
-	// Standard object's metadata.
-	metav1.ObjectMeta `json:"metadata,omitempty"`
-	// Specification of the GlobalReport.
-	Spec ReportTypeSpec `json:"spec,omitempty"`
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata"`
+	Spec              ReportTypeSpec `json:"spec"`
 }
 
 // ReportTypeSpec contains the various templates, and configuration used to render a specific type of report.
@@ -115,6 +114,7 @@ type AuditResource struct {
 }
 
 // +genclient:nonNamespaced
+// +kubebuilder:resource:scope=Cluster
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // GlobalReportTypeList contains a list of GlobalReportType resources.

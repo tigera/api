@@ -6,8 +6,6 @@ package v3
 
 type AlertExceptionExpansion interface{}
 
-type AuthenticationReviewExpansion interface{}
-
 type AuthorizationReviewExpansion interface{}
 
 type BFDConfigurationExpansion interface{}
@@ -48,7 +46,11 @@ type GlobalThreatFeedExpansion interface{}
 
 type HostEndpointExpansion interface{}
 
+type IPAMBlockExpansion interface{}
+
 type IPAMConfigurationExpansion interface{}
+
+type IPAMHandleExpansion interface{}
 
 type IPPoolExpansion interface{}
 

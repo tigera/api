@@ -14,14 +14,16 @@ const (
 // +genclient
 // +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +kubebuilder:resource:scope=Cluster
 
 // AlertException defines exceptions for alert events.
 type AlertException struct {
 	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty"`
+	metav1.ObjectMeta `json:"metadata"`
+	Spec              AlertExceptionSpec `json:"spec"`
 
-	Spec   AlertExceptionSpec   `json:"spec,omitempty"`
-	Status AlertExceptionStatus `json:"status,omitempty"`
+	// +optional
+	Status AlertExceptionStatus `json:"status"`
 }
 
 // AlertExceptionSpec contains the specification for an alert exception resource.
@@ -46,11 +48,11 @@ type AlertExceptionSpec struct {
 }
 
 // AlertExceptionStatus contains the status of an alert exception.
-type AlertExceptionStatus struct {
-}
+type AlertExceptionStatus struct{}
 
 // +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +kubebuilder:resource:scope=Cluster
 
 // AlertExceptionList contains a list of AlertException resources.
 type AlertExceptionList struct {
