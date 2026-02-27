@@ -20,6 +20,7 @@ const (
 
 // +genclient
 // +genclient:nonNamespaced
+// +kubebuilder:resource:scope=Cluster
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // GlobalThreatFeed is a source of intel for possible threats to the cluster. This
@@ -27,12 +28,12 @@ const (
 // detection jobs or policy based on the intel.
 // +kubebuilder:subresource:status
 type GlobalThreatFeed struct {
-	metav1.TypeMeta `json:",inline"`
-	// Standard object's metadata.
-	metav1.ObjectMeta `json:"metadata,omitempty"`
-	// Specification of the GlobalThreatFeed.
-	Spec   GlobalThreatFeedSpec   `json:"spec,omitempty"`
-	Status GlobalThreatFeedStatus `json:"status,omitempty"`
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata"`
+	Spec              GlobalThreatFeedSpec `json:"spec"`
+
+	// +optional
+	Status GlobalThreatFeedStatus `json:"status"`
 }
 
 // GlobalThreatFeedSpec contains the specification of a GlobalThreatFeed resource.
@@ -57,6 +58,7 @@ type GlobalThreatFeedSpec struct {
 }
 
 // +genclient:nonNamespaced
+// +kubebuilder:resource:scope=Cluster
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // GlobalThreatFeedList contains a list of GlobalThreatFeed resources.
