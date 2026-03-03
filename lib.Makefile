@@ -382,8 +382,6 @@ ifneq ($(CALICO_API_GROUP),projectcalico.org/v3)
 CALICO_CRD_PATH = libcalico-go/config/crd/
 endif
 
-CALICO_ADMISSION_POLICY_PATH ?= api/admission/
-
 # The image to use for building calico/base-dependent modules (e.g. apiserver, typha).
 ifdef USE_UBI_AS_CALICO_BASE
 CALICO_BASE ?= $(UBI_IMAGE)
@@ -1598,7 +1596,7 @@ $(REPO_ROOT)/.$(KIND_NAME).created: $(KUBECTL) $(KIND)
 	while ! KUBECONFIG=$(KIND_KUBECONFIG) $(KUBECTL) apply -f $(REPO_ROOT)/libcalico-go/config/crd/policy.networking.k8s.io_baselineadminnetworkpolicies.yaml; do echo "Waiting for CRDs to be created"; sleep 2; done
 
 	# Install mutating admission policies.
-	while ! KUBECONFIG=$(KIND_KUBECONFIG) $(KUBECTL) apply -f $(REPO_ROOT)/$(CALICO_ADMISSION_POLICY_PATH); do echo "Waiting for mutating admission policies to be created"; sleep 2; done
+	while ! KUBECONFIG=$(KIND_KUBECONFIG) $(KUBECTL) apply -f $(REPO_ROOT)/api/admission/; do echo "Waiting for mutating admission policies to be created"; sleep 2; done
 
 	touch $@
 

@@ -30,11 +30,6 @@ blocks:
     task:
       jobs:
         - name: "make build / ci"
-          env_vars:
-            - name: CALICO_CRD_PATH
-              value: config/crd/
-            - name: CALICO_ADMISSION_POLICY_PATH
-              value: admission/
           commands:
             - make build
             - make ci
