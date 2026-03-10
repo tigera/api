@@ -22,7 +22,6 @@ const (
 )
 
 // +genclient:nonNamespaced
-// +kubebuilder:resource:scope=Cluster
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // AuthorizationReviewList is a list of AuthorizationReview objects.
@@ -34,7 +33,6 @@ type AuthorizationReviewList struct {
 
 // +genclient
 // +genclient:nonNamespaced
-// +kubebuilder:resource:scope=Cluster
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 type AuthorizationReview struct {
