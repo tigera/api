@@ -94,11 +94,11 @@ LIBBPF_VERSION=v1.6.2
 BPFTOOL_IMAGE=calico/bpftool:v7.5.0
 
 # The operator branch corresponding to this branch.
-OPERATOR_BRANCH ?= master
+OPERATOR_BRANCH ?= release-v1.42
 OPERATOR_ORGANIZATION ?= tigera
 OPERATOR_GIT_REPO     ?= operator
 # The manager branch corresponding to this branch.
-MANAGER_BRANCH ?= master
+MANAGER_BRANCH ?= release-calient-v3.23
 
 # quay.io expiry time for hashrelease/dev images
 QUAY_EXPIRE_DAYS=90
