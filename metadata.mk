@@ -3,8 +3,8 @@
 #################################################################################################
 
 # The version of calico/go-build and calico/base to use.
-GO_BUILD_VER=1.25.3-llvm18.1.8-k8s1.33.5
-CALICO_BASE_VER=ubi9-1760470891
+GO_BUILD_VER=1.24.10-llvm18.1.8-k8s1.33.5-1
+CALICO_BASE_VER=ubi9-1761116414
 
 # Env var to ACK Ginkgo deprecation warnings, may need updating with go-build.
 ACK_GINKGO=ACK_GINKGO_DEPRECATIONS=1.16.5
@@ -42,11 +42,8 @@ endif
 
 # Configuration for Semaphore/Github integration.  This needs to be set
 # differently for a forked repo.
-ORGANIZATION  ?= tigera
-GIT_REPO      ?= calico-private
-
-RELEASE_BRANCH_PREFIX ?=release-calient
-DEV_TAG_SUFFIX        ?= calient-0.dev
+ORGANIZATION = tigera
+GIT_REPO = calico-private
 
 # Part of the git remote that is common to git and HTTP representations.
 # Used to auto-detect the right remote.
@@ -64,6 +61,9 @@ BIRD_VERSION=v0.3.3-211-g9111ec3c
 # DEV_REGISTRIES configures the container image registries which are built from this
 # repository.
 DEV_REGISTRIES ?= tigera
+
+# The suffix added to development tags (and, by association, images)
+DEV_TAG_SUFFIX ?= calient-0.dev
 
 # RELEASE_REGISTRIES configures the container images registries which are published to
 # as part of an official release.
@@ -90,13 +90,13 @@ FLANNEL_VERSION=main
 BPFTOOL_IMAGE=calico/bpftool:v7.5.0
 
 # The default branch for semaphore
-DEFAULT_BRANCH_OVERRIDE ?= master
+DEFAULT_BRANCH_OVERRIDE ?= release-calient-v3.22
+# Default branch prefix for release branches
+RELEASE_BRANCH_PREFIX ?= release-calient
 # The operator branch corresponding to this branch.
-OPERATOR_BRANCH       ?= master
-OPERATOR_ORGANIZATION ?= tigera
-OPERATOR_GIT_REPO     ?= operator
+OPERATOR_BRANCH = release-v1.40
 # The manager branch corresponding to this branch.
-MANAGER_BRANCH ?= master
+MANAGER_BRANCH ?= release-calient-v3.22
 
 # The libbpf version to use
 LIBBPF_VERSION=v1.4.6
