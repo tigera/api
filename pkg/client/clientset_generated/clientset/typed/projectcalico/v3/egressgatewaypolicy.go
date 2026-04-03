@@ -8,6 +8,7 @@ import (
 	context "context"
 
 	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
+	applyconfigurationgeneratedprojectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
 	scheme "github.com/tigera/api/pkg/client/clientset_generated/clientset/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
@@ -31,18 +32,19 @@ type EgressGatewayPolicyInterface interface {
 	List(ctx context.Context, opts v1.ListOptions) (*projectcalicov3.EgressGatewayPolicyList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
 	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *projectcalicov3.EgressGatewayPolicy, err error)
+	Apply(ctx context.Context, egressGatewayPolicy *applyconfigurationgeneratedprojectcalicov3.EgressGatewayPolicyApplyConfiguration, opts v1.ApplyOptions) (result *projectcalicov3.EgressGatewayPolicy, err error)
 	EgressGatewayPolicyExpansion
 }
 
 // egressGatewayPolicies implements EgressGatewayPolicyInterface
 type egressGatewayPolicies struct {
-	*gentype.ClientWithList[*projectcalicov3.EgressGatewayPolicy, *projectcalicov3.EgressGatewayPolicyList]
+	*gentype.ClientWithListAndApply[*projectcalicov3.EgressGatewayPolicy, *projectcalicov3.EgressGatewayPolicyList, *applyconfigurationgeneratedprojectcalicov3.EgressGatewayPolicyApplyConfiguration]
 }
 
 // newEgressGatewayPolicies returns a EgressGatewayPolicies
 func newEgressGatewayPolicies(c *ProjectcalicoV3Client) *egressGatewayPolicies {
 	return &egressGatewayPolicies{
-		gentype.NewClientWithList[*projectcalicov3.EgressGatewayPolicy, *projectcalicov3.EgressGatewayPolicyList](
+		gentype.NewClientWithListAndApply[*projectcalicov3.EgressGatewayPolicy, *projectcalicov3.EgressGatewayPolicyList, *applyconfigurationgeneratedprojectcalicov3.EgressGatewayPolicyApplyConfiguration](
 			"egressgatewaypolicies",
 			c.RESTClient(),
 			scheme.ParameterCodec,
