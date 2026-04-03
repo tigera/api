@@ -8,6 +8,7 @@ import (
 	context "context"
 
 	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
+	applyconfigurationgeneratedprojectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
 	scheme "github.com/tigera/api/pkg/client/clientset_generated/clientset/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
@@ -33,18 +34,21 @@ type GlobalReportInterface interface {
 	List(ctx context.Context, opts v1.ListOptions) (*projectcalicov3.GlobalReportList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
 	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *projectcalicov3.GlobalReport, err error)
+	Apply(ctx context.Context, globalReport *applyconfigurationgeneratedprojectcalicov3.GlobalReportApplyConfiguration, opts v1.ApplyOptions) (result *projectcalicov3.GlobalReport, err error)
+	// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
+	ApplyStatus(ctx context.Context, globalReport *applyconfigurationgeneratedprojectcalicov3.GlobalReportApplyConfiguration, opts v1.ApplyOptions) (result *projectcalicov3.GlobalReport, err error)
 	GlobalReportExpansion
 }
 
 // globalReports implements GlobalReportInterface
 type globalReports struct {
-	*gentype.ClientWithList[*projectcalicov3.GlobalReport, *projectcalicov3.GlobalReportList]
+	*gentype.ClientWithListAndApply[*projectcalicov3.GlobalReport, *projectcalicov3.GlobalReportList, *applyconfigurationgeneratedprojectcalicov3.GlobalReportApplyConfiguration]
 }
 
 // newGlobalReports returns a GlobalReports
 func newGlobalReports(c *ProjectcalicoV3Client) *globalReports {
 	return &globalReports{
-		gentype.NewClientWithList[*projectcalicov3.GlobalReport, *projectcalicov3.GlobalReportList](
+		gentype.NewClientWithListAndApply[*projectcalicov3.GlobalReport, *projectcalicov3.GlobalReportList, *applyconfigurationgeneratedprojectcalicov3.GlobalReportApplyConfiguration](
 			"globalreports",
 			c.RESTClient(),
 			scheme.ParameterCodec,
