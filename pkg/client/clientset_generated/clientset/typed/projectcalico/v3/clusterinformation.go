@@ -8,7 +8,6 @@ import (
 	context "context"
 
 	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	applyconfigurationgeneratedprojectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
 	scheme "github.com/tigera/api/pkg/client/clientset_generated/clientset/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
@@ -32,19 +31,18 @@ type ClusterInformationInterface interface {
 	List(ctx context.Context, opts v1.ListOptions) (*projectcalicov3.ClusterInformationList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
 	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *projectcalicov3.ClusterInformation, err error)
-	Apply(ctx context.Context, clusterInformation *applyconfigurationgeneratedprojectcalicov3.ClusterInformationApplyConfiguration, opts v1.ApplyOptions) (result *projectcalicov3.ClusterInformation, err error)
 	ClusterInformationExpansion
 }
 
 // clusterInformations implements ClusterInformationInterface
 type clusterInformations struct {
-	*gentype.ClientWithListAndApply[*projectcalicov3.ClusterInformation, *projectcalicov3.ClusterInformationList, *applyconfigurationgeneratedprojectcalicov3.ClusterInformationApplyConfiguration]
+	*gentype.ClientWithList[*projectcalicov3.ClusterInformation, *projectcalicov3.ClusterInformationList]
 }
 
 // newClusterInformations returns a ClusterInformations
 func newClusterInformations(c *ProjectcalicoV3Client) *clusterInformations {
 	return &clusterInformations{
-		gentype.NewClientWithListAndApply[*projectcalicov3.ClusterInformation, *projectcalicov3.ClusterInformationList, *applyconfigurationgeneratedprojectcalicov3.ClusterInformationApplyConfiguration](
+		gentype.NewClientWithList[*projectcalicov3.ClusterInformation, *projectcalicov3.ClusterInformationList](
 			"clusterinformations",
 			c.RESTClient(),
 			scheme.ParameterCodec,

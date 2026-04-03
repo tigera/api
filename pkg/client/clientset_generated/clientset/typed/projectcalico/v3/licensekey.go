@@ -8,7 +8,6 @@ import (
 	context "context"
 
 	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	applyconfigurationgeneratedprojectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
 	scheme "github.com/tigera/api/pkg/client/clientset_generated/clientset/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
@@ -34,21 +33,18 @@ type LicenseKeyInterface interface {
 	List(ctx context.Context, opts v1.ListOptions) (*projectcalicov3.LicenseKeyList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
 	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *projectcalicov3.LicenseKey, err error)
-	Apply(ctx context.Context, licenseKey *applyconfigurationgeneratedprojectcalicov3.LicenseKeyApplyConfiguration, opts v1.ApplyOptions) (result *projectcalicov3.LicenseKey, err error)
-	// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
-	ApplyStatus(ctx context.Context, licenseKey *applyconfigurationgeneratedprojectcalicov3.LicenseKeyApplyConfiguration, opts v1.ApplyOptions) (result *projectcalicov3.LicenseKey, err error)
 	LicenseKeyExpansion
 }
 
 // licenseKeys implements LicenseKeyInterface
 type licenseKeys struct {
-	*gentype.ClientWithListAndApply[*projectcalicov3.LicenseKey, *projectcalicov3.LicenseKeyList, *applyconfigurationgeneratedprojectcalicov3.LicenseKeyApplyConfiguration]
+	*gentype.ClientWithList[*projectcalicov3.LicenseKey, *projectcalicov3.LicenseKeyList]
 }
 
 // newLicenseKeys returns a LicenseKeys
 func newLicenseKeys(c *ProjectcalicoV3Client) *licenseKeys {
 	return &licenseKeys{
-		gentype.NewClientWithListAndApply[*projectcalicov3.LicenseKey, *projectcalicov3.LicenseKeyList, *applyconfigurationgeneratedprojectcalicov3.LicenseKeyApplyConfiguration](
+		gentype.NewClientWithList[*projectcalicov3.LicenseKey, *projectcalicov3.LicenseKeyList](
 			"licensekeys",
 			c.RESTClient(),
 			scheme.ParameterCodec,

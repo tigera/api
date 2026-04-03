@@ -6,20 +6,19 @@ package fake
 
 import (
 	v3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	projectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
-	typedprojectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
+	projectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
 	gentype "k8s.io/client-go/gentype"
 )
 
 // fakeDeepPacketInspections implements DeepPacketInspectionInterface
 type fakeDeepPacketInspections struct {
-	*gentype.FakeClientWithListAndApply[*v3.DeepPacketInspection, *v3.DeepPacketInspectionList, *projectcalicov3.DeepPacketInspectionApplyConfiguration]
+	*gentype.FakeClientWithList[*v3.DeepPacketInspection, *v3.DeepPacketInspectionList]
 	Fake *FakeProjectcalicoV3
 }
 
-func newFakeDeepPacketInspections(fake *FakeProjectcalicoV3, namespace string) typedprojectcalicov3.DeepPacketInspectionInterface {
+func newFakeDeepPacketInspections(fake *FakeProjectcalicoV3, namespace string) projectcalicov3.DeepPacketInspectionInterface {
 	return &fakeDeepPacketInspections{
-		gentype.NewFakeClientWithListAndApply[*v3.DeepPacketInspection, *v3.DeepPacketInspectionList, *projectcalicov3.DeepPacketInspectionApplyConfiguration](
+		gentype.NewFakeClientWithList[*v3.DeepPacketInspection, *v3.DeepPacketInspectionList](
 			fake.Fake,
 			namespace,
 			v3.SchemeGroupVersion.WithResource("deeppacketinspections"),

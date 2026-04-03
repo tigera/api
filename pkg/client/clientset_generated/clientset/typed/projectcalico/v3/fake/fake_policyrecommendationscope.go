@@ -6,20 +6,19 @@ package fake
 
 import (
 	v3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	projectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
-	typedprojectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
+	projectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
 	gentype "k8s.io/client-go/gentype"
 )
 
 // fakePolicyRecommendationScopes implements PolicyRecommendationScopeInterface
 type fakePolicyRecommendationScopes struct {
-	*gentype.FakeClientWithListAndApply[*v3.PolicyRecommendationScope, *v3.PolicyRecommendationScopeList, *projectcalicov3.PolicyRecommendationScopeApplyConfiguration]
+	*gentype.FakeClientWithList[*v3.PolicyRecommendationScope, *v3.PolicyRecommendationScopeList]
 	Fake *FakeProjectcalicoV3
 }
 
-func newFakePolicyRecommendationScopes(fake *FakeProjectcalicoV3) typedprojectcalicov3.PolicyRecommendationScopeInterface {
+func newFakePolicyRecommendationScopes(fake *FakeProjectcalicoV3) projectcalicov3.PolicyRecommendationScopeInterface {
 	return &fakePolicyRecommendationScopes{
-		gentype.NewFakeClientWithListAndApply[*v3.PolicyRecommendationScope, *v3.PolicyRecommendationScopeList, *projectcalicov3.PolicyRecommendationScopeApplyConfiguration](
+		gentype.NewFakeClientWithList[*v3.PolicyRecommendationScope, *v3.PolicyRecommendationScopeList](
 			fake.Fake,
 			"",
 			v3.SchemeGroupVersion.WithResource("policyrecommendationscopes"),

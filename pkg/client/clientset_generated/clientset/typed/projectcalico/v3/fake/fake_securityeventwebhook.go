@@ -6,20 +6,19 @@ package fake
 
 import (
 	v3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	projectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
-	typedprojectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
+	projectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
 	gentype "k8s.io/client-go/gentype"
 )
 
 // fakeSecurityEventWebhooks implements SecurityEventWebhookInterface
 type fakeSecurityEventWebhooks struct {
-	*gentype.FakeClientWithListAndApply[*v3.SecurityEventWebhook, *v3.SecurityEventWebhookList, *projectcalicov3.SecurityEventWebhookApplyConfiguration]
+	*gentype.FakeClientWithList[*v3.SecurityEventWebhook, *v3.SecurityEventWebhookList]
 	Fake *FakeProjectcalicoV3
 }
 
-func newFakeSecurityEventWebhooks(fake *FakeProjectcalicoV3) typedprojectcalicov3.SecurityEventWebhookInterface {
+func newFakeSecurityEventWebhooks(fake *FakeProjectcalicoV3) projectcalicov3.SecurityEventWebhookInterface {
 	return &fakeSecurityEventWebhooks{
-		gentype.NewFakeClientWithListAndApply[*v3.SecurityEventWebhook, *v3.SecurityEventWebhookList, *projectcalicov3.SecurityEventWebhookApplyConfiguration](
+		gentype.NewFakeClientWithList[*v3.SecurityEventWebhook, *v3.SecurityEventWebhookList](
 			fake.Fake,
 			"",
 			v3.SchemeGroupVersion.WithResource("securityeventwebhooks"),

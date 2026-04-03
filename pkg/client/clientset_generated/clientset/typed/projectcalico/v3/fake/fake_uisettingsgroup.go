@@ -6,20 +6,19 @@ package fake
 
 import (
 	v3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	projectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
-	typedprojectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
+	projectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
 	gentype "k8s.io/client-go/gentype"
 )
 
 // fakeUISettingsGroups implements UISettingsGroupInterface
 type fakeUISettingsGroups struct {
-	*gentype.FakeClientWithListAndApply[*v3.UISettingsGroup, *v3.UISettingsGroupList, *projectcalicov3.UISettingsGroupApplyConfiguration]
+	*gentype.FakeClientWithList[*v3.UISettingsGroup, *v3.UISettingsGroupList]
 	Fake *FakeProjectcalicoV3
 }
 
-func newFakeUISettingsGroups(fake *FakeProjectcalicoV3) typedprojectcalicov3.UISettingsGroupInterface {
+func newFakeUISettingsGroups(fake *FakeProjectcalicoV3) projectcalicov3.UISettingsGroupInterface {
 	return &fakeUISettingsGroups{
-		gentype.NewFakeClientWithListAndApply[*v3.UISettingsGroup, *v3.UISettingsGroupList, *projectcalicov3.UISettingsGroupApplyConfiguration](
+		gentype.NewFakeClientWithList[*v3.UISettingsGroup, *v3.UISettingsGroupList](
 			fake.Fake,
 			"",
 			v3.SchemeGroupVersion.WithResource("uisettingsgroups"),

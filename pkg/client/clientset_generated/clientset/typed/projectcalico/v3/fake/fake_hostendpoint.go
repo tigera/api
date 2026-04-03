@@ -6,20 +6,19 @@ package fake
 
 import (
 	v3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	projectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
-	typedprojectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
+	projectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
 	gentype "k8s.io/client-go/gentype"
 )
 
 // fakeHostEndpoints implements HostEndpointInterface
 type fakeHostEndpoints struct {
-	*gentype.FakeClientWithListAndApply[*v3.HostEndpoint, *v3.HostEndpointList, *projectcalicov3.HostEndpointApplyConfiguration]
+	*gentype.FakeClientWithList[*v3.HostEndpoint, *v3.HostEndpointList]
 	Fake *FakeProjectcalicoV3
 }
 
-func newFakeHostEndpoints(fake *FakeProjectcalicoV3) typedprojectcalicov3.HostEndpointInterface {
+func newFakeHostEndpoints(fake *FakeProjectcalicoV3) projectcalicov3.HostEndpointInterface {
 	return &fakeHostEndpoints{
-		gentype.NewFakeClientWithListAndApply[*v3.HostEndpoint, *v3.HostEndpointList, *projectcalicov3.HostEndpointApplyConfiguration](
+		gentype.NewFakeClientWithList[*v3.HostEndpoint, *v3.HostEndpointList](
 			fake.Fake,
 			"",
 			v3.SchemeGroupVersion.WithResource("hostendpoints"),

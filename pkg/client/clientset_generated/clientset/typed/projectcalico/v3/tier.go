@@ -8,7 +8,6 @@ import (
 	context "context"
 
 	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	applyconfigurationgeneratedprojectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
 	scheme "github.com/tigera/api/pkg/client/clientset_generated/clientset/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
@@ -34,21 +33,18 @@ type TierInterface interface {
 	List(ctx context.Context, opts v1.ListOptions) (*projectcalicov3.TierList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
 	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *projectcalicov3.Tier, err error)
-	Apply(ctx context.Context, tier *applyconfigurationgeneratedprojectcalicov3.TierApplyConfiguration, opts v1.ApplyOptions) (result *projectcalicov3.Tier, err error)
-	// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
-	ApplyStatus(ctx context.Context, tier *applyconfigurationgeneratedprojectcalicov3.TierApplyConfiguration, opts v1.ApplyOptions) (result *projectcalicov3.Tier, err error)
 	TierExpansion
 }
 
 // tiers implements TierInterface
 type tiers struct {
-	*gentype.ClientWithListAndApply[*projectcalicov3.Tier, *projectcalicov3.TierList, *applyconfigurationgeneratedprojectcalicov3.TierApplyConfiguration]
+	*gentype.ClientWithList[*projectcalicov3.Tier, *projectcalicov3.TierList]
 }
 
 // newTiers returns a Tiers
 func newTiers(c *ProjectcalicoV3Client) *tiers {
 	return &tiers{
-		gentype.NewClientWithListAndApply[*projectcalicov3.Tier, *projectcalicov3.TierList, *applyconfigurationgeneratedprojectcalicov3.TierApplyConfiguration](
+		gentype.NewClientWithList[*projectcalicov3.Tier, *projectcalicov3.TierList](
 			"tiers",
 			c.RESTClient(),
 			scheme.ParameterCodec,

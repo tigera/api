@@ -8,7 +8,6 @@ import (
 	context "context"
 
 	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	applyconfigurationgeneratedprojectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
 	scheme "github.com/tigera/api/pkg/client/clientset_generated/clientset/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
@@ -32,19 +31,18 @@ type ProfileInterface interface {
 	List(ctx context.Context, opts v1.ListOptions) (*projectcalicov3.ProfileList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
 	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *projectcalicov3.Profile, err error)
-	Apply(ctx context.Context, profile *applyconfigurationgeneratedprojectcalicov3.ProfileApplyConfiguration, opts v1.ApplyOptions) (result *projectcalicov3.Profile, err error)
 	ProfileExpansion
 }
 
 // profiles implements ProfileInterface
 type profiles struct {
-	*gentype.ClientWithListAndApply[*projectcalicov3.Profile, *projectcalicov3.ProfileList, *applyconfigurationgeneratedprojectcalicov3.ProfileApplyConfiguration]
+	*gentype.ClientWithList[*projectcalicov3.Profile, *projectcalicov3.ProfileList]
 }
 
 // newProfiles returns a Profiles
 func newProfiles(c *ProjectcalicoV3Client) *profiles {
 	return &profiles{
-		gentype.NewClientWithListAndApply[*projectcalicov3.Profile, *projectcalicov3.ProfileList, *applyconfigurationgeneratedprojectcalicov3.ProfileApplyConfiguration](
+		gentype.NewClientWithList[*projectcalicov3.Profile, *projectcalicov3.ProfileList](
 			"profiles",
 			c.RESTClient(),
 			scheme.ParameterCodec,

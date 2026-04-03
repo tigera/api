@@ -8,7 +8,6 @@ import (
 	context "context"
 
 	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	applyconfigurationgeneratedprojectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
 	scheme "github.com/tigera/api/pkg/client/clientset_generated/clientset/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
@@ -34,21 +33,18 @@ type PacketCaptureInterface interface {
 	List(ctx context.Context, opts v1.ListOptions) (*projectcalicov3.PacketCaptureList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
 	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *projectcalicov3.PacketCapture, err error)
-	Apply(ctx context.Context, packetCapture *applyconfigurationgeneratedprojectcalicov3.PacketCaptureApplyConfiguration, opts v1.ApplyOptions) (result *projectcalicov3.PacketCapture, err error)
-	// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
-	ApplyStatus(ctx context.Context, packetCapture *applyconfigurationgeneratedprojectcalicov3.PacketCaptureApplyConfiguration, opts v1.ApplyOptions) (result *projectcalicov3.PacketCapture, err error)
 	PacketCaptureExpansion
 }
 
 // packetCaptures implements PacketCaptureInterface
 type packetCaptures struct {
-	*gentype.ClientWithListAndApply[*projectcalicov3.PacketCapture, *projectcalicov3.PacketCaptureList, *applyconfigurationgeneratedprojectcalicov3.PacketCaptureApplyConfiguration]
+	*gentype.ClientWithList[*projectcalicov3.PacketCapture, *projectcalicov3.PacketCaptureList]
 }
 
 // newPacketCaptures returns a PacketCaptures
 func newPacketCaptures(c *ProjectcalicoV3Client, namespace string) *packetCaptures {
 	return &packetCaptures{
-		gentype.NewClientWithListAndApply[*projectcalicov3.PacketCapture, *projectcalicov3.PacketCaptureList, *applyconfigurationgeneratedprojectcalicov3.PacketCaptureApplyConfiguration](
+		gentype.NewClientWithList[*projectcalicov3.PacketCapture, *projectcalicov3.PacketCaptureList](
 			"packetcaptures",
 			c.RESTClient(),
 			scheme.ParameterCodec,

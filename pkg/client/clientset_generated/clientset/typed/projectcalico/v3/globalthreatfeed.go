@@ -8,7 +8,6 @@ import (
 	context "context"
 
 	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	applyconfigurationgeneratedprojectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
 	scheme "github.com/tigera/api/pkg/client/clientset_generated/clientset/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
@@ -34,21 +33,18 @@ type GlobalThreatFeedInterface interface {
 	List(ctx context.Context, opts v1.ListOptions) (*projectcalicov3.GlobalThreatFeedList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
 	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *projectcalicov3.GlobalThreatFeed, err error)
-	Apply(ctx context.Context, globalThreatFeed *applyconfigurationgeneratedprojectcalicov3.GlobalThreatFeedApplyConfiguration, opts v1.ApplyOptions) (result *projectcalicov3.GlobalThreatFeed, err error)
-	// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
-	ApplyStatus(ctx context.Context, globalThreatFeed *applyconfigurationgeneratedprojectcalicov3.GlobalThreatFeedApplyConfiguration, opts v1.ApplyOptions) (result *projectcalicov3.GlobalThreatFeed, err error)
 	GlobalThreatFeedExpansion
 }
 
 // globalThreatFeeds implements GlobalThreatFeedInterface
 type globalThreatFeeds struct {
-	*gentype.ClientWithListAndApply[*projectcalicov3.GlobalThreatFeed, *projectcalicov3.GlobalThreatFeedList, *applyconfigurationgeneratedprojectcalicov3.GlobalThreatFeedApplyConfiguration]
+	*gentype.ClientWithList[*projectcalicov3.GlobalThreatFeed, *projectcalicov3.GlobalThreatFeedList]
 }
 
 // newGlobalThreatFeeds returns a GlobalThreatFeeds
 func newGlobalThreatFeeds(c *ProjectcalicoV3Client) *globalThreatFeeds {
 	return &globalThreatFeeds{
-		gentype.NewClientWithListAndApply[*projectcalicov3.GlobalThreatFeed, *projectcalicov3.GlobalThreatFeedList, *applyconfigurationgeneratedprojectcalicov3.GlobalThreatFeedApplyConfiguration](
+		gentype.NewClientWithList[*projectcalicov3.GlobalThreatFeed, *projectcalicov3.GlobalThreatFeedList](
 			"globalthreatfeeds",
 			c.RESTClient(),
 			scheme.ParameterCodec,

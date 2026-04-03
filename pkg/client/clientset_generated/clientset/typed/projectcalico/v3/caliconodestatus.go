@@ -8,7 +8,6 @@ import (
 	context "context"
 
 	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	applyconfigurationgeneratedprojectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
 	scheme "github.com/tigera/api/pkg/client/clientset_generated/clientset/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
@@ -34,21 +33,18 @@ type CalicoNodeStatusInterface interface {
 	List(ctx context.Context, opts v1.ListOptions) (*projectcalicov3.CalicoNodeStatusList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
 	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *projectcalicov3.CalicoNodeStatus, err error)
-	Apply(ctx context.Context, calicoNodeStatus *applyconfigurationgeneratedprojectcalicov3.CalicoNodeStatusApplyConfiguration, opts v1.ApplyOptions) (result *projectcalicov3.CalicoNodeStatus, err error)
-	// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
-	ApplyStatus(ctx context.Context, calicoNodeStatus *applyconfigurationgeneratedprojectcalicov3.CalicoNodeStatusApplyConfiguration, opts v1.ApplyOptions) (result *projectcalicov3.CalicoNodeStatus, err error)
 	CalicoNodeStatusExpansion
 }
 
 // calicoNodeStatuses implements CalicoNodeStatusInterface
 type calicoNodeStatuses struct {
-	*gentype.ClientWithListAndApply[*projectcalicov3.CalicoNodeStatus, *projectcalicov3.CalicoNodeStatusList, *applyconfigurationgeneratedprojectcalicov3.CalicoNodeStatusApplyConfiguration]
+	*gentype.ClientWithList[*projectcalicov3.CalicoNodeStatus, *projectcalicov3.CalicoNodeStatusList]
 }
 
 // newCalicoNodeStatuses returns a CalicoNodeStatuses
 func newCalicoNodeStatuses(c *ProjectcalicoV3Client) *calicoNodeStatuses {
 	return &calicoNodeStatuses{
-		gentype.NewClientWithListAndApply[*projectcalicov3.CalicoNodeStatus, *projectcalicov3.CalicoNodeStatusList, *applyconfigurationgeneratedprojectcalicov3.CalicoNodeStatusApplyConfiguration](
+		gentype.NewClientWithList[*projectcalicov3.CalicoNodeStatus, *projectcalicov3.CalicoNodeStatusList](
 			"caliconodestatuses",
 			c.RESTClient(),
 			scheme.ParameterCodec,

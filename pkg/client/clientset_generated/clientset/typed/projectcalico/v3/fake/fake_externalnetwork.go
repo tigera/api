@@ -6,20 +6,19 @@ package fake
 
 import (
 	v3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	projectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
-	typedprojectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
+	projectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
 	gentype "k8s.io/client-go/gentype"
 )
 
 // fakeExternalNetworks implements ExternalNetworkInterface
 type fakeExternalNetworks struct {
-	*gentype.FakeClientWithListAndApply[*v3.ExternalNetwork, *v3.ExternalNetworkList, *projectcalicov3.ExternalNetworkApplyConfiguration]
+	*gentype.FakeClientWithList[*v3.ExternalNetwork, *v3.ExternalNetworkList]
 	Fake *FakeProjectcalicoV3
 }
 
-func newFakeExternalNetworks(fake *FakeProjectcalicoV3) typedprojectcalicov3.ExternalNetworkInterface {
+func newFakeExternalNetworks(fake *FakeProjectcalicoV3) projectcalicov3.ExternalNetworkInterface {
 	return &fakeExternalNetworks{
-		gentype.NewFakeClientWithListAndApply[*v3.ExternalNetwork, *v3.ExternalNetworkList, *projectcalicov3.ExternalNetworkApplyConfiguration](
+		gentype.NewFakeClientWithList[*v3.ExternalNetwork, *v3.ExternalNetworkList](
 			fake.Fake,
 			"",
 			v3.SchemeGroupVersion.WithResource("externalnetworks"),

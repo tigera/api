@@ -6,20 +6,19 @@ package fake
 
 import (
 	v3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	projectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
-	typedprojectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
+	projectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
 	gentype "k8s.io/client-go/gentype"
 )
 
 // fakeProfiles implements ProfileInterface
 type fakeProfiles struct {
-	*gentype.FakeClientWithListAndApply[*v3.Profile, *v3.ProfileList, *projectcalicov3.ProfileApplyConfiguration]
+	*gentype.FakeClientWithList[*v3.Profile, *v3.ProfileList]
 	Fake *FakeProjectcalicoV3
 }
 
-func newFakeProfiles(fake *FakeProjectcalicoV3) typedprojectcalicov3.ProfileInterface {
+func newFakeProfiles(fake *FakeProjectcalicoV3) projectcalicov3.ProfileInterface {
 	return &fakeProfiles{
-		gentype.NewFakeClientWithListAndApply[*v3.Profile, *v3.ProfileList, *projectcalicov3.ProfileApplyConfiguration](
+		gentype.NewFakeClientWithList[*v3.Profile, *v3.ProfileList](
 			fake.Fake,
 			"",
 			v3.SchemeGroupVersion.WithResource("profiles"),

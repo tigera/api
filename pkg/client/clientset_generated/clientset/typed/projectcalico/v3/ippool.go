@@ -8,7 +8,6 @@ import (
 	context "context"
 
 	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	applyconfigurationgeneratedprojectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
 	scheme "github.com/tigera/api/pkg/client/clientset_generated/clientset/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
@@ -34,21 +33,18 @@ type IPPoolInterface interface {
 	List(ctx context.Context, opts v1.ListOptions) (*projectcalicov3.IPPoolList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
 	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *projectcalicov3.IPPool, err error)
-	Apply(ctx context.Context, iPPool *applyconfigurationgeneratedprojectcalicov3.IPPoolApplyConfiguration, opts v1.ApplyOptions) (result *projectcalicov3.IPPool, err error)
-	// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
-	ApplyStatus(ctx context.Context, iPPool *applyconfigurationgeneratedprojectcalicov3.IPPoolApplyConfiguration, opts v1.ApplyOptions) (result *projectcalicov3.IPPool, err error)
 	IPPoolExpansion
 }
 
 // iPPools implements IPPoolInterface
 type iPPools struct {
-	*gentype.ClientWithListAndApply[*projectcalicov3.IPPool, *projectcalicov3.IPPoolList, *applyconfigurationgeneratedprojectcalicov3.IPPoolApplyConfiguration]
+	*gentype.ClientWithList[*projectcalicov3.IPPool, *projectcalicov3.IPPoolList]
 }
 
 // newIPPools returns a IPPools
 func newIPPools(c *ProjectcalicoV3Client) *iPPools {
 	return &iPPools{
-		gentype.NewClientWithListAndApply[*projectcalicov3.IPPool, *projectcalicov3.IPPoolList, *applyconfigurationgeneratedprojectcalicov3.IPPoolApplyConfiguration](
+		gentype.NewClientWithList[*projectcalicov3.IPPool, *projectcalicov3.IPPoolList](
 			"ippools",
 			c.RESTClient(),
 			scheme.ParameterCodec,

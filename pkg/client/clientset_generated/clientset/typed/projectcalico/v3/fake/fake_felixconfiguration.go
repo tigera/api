@@ -6,20 +6,19 @@ package fake
 
 import (
 	v3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	projectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
-	typedprojectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
+	projectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
 	gentype "k8s.io/client-go/gentype"
 )
 
 // fakeFelixConfigurations implements FelixConfigurationInterface
 type fakeFelixConfigurations struct {
-	*gentype.FakeClientWithListAndApply[*v3.FelixConfiguration, *v3.FelixConfigurationList, *projectcalicov3.FelixConfigurationApplyConfiguration]
+	*gentype.FakeClientWithList[*v3.FelixConfiguration, *v3.FelixConfigurationList]
 	Fake *FakeProjectcalicoV3
 }
 
-func newFakeFelixConfigurations(fake *FakeProjectcalicoV3) typedprojectcalicov3.FelixConfigurationInterface {
+func newFakeFelixConfigurations(fake *FakeProjectcalicoV3) projectcalicov3.FelixConfigurationInterface {
 	return &fakeFelixConfigurations{
-		gentype.NewFakeClientWithListAndApply[*v3.FelixConfiguration, *v3.FelixConfigurationList, *projectcalicov3.FelixConfigurationApplyConfiguration](
+		gentype.NewFakeClientWithList[*v3.FelixConfiguration, *v3.FelixConfigurationList](
 			fake.Fake,
 			"",
 			v3.SchemeGroupVersion.WithResource("felixconfigurations"),

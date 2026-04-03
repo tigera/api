@@ -8,7 +8,6 @@ import (
 	context "context"
 
 	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	applyconfigurationgeneratedprojectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
 	scheme "github.com/tigera/api/pkg/client/clientset_generated/clientset/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
@@ -32,19 +31,18 @@ type BGPFilterInterface interface {
 	List(ctx context.Context, opts v1.ListOptions) (*projectcalicov3.BGPFilterList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
 	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *projectcalicov3.BGPFilter, err error)
-	Apply(ctx context.Context, bGPFilter *applyconfigurationgeneratedprojectcalicov3.BGPFilterApplyConfiguration, opts v1.ApplyOptions) (result *projectcalicov3.BGPFilter, err error)
 	BGPFilterExpansion
 }
 
 // bGPFilters implements BGPFilterInterface
 type bGPFilters struct {
-	*gentype.ClientWithListAndApply[*projectcalicov3.BGPFilter, *projectcalicov3.BGPFilterList, *applyconfigurationgeneratedprojectcalicov3.BGPFilterApplyConfiguration]
+	*gentype.ClientWithList[*projectcalicov3.BGPFilter, *projectcalicov3.BGPFilterList]
 }
 
 // newBGPFilters returns a BGPFilters
 func newBGPFilters(c *ProjectcalicoV3Client) *bGPFilters {
 	return &bGPFilters{
-		gentype.NewClientWithListAndApply[*projectcalicov3.BGPFilter, *projectcalicov3.BGPFilterList, *applyconfigurationgeneratedprojectcalicov3.BGPFilterApplyConfiguration](
+		gentype.NewClientWithList[*projectcalicov3.BGPFilter, *projectcalicov3.BGPFilterList](
 			"bgpfilters",
 			c.RESTClient(),
 			scheme.ParameterCodec,

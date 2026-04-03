@@ -6,20 +6,19 @@ package fake
 
 import (
 	v3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	projectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
-	typedprojectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
+	projectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
 	gentype "k8s.io/client-go/gentype"
 )
 
 // fakeEgressGatewayPolicies implements EgressGatewayPolicyInterface
 type fakeEgressGatewayPolicies struct {
-	*gentype.FakeClientWithListAndApply[*v3.EgressGatewayPolicy, *v3.EgressGatewayPolicyList, *projectcalicov3.EgressGatewayPolicyApplyConfiguration]
+	*gentype.FakeClientWithList[*v3.EgressGatewayPolicy, *v3.EgressGatewayPolicyList]
 	Fake *FakeProjectcalicoV3
 }
 
-func newFakeEgressGatewayPolicies(fake *FakeProjectcalicoV3) typedprojectcalicov3.EgressGatewayPolicyInterface {
+func newFakeEgressGatewayPolicies(fake *FakeProjectcalicoV3) projectcalicov3.EgressGatewayPolicyInterface {
 	return &fakeEgressGatewayPolicies{
-		gentype.NewFakeClientWithListAndApply[*v3.EgressGatewayPolicy, *v3.EgressGatewayPolicyList, *projectcalicov3.EgressGatewayPolicyApplyConfiguration](
+		gentype.NewFakeClientWithList[*v3.EgressGatewayPolicy, *v3.EgressGatewayPolicyList](
 			fake.Fake,
 			"",
 			v3.SchemeGroupVersion.WithResource("egressgatewaypolicies"),
