@@ -8,6 +8,7 @@ import (
 	context "context"
 
 	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
+	applyconfigurationgeneratedprojectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
 	scheme "github.com/tigera/api/pkg/client/clientset_generated/clientset/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
@@ -31,18 +32,19 @@ type GlobalAlertTemplateInterface interface {
 	List(ctx context.Context, opts v1.ListOptions) (*projectcalicov3.GlobalAlertTemplateList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
 	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *projectcalicov3.GlobalAlertTemplate, err error)
+	Apply(ctx context.Context, globalAlertTemplate *applyconfigurationgeneratedprojectcalicov3.GlobalAlertTemplateApplyConfiguration, opts v1.ApplyOptions) (result *projectcalicov3.GlobalAlertTemplate, err error)
 	GlobalAlertTemplateExpansion
 }
 
 // globalAlertTemplates implements GlobalAlertTemplateInterface
 type globalAlertTemplates struct {
-	*gentype.ClientWithList[*projectcalicov3.GlobalAlertTemplate, *projectcalicov3.GlobalAlertTemplateList]
+	*gentype.ClientWithListAndApply[*projectcalicov3.GlobalAlertTemplate, *projectcalicov3.GlobalAlertTemplateList, *applyconfigurationgeneratedprojectcalicov3.GlobalAlertTemplateApplyConfiguration]
 }
 
 // newGlobalAlertTemplates returns a GlobalAlertTemplates
 func newGlobalAlertTemplates(c *ProjectcalicoV3Client) *globalAlertTemplates {
 	return &globalAlertTemplates{
-		gentype.NewClientWithList[*projectcalicov3.GlobalAlertTemplate, *projectcalicov3.GlobalAlertTemplateList](
+		gentype.NewClientWithListAndApply[*projectcalicov3.GlobalAlertTemplate, *projectcalicov3.GlobalAlertTemplateList, *applyconfigurationgeneratedprojectcalicov3.GlobalAlertTemplateApplyConfiguration](
 			"globalalerttemplates",
 			c.RESTClient(),
 			scheme.ParameterCodec,

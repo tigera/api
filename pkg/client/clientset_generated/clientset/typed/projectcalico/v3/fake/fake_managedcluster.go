@@ -6,19 +6,20 @@ package fake
 
 import (
 	v3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	projectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
+	projectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
+	typedprojectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
 	gentype "k8s.io/client-go/gentype"
 )
 
 // fakeManagedClusters implements ManagedClusterInterface
 type fakeManagedClusters struct {
-	*gentype.FakeClientWithList[*v3.ManagedCluster, *v3.ManagedClusterList]
+	*gentype.FakeClientWithListAndApply[*v3.ManagedCluster, *v3.ManagedClusterList, *projectcalicov3.ManagedClusterApplyConfiguration]
 	Fake *FakeProjectcalicoV3
 }
 
-func newFakeManagedClusters(fake *FakeProjectcalicoV3) projectcalicov3.ManagedClusterInterface {
+func newFakeManagedClusters(fake *FakeProjectcalicoV3) typedprojectcalicov3.ManagedClusterInterface {
 	return &fakeManagedClusters{
-		gentype.NewFakeClientWithList[*v3.ManagedCluster, *v3.ManagedClusterList](
+		gentype.NewFakeClientWithListAndApply[*v3.ManagedCluster, *v3.ManagedClusterList, *projectcalicov3.ManagedClusterApplyConfiguration](
 			fake.Fake,
 			"",
 			v3.SchemeGroupVersion.WithResource("managedclusters"),
