@@ -29,7 +29,7 @@ const (
 // GlobalNetworkSetList is a list of NetworkSet objects.
 type GlobalNetworkSetList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata" protobuf:"bytes,1,opt,name=metadata"`
+	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 
 	Items []GlobalNetworkSet `json:"items" protobuf:"bytes,2,rep,name=items"`
 }
@@ -59,6 +59,7 @@ type GlobalNetworkSetSpec struct {
 	// only.  Domain names specified here only work to allow egress traffic from the cluster to
 	// external destinations.  They don't work to _deny_ traffic to destinations specified by
 	// domain name, or to allow ingress traffic from _sources_ specified by domain name.
+	// +listType=atomic
 	AllowedEgressDomains []string `json:"allowedEgressDomains,omitempty" validate:"omitempty,dive,wildname"`
 }
 

@@ -64,7 +64,7 @@ type GlobalThreatFeedSpec struct {
 // GlobalThreatFeedList contains a list of GlobalThreatFeed resources.
 type GlobalThreatFeedList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata"`
+	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 	Items           []GlobalThreatFeed `json:"items"`
 }
 
@@ -102,9 +102,10 @@ type Pull struct {
 }
 
 type HTTPPull struct {
-	Format  ThreatFeedFormat `json:"format,omitempty" validate:"omitempty"`
-	URL     string           `json:"url" validate:"required,url"`
-	Headers []HTTPHeader     `json:"headers,omitempty" validate:"dive"`
+	Format ThreatFeedFormat `json:"format,omitempty" validate:"omitempty"`
+	URL    string           `json:"url" validate:"required,url"`
+	// +listType=atomic
+	Headers []HTTPHeader `json:"headers,omitempty" validate:"dive"`
 }
 
 type ThreatFeedFormat struct {
@@ -152,6 +153,7 @@ type GlobalThreatFeedStatus struct {
 	// +optional
 	LastSuccessfulSearch *metav1.Time `json:"lastSuccessfulSearch,omitempty"`
 	// +optional
+	// +listType=atomic
 	ErrorConditions []ErrorCondition `json:"errorConditions,omitempty"`
 }
 

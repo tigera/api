@@ -60,6 +60,7 @@ type UIGraphView struct {
 	// of selectors. In the case of overlapping selectors, the order specified in the slice is the order checked and so
 	// the first selector to match is used.  The nodes will be aggregated into a graph node with the name specified in
 	// the NamedSelector.
+	// +listType=atomic
 	HostAggregationSelectors []NamedSelector `json:"hostAggregationSelectors,omitempty" validate:"omitempty,dive"`
 
 	// Layout type. Semi-arbitrary value used to specify the layout-type/algorithm. For example could specify
@@ -67,15 +68,18 @@ type UIGraphView struct {
 	LayoutType string `json:"layoutType,omitempty" validate:"omitempty"`
 
 	// Positions of graph nodes.
+	// +listType=atomic
 	Positions []Position `json:"positions,omitempty" validate:"omitempty,dive"`
 
 	// The set of layer names that are active in this view.  Note that layers may be defined, but it is not necessary
 	// to have each layer "active". Corresponds directly to the name of the UISettings resource that contains a layer
 	// definition.
+	// +listType=atomic
 	Layers []string `json:"layers,omitempty" validate:"omitempty,dive,name"`
 
 	// Graph node specific view data. This provides information about what is in focus, expanded, hidden,
 	// deemphasized etc. at a per-node level.
+	// +listType=atomic
 	Nodes []UIGraphNodeView `json:"nodes,omitempty" validate:"omitempty,dive"`
 }
 
@@ -96,6 +100,7 @@ type NamedSelector struct {
 // UIGraphLayer contains the data for a UI graph layer.
 type UIGraphLayer struct {
 	// The nodes that are aggregated into a single layer.
+	// +listType=atomic
 	Nodes []UIGraphNode `json:"nodes" validate:"omitempty,dive"`
 
 	// A user-configurable icon. If not specified, the default layer icon is used for this layer node.
@@ -151,6 +156,7 @@ type UIGraphNodeView struct {
 // UIDashboard contains the data for a UI dashboard.
 type UIDashboard struct {
 	// Array of dashboard data
+	// +listType=atomic
 	DashboardData []DashboardData `json:"dashboardData,omitempty" validate:"omitempty"`
 }
 
@@ -206,7 +212,7 @@ type DashboardLayout struct {
 // UISettingsList contains a list of UISettings resources.
 type UISettingsList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata"`
+	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 	Items           []UISettings `json:"items"`
 }
 

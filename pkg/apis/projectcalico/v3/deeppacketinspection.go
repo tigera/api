@@ -58,6 +58,7 @@ type DeepPacketInspectionSpec struct {
 
 // DeepPacketInspectionStatus contains status of deep packet inspection in each node.
 type DeepPacketInspectionStatus struct {
+	// +listType=atomic
 	Nodes []DPINode `json:"nodes,omitempty"`
 }
 
@@ -66,6 +67,7 @@ type DPINode struct {
 	Node   string    `json:"node,omitempty"`
 	Active DPIActive `json:"active,omitempty"`
 	// +kubebuilder:validation:MaxItems:=10
+	// +listType=atomic
 	ErrorConditions []DPIErrorCondition `json:"errorConditions,omitempty"`
 }
 
@@ -88,7 +90,7 @@ type DPIErrorCondition struct {
 // DeepPacketInspectionList contains list of DeepPacketInspection resource.
 type DeepPacketInspectionList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata"`
+	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 	Items           []DeepPacketInspection `json:"items"`
 }
 

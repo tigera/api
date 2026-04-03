@@ -78,6 +78,7 @@ type PacketCaptureSpec struct {
 
 	// The ordered set of filters applied to traffic captured from an interface.  Each rule contains a set of
 	// packet match criteria.
+	// +listType=atomic
 	Filters []PacketCaptureRule `json:"filters,omitempty" validate:"omitempty,dive"`
 
 	// Defines the start time from which this PacketCapture will capture packets.
@@ -107,12 +108,14 @@ type PacketCaptureRule struct {
 	// Ports is an optional field that defines a filter for all traffic that has a
 	// source or destination port that matches one of these ranges/values. This value is a
 	// list of integers or strings that represent ranges of ports.
+	// +listType=atomic
 	Ports []numorstring.Port `json:"ports,omitempty" validate:"omitempty,dive"`
 }
 
 // PacketCaptureStatus describes the files that have been captured, for a given PacketCapture, on each node
 // that generates packet capture files
 type PacketCaptureStatus struct {
+	// +listType=atomic
 	Files []PacketCaptureFile `json:"files,omitempty"`
 }
 
@@ -129,6 +132,7 @@ type PacketCaptureFile struct {
 	// The active packet capture file will be identified using the following schema:
 	// "{workload endpoint name}_{host network interface}.pcap" .
 	// Rotated capture files name will contain an index matching the rotation timestamp.
+	// +listType=atomic
 	FileNames []string `json:"fileNames,omitempty" validate:"omitempty,dive"`
 
 	// Determines whether a PacketCapture is capturing traffic from any interface
@@ -143,7 +147,7 @@ type PacketCaptureFile struct {
 // PacketCaptureList contains a list of PacketCapture resources.
 type PacketCaptureList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata"`
+	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 	Items           []PacketCapture `json:"items"`
 }
 

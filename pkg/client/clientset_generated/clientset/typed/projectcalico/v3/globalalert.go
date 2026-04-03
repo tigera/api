@@ -8,6 +8,7 @@ import (
 	context "context"
 
 	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
+	applyconfigurationgeneratedprojectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
 	scheme "github.com/tigera/api/pkg/client/clientset_generated/clientset/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
@@ -33,18 +34,21 @@ type GlobalAlertInterface interface {
 	List(ctx context.Context, opts v1.ListOptions) (*projectcalicov3.GlobalAlertList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
 	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *projectcalicov3.GlobalAlert, err error)
+	Apply(ctx context.Context, globalAlert *applyconfigurationgeneratedprojectcalicov3.GlobalAlertApplyConfiguration, opts v1.ApplyOptions) (result *projectcalicov3.GlobalAlert, err error)
+	// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
+	ApplyStatus(ctx context.Context, globalAlert *applyconfigurationgeneratedprojectcalicov3.GlobalAlertApplyConfiguration, opts v1.ApplyOptions) (result *projectcalicov3.GlobalAlert, err error)
 	GlobalAlertExpansion
 }
 
 // globalAlerts implements GlobalAlertInterface
 type globalAlerts struct {
-	*gentype.ClientWithList[*projectcalicov3.GlobalAlert, *projectcalicov3.GlobalAlertList]
+	*gentype.ClientWithListAndApply[*projectcalicov3.GlobalAlert, *projectcalicov3.GlobalAlertList, *applyconfigurationgeneratedprojectcalicov3.GlobalAlertApplyConfiguration]
 }
 
 // newGlobalAlerts returns a GlobalAlerts
 func newGlobalAlerts(c *ProjectcalicoV3Client) *globalAlerts {
 	return &globalAlerts{
-		gentype.NewClientWithList[*projectcalicov3.GlobalAlert, *projectcalicov3.GlobalAlertList](
+		gentype.NewClientWithListAndApply[*projectcalicov3.GlobalAlert, *projectcalicov3.GlobalAlertList, *applyconfigurationgeneratedprojectcalicov3.GlobalAlertApplyConfiguration](
 			"globalalerts",
 			c.RESTClient(),
 			scheme.ParameterCodec,
