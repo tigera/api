@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Tigera, Inc. All rights reserved.
+// Copyright (c) 2022-2026 Tigera, Inc. All rights reserved.
 package v3
 
 import (
@@ -57,10 +57,16 @@ type PolicyRecommendationScopeSpec struct {
 	PoliciesLearningCutOff *int `json:"policiesLearningCutOff,omitempty"`
 
 	// The namespace spec contains the namespace relative recommendation vars.
-	NamespaceSpec PolicyRecommendationScopeNamespaceSpec `json:"namespaceSpec,omitempty"`
+	// +optional
+	NamespaceSpec *PolicyRecommendationScopeNamespaceSpec `json:"namespaceSpec,omitempty"`
+
+	// The host endpoint spec contains host endpoint relative recommendation vars.
+	// +optional
+	HostEndpointSpec *PolicyRecommendationScopeHostEndpointSpec `json:"hostEndpointSpec,omitempty"`
 }
 
 type PolicyRecommendationScopeStatus struct {
+	// +listType=atomic
 	Conditions []PolicyRecommendationScopeStatusCondition `json:"conditions,omitempty"`
 }
 
@@ -85,23 +91,44 @@ type PolicyRecommendationScopeNamespaceSpec struct {
 	// +optional
 	IntraNamespacePassThroughTraffic bool `json:"intraNamespacePassThroughTraffic,omitempty"`
 	// Recommendation status. One of Enabled, Disabled.
-	RecStatus PolicyRecommendationNamespaceStatus `json:"recStatus,omitempty" validate:"omitempty,policyrecstatus"`
+	RecStatus PolicyRecommendationStatus `json:"recStatus,omitempty" validate:"omitempty,policyrecstatus"`
 	// The namespace selector is an expression used to pick out the namespaces that the policy
 	// recommendation engine should create policies for. The syntax is the same as the
 	// NetworkPolicy.projectcalico.org resource selectors.
+	// +kubebuilder:validation:MaxLength=4096
 	Selector string `json:"selector" validate:"selector"`
 	// The name of the policy recommendation tier for namespace-isolated policies.
 	// [Default: "namespace-isolation"]
 	// +optional
+	// +kubebuilder:validation:MaxLength=253
 	TierName string `json:"tierName,omitempty" validate:"omitempty,name"`
 }
 
-type PolicyRecommendationNamespaceStatus string
+// +kubebuilder:validation:Enum=Enabled;Disabled
+type PolicyRecommendationStatus string
 
 const (
-	PolicyRecommendationScopeEnabled  PolicyRecommendationNamespaceStatus = "Enabled"
-	PolicyRecommendationScopeDisabled PolicyRecommendationNamespaceStatus = "Disabled"
+	PolicyRecommendationEnabled  PolicyRecommendationStatus = "Enabled"
+	PolicyRecommendationDisabled PolicyRecommendationStatus = "Disabled"
 )
+
+// PolicyRecommendationScopeHostEndpointSpec contains host endpoint information that defines the
+// host endpoint based recommended policy.
+type PolicyRecommendationScopeHostEndpointSpec struct {
+	// Recommendation status. One of Enabled, Disabled.
+	// +optional
+	RecommendationStatus PolicyRecommendationStatus `json:"recommendationStatus,omitempty" validate:"omitempty,policyrecstatus"`
+	// The selector is an expression used to pick out the host endpoints that the policy
+	// recommendation engine should create policies for. The syntax is the same as the
+	// NetworkPolicy.projectcalico.org resource selectors.
+	// +kubebuilder:validation:MaxLength=4096
+	Selector string `json:"selector" validate:"selector"`
+	// The name of the policy recommendation tier for host endpoint isolated policies.
+	// [Default: "hostendpoint-isolation"]
+	// +optional
+	// +kubebuilder:validation:MaxLength=253
+	TierName string `json:"tierName,omitempty" validate:"omitempty,name"`
+}
 
 // +genclient:nonNamespaced
 // +kubebuilder:resource:scope=Cluster
@@ -110,7 +137,7 @@ const (
 // PolicyRecommendationList contains a list of Monitor
 type PolicyRecommendationScopeList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty"`
+	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 	Items           []PolicyRecommendationScope `json:"items"`
 }
 

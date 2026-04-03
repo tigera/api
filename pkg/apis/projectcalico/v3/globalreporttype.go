@@ -46,6 +46,7 @@ type ReportTypeSpec struct {
 	UISummaryTemplate ReportTemplate `json:"uiSummaryTemplate,omitempty" validate:"required"`
 
 	// The set of templates used to render the report for downloads.
+	// +listType=atomic
 	DownloadTemplates []ReportTemplate `json:"downloadTemplates,omitempty" validate:"dive"`
 
 	// Whether to include endpoint data in the report. The actual endpoints included may be filtered by the Report,
@@ -80,6 +81,7 @@ type ReportTemplate struct {
 type AuditEventsSelection struct {
 	// Resources lists the resources that will be included in the audit logs in the ReportData.  Blank fields in the
 	// listed ResourceID structs are treated as wildcards.
+	// +listType=atomic
 	Resources []AuditResource `json:"resources,omitempty" validate:"omitempty"`
 }
 
@@ -120,7 +122,7 @@ type AuditResource struct {
 // GlobalReportTypeList contains a list of GlobalReportType resources.
 type GlobalReportTypeList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata"`
+	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 	Items           []GlobalReportType `json:"items"`
 }
 
