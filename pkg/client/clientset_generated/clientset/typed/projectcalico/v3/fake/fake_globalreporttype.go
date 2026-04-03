@@ -6,19 +6,20 @@ package fake
 
 import (
 	v3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	projectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
+	projectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
+	typedprojectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
 	gentype "k8s.io/client-go/gentype"
 )
 
 // fakeGlobalReportTypes implements GlobalReportTypeInterface
 type fakeGlobalReportTypes struct {
-	*gentype.FakeClientWithList[*v3.GlobalReportType, *v3.GlobalReportTypeList]
+	*gentype.FakeClientWithListAndApply[*v3.GlobalReportType, *v3.GlobalReportTypeList, *projectcalicov3.GlobalReportTypeApplyConfiguration]
 	Fake *FakeProjectcalicoV3
 }
 
-func newFakeGlobalReportTypes(fake *FakeProjectcalicoV3) projectcalicov3.GlobalReportTypeInterface {
+func newFakeGlobalReportTypes(fake *FakeProjectcalicoV3) typedprojectcalicov3.GlobalReportTypeInterface {
 	return &fakeGlobalReportTypes{
-		gentype.NewFakeClientWithList[*v3.GlobalReportType, *v3.GlobalReportTypeList](
+		gentype.NewFakeClientWithListAndApply[*v3.GlobalReportType, *v3.GlobalReportTypeList, *projectcalicov3.GlobalReportTypeApplyConfiguration](
 			fake.Fake,
 			"",
 			v3.SchemeGroupVersion.WithResource("globalreporttypes"),

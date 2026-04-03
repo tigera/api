@@ -21,28 +21,7 @@ test: ut fv st
 # The target architecture is select by setting the ARCH variable.
 # When ARCH is undefined it is set to the detected host architecture.
 # When ARCH differs from the host architecture a crossbuild will be performed.
-# This variable is only set if ARCHES is not set
-ARCHES ?= $(patsubst docker-image/Dockerfile.%,%,$(wildcard docker-image/Dockerfile.*))
-
-# Some repositories keep their Dockerfile(s) in the sub-directories of the 'docker-image'
-# directory (e.g., voltron). Make sure ARCHES gets filled from all unique Dockerfiles.
-ifeq ($(ARCHES),)
-	dockerfiles_in_subdir=$(wildcard docker-image/**/Dockerfile.*)
-	ifneq ($(dockerfiles_in_subdir),)
-		ARCHES=$(patsubst Dockerfile.%,%,$(shell basename -a $(dockerfiles_in_subdir) | sort | uniq))
-	endif
-endif
-
-# Some repositories keep their Dockerfile(s) in the root directory instead of in
-# the 'docker-image' subdir. Make sure ARCHES gets filled in either way.
-ifeq ($(ARCHES),)
-	ARCHES=$(patsubst Dockerfile.%,%,$(wildcard Dockerfile.*))
-endif
-
-# If architectures cannot infer from Dockerfiles, set default supported architecture.
-ifeq ($(ARCHES),)
-	ARCHES=amd64 arm64
-endif
+ARCHES ?= amd64 arm64
 
 # list of arches *not* to build when doing *-all
 EXCLUDEARCH?=ppc64le s390x
@@ -100,6 +79,9 @@ endif
 
 # Enable binfmt adding support for miscellaneous binary formats.
 # This is only needed when running non-native binaries.
+# Marked .PHONY since it produces no file; use as an order-only prerequisite
+# (| register) to avoid triggering unnecessary rebuilds.
+.PHONY: register
 register:
 ifneq ($(BUILDARCH),$(ARCH))
 	docker run --privileged --rm calico/binfmt:qemu-v10.1.3 --install all || true
@@ -396,11 +378,10 @@ DOCKER_PULL =
 endif
 
 # DOCKER_BUILD is the base build command used for building all images.
-DOCKER_BUILD=docker buildx build --load --platform=linux/$(ARCH) $(DOCKER_PULL)\
-	--build-arg UBI_IMAGE=$(UBI_IMAGE) \
-	--build-arg GIT_VERSION=$(GIT_VERSION) \
+DOCKER_BUILD=docker buildx build --load --platform=linux/$(ARCH) $(DOCKER_PULL) \
 	--build-arg CALICO_BASE=$(CALICO_BASE) \
-	--build-arg BPFTOOL_IMAGE=$(BPFTOOL_IMAGE)
+	--build-arg GIT_VERSION=$(GIT_VERSION) \
+	--build-arg UBI_IMAGE=$(UBI_IMAGE)
 
 DOCKER_BUILD_THIRD_PARTY = $(DOCKER_BUILD) \
 	--build-arg THIRD_PARTY_REGISTRY=$(THIRD_PARTY_REGISTRY) \
@@ -504,6 +485,29 @@ define host_native_deb_build
 		$(HOST_NATIVE_BUILD_IMAGE):$(1) \
 			sh -c 'cd package/$(1)/$(2) && debuild -us -uc -b'
 endef
+
+###############################################################################
+# Source file dependency tracking via deps.txt
+#
+# Each component's deps.txt contains both external module dependencies and
+# local in-repo package directories (prefixed with "local:"). If deps.txt
+# has local entries, SRC_FILES is automatically populated with all .go files
+# in those directories. Components can append extra non-Go dependencies
+# (e.g., BPF .c/.h files) after including lib.Makefile.
+#
+# IMAGE_DEPS lists non-Go files that the Docker image depends on (Dockerfiles,
+# config templates, scripts, etc.). Components should override or append to
+# this variable and include $(IMAGE_DEPS) in their .image.created prereqs.
+###############################################################################
+ifneq ($(wildcard deps.txt),)
+SRC_FILES := $(shell find $(addprefix $(REPO_ROOT)/,$(shell grep '^local:' deps.txt | cut -d: -f2-)) -name '*.go' 2>/dev/null)
+endif
+
+IMAGE_DEPS ?= Dockerfile
+
+# Expand a component's deps.txt local entries to the list of .go files.
+# Usage: $(call local-deps-go-files,<component-dir>)
+local-deps-go-files = $(shell find $(addprefix $(REPO_ROOT)/,$(shell grep '^local:' $(REPO_ROOT)/$(1)/deps.txt | cut -d: -f2-)) -name '*.go' 2>/dev/null)
 
 # A target that does nothing but it always stale, used to force a rebuild on certain targets based on some non-file criteria.
 .PHONY: force-rebuild
@@ -843,7 +847,7 @@ trigger-auto-pin-update-process-wrapped: create-pin-update-head trigger-pin-upda
 static-checks: $(LOCAL_CHECKS)
 	$(MAKE) golangci-lint
 
-LINT_ARGS ?= --max-issues-per-linter 0 --max-same-issues 0 --timeout 8m
+LINT_ARGS ?= --max-issues-per-linter 0 --max-same-issues 0 --timeout 15m
 
 .PHONY: golangci-lint
 golangci-lint: $(GENERATED_FILES)
@@ -989,7 +993,7 @@ SEMAPHORE_TYPHA_PROJECT_ID=c2ea3f0a-58a0-427a-9ed5-6eff8d6543b3
 SEMAPHORE_TYPHA_PRIVATE_PROJECT_ID=51e84cb9-0f38-408a-a113-0f5ca71844d7
 SEMAPHORE_VOLTRON_PROJECT_ID=9d239362-9594-4c84-8983-868ee19ebd41
 
-SEMAPHORE_WORKFLOW_BRANCH?=master
+SEMAPHORE_WORKFLOW_BRANCH?=release-calient-v3.23
 
 # Sends a request to the semaphore API to run the request workflow. It requires setting the SEMAPHORE_API_TOKEN, SEMAPHORE_PROJECT_ID,
 # SEMAPHORE_WORKFLOW_BRANCH, and SEMAPHORE_WORKFLOW_FILE ENV variables.
@@ -1026,14 +1030,19 @@ gen-mocks:
 	# The generated files need import reordering to pass static-checks
 	$(MAKE) fix-changed
 
-# Run mockery for each path in MOCKERY_FILE_PATHS. The the generated mocks are
-# created in package and in test files. Look here for more information https://github.com/vektra/mockery
+# Run mockery to generate mocks. If a .mockery.yaml config file exists (mockery v3),
+# run mockery with that config. Otherwise, fall back to the v2 CLI flags using MOCKERY_FILE_PATHS.
+# Look here for more information https://github.com/vektra/mockery
 mockery-run:
-	for FILE_PATH in $(MOCKERY_FILE_PATHS); do\
-		DIR=$$(dirname $$FILE_PATH); \
-		INTERFACE_NAME=$$(basename $$FILE_PATH); \
-		mockery --dir $$DIR --name $$INTERFACE_NAME --inpackage; \
-	done
+	if [ -f .mockery.yaml ] || [ -f .mockery.yml ]; then \
+		mockery; \
+	else \
+		for FILE_PATH in $(MOCKERY_FILE_PATHS); do\
+			DIR=$$(dirname $$FILE_PATH); \
+			INTERFACE_NAME=$$(basename $$FILE_PATH); \
+			mockery --dir $$DIR --name $$INTERFACE_NAME --inpackage; \
+		done; \
+	fi
 
 ###############################################################################
 # Docker helpers
@@ -1514,6 +1523,7 @@ run-k8s-apiserver: run-etcd
 			--max-requests-inflight=0 \
 			--enable-aggregator-routing \
 			--requestheader-client-ca-file=/home/user/certs/ca.pem \
+			--requestheader-allowed-names=kubernetes \
 			--requestheader-username-headers=X-Remote-User \
 			--requestheader-group-headers=X-Remote-Group \
 			--requestheader-extra-headers-prefix=X-Remote-Extra- \
@@ -1601,7 +1611,7 @@ $(REPO_ROOT)/.$(KIND_NAME).created: $(KUBECTL) $(KIND)
 
 	touch $@
 
-kind-cluster-destroy: $(KIND) $(KUBECTL)
+kind-cluster-destroy kind-down: $(KIND) $(KUBECTL)
 	# We need to drain the cluster gracefully when shutting down to avoid a netdev unregister error from the kernel.
 	# This requires we execute CNI del on pods with pod networking.
 	-$(KIND) delete cluster --name $(KIND_NAME)
@@ -1677,6 +1687,317 @@ bin/yq:
 	mkdir -p bin
 	curl -sSfL --retry 5 https://github.com/mikefarah/yq/releases/download/v4.44.6/yq_linux_$(BUILDARCH).tar.gz | tar xz -C bin ./yq_linux_$(BUILDARCH) && \
 	mv bin/yq_linux_$(BUILDARCH) bin/yq
+
+###############################################################################
+# Common functions for setting up a kind cluster with Calico for testing.
+###############################################################################
+KIND_INFRA_DIR := $(REPO_ROOT)/hack/test/kind/infra
+KIND_TEST_BUILD_TAG = test-build
+
+# Calico images built locally with latest-$(ARCH) tags. kind-build-images
+# re-tags each as :test-build for the kind cluster.
+KIND_CALICO_IMAGES = \
+	tigera/node:$(KIND_TEST_BUILD_TAG) \
+	tigera/typha:$(KIND_TEST_BUILD_TAG) \
+	tigera/apiserver:$(KIND_TEST_BUILD_TAG) \
+	tigera/calicoctl:$(KIND_TEST_BUILD_TAG) \
+	tigera/cni:$(KIND_TEST_BUILD_TAG) \
+	tigera/csi:$(KIND_TEST_BUILD_TAG) \
+	tigera/node-driver-registrar:$(KIND_TEST_BUILD_TAG) \
+	tigera/pod2daemon-flexvol:$(KIND_TEST_BUILD_TAG) \
+	tigera/kube-controllers:$(KIND_TEST_BUILD_TAG) \
+	tigera/webhooks:$(KIND_TEST_BUILD_TAG)
+
+# Operator is built separately (build-operator.sh tags it directly as
+# :test-build), so it's not in KIND_CALICO_IMAGES.
+KIND_OPERATOR_IMAGE = docker.io/tigera/operator:$(KIND_TEST_BUILD_TAG)
+
+# All images loaded onto the kind cluster.
+KIND_IMAGES = $(KIND_OPERATOR_IMAGE) $(KIND_CALICO_IMAGES)
+
+# Enterprise-only: paths to license and pull secret for kind cluster setup.
+GCR_IO_PULL_SECRET ?= $(HOME)/secrets/docker_cfg.json
+TSEE_TEST_LICENSE ?= $(HOME)/secrets/license.yaml
+
+# Enterprise-only images (all images loaded onto the kind cluster).
+# Enterprise images built locally with latest-$(ARCH) tags. kind-build-images
+# re-tags each as :test-build for the kind cluster.
+KIND_ENTERPRISE_LOCAL_IMAGES = \
+	tigera/egress-gateway:$(KIND_TEST_BUILD_TAG) \
+	tigera/queryserver:$(KIND_TEST_BUILD_TAG) \
+	tigera/prometheus-service:$(KIND_TEST_BUILD_TAG) \
+	tigera/fluentd:$(KIND_TEST_BUILD_TAG) \
+	tigera/policy-recommendation:$(KIND_TEST_BUILD_TAG) \
+	tigera/voltron:$(KIND_TEST_BUILD_TAG) \
+	tigera/ui-apis:$(KIND_TEST_BUILD_TAG) \
+	tigera/es-gateway:$(KIND_TEST_BUILD_TAG) \
+	tigera/linseed:$(KIND_TEST_BUILD_TAG) \
+	tigera/intrusion-detection-controller:$(KIND_TEST_BUILD_TAG) \
+	tigera/webhooks-processor:$(KIND_TEST_BUILD_TAG) \
+	tigera/intrusion-detection-job-installer:$(KIND_TEST_BUILD_TAG) \
+	tigera/elasticsearch-metrics:$(KIND_TEST_BUILD_TAG) \
+	tigera/prometheus-operator:$(KIND_TEST_BUILD_TAG) \
+	tigera/prometheus-config-reloader:$(KIND_TEST_BUILD_TAG) \
+	tigera/eck-operator:$(KIND_TEST_BUILD_TAG)
+
+# Enterprise images pulled from a registry. Stamp rules pull and tag as
+# latest-$(ARCH); the common tagging loop handles the final tag.
+KIND_ENTERPRISE_PULLED_IMAGES = \
+	tigera/prometheus:$(KIND_TEST_BUILD_TAG) \
+	tigera/alertmanager:$(KIND_TEST_BUILD_TAG) \
+	tigera/manager:$(KIND_TEST_BUILD_TAG) \
+	tigera/kibana:$(KIND_TEST_BUILD_TAG) \
+	tigera/elasticsearch:$(KIND_TEST_BUILD_TAG)
+
+# All enterprise images = locally built + pulled from registry.
+KIND_CALICO_ENTERPRISE_IMAGES = $(KIND_ENTERPRISE_LOCAL_IMAGES) $(KIND_ENTERPRISE_PULLED_IMAGES)
+
+KIND_IMAGES += $(KIND_CALICO_ENTERPRISE_IMAGES)
+
+# .image.created markers: the per-component image build stamp files.
+# Each depends on its source files via deps.txt so Make knows when
+# to rebuild. The sub-make handles the actual build; we just ensure it
+# runs when sources are newer.
+KIND_IMAGE_MARKERS = \
+	$(REPO_ROOT)/node/.image.created-$(ARCH) \
+	$(REPO_ROOT)/typha/.image.created-$(ARCH) \
+	$(REPO_ROOT)/apiserver/.image.created-$(ARCH) \
+	$(REPO_ROOT)/cni-plugin/.image.created-$(ARCH) \
+	$(REPO_ROOT)/pod2daemon/.image.created-$(ARCH) \
+	$(REPO_ROOT)/calicoctl/.image.created-$(ARCH) \
+	$(REPO_ROOT)/kube-controllers/.image.created-$(ARCH) \
+	$(REPO_ROOT)/webhooks/.image.created-$(ARCH)
+
+$(REPO_ROOT)/node/.image.created-$(ARCH): $(call local-deps-go-files,node)
+	$(MAKE) -C $(REPO_ROOT)/node image
+
+$(REPO_ROOT)/typha/.image.created-$(ARCH): $(call local-deps-go-files,typha)
+	$(MAKE) -C $(REPO_ROOT)/typha image
+
+$(REPO_ROOT)/apiserver/.image.created-$(ARCH): $(call local-deps-go-files,apiserver)
+	$(MAKE) -C $(REPO_ROOT)/apiserver image
+
+$(REPO_ROOT)/cni-plugin/.image.created-$(ARCH): $(call local-deps-go-files,cni-plugin)
+	$(MAKE) -C $(REPO_ROOT)/cni-plugin image
+
+$(REPO_ROOT)/pod2daemon/.image.created-$(ARCH): $(call local-deps-go-files,pod2daemon)
+	$(MAKE) -C $(REPO_ROOT)/pod2daemon image
+
+$(REPO_ROOT)/calicoctl/.image.created-$(ARCH): $(call local-deps-go-files,calicoctl)
+	$(MAKE) -C $(REPO_ROOT)/calicoctl image
+
+$(REPO_ROOT)/kube-controllers/.image.created-$(ARCH): $(call local-deps-go-files,kube-controllers)
+	$(MAKE) -C $(REPO_ROOT)/kube-controllers image
+
+$(REPO_ROOT)/webhooks/.image.created-$(ARCH): $(call local-deps-go-files,webhooks)
+	$(MAKE) -C $(REPO_ROOT)/webhooks image
+
+# Operator is built from a separate repo/branch and depends on all other
+# images being built first.
+$(REPO_ROOT)/.stamp.operator: $(KIND_IMAGE_MARKERS) $(KIND_INFRA_DIR)/calico_versions.yml
+	cd $(KIND_INFRA_DIR) && BRANCH=$(OPERATOR_BRANCH) ./build-operator.sh
+	touch $@
+
+# Enterprise-only image markers for locally-built components. These follow
+# the same pattern as KIND_IMAGE_MARKERS: source deps so Make knows when
+# to rebuild. Components with deps.txt use local-deps-go-files; third_party
+# components without deps.txt approximate with find.
+KIND_ENTERPRISE_IMAGE_MARKERS = \
+	$(REPO_ROOT)/egress-gateway/.image.created-$(ARCH) \
+	$(REPO_ROOT)/queryserver/.image.created-$(ARCH) \
+	$(REPO_ROOT)/prometheus-service/.image.created-$(ARCH) \
+	$(REPO_ROOT)/fluentd/.image.created-$(ARCH) \
+	$(REPO_ROOT)/policy-recommendation/.image.created-$(ARCH) \
+	$(REPO_ROOT)/voltron/.image.created-$(ARCH) \
+	$(REPO_ROOT)/ui-apis/.image.created-$(ARCH) \
+	$(REPO_ROOT)/es-gateway/.image.created-$(ARCH) \
+	$(REPO_ROOT)/linseed/.image.created-$(ARCH) \
+	$(REPO_ROOT)/intrusion-detection-controller/.image.created-$(ARCH) \
+	$(REPO_ROOT)/webhooks-processor/.image.created-$(ARCH) \
+	$(REPO_ROOT)/intrusion-detection-controller/.dashboards-installer.image.created-$(ARCH) \
+	$(REPO_ROOT)/elasticsearch-metrics/.image.created-$(ARCH) \
+	$(REPO_ROOT)/third_party/prometheus-operator/.prometheus-operator.created-$(ARCH) \
+	$(REPO_ROOT)/third_party/prometheus-operator/.prometheus-config-reloader.created-$(ARCH) \
+	$(REPO_ROOT)/third_party/eck-operator/.eck-operator.created-$(ARCH)
+
+# Enterprise-only markers for images pulled from a registry. These have
+# no local source deps and are pulled once per stamp lifetime.
+KIND_ENTERPRISE_PULLED_IMAGE_MARKERS = \
+	$(REPO_ROOT)/.stamp.prometheus \
+	$(REPO_ROOT)/.stamp.alertmanager \
+	$(REPO_ROOT)/.stamp.manager \
+	$(REPO_ROOT)/.stamp.kibana \
+	$(REPO_ROOT)/.stamp.elastic
+
+## Build all component images needed for kind cluster testing, then tag them.
+.PHONY: kind-build-images
+kind-build-images: $(KIND_IMAGE_MARKERS) $(REPO_ROOT)/.stamp.operator $(KIND_ENTERPRISE_IMAGE_MARKERS) $(KIND_ENTERPRISE_PULLED_IMAGE_MARKERS)
+	@for img in $(KIND_CALICO_IMAGES); do \
+	  base=$${img%%:*}; \
+	  docker tag $$base:latest-$(ARCH) $$img; \
+	done
+	@for img in $(KIND_CALICO_ENTERPRISE_IMAGES); do \
+	  base=$${img%%:*}; \
+	  docker tag $$base:latest-$(ARCH) $$img; \
+	done
+
+# Create a kind cluster and deploy Calico on it via Helm. Assumes images are
+# already built and tagged as test-build in the local Docker daemon. If a
+# cluster already exists (stamp file present), the creation step is skipped.
+# Default to v3 CRDs for kind clusters. Override with KIND_CALICO_API_GROUP=crd.projectcalico.org/v1 if needed.
+KIND_CALICO_API_GROUP ?= projectcalico.org/v3
+
+# Load images, install Calico via Helm, and wait for readiness on an existing
+# kind cluster. Use kind-up for end-to-end bringup (images + cluster + deploy).
+.PHONY: kind-deploy
+kind-deploy:
+	$(MAKE) -C $(REPO_ROOT) chart CALICO_API_GROUP=$(KIND_CALICO_API_GROUP)
+	REPO_ROOT=$(REPO_ROOT) \
+	KUBECONFIG=$(KIND_KUBECONFIG) \
+	KIND=$(KIND) \
+	KIND_NAME=$(KIND_NAME) \
+	ARCH=$(ARCH) \
+	GIT_VERSION=$(GIT_VERSION) \
+	CALICO_API_GROUP=$(KIND_CALICO_API_GROUP) \
+	CLUSTER_ROUTING=$(CLUSTER_ROUTING) \
+	TSEE_TEST_LICENSE=$(TSEE_TEST_LICENSE) \
+	GCR_IO_PULL_SECRET=$(GCR_IO_PULL_SECRET) \
+	KIND_IMAGES="$(KIND_IMAGES)" \
+	$(REPO_ROOT)/hack/test/kind/deploy_resources.sh
+
+# Rebuild any images whose source files have changed, load onto the kind
+# cluster, and restart pods.
+.PHONY: kind-reload
+kind-reload: kind-build-images
+	KIND=$(KIND) KIND_NAME=$(KIND_NAME) $(REPO_ROOT)/hack/test/kind/load_images.sh $(KIND_IMAGES)
+	KUBECONFIG=$(KIND_KUBECONFIG) $(KUBECTL) delete pods -n calico-system --all
+	KUBECONFIG=$(KIND_KUBECONFIG) $(KUBECTL) apply -f $(KIND_INFRA_DIR)/calicoctl.yaml
+
+# Enterprise-only image build rules.
+
+# Locally-built enterprise components with deps.txt: these use the same
+# .image.created pattern as OSS components so Make tracks source changes.
+$(REPO_ROOT)/egress-gateway/.image.created-$(ARCH): $(call local-deps-go-files,egress-gateway)
+	$(MAKE) -C $(REPO_ROOT)/egress-gateway image
+
+$(REPO_ROOT)/queryserver/.image.created-$(ARCH): $(call local-deps-go-files,queryserver)
+	$(MAKE) -C $(REPO_ROOT)/queryserver image
+
+$(REPO_ROOT)/prometheus-service/.image.created-$(ARCH): $(call local-deps-go-files,prometheus-service)
+	$(MAKE) -C $(REPO_ROOT)/prometheus-service image
+
+$(REPO_ROOT)/fluentd/.image.created-$(ARCH): $(call local-deps-go-files,fluentd)
+	$(MAKE) -C $(REPO_ROOT)/fluentd image THIRD_PARTY_REGISTRY=$(THIRD_PARTY_REGISTRY_CD)
+
+$(REPO_ROOT)/policy-recommendation/.image.created-$(ARCH): $(call local-deps-go-files,policy-recommendation)
+	$(MAKE) -C $(REPO_ROOT)/policy-recommendation image
+
+$(REPO_ROOT)/voltron/.image.created-$(ARCH): $(call local-deps-go-files,voltron)
+	$(MAKE) -C $(REPO_ROOT)/voltron image
+
+$(REPO_ROOT)/ui-apis/.image.created-$(ARCH): $(call local-deps-go-files,ui-apis)
+	$(MAKE) -C $(REPO_ROOT)/ui-apis image
+
+$(REPO_ROOT)/es-gateway/.image.created-$(ARCH): $(call local-deps-go-files,es-gateway)
+	$(MAKE) -C $(REPO_ROOT)/es-gateway image
+
+$(REPO_ROOT)/linseed/.image.created-$(ARCH): $(call local-deps-go-files,linseed)
+	$(MAKE) -C $(REPO_ROOT)/linseed image
+
+$(REPO_ROOT)/intrusion-detection-controller/.image.created-$(ARCH): $(call local-deps-go-files,intrusion-detection-controller)
+	$(MAKE) -C $(REPO_ROOT)/intrusion-detection-controller image
+
+$(REPO_ROOT)/webhooks-processor/.image.created-$(ARCH): $(call local-deps-go-files,webhooks-processor)
+	$(MAKE) -C $(REPO_ROOT)/webhooks-processor image
+
+$(REPO_ROOT)/intrusion-detection-controller/.dashboards-installer.image.created-$(ARCH): $(call local-deps-go-files,intrusion-detection-controller)
+	$(MAKE) -C $(REPO_ROOT)/intrusion-detection-controller intrusion-detection-job-installer
+
+$(REPO_ROOT)/elasticsearch-metrics/.image.created-$(ARCH): $(call local-deps-go-files,elasticsearch-metrics)
+	$(MAKE) -C $(REPO_ROOT)/elasticsearch-metrics image
+
+# Third-party locally-built images: use find for source deps since these
+# don't have deps.txt. The component Makefiles create the marker files.
+$(REPO_ROOT)/third_party/prometheus-operator/.prometheus-operator.created-$(ARCH): $(shell find $(REPO_ROOT)/third_party/prometheus-operator -name '*.go')
+	$(MAKE) -C $(REPO_ROOT)/third_party/prometheus-operator image
+
+$(REPO_ROOT)/third_party/prometheus-operator/.prometheus-config-reloader.created-$(ARCH): $(shell find $(REPO_ROOT)/third_party/prometheus-operator -name '*.go')
+	$(MAKE) -C $(REPO_ROOT)/third_party/prometheus-operator image
+
+$(REPO_ROOT)/third_party/eck-operator/.eck-operator.created-$(ARCH): $(shell find $(REPO_ROOT)/third_party/eck-operator -name '*.go')
+	$(MAKE) -C $(REPO_ROOT)/third_party/eck-operator image
+
+# GCR-pulled images: no local source deps, use stamp files. Tag as
+# latest-$(ARCH) so the common tagging loop handles the final tag.
+$(REPO_ROOT)/.stamp.prometheus:
+	# TODO: Build this. We cannot at the moment because it relies on the host OS npm / go toolchain.
+	docker pull gcr.io/unique-caldron-775/cnx/tigera/prometheus:$(THIRD_PARTY_RELEASE_BRANCH)
+	docker tag gcr.io/unique-caldron-775/cnx/tigera/prometheus:$(THIRD_PARTY_RELEASE_BRANCH) tigera/prometheus:latest-$(ARCH)
+	touch $@
+
+$(REPO_ROOT)/.stamp.alertmanager:
+	# TODO: Build this.
+	docker pull gcr.io/unique-caldron-775/cnx/tigera/alertmanager:$(THIRD_PARTY_RELEASE_BRANCH)
+	docker tag gcr.io/unique-caldron-775/cnx/tigera/alertmanager:$(THIRD_PARTY_RELEASE_BRANCH) tigera/alertmanager:latest-$(ARCH)
+	touch $@
+
+$(REPO_ROOT)/.stamp.manager:
+	# TODO
+	docker pull gcr.io/unique-caldron-775/cnx/tigera/manager:$(THIRD_PARTY_RELEASE_BRANCH)
+	docker tag gcr.io/unique-caldron-775/cnx/tigera/manager:$(THIRD_PARTY_RELEASE_BRANCH) tigera/manager:latest-$(ARCH)
+	touch $@
+
+$(REPO_ROOT)/.stamp.kibana:
+	# TODO: Can we run without kibana? Requires operator change.
+	docker pull gcr.io/unique-caldron-775/cnx/tigera/kibana:$(THIRD_PARTY_RELEASE_BRANCH)
+	docker tag gcr.io/unique-caldron-775/cnx/tigera/kibana:$(THIRD_PARTY_RELEASE_BRANCH) tigera/kibana:latest-$(ARCH)
+	touch $@
+
+$(REPO_ROOT)/.stamp.elastic:
+	# TODO: Build this.
+	docker pull gcr.io/unique-caldron-775/cnx/tigera/elasticsearch:$(THIRD_PARTY_RELEASE_BRANCH)
+	docker tag gcr.io/unique-caldron-775/cnx/tigera/elasticsearch:$(THIRD_PARTY_RELEASE_BRANCH) tigera/elasticsearch:latest-$(ARCH)
+	touch $@
+
+###############################################################################
+# Common functions for setting up a local envtest environment.
+###############################################################################
+ENVTEST_DIR := $(REPO_ROOT)/hack/test/envtest
+ENVTEST_CONTAINER_DIR := /go/src/github.com/projectcalico/calico/hack/test/envtest
+# Derive major.minor from K8S_VERSION (e.g. v1.34.3 -> 1.34.x) for setup-envtest.
+# Envtest publishes binaries per minor version, not per patch, so we use a wildcard.
+ENVTEST_K8S_VERSION ?= $(shell echo $(K8S_VERSION) | sed 's/^v//' | cut -d. -f1,2).x
+ENVTEST_ASSETS_MARKER := $(ENVTEST_DIR)/.envtest-$(ENVTEST_K8S_VERSION)
+
+## Download envtest binaries (kube-apiserver, etcd) for use by tests that use controller-runtime envtest.
+.PHONY: setup-envtest
+setup-envtest: $(ENVTEST_ASSETS_MARKER)
+$(ENVTEST_ASSETS_MARKER):
+	@echo "Setting up envtest binaries for Kubernetes $(ENVTEST_K8S_VERSION)..."
+	mkdir -p $(ENVTEST_DIR)
+	rm -f $(ENVTEST_DIR)/.envtest-*
+	$(DOCKER_GO_BUILD) sh -c \
+		'go run sigs.k8s.io/controller-runtime/tools/setup-envtest@v0.0.0-20260119123727-a2de7e94d2dd \
+		use --bin-dir $(ENVTEST_CONTAINER_DIR) -p path $(ENVTEST_K8S_VERSION)'
+	touch $@
+
+# Minimum supported Kubernetes version for CEL XValidation (GA in 1.29).
+MIN_K8S_VERSION ?= v1.29.0
+ENVTEST_MIN_K8S_VERSION ?= $(shell echo $(MIN_K8S_VERSION) | sed 's/^v//' | cut -d. -f1,2).x
+# Major.minor prefix for globbing the downloaded envtest directory (e.g. "1.29").
+ENVTEST_MIN_K8S_MINOR := $(shell echo $(MIN_K8S_VERSION) | sed 's/^v//' | cut -d. -f1,2)
+ENVTEST_MIN_ASSETS_MARKER := $(ENVTEST_DIR)/.envtest-min-$(ENVTEST_MIN_K8S_VERSION)
+
+## Download envtest binaries for the minimum supported Kubernetes version.
+.PHONY: setup-envtest-min
+setup-envtest-min: $(ENVTEST_MIN_ASSETS_MARKER)
+$(ENVTEST_MIN_ASSETS_MARKER):
+	@echo "Setting up envtest binaries for minimum K8s $(ENVTEST_MIN_K8S_VERSION)..."
+	mkdir -p $(ENVTEST_DIR)
+	$(DOCKER_GO_BUILD) sh -c \
+		'go run sigs.k8s.io/controller-runtime/tools/setup-envtest@v0.0.0-20260119123727-a2de7e94d2dd \
+		use --bin-dir $(ENVTEST_CONTAINER_DIR) -p path $(ENVTEST_MIN_K8S_VERSION)'
+	touch $@
 
 ###############################################################################
 # Common functions for launching a local etcd instance.
