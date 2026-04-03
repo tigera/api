@@ -81,6 +81,7 @@ type CISBenchmarkParams struct {
 
 	// Benchmark results filters. The first matching set of filters is applied to each set of benchmark results.
 	// If there are no matching filters, the full set of benchmark results will be included in the report.
+	// +listType=atomic
 	ResultsFilters []CISBenchmarkFilter `json:"resultsFilters,omitempty"`
 
 	// Interpretted as a percentage to indicate at what levels of passing tests a node should be considered
@@ -98,11 +99,13 @@ type CISBenchmarkFilter struct {
 	BenchmarkSelection *CISBenchmarkSelection `json:"benchmarkSelection,omitempty" validate:"omitempty"`
 
 	// Exclude is an array of test indices to exclude from the report.
+	// +listType=atomic
 	Exclude []string `json:"exclude,omitempty"`
 
 	// Include is an array of test indices to show in the report.
 	// Is additive if IncludeUnscoredTests is true.
 	// Takes precedence over Exclude.
+	// +listType=atomic
 	Include []string `json:"include,omitempty"`
 }
 
@@ -118,12 +121,15 @@ type CISBenchmarkSelection struct {
 // ReportStatus contains the status of the automated report generation.
 type ReportStatus struct {
 	// The configured report jobs that have completed successfully.
+	// +listType=atomic
 	LastSuccessfulReportJobs []CompletedReportJob `json:"lastSuccessfulReportJobs,omitempty"`
 
 	// The configured report jobs that have failed.
+	// +listType=atomic
 	LastFailedReportJobs []CompletedReportJob `json:"lastFailedReportJobs,omitempty"`
 
 	// The set of active report jobs.
+	// +listType=atomic
 	ActiveReportJobs []ReportJob `json:"activeReportJobs,omitempty"`
 
 	// The last scheduled report job.
@@ -167,6 +173,7 @@ type EndpointsSelection struct {
 // NamesAndLabelsMatch is used to specify resource matches using both label and name selection.
 type NamesAndLabelsMatch struct {
 	// Names is an optional field that specifies a set of resources by name.
+	// +listType=atomic
 	Names []string `json:"names,omitempty" validate:"omitempty"`
 
 	// Selector is an optional field that selects a set of resources by label.
@@ -181,7 +188,7 @@ type NamesAndLabelsMatch struct {
 // GlobalReportList contains a list of GlobalReport resources.
 type GlobalReportList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata"`
+	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 	Items           []GlobalReport `json:"items"`
 }
 

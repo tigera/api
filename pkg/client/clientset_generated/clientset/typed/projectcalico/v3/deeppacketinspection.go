@@ -8,6 +8,7 @@ import (
 	context "context"
 
 	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
+	applyconfigurationgeneratedprojectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
 	scheme "github.com/tigera/api/pkg/client/clientset_generated/clientset/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
@@ -33,18 +34,21 @@ type DeepPacketInspectionInterface interface {
 	List(ctx context.Context, opts v1.ListOptions) (*projectcalicov3.DeepPacketInspectionList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
 	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *projectcalicov3.DeepPacketInspection, err error)
+	Apply(ctx context.Context, deepPacketInspection *applyconfigurationgeneratedprojectcalicov3.DeepPacketInspectionApplyConfiguration, opts v1.ApplyOptions) (result *projectcalicov3.DeepPacketInspection, err error)
+	// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
+	ApplyStatus(ctx context.Context, deepPacketInspection *applyconfigurationgeneratedprojectcalicov3.DeepPacketInspectionApplyConfiguration, opts v1.ApplyOptions) (result *projectcalicov3.DeepPacketInspection, err error)
 	DeepPacketInspectionExpansion
 }
 
 // deepPacketInspections implements DeepPacketInspectionInterface
 type deepPacketInspections struct {
-	*gentype.ClientWithList[*projectcalicov3.DeepPacketInspection, *projectcalicov3.DeepPacketInspectionList]
+	*gentype.ClientWithListAndApply[*projectcalicov3.DeepPacketInspection, *projectcalicov3.DeepPacketInspectionList, *applyconfigurationgeneratedprojectcalicov3.DeepPacketInspectionApplyConfiguration]
 }
 
 // newDeepPacketInspections returns a DeepPacketInspections
 func newDeepPacketInspections(c *ProjectcalicoV3Client, namespace string) *deepPacketInspections {
 	return &deepPacketInspections{
-		gentype.NewClientWithList[*projectcalicov3.DeepPacketInspection, *projectcalicov3.DeepPacketInspectionList](
+		gentype.NewClientWithListAndApply[*projectcalicov3.DeepPacketInspection, *projectcalicov3.DeepPacketInspectionList, *applyconfigurationgeneratedprojectcalicov3.DeepPacketInspectionApplyConfiguration](
 			"deeppacketinspections",
 			c.RESTClient(),
 			scheme.ParameterCodec,

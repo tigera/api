@@ -8,6 +8,7 @@ import (
 	context "context"
 
 	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
+	applyconfigurationgeneratedprojectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
 	scheme "github.com/tigera/api/pkg/client/clientset_generated/clientset/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
@@ -31,18 +32,19 @@ type UISettingsInterface interface {
 	List(ctx context.Context, opts v1.ListOptions) (*projectcalicov3.UISettingsList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
 	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *projectcalicov3.UISettings, err error)
+	Apply(ctx context.Context, uISettings *applyconfigurationgeneratedprojectcalicov3.UISettingsApplyConfiguration, opts v1.ApplyOptions) (result *projectcalicov3.UISettings, err error)
 	UISettingsExpansion
 }
 
 // uISettings implements UISettingsInterface
 type uISettings struct {
-	*gentype.ClientWithList[*projectcalicov3.UISettings, *projectcalicov3.UISettingsList]
+	*gentype.ClientWithListAndApply[*projectcalicov3.UISettings, *projectcalicov3.UISettingsList, *applyconfigurationgeneratedprojectcalicov3.UISettingsApplyConfiguration]
 }
 
 // newUISettings returns a UISettings
 func newUISettings(c *ProjectcalicoV3Client) *uISettings {
 	return &uISettings{
-		gentype.NewClientWithList[*projectcalicov3.UISettings, *projectcalicov3.UISettingsList](
+		gentype.NewClientWithListAndApply[*projectcalicov3.UISettings, *projectcalicov3.UISettingsList, *applyconfigurationgeneratedprojectcalicov3.UISettingsApplyConfiguration](
 			"uisettings",
 			c.RESTClient(),
 			scheme.ParameterCodec,
