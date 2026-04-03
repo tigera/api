@@ -916,6 +916,20 @@ type FelixConfigurationSpec struct {
 	// [Default: 1]
 	BPFExportBufferSizeMB *int `json:"bpfExportBufferSizeMB,omitempty" validate:"omitempty,cidrs"`
 
+	// CgroupV2Path overrides the default location where to find the cgroup hierarchy.
+	CgroupV2Path string `json:"cgroupV2Path,omitempty"`
+
+	// IstioAmbientMode configures Felix to work together with Tigera's Istio distribution.
+	// [Default: Disabled]
+	// +optional
+	IstioAmbientMode *IstioAmbientMode `json:"istioAmbientMode,omitempty"`
+
+	// IstioDSCPMark sets the value to use when directing traffic to Istio ZTunnel, when Istio is enabled. The mark is set only on
+	// SYN packets at the final hop to avoid interference with other protocols. This value is reserved by Calico and must not be used
+	// with other Istio installation. [Default: 23]
+	// +optional
+	IstioDSCPMark *numorstring.DSCP `json:"istioDSCPMark,omitempty"`
+
 	// SyslogReporterEnabled turns on the feature to write logs to Syslog. Please note that this can incur significant
 	// disk space usage when running felix on non-cluster hosts.
 	SyslogReporterEnabled *bool `json:"syslogReporterEnabled,omitempty" validate:"omitempty"`
@@ -1368,6 +1382,14 @@ type FelixConfigurationSpec struct {
 	// to have failed.
 	EgressGatewayPollFailureCount *int `json:"egressGatewayPollFailureCount,omitempty" validate:"omitempty,gt=0"`
 
+	// EgressIPHostIfacePattern is a comma-separated list of interface names which might send and receive egress traffic
+	// across the cluster boundary, after it has left an Egress Gateway pod. Felix will ensure `src_valid_mark` sysctl flags
+	// are set correctly for matching interfaces.
+	// To target multiple interfaces with a single string, the list supports regular expressions.
+	// For regular expressions, wrap the value with `/`.
+	// Example: `/^bond/,eth0` will match all interfaces that begin with `bond` and also the interface `eth0`. [Default: ""]
+	EgressIPHostIfacePattern string `json:"egressIPHostIfacePattern,omitempty"`
+
 	// RouteSyncDisabled will disable all operations performed on the route table. Set to true to
 	// run in network-policy mode only.
 	RouteSyncDisabled *bool `json:"routeSyncDisabled,omitempty"`
@@ -1621,6 +1643,15 @@ type BPFConntrackTimeouts struct {
 	// +optional
 	ICMPTimeout *BPFConntrackTimeout `json:"icmpTimeout,omitempty"`
 }
+
+// IstioAmbientMode is the enum used to enable/disable Tigera Istio mode.
+// +kubebuilder:validation:Enum=Enabled;Disabled
+type IstioAmbientMode string
+
+const (
+	IstioAmbientModeEnabled  IstioAmbientMode = "Enabled"
+	IstioAmbientModeDisabled IstioAmbientMode = "Disabled"
+)
 
 // New FelixConfiguration creates a new (zeroed) FelixConfiguration struct with the TypeMetadata
 // initialized to the current version.

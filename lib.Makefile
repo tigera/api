@@ -102,7 +102,7 @@ endif
 # This is only needed when running non-native binaries.
 register:
 ifneq ($(BUILDARCH),$(ARCH))
-	docker run --privileged --rm tonistiigi/binfmt --install all || true
+	docker run --privileged --rm calico/binfmt:qemu-v10.1.3 --install all || true
 endif
 
 # If this is a release, also tag and push additional images.
@@ -179,6 +179,9 @@ endif
 GO_BUILD_IMAGE ?= calico/go-build
 CALICO_BUILD    = $(GO_BUILD_IMAGE):$(GO_BUILD_VER)
 
+RUST_BUILD_IMAGE ?= calico/rust-build
+CALICO_RUST_BUILD = $(RUST_BUILD_IMAGE):$(RUST_BUILD_VER)
+
 # Build a binary with boring crypto support.
 # This function expects you to pass in two arguments:
 #   1st arg: path/to/input/package(s)
@@ -212,6 +215,13 @@ define build_binary
 		-e CGO_ENABLED=0 \
 		$(CALICO_BUILD) \
 		sh -c '$(GIT_CONFIG_SSH) go build -o $(2) $(if $(BUILD_TAGS),-tags $(BUILD_TAGS)) -v -buildvcs=false -ldflags "$(LDFLAGS) -s -w" $(1)'
+endef
+
+define build_binary_dir
+	$(DOCKER_RUN) \
+		-e CGO_ENABLED=0 \
+		$(CALICO_BUILD) \
+		sh -c '$(GIT_CONFIG_SSH) go build -C $(1) -o $(3) $(if $(BUILD_TAGS),-tags $(BUILD_TAGS)) -v -buildvcs=false -ldflags "$(LDFLAGS) -s -w" $(2)'
 endef
 
 # For windows builds that require cgo.
@@ -249,7 +259,12 @@ ifeq ($(GIT_USE_SSH),true)
 endif
 
 # Get version from git. We allow setting this manually for the hashrelease process.
-GIT_VERSION ?= $(shell git describe --tags --dirty --always --abbrev=12)
+# By default, includes commit count and hash (--long). During releases (RELEASE=true),
+# only the tag is used without the commit count suffix.
+GIT_VERSION ?= $(shell git describe --tags --dirty --always --abbrev=12 --long)
+ifeq ($(RELEASE),true)
+	GIT_VERSION := $(shell git describe --tags --dirty --always --abbrev=12)
+endif
 
 # Figure out version information.  To support builds from release tarballs, we default to
 # <unknown> if this isn't a git checkout.
@@ -333,6 +348,7 @@ CALICO_BASE ?= $(UBI_IMAGE)
 else
 CALICO_BASE ?= calico/base:$(CALICO_BASE_VER)
 endif
+CALICO_BASE_UBI10 ?= calico/base:$(CALICO_BASE_UBI10_VER)
 
 ifndef NO_DOCKER_PULL
 DOCKER_PULL = --pull
@@ -345,6 +361,7 @@ DOCKER_BUILD=docker buildx build --load --platform=linux/$(ARCH) $(DOCKER_PULL)\
 	--build-arg UBI_IMAGE=$(UBI_IMAGE) \
 	--build-arg GIT_VERSION=$(GIT_VERSION) \
 	--build-arg CALICO_BASE=$(CALICO_BASE) \
+	--build-arg CALICO_BASE_UBI10=$(CALICO_BASE_UBI10) \
 	--build-arg BPFTOOL_IMAGE=$(BPFTOOL_IMAGE)
 
 DOCKER_BUILD_THIRD_PARTY = $(DOCKER_BUILD) \
@@ -370,6 +387,15 @@ DOCKER_RUN := mkdir -p $(REPO_ROOT)/.go-pkg-cache bin $(GOMOD_CACHE) && \
 		-w /go/src/$(PACKAGE_NAME)
 
 DOCKER_GO_BUILD := $(DOCKER_RUN) $(CALICO_BUILD)
+
+DOCKER_RUST_BUILD := mkdir -p bin && \
+	docker run --rm \
+		--init \
+		--user $(LOCAL_USER_ID):$(LOCAL_GROUP_ID) \
+		$(EXTRA_DOCKER_ARGS) \
+		-v $(REPO_ROOT):/rust/src/github.com/projectcalico/calico:rw \
+		-w /rust/src/$(PACKAGE_NAME) \
+		$(CALICO_RUST_BUILD)
 
 # Host native build images
 HOST_NATIVE_BUILD_IMAGE ?= calico/host-native-build
@@ -488,6 +514,7 @@ define update_calico_base_pin
 	bash -c '\
 		if [[ "$(new_ver)" > "$(old_ver)" ]]; then \
 			sed -i "s/^CALICO_BASE_VER[[:space:]]*=.*/CALICO_BASE_VER=$(new_ver)/" $(1); \
+			sed -i "s/^CALICO_BASE_UBI10_VER[[:space:]]*=.*/CALICO_BASE_UBI10_VER=$(subst ubi9,ubi10,$(new_ver))/" $(1); \
 			echo "CALICO_BASE_VER is updated to $(new_ver)"; \
 		else \
 			echo "no need to update CALICO_BASE_VER"; \
@@ -583,10 +610,9 @@ git-commit:
 ###############################################################################
 
 ifdef LOCAL_CRANE
-CRANE_CMD         = bash -c $(double_quote)crane
+CRANE_CMD         = crane
 else
-CRANE_CMD         = docker run -t --entrypoint /bin/sh -v $(DOCKER_CONFIG):/root/.docker/config.json $(CALICO_BUILD) -c \
-                    $(double_quote)crane
+CRANE_CMD         = $(REPO_ROOT)/bin/crane
 endif
 
 ifdef LOCAL_PYTHON
@@ -607,10 +633,10 @@ GIT           = $(GIT_CMD)
 DOCKER        = $(DOCKER_CMD)
 RELEASE_PY3   = $(PYTHON3_CMD)
 else
-CRANE         = @echo [DRY RUN] $(CRANE_CMD)
-GIT           = @echo [DRY RUN] $(GIT_CMD)
-DOCKER        = @echo [DRY RUN] $(DOCKER_CMD)
-RELEASE_PY3   = @echo [DRY RUN] $(PYTHON3_CMD)
+CRANE         = echo [DRY RUN] $(CRANE_CMD)
+GIT           = echo [DRY RUN] $(GIT_CMD)
+DOCKER        = echo [DRY RUN] $(DOCKER_CMD)
+RELEASE_PY3   = echo [DRY RUN] $(PYTHON3_CMD)
 endif
 
 QUAY_SET_EXPIRY_SCRIPT = $(REPO_ROOT)/hack/set_quay_expiry.py
@@ -1069,8 +1095,8 @@ push-manifests-with-tag: var-require-one-of-CONFIRM-DRYRUN var-require-all-BRANC
 	$(MAKE) push-manifests IMAGETAG=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(BRANCH_NAME) EXCLUDEARCH="$(EXCLUDEARCH)"
 	$(MAKE) push-manifests IMAGETAG=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(GIT_VERSION) EXCLUDEARCH="$(EXCLUDEARCH)"
 
-# cd-common tags and pushes images with the branch name and git version. This target uses PUSH_IMAGES, BUILD_IMAGE,
-# and BRANCH_NAME env variables to figure out what to tag and where to push it to.
+# cd-common tags and pushes images with the branch name and git version. This target uses PUSH_IMAGES, BUILD_IMAGES,
+# and BRANCH_NAME env variables to figure out what to tag and where to push them to.
 cd-common: var-require-one-of-CONFIRM-DRYRUN var-require-all-BRANCH_NAME
 	$(MAKE) retag-build-images-with-registries push-images-to-registries IMAGETAG=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(BRANCH_NAME) EXCLUDEARCH="$(EXCLUDEARCH)"
 	$(MAKE) retag-build-images-with-registries push-images-to-registries IMAGETAG=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(GIT_VERSION) EXCLUDEARCH="$(EXCLUDEARCH)"
@@ -1305,9 +1331,9 @@ release-retag-dev-images-in-registry-%:
 # release-retag-dev-image-in-registry-% retags the build image specified by $* in the dev registry specified by
 # DEV_REGISTRY with the release tag specified by RELEASE_TAG. If DEV_REGISTRY is in the list of registries specified by
 # RELEASE_REGISTRIES then the retag is not done
-release-retag-dev-image-in-registry-%:
+release-retag-dev-image-in-registry-%: bin/crane
 	$(if $(filter-out $(RELEASE_REGISTRIES),$(DEV_REGISTRY)),\
-		$(CRANE) cp $(DEV_REGISTRY)/$(call unescapefs,$*):$(DEV_TAG) $(DEV_REGISTRY)/$(call unescapefs,$*):$(RELEASE_TAG))$(double_quote)
+		$(CRANE) cp $(DEV_REGISTRY)/$(call unescapefs,$*):$(DEV_TAG) $(DEV_REGISTRY)/$(call unescapefs,$*):$(RELEASE_TAG))
 
 # release-dev-images-to-registry-% copies and retags all the build / arch images specified by BUILD_IMAGES and
 # VALIDARCHES from the registry specified by DEV_REGISTRY to the registry specified by RELEASE_REGISTRY using the tag
@@ -1317,16 +1343,16 @@ release-dev-images-to-registry-%:
 
 # release-dev-image-to-registry-% copies the build image and build arch images specified by $* and VALIDARCHES from
 # the dev repo specified by DEV_TAG and RELEASE.
-release-dev-image-to-registry-%:
+release-dev-image-to-registry-%: bin/crane
 	$(if $(SKIP_MANIFEST_RELEASE),,\
-		$(CRANE) cp $(DEV_REGISTRY)/$(call unescapefs,$*):$(DEV_TAG) $(RELEASE_REGISTRY)/$(call unescapefs,$*):$(RELEASE_TAG))$(double_quote)
+		$(CRANE) cp $(DEV_REGISTRY)/$(call unescapefs,$*):$(DEV_TAG) $(RELEASE_REGISTRY)/$(call unescapefs,$*):$(RELEASE_TAG))
 	$(if $(SKIP_ARCH_RELEASE),,\
 		$(MAKE) $(addprefix release-dev-image-arch-to-registry-,$(VALIDARCHES)) BUILD_IMAGE=$(call unescapefs,$*))
 
 # release-dev-image-to-registry-% copies the build arch image specified by BUILD_IMAGE and ARCH from the dev repo
 # specified by DEV_TAG and RELEASE.
-release-dev-image-arch-to-registry-%:
-	$(CRANE) cp $(DEV_REGISTRY)/$(BUILD_IMAGE):$(DEV_TAG)-$* $(RELEASE_REGISTRY)/$(BUILD_IMAGE):$(RELEASE_TAG)-$*$(double_quote)
+release-dev-image-arch-to-registry-%: bin/crane
+	$(CRANE) cp $(DEV_REGISTRY)/$(BUILD_IMAGE):$(DEV_TAG)-$* $(RELEASE_REGISTRY)/$(BUILD_IMAGE):$(RELEASE_TAG)-$*
 
 # release-prereqs checks that the environment is configured properly to create a release.
 .PHONY: release-prereqs
@@ -1340,23 +1366,42 @@ check-dirty:
 	@if [ "$$(git --no-pager diff --stat)" != "" ]; then \
 	echo "The following files are dirty"; git --no-pager diff; exit 1; fi
 
-# This setup is used to download and install the 'crane' binary into the local bin/ directory.
-# The binary will be placed at: ./bin/crane
-# Normalize architecture for go-containerregistry filenames
-CRANE_BUILDARCH := $(shell uname -m | sed 's/amd64/x86_64/;s/x86_64/x86_64/;s/aarch64/arm64/')
-ifeq ($(CRANE_BUILDARCH),)
-  $(error Unsupported or unknown architecture: $(shell uname -m))
-endif
-CRANE_FILENAME := go-containerregistry_Linux_$(CRANE_BUILDARCH).tar.gz
-CRANE_URL := https://github.com/google/go-containerregistry/releases/download/$(CRANE_VERSION)/$(CRANE_FILENAME)
+.PHONY: bin/crane
+
+# This setup is used to download and install the `crane` binary into $(REPO_ROOT)/bin/crane (or crane.exe for Windows).
+
+.PHONY: bin/crane
+CRANE_FILENAME = go-containerregistry_$(CRANE_OS)_$(CRANE_BUILDARCH).tar.gz
+CRANE_URL = https://github.com/google/go-containerregistry/releases/download/$(CRANE_VERSION)/$(CRANE_FILENAME)
+
+# Special case for Windows - we don't use this yet, it will need testing
+ifeq ($(OS),Windows_NT)
+CRANE_BUILDARCH = x86_64
+CRANE_OS = Windows
+CRANE_CMD = $(CRANE_CMD).exe
 
 # Install crane binary into bin/
-bin/crane:
-	mkdir -p bin
-	$(eval CRANE_TMP := $(shell mktemp -d))
-	curl -sSfL --retry 5 -o $(CRANE_TMP)/crane.tar.gz $(CRANE_URL)
-	tar -xzf $(CRANE_TMP)/crane.tar.gz -C $(CRANE_TMP) crane
-	mv $(CRANE_TMP)/crane bin/crane
+bin/crane: $(REPO_ROOT)/bin/crane.exe
+$(REPO_ROOT)/bin/crane.exe:
+	$(info ::: Downloading crane from $(CRANE_URL))
+	@mkdir -p $(REPO_ROOT)/bin
+	@curl -sSfL --retry 5 $(CRANE_URL) | tar zx -C $(REPO_ROOT)/bin crane.exe
+
+else
+
+# All other OSes (macos/Linux)
+# Normalize architecture for go-containerregistry filenames
+CRANE_BUILDARCH := $(shell echo $(BUILDARCH) | sed -e 's/aarch64/arm64/' -e 's/amd64/x86_64/')
+CRANE_OS := $(shell uname -s)
+# Install crane binary into bin/
+bin/crane: $(REPO_ROOT)/bin/crane
+$(REPO_ROOT)/bin/crane:
+	$(info ::: Downloading crane from $(CRANE_URL))
+	@mkdir -p $(REPO_ROOT)/bin
+	@curl -sSfL --retry 5 $(CRANE_URL) | tar zx -C $(REPO_ROOT)/bin crane
+
+endif # Windows_NT
+
 
 ###############################################################################
 # Common functions for launching a local Kubernetes control plane.
@@ -1382,7 +1427,15 @@ run-k8s-apiserver: stop-k8s-apiserver run-etcd
 		--tls-private-key-file=/home/user/certs/kubernetes-key.pem \
 		--enable-priority-and-fairness=false \
 		--max-mutating-requests-inflight=0 \
-		--max-requests-inflight=0
+		--max-requests-inflight=0 \
+		--enable-aggregator-routing \
+		--requestheader-client-ca-file=/home/user/certs/ca.pem \
+		--requestheader-username-headers=X-Remote-User \
+		--requestheader-group-headers=X-Remote-Group \
+		--requestheader-extra-headers-prefix=X-Remote-Extra- \
+		--proxy-client-cert-file=/home/user/certs/kubernetes.pem \
+		--proxy-client-key-file=/home/user/certs/kubernetes-key.pem
+
 
 	# Wait until the apiserver is accepting requests.
 	while ! docker exec $(APISERVER_NAME) kubectl get namespace default; do echo "Waiting for apiserver to come up..."; sleep 2; done
@@ -1591,6 +1644,8 @@ BOOTSTRAP_PASSWORD := $(shell cat /dev/urandom | LC_CTYPE=C tr -dc A-Za-z0-9 | h
 ELASTIC_PASSWORD := $(BOOTSTRAP_PASSWORD)
 
 ELASTIC_IMAGE   ?= docker.elastic.co/elasticsearch/elasticsearch:$(shell grep -o '^ELASTIC_VERSION=[0-9\.]*' $(REPO_ROOT)/third_party/elasticsearch/Makefile | cut -d "=" -f 2)
+ELASTIC_EXTRA_DOCKER_ARGS ?=
+ELASTIC_MEMORY ?= 2GB
 
 ## Run elasticsearch as a container (tigera-elastic)
 .PHONY: run-elastic
@@ -1598,11 +1653,12 @@ run-elastic: $(REPO_ROOT)/.elasticsearch.created
 $(REPO_ROOT)/.elasticsearch.created:
 	# Run ES on Docker.
 	docker run --detach \
-	-m 2GB \
+	-m $(ELASTIC_MEMORY) \
 	--net=host \
 	--name=tigera-elastic \
 	-e "discovery.type=single-node" \
 	-e "xpack.security.enabled=false" \
+	$(ELASTIC_EXTRA_DOCKER_ARGS) \
 	$(ELASTIC_IMAGE)
 
 	# Wait until ES is accepting requests.
@@ -1624,32 +1680,6 @@ stop-elastic:
 ###############################################################################
 # Common functions for building windows images.
 ###############################################################################
-
-# When running on semaphore, just copy the docker config, otherwise run
-# 'docker-credential-gcr configure-docker' as well.
-ifdef SEMAPHORE
-DOCKER_CREDENTIAL_CMD = cp /root/.docker/config.json_host /root/.docker/config.json
-else
-DOCKER_CREDENTIAL_CMD = cp /root/.docker/config.json_host /root/.docker/config.json && \
-						docker-credential-gcr configure-docker
-endif
-
-# This needs the $(WINDOWS_DIST)/bin/docker-credential-gcr binary in $PATH and
-# also the local ~/.config/gcloud dir to be able to push to gcr.io.  It mounts
-# $(DOCKER_CONFIG) and copies it so that it can be written to on the container,
-# but not have any effect on the host config.
-CRANE_BINDMOUNT_CMD := \
-	docker run --rm \
-		--net=host \
-		--init \
-		--entrypoint /bin/sh \
-		-e LOCAL_USER_ID=$(LOCAL_USER_ID) \
-		-v $(CURDIR):/go/src/$(PACKAGE_NAME):rw \
-		-v $(DOCKER_CONFIG):/root/.docker/config.json_host:ro \
-		-e PATH=$${PATH}:/go/src/$(PACKAGE_NAME)/$(WINDOWS_DIST)/bin \
-		-v $(HOME)/.config/gcloud:/root/.config/gcloud \
-		-w /go/src/$(PACKAGE_NAME) \
-		$(CALICO_BUILD) -c $(double_quote)$(DOCKER_CREDENTIAL_CMD) && crane
 
 DOCKER_MANIFEST_CMD := docker manifest
 
@@ -1741,14 +1771,6 @@ docker-credential-gcr-binary: var-require-all-WINDOWS_DIST-DOCKER_CREDENTIAL_VER
 # lib.Makefile) on the specific package Makefile otherwise they are not correctly
 # recognized.
 
-# Translate WINDOWS_VERSIONS defined in metadata.mk to Windows LTSC versions.
-# For some enterprise components like fluentd for windows, we build off ltsc2019
-# but re-tag it to 1809 due to the version number is being used in some old releases.
-# (see version mapping note in https://github.com/tigera/fluentd-base/blob/windows-versions/README.md).
-# FIXME fix the confusing 1809 to ltsc2019 Windows version mapping.
-WINDOWS_LTSC_VERSION_1809 := windows-ltsc2019
-WINDOWS_LTSC_VERSION_ltsc2022 := windows-ltsc2022
-
 windows-sub-image-%: var-require-all-GIT_VERSION-WINDOWS_IMAGE-WINDOWS_DIST-WINDOWS_IMAGE_REQS
 	# ensure dir for windows image tars exits
 	-mkdir -p $(WINDOWS_DIST)
@@ -1760,7 +1782,6 @@ windows-sub-image-%: var-require-all-GIT_VERSION-WINDOWS_IMAGE-WINDOWS_DIST-WIND
 		--build-arg GIT_VERSION=$(GIT_VERSION) \
 		--build-arg THIRD_PARTY_REGISTRY=$(THIRD_PARTY_REGISTRY) \
 		--build-arg THIRD_PARTY_RELEASE_BRANCH=$(THIRD_PARTY_RELEASE_BRANCH) \
-		--build-arg WINDOWS_LTSC_VERSION=$(WINDOWS_LTSC_VERSION_$*) \
 		--build-arg WINDOWS_VERSION=$* \
 		-f Dockerfile-windows .
 
@@ -1770,7 +1791,7 @@ image-windows: setup-windows-builder var-require-all-WINDOWS_VERSIONS
 		$(MAKE) windows-sub-image-$${version}; \
 	done;
 
-release-windows-with-tag: var-require-one-of-CONFIRM-DRYRUN var-require-all-IMAGETAG-DEV_REGISTRIES image-windows docker-credential-gcr-binary
+release-windows-with-tag: var-require-one-of-CONFIRM-DRYRUN var-require-all-IMAGETAG-DEV_REGISTRIES image-windows docker-credential-gcr-binary bin/crane
 	for registry in $(DEV_REGISTRIES); do \
 		echo Pushing Windows images to $${registry}; \
 		all_images=""; \
@@ -1779,7 +1800,7 @@ release-windows-with-tag: var-require-one-of-CONFIRM-DRYRUN var-require-all-IMAG
 			image_tar="$(WINDOWS_DIST)/$(WINDOWS_IMAGE)-$(GIT_VERSION)-$${win_ver}.tar"; \
 			image="$${registry}/$(WINDOWS_IMAGE):$(IMAGETAG)-windows-$${win_ver}"; \
 			echo Pushing image $${image} ...; \
-			$(CRANE_BINDMOUNT) push $${image_tar} $${image}$(double_quote) & \
+			$(CRANE) push $${image_tar} $${image} & \
 			all_images="$${all_images} $${image}"; \
 		done; \
 		wait; \
@@ -1793,10 +1814,10 @@ release-windows-with-tag: var-require-one-of-CONFIRM-DRYRUN var-require-all-IMAG
 		$(RELEASE_PY3) $(QUAY_SET_EXPIRY_SCRIPT) add --expiry-days=$(QUAY_EXPIRE_DAYS) $${manifest_image} $${all_images} || true; \
 	done;
 
-release-windows: var-require-one-of-CONFIRM-DRYRUN var-require-all-DEV_REGISTRIES-WINDOWS_IMAGE var-require-one-of-VERSION-BRANCH_NAME
+release-windows: var-require-one-of-CONFIRM-DRYRUN var-require-all-DEV_REGISTRIES-WINDOWS_IMAGE var-require-one-of-VERSION-BRANCH_NAME bin/crane
 	describe_tag=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(GIT_VERSION); \
 	release_tag=$(if $(VERSION),$(VERSION),$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(BRANCH_NAME)); \
 	$(MAKE) release-windows-with-tag IMAGETAG=$${describe_tag}; \
 	for registry in $(DEV_REGISTRIES); do \
-		$(CRANE_BINDMOUNT) cp $${registry}/$(WINDOWS_IMAGE):$${describe_tag} $${registry}/$(WINDOWS_IMAGE):$${release_tag}$(double_quote); \
+		$(CRANE) cp $${registry}/$(WINDOWS_IMAGE):$${describe_tag} $${registry}/$(WINDOWS_IMAGE):$${release_tag}; \
 	done;
