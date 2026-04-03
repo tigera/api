@@ -8,6 +8,7 @@ import (
 	context "context"
 
 	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
+	applyconfigurationgeneratedprojectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
 	scheme "github.com/tigera/api/pkg/client/clientset_generated/clientset/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
@@ -33,18 +34,21 @@ type SecurityEventWebhookInterface interface {
 	List(ctx context.Context, opts v1.ListOptions) (*projectcalicov3.SecurityEventWebhookList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
 	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *projectcalicov3.SecurityEventWebhook, err error)
+	Apply(ctx context.Context, securityEventWebhook *applyconfigurationgeneratedprojectcalicov3.SecurityEventWebhookApplyConfiguration, opts v1.ApplyOptions) (result *projectcalicov3.SecurityEventWebhook, err error)
+	// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
+	ApplyStatus(ctx context.Context, securityEventWebhook *applyconfigurationgeneratedprojectcalicov3.SecurityEventWebhookApplyConfiguration, opts v1.ApplyOptions) (result *projectcalicov3.SecurityEventWebhook, err error)
 	SecurityEventWebhookExpansion
 }
 
 // securityEventWebhooks implements SecurityEventWebhookInterface
 type securityEventWebhooks struct {
-	*gentype.ClientWithList[*projectcalicov3.SecurityEventWebhook, *projectcalicov3.SecurityEventWebhookList]
+	*gentype.ClientWithListAndApply[*projectcalicov3.SecurityEventWebhook, *projectcalicov3.SecurityEventWebhookList, *applyconfigurationgeneratedprojectcalicov3.SecurityEventWebhookApplyConfiguration]
 }
 
 // newSecurityEventWebhooks returns a SecurityEventWebhooks
 func newSecurityEventWebhooks(c *ProjectcalicoV3Client) *securityEventWebhooks {
 	return &securityEventWebhooks{
-		gentype.NewClientWithList[*projectcalicov3.SecurityEventWebhook, *projectcalicov3.SecurityEventWebhookList](
+		gentype.NewClientWithListAndApply[*projectcalicov3.SecurityEventWebhook, *projectcalicov3.SecurityEventWebhookList, *applyconfigurationgeneratedprojectcalicov3.SecurityEventWebhookApplyConfiguration](
 			"securityeventwebhooks",
 			c.RESTClient(),
 			scheme.ParameterCodec,
