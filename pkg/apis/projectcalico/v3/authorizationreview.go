@@ -27,7 +27,7 @@ const (
 // AuthorizationReviewList is a list of AuthorizationReview objects.
 type AuthorizationReviewList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata"`
+	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 	Items           []AuthorizationReview `json:"items"`
 }
 
@@ -47,6 +47,7 @@ type AuthorizationReview struct {
 type AuthorizationReviewSpec struct {
 	// The set of resource attributes that are being checked. Each resource attribute is expanded into individual
 	// kind/resource and verbs.
+	// +listType=atomic
 	ResourceAttributes []AuthorizationReviewResourceAttributes `json:"resourceAttributes,omitempty" validate:"omitempty"`
 
 	// User is the user you're testing for.
@@ -55,6 +56,7 @@ type AuthorizationReviewSpec struct {
 	User string `json:"user,omitempty" validate:"omitempty"`
 	// Groups is the groups you're testing for.
 	// +optional
+	// +listType=atomic
 	Groups []string `json:"groups,omitempty" validate:"omitempty"`
 	// Extra corresponds to the user.Info.GetExtra() method from the authenticator.  Since that is input to the authorizer
 	// it needs a reflection here.
@@ -69,14 +71,17 @@ type AuthorizationReviewResourceAttributes struct {
 	// The API Group to check.
 	APIGroup string `json:"apiGroup,omitempty" validate:"omitempty"`
 	// The set of resources to check within the same API Group.
+	// +listType=atomic
 	Resources []string `json:"resources,omitempty" validate:"omitempty"`
 	// The set of verbs to check. This is expanded for each resource and within the same API Group.
+	// +listType=atomic
 	Verbs []string `json:"verbs,omitempty" validate:"omitempty"`
 }
 
 type AuthorizationReviewStatus struct {
 	// The set of authorized resource actions. A given API Group and resource combination will appear at most once in
 	// this slice.
+	// +listType=atomic
 	AuthorizedResourceVerbs []AuthorizedResourceVerbs `json:"authorizedResourceVerbs,omitempty" validate:"omitempty"`
 }
 
@@ -89,6 +94,7 @@ type AuthorizedResourceVerbs struct {
 	// which the user is authorized to perform that action. This is calculated to avoid duplication such that a single
 	// resource instance can only be associated with a single entry in this slice. This allows a consumer of this API
 	// to issue a minimal set of queries (e.g. watches) that cover, uniquely, the authorized set of resources.
+	// +listType=atomic
 	Verbs []AuthorizedResourceVerb `json:"verbs,omitempty" validate:"omitempty,dive"`
 }
 
@@ -96,6 +102,7 @@ type AuthorizedResourceVerb struct {
 	// The verb.
 	Verb string `json:"verb"`
 	// The group of resource instances that are authorized for this verb.
+	// +listType=atomic
 	ResourceGroups []AuthorizedResourceGroup `json:"resourceGroups"`
 }
 

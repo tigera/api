@@ -3,28 +3,27 @@
 #################################################################################################
 
 # Calico toolchain versions and the calico/base image to use.
-GO_BUILD_VER=1.25.7-llvm18.1.8-k8s1.34.4
+GO_BUILD_VER=1.26.1-llvm20.1.8-k8s1.35.3
 RUST_BUILD_VER=1.93.1
 
 # Calico Enterprise shipping images now builds on UBI 10. For Calico OSS to Enterprise merges,
 # please don't downgrade the base image back to UBI 9.
-CALICO_BASE_VER=ubi10-1771532994
+CALICO_BASE_VER=ubi10-1774386983
 
-# Version of Kubernetes to use for tests, rancher/kubectl, and kubectl binary release in
-# confd and kube-controllers.
-K8S_VERSION=v1.34.4
+# Version of Kubernetes to use for tests, rancher/kubectl, and kubectl binary release.
+K8S_VERSION=v1.35.2
 
 # Version of various tools used in the build and tests.
 COREDNS_VERSION=1.5.2
-CRANE_VERSION=v0.20.7
+CRANE_VERSION=v0.21.3
 ETCD_VERSION=v3.5.24
 GHR_VERSION=v0.17.0
 GITHUB_CLI_VERSION=2.76.2
-GOTESTSUM_VERSION=v1.12.3
+GOTESTSUM_VERSION=v1.13.0
 HELM_VERSION=v3.16.4
-KINDEST_NODE_VERSION=v1.34.3
+KINDEST_NODE_VERSION=v1.35.1
 KINDEST_NODE_VERSION_DUAL_TOR=v1.24.7
-KIND_VERSION=v0.29.0
+KIND_VERSION=v0.31.0
 
 # This gets embedded into node as the Calico version, the Enterprise release
 # is based off of. This should be updated everytime a new opensource Calico

@@ -42,7 +42,7 @@ func NewGlobalReportInformer(client clientset.Interface, resyncPeriod time.Durat
 // one. This reduces memory footprint and number of connections to the server.
 func NewFilteredGlobalReportInformer(client clientset.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
 	return cache.NewSharedIndexInformer(
-		&cache.ListWatch{
+		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(options v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
@@ -67,7 +67,7 @@ func NewFilteredGlobalReportInformer(client clientset.Interface, resyncPeriod ti
 				}
 				return client.ProjectcalicoV3().GlobalReports().Watch(ctx, options)
 			},
-		},
+		}, client),
 		&apisprojectcalicov3.GlobalReport{},
 		resyncPeriod,
 		indexers,
