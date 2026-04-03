@@ -6,19 +6,20 @@ package fake
 
 import (
 	v3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	projectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
+	projectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
+	typedprojectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
 	gentype "k8s.io/client-go/gentype"
 )
 
 // fakeAlertExceptions implements AlertExceptionInterface
 type fakeAlertExceptions struct {
-	*gentype.FakeClientWithList[*v3.AlertException, *v3.AlertExceptionList]
+	*gentype.FakeClientWithListAndApply[*v3.AlertException, *v3.AlertExceptionList, *projectcalicov3.AlertExceptionApplyConfiguration]
 	Fake *FakeProjectcalicoV3
 }
 
-func newFakeAlertExceptions(fake *FakeProjectcalicoV3) projectcalicov3.AlertExceptionInterface {
+func newFakeAlertExceptions(fake *FakeProjectcalicoV3) typedprojectcalicov3.AlertExceptionInterface {
 	return &fakeAlertExceptions{
-		gentype.NewFakeClientWithList[*v3.AlertException, *v3.AlertExceptionList](
+		gentype.NewFakeClientWithListAndApply[*v3.AlertException, *v3.AlertExceptionList, *projectcalicov3.AlertExceptionApplyConfiguration](
 			fake.Fake,
 			"",
 			v3.SchemeGroupVersion.WithResource("alertexceptions"),

@@ -84,10 +84,13 @@ type LicenseKeyStatus struct {
 
 	// List of features that are available via the applied license
 	// +optional
+	// +listType=atomic
 	Features []string `json:"features,omitempty" yaml:"features" validate:"omitempty"`
 
 	// Conditions is a list of conditions related to the license key. This can be used to indicate if the license is valid, expired, etc.
 	// +optional
+	// +listType=map
+	// +listMapKey=type
 	Conditions []metav1.Condition `json:"conditions,omitempty" yaml:"conditions" validate:"omitempty"`
 }
 
@@ -109,7 +112,7 @@ const (
 // (even though there should only be one).
 type LicenseKeyList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata"`
+	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 	Items           []LicenseKey `json:"items"`
 }
 

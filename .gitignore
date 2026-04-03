@@ -23,3 +23,7 @@ bin/
 
 pkg/report
 *.orig
+
+.openapi-gen.log
+.openapi-violations.log
+.openapi-new-violations.log
