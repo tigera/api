@@ -8,6 +8,7 @@ import (
 	context "context"
 
 	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
+	applyconfigurationgeneratedprojectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
 	scheme "github.com/tigera/api/pkg/client/clientset_generated/clientset/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
@@ -33,18 +34,21 @@ type ManagedClusterInterface interface {
 	List(ctx context.Context, opts v1.ListOptions) (*projectcalicov3.ManagedClusterList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
 	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *projectcalicov3.ManagedCluster, err error)
+	Apply(ctx context.Context, managedCluster *applyconfigurationgeneratedprojectcalicov3.ManagedClusterApplyConfiguration, opts v1.ApplyOptions) (result *projectcalicov3.ManagedCluster, err error)
+	// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
+	ApplyStatus(ctx context.Context, managedCluster *applyconfigurationgeneratedprojectcalicov3.ManagedClusterApplyConfiguration, opts v1.ApplyOptions) (result *projectcalicov3.ManagedCluster, err error)
 	ManagedClusterExpansion
 }
 
 // managedClusters implements ManagedClusterInterface
 type managedClusters struct {
-	*gentype.ClientWithList[*projectcalicov3.ManagedCluster, *projectcalicov3.ManagedClusterList]
+	*gentype.ClientWithListAndApply[*projectcalicov3.ManagedCluster, *projectcalicov3.ManagedClusterList, *applyconfigurationgeneratedprojectcalicov3.ManagedClusterApplyConfiguration]
 }
 
 // newManagedClusters returns a ManagedClusters
 func newManagedClusters(c *ProjectcalicoV3Client) *managedClusters {
 	return &managedClusters{
-		gentype.NewClientWithList[*projectcalicov3.ManagedCluster, *projectcalicov3.ManagedClusterList](
+		gentype.NewClientWithListAndApply[*projectcalicov3.ManagedCluster, *projectcalicov3.ManagedClusterList, *applyconfigurationgeneratedprojectcalicov3.ManagedClusterApplyConfiguration](
 			"managedclusters",
 			c.RESTClient(),
 			scheme.ParameterCodec,

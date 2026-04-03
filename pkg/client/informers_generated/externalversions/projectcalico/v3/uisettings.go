@@ -42,7 +42,7 @@ func NewUISettingsInformer(client clientset.Interface, resyncPeriod time.Duratio
 // one. This reduces memory footprint and number of connections to the server.
 func NewFilteredUISettingsInformer(client clientset.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
 	return cache.NewSharedIndexInformer(
-		&cache.ListWatch{
+		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(options v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
@@ -67,7 +67,7 @@ func NewFilteredUISettingsInformer(client clientset.Interface, resyncPeriod time
 				}
 				return client.ProjectcalicoV3().UISettings().Watch(ctx, options)
 			},
-		},
+		}, client),
 		&apisprojectcalicov3.UISettings{},
 		resyncPeriod,
 		indexers,
