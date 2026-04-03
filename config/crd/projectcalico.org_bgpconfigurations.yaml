@@ -41,15 +41,12 @@ spec:
                   items:
                     properties:
                       name:
-                        maxLength: 253
                         type: string
                       value:
-                        maxLength: 40
                         pattern: ^(\d+):(\d+)$|^(\d+):(\d+):(\d+)$
                         type: string
                     type: object
                     x-kubernetes-map-type: atomic
-                  maxItems: 500
                   type: array
                   x-kubernetes-list-type: set
                 extensions:
@@ -110,12 +107,9 @@ spec:
                       communities:
                         items:
                           type: string
-                        maxItems: 50
                         type: array
-                        x-kubernetes-list-type: atomic
                     type: object
                     x-kubernetes-map-type: atomic
-                  maxItems: 500
                   type: array
                   x-kubernetes-list-type: set
                 programClusterRoutes:
@@ -175,11 +169,6 @@ spec:
                   rule:
                     "!has(self.nodeMeshMaxRestartTime) || !has(self.nodeToNodeMeshEnabled)
                     || self.nodeToNodeMeshEnabled == true"
-                - message: communities are defined but not used in prefixAdvertisements
-                  reason: FieldValueInvalid
-                  rule:
-                    "!has(self.communities) || size(self.communities) == 0 || (has(self.prefixAdvertisements)
-                    && size(self.prefixAdvertisements) > 0)"
           required:
             - metadata
             - spec

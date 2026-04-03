@@ -43,7 +43,6 @@ spec:
                             type: string
                         type: object
                       type: array
-                      x-kubernetes-list-type: atomic
                   type: object
                 downloadTemplates:
                   items:
@@ -56,7 +55,6 @@ spec:
                         type: string
                     type: object
                   type: array
-                  x-kubernetes-list-type: atomic
                 includeCISBenchmarkData:
                   type: boolean
                 includeEndpointData:

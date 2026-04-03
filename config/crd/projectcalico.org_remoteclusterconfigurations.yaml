@@ -45,9 +45,6 @@ spec:
                   type: object
                   x-kubernetes-map-type: atomic
                 datastoreType:
-                  enum:
-                    - etcdv3
-                    - kubernetes
                   type: string
                 etcdCACert:
                   type: string

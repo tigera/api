@@ -47,7 +47,6 @@ spec:
                       - matchPattern
                     type: object
                   type: array
-                  x-kubernetes-list-type: atomic
                 nodeSelector:
                   type: string
               type: object
