@@ -1,4 +1,4 @@
-// Copyright (c) 2018,2020-2021 Tigera, Inc. All rights reserved.
+// Copyright (c) 2018,2020-2021,2026 Tigera, Inc. All rights reserved.
 
 package v3
 
@@ -28,8 +28,9 @@ type RemoteClusterConfiguration struct {
 
 // RemoteClusterConfigurationSpec contains the values of describing the cluster.
 type RemoteClusterConfigurationSpec struct {
-	// Indicates the datastore to use. If unspecified, defaults to etcdv3
-	DatastoreType string `json:"datastoreType,omitempty" validate:"omitempty,datastoreType"`
+	// Indicates the datastore to use. If unspecified, defaults to etcdv3.
+	// +kubebuilder:validation:Enum=etcdv3;kubernetes
+	DatastoreType string `json:"datastoreType,omitempty" validate:"omitempty"`
 
 	// Specifies a Secret to read for the RemoteClusterconfiguration.
 	// If defined all datastore configuration in this struct will be cleared
@@ -110,7 +111,7 @@ type KubeConfig struct {
 // RemoteClusterConfigurationList contains a list of RemoteClusterConfiguration resources
 type RemoteClusterConfigurationList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata"`
+	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 	Items           []RemoteClusterConfiguration `json:"items"`
 }
 
