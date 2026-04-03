@@ -6,20 +6,19 @@ package fake
 
 import (
 	v3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	projectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
-	typedprojectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
+	projectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
 	gentype "k8s.io/client-go/gentype"
 )
 
 // fakeNetworkPolicies implements NetworkPolicyInterface
 type fakeNetworkPolicies struct {
-	*gentype.FakeClientWithListAndApply[*v3.NetworkPolicy, *v3.NetworkPolicyList, *projectcalicov3.NetworkPolicyApplyConfiguration]
+	*gentype.FakeClientWithList[*v3.NetworkPolicy, *v3.NetworkPolicyList]
 	Fake *FakeProjectcalicoV3
 }
 
-func newFakeNetworkPolicies(fake *FakeProjectcalicoV3, namespace string) typedprojectcalicov3.NetworkPolicyInterface {
+func newFakeNetworkPolicies(fake *FakeProjectcalicoV3, namespace string) projectcalicov3.NetworkPolicyInterface {
 	return &fakeNetworkPolicies{
-		gentype.NewFakeClientWithListAndApply[*v3.NetworkPolicy, *v3.NetworkPolicyList, *projectcalicov3.NetworkPolicyApplyConfiguration](
+		gentype.NewFakeClientWithList[*v3.NetworkPolicy, *v3.NetworkPolicyList](
 			fake.Fake,
 			namespace,
 			v3.SchemeGroupVersion.WithResource("networkpolicies"),

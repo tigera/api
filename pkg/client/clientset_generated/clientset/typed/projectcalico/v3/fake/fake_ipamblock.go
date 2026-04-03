@@ -6,20 +6,19 @@ package fake
 
 import (
 	v3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	projectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
-	typedprojectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
+	projectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
 	gentype "k8s.io/client-go/gentype"
 )
 
 // fakeIPAMBlocks implements IPAMBlockInterface
 type fakeIPAMBlocks struct {
-	*gentype.FakeClientWithListAndApply[*v3.IPAMBlock, *v3.IPAMBlockList, *projectcalicov3.IPAMBlockApplyConfiguration]
+	*gentype.FakeClientWithList[*v3.IPAMBlock, *v3.IPAMBlockList]
 	Fake *FakeProjectcalicoV3
 }
 
-func newFakeIPAMBlocks(fake *FakeProjectcalicoV3) typedprojectcalicov3.IPAMBlockInterface {
+func newFakeIPAMBlocks(fake *FakeProjectcalicoV3) projectcalicov3.IPAMBlockInterface {
 	return &fakeIPAMBlocks{
-		gentype.NewFakeClientWithListAndApply[*v3.IPAMBlock, *v3.IPAMBlockList, *projectcalicov3.IPAMBlockApplyConfiguration](
+		gentype.NewFakeClientWithList[*v3.IPAMBlock, *v3.IPAMBlockList](
 			fake.Fake,
 			"",
 			v3.SchemeGroupVersion.WithResource("ipamblocks"),

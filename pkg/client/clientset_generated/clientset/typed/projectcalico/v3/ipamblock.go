@@ -8,7 +8,6 @@ import (
 	context "context"
 
 	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	applyconfigurationgeneratedprojectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
 	scheme "github.com/tigera/api/pkg/client/clientset_generated/clientset/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
@@ -32,19 +31,18 @@ type IPAMBlockInterface interface {
 	List(ctx context.Context, opts v1.ListOptions) (*projectcalicov3.IPAMBlockList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
 	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *projectcalicov3.IPAMBlock, err error)
-	Apply(ctx context.Context, iPAMBlock *applyconfigurationgeneratedprojectcalicov3.IPAMBlockApplyConfiguration, opts v1.ApplyOptions) (result *projectcalicov3.IPAMBlock, err error)
 	IPAMBlockExpansion
 }
 
 // iPAMBlocks implements IPAMBlockInterface
 type iPAMBlocks struct {
-	*gentype.ClientWithListAndApply[*projectcalicov3.IPAMBlock, *projectcalicov3.IPAMBlockList, *applyconfigurationgeneratedprojectcalicov3.IPAMBlockApplyConfiguration]
+	*gentype.ClientWithList[*projectcalicov3.IPAMBlock, *projectcalicov3.IPAMBlockList]
 }
 
 // newIPAMBlocks returns a IPAMBlocks
 func newIPAMBlocks(c *ProjectcalicoV3Client) *iPAMBlocks {
 	return &iPAMBlocks{
-		gentype.NewClientWithListAndApply[*projectcalicov3.IPAMBlock, *projectcalicov3.IPAMBlockList, *applyconfigurationgeneratedprojectcalicov3.IPAMBlockApplyConfiguration](
+		gentype.NewClientWithList[*projectcalicov3.IPAMBlock, *projectcalicov3.IPAMBlockList](
 			"ipamblocks",
 			c.RESTClient(),
 			scheme.ParameterCodec,

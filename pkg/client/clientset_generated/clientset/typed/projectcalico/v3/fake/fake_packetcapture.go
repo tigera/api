@@ -6,20 +6,19 @@ package fake
 
 import (
 	v3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	projectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
-	typedprojectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
+	projectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
 	gentype "k8s.io/client-go/gentype"
 )
 
 // fakePacketCaptures implements PacketCaptureInterface
 type fakePacketCaptures struct {
-	*gentype.FakeClientWithListAndApply[*v3.PacketCapture, *v3.PacketCaptureList, *projectcalicov3.PacketCaptureApplyConfiguration]
+	*gentype.FakeClientWithList[*v3.PacketCapture, *v3.PacketCaptureList]
 	Fake *FakeProjectcalicoV3
 }
 
-func newFakePacketCaptures(fake *FakeProjectcalicoV3, namespace string) typedprojectcalicov3.PacketCaptureInterface {
+func newFakePacketCaptures(fake *FakeProjectcalicoV3, namespace string) projectcalicov3.PacketCaptureInterface {
 	return &fakePacketCaptures{
-		gentype.NewFakeClientWithListAndApply[*v3.PacketCapture, *v3.PacketCaptureList, *projectcalicov3.PacketCaptureApplyConfiguration](
+		gentype.NewFakeClientWithList[*v3.PacketCapture, *v3.PacketCaptureList](
 			fake.Fake,
 			namespace,
 			v3.SchemeGroupVersion.WithResource("packetcaptures"),

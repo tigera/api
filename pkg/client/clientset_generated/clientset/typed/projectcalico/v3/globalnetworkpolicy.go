@@ -8,7 +8,6 @@ import (
 	context "context"
 
 	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	applyconfigurationgeneratedprojectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
 	scheme "github.com/tigera/api/pkg/client/clientset_generated/clientset/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
@@ -32,19 +31,18 @@ type GlobalNetworkPolicyInterface interface {
 	List(ctx context.Context, opts v1.ListOptions) (*projectcalicov3.GlobalNetworkPolicyList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
 	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *projectcalicov3.GlobalNetworkPolicy, err error)
-	Apply(ctx context.Context, globalNetworkPolicy *applyconfigurationgeneratedprojectcalicov3.GlobalNetworkPolicyApplyConfiguration, opts v1.ApplyOptions) (result *projectcalicov3.GlobalNetworkPolicy, err error)
 	GlobalNetworkPolicyExpansion
 }
 
 // globalNetworkPolicies implements GlobalNetworkPolicyInterface
 type globalNetworkPolicies struct {
-	*gentype.ClientWithListAndApply[*projectcalicov3.GlobalNetworkPolicy, *projectcalicov3.GlobalNetworkPolicyList, *applyconfigurationgeneratedprojectcalicov3.GlobalNetworkPolicyApplyConfiguration]
+	*gentype.ClientWithList[*projectcalicov3.GlobalNetworkPolicy, *projectcalicov3.GlobalNetworkPolicyList]
 }
 
 // newGlobalNetworkPolicies returns a GlobalNetworkPolicies
 func newGlobalNetworkPolicies(c *ProjectcalicoV3Client) *globalNetworkPolicies {
 	return &globalNetworkPolicies{
-		gentype.NewClientWithListAndApply[*projectcalicov3.GlobalNetworkPolicy, *projectcalicov3.GlobalNetworkPolicyList, *applyconfigurationgeneratedprojectcalicov3.GlobalNetworkPolicyApplyConfiguration](
+		gentype.NewClientWithList[*projectcalicov3.GlobalNetworkPolicy, *projectcalicov3.GlobalNetworkPolicyList](
 			"globalnetworkpolicies",
 			c.RESTClient(),
 			scheme.ParameterCodec,

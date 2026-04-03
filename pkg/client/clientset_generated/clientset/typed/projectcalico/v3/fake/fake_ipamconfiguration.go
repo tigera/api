@@ -6,20 +6,19 @@ package fake
 
 import (
 	v3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	projectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
-	typedprojectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
+	projectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
 	gentype "k8s.io/client-go/gentype"
 )
 
 // fakeIPAMConfigurations implements IPAMConfigurationInterface
 type fakeIPAMConfigurations struct {
-	*gentype.FakeClientWithListAndApply[*v3.IPAMConfiguration, *v3.IPAMConfigurationList, *projectcalicov3.IPAMConfigurationApplyConfiguration]
+	*gentype.FakeClientWithList[*v3.IPAMConfiguration, *v3.IPAMConfigurationList]
 	Fake *FakeProjectcalicoV3
 }
 
-func newFakeIPAMConfigurations(fake *FakeProjectcalicoV3) typedprojectcalicov3.IPAMConfigurationInterface {
+func newFakeIPAMConfigurations(fake *FakeProjectcalicoV3) projectcalicov3.IPAMConfigurationInterface {
 	return &fakeIPAMConfigurations{
-		gentype.NewFakeClientWithListAndApply[*v3.IPAMConfiguration, *v3.IPAMConfigurationList, *projectcalicov3.IPAMConfigurationApplyConfiguration](
+		gentype.NewFakeClientWithList[*v3.IPAMConfiguration, *v3.IPAMConfigurationList](
 			fake.Fake,
 			"",
 			v3.SchemeGroupVersion.WithResource("ipamconfigurations"),

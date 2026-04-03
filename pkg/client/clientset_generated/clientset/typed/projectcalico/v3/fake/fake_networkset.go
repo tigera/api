@@ -6,20 +6,19 @@ package fake
 
 import (
 	v3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	projectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
-	typedprojectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
+	projectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
 	gentype "k8s.io/client-go/gentype"
 )
 
 // fakeNetworkSets implements NetworkSetInterface
 type fakeNetworkSets struct {
-	*gentype.FakeClientWithListAndApply[*v3.NetworkSet, *v3.NetworkSetList, *projectcalicov3.NetworkSetApplyConfiguration]
+	*gentype.FakeClientWithList[*v3.NetworkSet, *v3.NetworkSetList]
 	Fake *FakeProjectcalicoV3
 }
 
-func newFakeNetworkSets(fake *FakeProjectcalicoV3, namespace string) typedprojectcalicov3.NetworkSetInterface {
+func newFakeNetworkSets(fake *FakeProjectcalicoV3, namespace string) projectcalicov3.NetworkSetInterface {
 	return &fakeNetworkSets{
-		gentype.NewFakeClientWithListAndApply[*v3.NetworkSet, *v3.NetworkSetList, *projectcalicov3.NetworkSetApplyConfiguration](
+		gentype.NewFakeClientWithList[*v3.NetworkSet, *v3.NetworkSetList](
 			fake.Fake,
 			namespace,
 			v3.SchemeGroupVersion.WithResource("networksets"),

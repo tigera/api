@@ -6,20 +6,19 @@ package fake
 
 import (
 	v3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	projectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
-	typedprojectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
+	projectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
 	gentype "k8s.io/client-go/gentype"
 )
 
 // fakeStagedKubernetesNetworkPolicies implements StagedKubernetesNetworkPolicyInterface
 type fakeStagedKubernetesNetworkPolicies struct {
-	*gentype.FakeClientWithListAndApply[*v3.StagedKubernetesNetworkPolicy, *v3.StagedKubernetesNetworkPolicyList, *projectcalicov3.StagedKubernetesNetworkPolicyApplyConfiguration]
+	*gentype.FakeClientWithList[*v3.StagedKubernetesNetworkPolicy, *v3.StagedKubernetesNetworkPolicyList]
 	Fake *FakeProjectcalicoV3
 }
 
-func newFakeStagedKubernetesNetworkPolicies(fake *FakeProjectcalicoV3, namespace string) typedprojectcalicov3.StagedKubernetesNetworkPolicyInterface {
+func newFakeStagedKubernetesNetworkPolicies(fake *FakeProjectcalicoV3, namespace string) projectcalicov3.StagedKubernetesNetworkPolicyInterface {
 	return &fakeStagedKubernetesNetworkPolicies{
-		gentype.NewFakeClientWithListAndApply[*v3.StagedKubernetesNetworkPolicy, *v3.StagedKubernetesNetworkPolicyList, *projectcalicov3.StagedKubernetesNetworkPolicyApplyConfiguration](
+		gentype.NewFakeClientWithList[*v3.StagedKubernetesNetworkPolicy, *v3.StagedKubernetesNetworkPolicyList](
 			fake.Fake,
 			namespace,
 			v3.SchemeGroupVersion.WithResource("stagedkubernetesnetworkpolicies"),

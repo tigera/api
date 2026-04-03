@@ -8,7 +8,6 @@ import (
 	context "context"
 
 	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	applyconfigurationgeneratedprojectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
 	scheme "github.com/tigera/api/pkg/client/clientset_generated/clientset/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
@@ -32,19 +31,18 @@ type BFDConfigurationInterface interface {
 	List(ctx context.Context, opts v1.ListOptions) (*projectcalicov3.BFDConfigurationList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
 	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *projectcalicov3.BFDConfiguration, err error)
-	Apply(ctx context.Context, bFDConfiguration *applyconfigurationgeneratedprojectcalicov3.BFDConfigurationApplyConfiguration, opts v1.ApplyOptions) (result *projectcalicov3.BFDConfiguration, err error)
 	BFDConfigurationExpansion
 }
 
 // bFDConfigurations implements BFDConfigurationInterface
 type bFDConfigurations struct {
-	*gentype.ClientWithListAndApply[*projectcalicov3.BFDConfiguration, *projectcalicov3.BFDConfigurationList, *applyconfigurationgeneratedprojectcalicov3.BFDConfigurationApplyConfiguration]
+	*gentype.ClientWithList[*projectcalicov3.BFDConfiguration, *projectcalicov3.BFDConfigurationList]
 }
 
 // newBFDConfigurations returns a BFDConfigurations
 func newBFDConfigurations(c *ProjectcalicoV3Client) *bFDConfigurations {
 	return &bFDConfigurations{
-		gentype.NewClientWithListAndApply[*projectcalicov3.BFDConfiguration, *projectcalicov3.BFDConfigurationList, *applyconfigurationgeneratedprojectcalicov3.BFDConfigurationApplyConfiguration](
+		gentype.NewClientWithList[*projectcalicov3.BFDConfiguration, *projectcalicov3.BFDConfigurationList](
 			"bfdconfigurations",
 			c.RESTClient(),
 			scheme.ParameterCodec,

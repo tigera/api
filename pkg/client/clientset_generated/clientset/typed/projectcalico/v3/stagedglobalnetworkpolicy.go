@@ -8,7 +8,6 @@ import (
 	context "context"
 
 	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	applyconfigurationgeneratedprojectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
 	scheme "github.com/tigera/api/pkg/client/clientset_generated/clientset/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
@@ -32,19 +31,18 @@ type StagedGlobalNetworkPolicyInterface interface {
 	List(ctx context.Context, opts v1.ListOptions) (*projectcalicov3.StagedGlobalNetworkPolicyList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
 	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *projectcalicov3.StagedGlobalNetworkPolicy, err error)
-	Apply(ctx context.Context, stagedGlobalNetworkPolicy *applyconfigurationgeneratedprojectcalicov3.StagedGlobalNetworkPolicyApplyConfiguration, opts v1.ApplyOptions) (result *projectcalicov3.StagedGlobalNetworkPolicy, err error)
 	StagedGlobalNetworkPolicyExpansion
 }
 
 // stagedGlobalNetworkPolicies implements StagedGlobalNetworkPolicyInterface
 type stagedGlobalNetworkPolicies struct {
-	*gentype.ClientWithListAndApply[*projectcalicov3.StagedGlobalNetworkPolicy, *projectcalicov3.StagedGlobalNetworkPolicyList, *applyconfigurationgeneratedprojectcalicov3.StagedGlobalNetworkPolicyApplyConfiguration]
+	*gentype.ClientWithList[*projectcalicov3.StagedGlobalNetworkPolicy, *projectcalicov3.StagedGlobalNetworkPolicyList]
 }
 
 // newStagedGlobalNetworkPolicies returns a StagedGlobalNetworkPolicies
 func newStagedGlobalNetworkPolicies(c *ProjectcalicoV3Client) *stagedGlobalNetworkPolicies {
 	return &stagedGlobalNetworkPolicies{
-		gentype.NewClientWithListAndApply[*projectcalicov3.StagedGlobalNetworkPolicy, *projectcalicov3.StagedGlobalNetworkPolicyList, *applyconfigurationgeneratedprojectcalicov3.StagedGlobalNetworkPolicyApplyConfiguration](
+		gentype.NewClientWithList[*projectcalicov3.StagedGlobalNetworkPolicy, *projectcalicov3.StagedGlobalNetworkPolicyList](
 			"stagedglobalnetworkpolicies",
 			c.RESTClient(),
 			scheme.ParameterCodec,

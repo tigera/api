@@ -8,7 +8,6 @@ import (
 	context "context"
 
 	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	applyconfigurationgeneratedprojectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
 	scheme "github.com/tigera/api/pkg/client/clientset_generated/clientset/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
@@ -32,19 +31,18 @@ type GlobalReportTypeInterface interface {
 	List(ctx context.Context, opts v1.ListOptions) (*projectcalicov3.GlobalReportTypeList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
 	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *projectcalicov3.GlobalReportType, err error)
-	Apply(ctx context.Context, globalReportType *applyconfigurationgeneratedprojectcalicov3.GlobalReportTypeApplyConfiguration, opts v1.ApplyOptions) (result *projectcalicov3.GlobalReportType, err error)
 	GlobalReportTypeExpansion
 }
 
 // globalReportTypes implements GlobalReportTypeInterface
 type globalReportTypes struct {
-	*gentype.ClientWithListAndApply[*projectcalicov3.GlobalReportType, *projectcalicov3.GlobalReportTypeList, *applyconfigurationgeneratedprojectcalicov3.GlobalReportTypeApplyConfiguration]
+	*gentype.ClientWithList[*projectcalicov3.GlobalReportType, *projectcalicov3.GlobalReportTypeList]
 }
 
 // newGlobalReportTypes returns a GlobalReportTypes
 func newGlobalReportTypes(c *ProjectcalicoV3Client) *globalReportTypes {
 	return &globalReportTypes{
-		gentype.NewClientWithListAndApply[*projectcalicov3.GlobalReportType, *projectcalicov3.GlobalReportTypeList, *applyconfigurationgeneratedprojectcalicov3.GlobalReportTypeApplyConfiguration](
+		gentype.NewClientWithList[*projectcalicov3.GlobalReportType, *projectcalicov3.GlobalReportTypeList](
 			"globalreporttypes",
 			c.RESTClient(),
 			scheme.ParameterCodec,

@@ -6,20 +6,19 @@ package fake
 
 import (
 	v3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	projectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
-	typedprojectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
+	projectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
 	gentype "k8s.io/client-go/gentype"
 )
 
 // fakeTiers implements TierInterface
 type fakeTiers struct {
-	*gentype.FakeClientWithListAndApply[*v3.Tier, *v3.TierList, *projectcalicov3.TierApplyConfiguration]
+	*gentype.FakeClientWithList[*v3.Tier, *v3.TierList]
 	Fake *FakeProjectcalicoV3
 }
 
-func newFakeTiers(fake *FakeProjectcalicoV3) typedprojectcalicov3.TierInterface {
+func newFakeTiers(fake *FakeProjectcalicoV3) projectcalicov3.TierInterface {
 	return &fakeTiers{
-		gentype.NewFakeClientWithListAndApply[*v3.Tier, *v3.TierList, *projectcalicov3.TierApplyConfiguration](
+		gentype.NewFakeClientWithList[*v3.Tier, *v3.TierList](
 			fake.Fake,
 			"",
 			v3.SchemeGroupVersion.WithResource("tiers"),

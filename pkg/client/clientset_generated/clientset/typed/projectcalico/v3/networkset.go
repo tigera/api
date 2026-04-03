@@ -8,7 +8,6 @@ import (
 	context "context"
 
 	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	applyconfigurationgeneratedprojectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
 	scheme "github.com/tigera/api/pkg/client/clientset_generated/clientset/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
@@ -32,19 +31,18 @@ type NetworkSetInterface interface {
 	List(ctx context.Context, opts v1.ListOptions) (*projectcalicov3.NetworkSetList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
 	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *projectcalicov3.NetworkSet, err error)
-	Apply(ctx context.Context, networkSet *applyconfigurationgeneratedprojectcalicov3.NetworkSetApplyConfiguration, opts v1.ApplyOptions) (result *projectcalicov3.NetworkSet, err error)
 	NetworkSetExpansion
 }
 
 // networkSets implements NetworkSetInterface
 type networkSets struct {
-	*gentype.ClientWithListAndApply[*projectcalicov3.NetworkSet, *projectcalicov3.NetworkSetList, *applyconfigurationgeneratedprojectcalicov3.NetworkSetApplyConfiguration]
+	*gentype.ClientWithList[*projectcalicov3.NetworkSet, *projectcalicov3.NetworkSetList]
 }
 
 // newNetworkSets returns a NetworkSets
 func newNetworkSets(c *ProjectcalicoV3Client, namespace string) *networkSets {
 	return &networkSets{
-		gentype.NewClientWithListAndApply[*projectcalicov3.NetworkSet, *projectcalicov3.NetworkSetList, *applyconfigurationgeneratedprojectcalicov3.NetworkSetApplyConfiguration](
+		gentype.NewClientWithList[*projectcalicov3.NetworkSet, *projectcalicov3.NetworkSetList](
 			"networksets",
 			c.RESTClient(),
 			scheme.ParameterCodec,

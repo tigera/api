@@ -8,7 +8,6 @@ import (
 	context "context"
 
 	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	applyconfigurationgeneratedprojectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
 	scheme "github.com/tigera/api/pkg/client/clientset_generated/clientset/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
@@ -32,19 +31,18 @@ type StagedNetworkPolicyInterface interface {
 	List(ctx context.Context, opts v1.ListOptions) (*projectcalicov3.StagedNetworkPolicyList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
 	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *projectcalicov3.StagedNetworkPolicy, err error)
-	Apply(ctx context.Context, stagedNetworkPolicy *applyconfigurationgeneratedprojectcalicov3.StagedNetworkPolicyApplyConfiguration, opts v1.ApplyOptions) (result *projectcalicov3.StagedNetworkPolicy, err error)
 	StagedNetworkPolicyExpansion
 }
 
 // stagedNetworkPolicies implements StagedNetworkPolicyInterface
 type stagedNetworkPolicies struct {
-	*gentype.ClientWithListAndApply[*projectcalicov3.StagedNetworkPolicy, *projectcalicov3.StagedNetworkPolicyList, *applyconfigurationgeneratedprojectcalicov3.StagedNetworkPolicyApplyConfiguration]
+	*gentype.ClientWithList[*projectcalicov3.StagedNetworkPolicy, *projectcalicov3.StagedNetworkPolicyList]
 }
 
 // newStagedNetworkPolicies returns a StagedNetworkPolicies
 func newStagedNetworkPolicies(c *ProjectcalicoV3Client, namespace string) *stagedNetworkPolicies {
 	return &stagedNetworkPolicies{
-		gentype.NewClientWithListAndApply[*projectcalicov3.StagedNetworkPolicy, *projectcalicov3.StagedNetworkPolicyList, *applyconfigurationgeneratedprojectcalicov3.StagedNetworkPolicyApplyConfiguration](
+		gentype.NewClientWithList[*projectcalicov3.StagedNetworkPolicy, *projectcalicov3.StagedNetworkPolicyList](
 			"stagednetworkpolicies",
 			c.RESTClient(),
 			scheme.ParameterCodec,

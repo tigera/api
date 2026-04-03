@@ -6,20 +6,19 @@ package fake
 
 import (
 	v3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	projectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
-	typedprojectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
+	projectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
 	gentype "k8s.io/client-go/gentype"
 )
 
 // fakeRemoteClusterConfigurations implements RemoteClusterConfigurationInterface
 type fakeRemoteClusterConfigurations struct {
-	*gentype.FakeClientWithListAndApply[*v3.RemoteClusterConfiguration, *v3.RemoteClusterConfigurationList, *projectcalicov3.RemoteClusterConfigurationApplyConfiguration]
+	*gentype.FakeClientWithList[*v3.RemoteClusterConfiguration, *v3.RemoteClusterConfigurationList]
 	Fake *FakeProjectcalicoV3
 }
 
-func newFakeRemoteClusterConfigurations(fake *FakeProjectcalicoV3) typedprojectcalicov3.RemoteClusterConfigurationInterface {
+func newFakeRemoteClusterConfigurations(fake *FakeProjectcalicoV3) projectcalicov3.RemoteClusterConfigurationInterface {
 	return &fakeRemoteClusterConfigurations{
-		gentype.NewFakeClientWithListAndApply[*v3.RemoteClusterConfiguration, *v3.RemoteClusterConfigurationList, *projectcalicov3.RemoteClusterConfigurationApplyConfiguration](
+		gentype.NewFakeClientWithList[*v3.RemoteClusterConfiguration, *v3.RemoteClusterConfigurationList](
 			fake.Fake,
 			"",
 			v3.SchemeGroupVersion.WithResource("remoteclusterconfigurations"),

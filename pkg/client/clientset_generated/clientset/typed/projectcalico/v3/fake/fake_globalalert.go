@@ -6,20 +6,19 @@ package fake
 
 import (
 	v3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	projectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
-	typedprojectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
+	projectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
 	gentype "k8s.io/client-go/gentype"
 )
 
 // fakeGlobalAlerts implements GlobalAlertInterface
 type fakeGlobalAlerts struct {
-	*gentype.FakeClientWithListAndApply[*v3.GlobalAlert, *v3.GlobalAlertList, *projectcalicov3.GlobalAlertApplyConfiguration]
+	*gentype.FakeClientWithList[*v3.GlobalAlert, *v3.GlobalAlertList]
 	Fake *FakeProjectcalicoV3
 }
 
-func newFakeGlobalAlerts(fake *FakeProjectcalicoV3) typedprojectcalicov3.GlobalAlertInterface {
+func newFakeGlobalAlerts(fake *FakeProjectcalicoV3) projectcalicov3.GlobalAlertInterface {
 	return &fakeGlobalAlerts{
-		gentype.NewFakeClientWithListAndApply[*v3.GlobalAlert, *v3.GlobalAlertList, *projectcalicov3.GlobalAlertApplyConfiguration](
+		gentype.NewFakeClientWithList[*v3.GlobalAlert, *v3.GlobalAlertList](
 			fake.Fake,
 			"",
 			v3.SchemeGroupVersion.WithResource("globalalerts"),

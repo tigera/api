@@ -8,7 +8,6 @@ import (
 	context "context"
 
 	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	applyconfigurationgeneratedprojectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
 	scheme "github.com/tigera/api/pkg/client/clientset_generated/clientset/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
@@ -34,21 +33,18 @@ type PolicyRecommendationScopeInterface interface {
 	List(ctx context.Context, opts v1.ListOptions) (*projectcalicov3.PolicyRecommendationScopeList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
 	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *projectcalicov3.PolicyRecommendationScope, err error)
-	Apply(ctx context.Context, policyRecommendationScope *applyconfigurationgeneratedprojectcalicov3.PolicyRecommendationScopeApplyConfiguration, opts v1.ApplyOptions) (result *projectcalicov3.PolicyRecommendationScope, err error)
-	// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
-	ApplyStatus(ctx context.Context, policyRecommendationScope *applyconfigurationgeneratedprojectcalicov3.PolicyRecommendationScopeApplyConfiguration, opts v1.ApplyOptions) (result *projectcalicov3.PolicyRecommendationScope, err error)
 	PolicyRecommendationScopeExpansion
 }
 
 // policyRecommendationScopes implements PolicyRecommendationScopeInterface
 type policyRecommendationScopes struct {
-	*gentype.ClientWithListAndApply[*projectcalicov3.PolicyRecommendationScope, *projectcalicov3.PolicyRecommendationScopeList, *applyconfigurationgeneratedprojectcalicov3.PolicyRecommendationScopeApplyConfiguration]
+	*gentype.ClientWithList[*projectcalicov3.PolicyRecommendationScope, *projectcalicov3.PolicyRecommendationScopeList]
 }
 
 // newPolicyRecommendationScopes returns a PolicyRecommendationScopes
 func newPolicyRecommendationScopes(c *ProjectcalicoV3Client) *policyRecommendationScopes {
 	return &policyRecommendationScopes{
-		gentype.NewClientWithListAndApply[*projectcalicov3.PolicyRecommendationScope, *projectcalicov3.PolicyRecommendationScopeList, *applyconfigurationgeneratedprojectcalicov3.PolicyRecommendationScopeApplyConfiguration](
+		gentype.NewClientWithList[*projectcalicov3.PolicyRecommendationScope, *projectcalicov3.PolicyRecommendationScopeList](
 			"policyrecommendationscopes",
 			c.RESTClient(),
 			scheme.ParameterCodec,

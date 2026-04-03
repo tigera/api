@@ -8,7 +8,6 @@ import (
 	context "context"
 
 	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	applyconfigurationgeneratedprojectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
 	scheme "github.com/tigera/api/pkg/client/clientset_generated/clientset/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
@@ -32,19 +31,18 @@ type FelixConfigurationInterface interface {
 	List(ctx context.Context, opts v1.ListOptions) (*projectcalicov3.FelixConfigurationList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
 	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *projectcalicov3.FelixConfiguration, err error)
-	Apply(ctx context.Context, felixConfiguration *applyconfigurationgeneratedprojectcalicov3.FelixConfigurationApplyConfiguration, opts v1.ApplyOptions) (result *projectcalicov3.FelixConfiguration, err error)
 	FelixConfigurationExpansion
 }
 
 // felixConfigurations implements FelixConfigurationInterface
 type felixConfigurations struct {
-	*gentype.ClientWithListAndApply[*projectcalicov3.FelixConfiguration, *projectcalicov3.FelixConfigurationList, *applyconfigurationgeneratedprojectcalicov3.FelixConfigurationApplyConfiguration]
+	*gentype.ClientWithList[*projectcalicov3.FelixConfiguration, *projectcalicov3.FelixConfigurationList]
 }
 
 // newFelixConfigurations returns a FelixConfigurations
 func newFelixConfigurations(c *ProjectcalicoV3Client) *felixConfigurations {
 	return &felixConfigurations{
-		gentype.NewClientWithListAndApply[*projectcalicov3.FelixConfiguration, *projectcalicov3.FelixConfigurationList, *applyconfigurationgeneratedprojectcalicov3.FelixConfigurationApplyConfiguration](
+		gentype.NewClientWithList[*projectcalicov3.FelixConfiguration, *projectcalicov3.FelixConfigurationList](
 			"felixconfigurations",
 			c.RESTClient(),
 			scheme.ParameterCodec,
