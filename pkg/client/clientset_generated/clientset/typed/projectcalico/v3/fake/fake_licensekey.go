@@ -6,19 +6,20 @@ package fake
 
 import (
 	v3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	projectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
+	projectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
+	typedprojectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
 	gentype "k8s.io/client-go/gentype"
 )
 
 // fakeLicenseKeys implements LicenseKeyInterface
 type fakeLicenseKeys struct {
-	*gentype.FakeClientWithList[*v3.LicenseKey, *v3.LicenseKeyList]
+	*gentype.FakeClientWithListAndApply[*v3.LicenseKey, *v3.LicenseKeyList, *projectcalicov3.LicenseKeyApplyConfiguration]
 	Fake *FakeProjectcalicoV3
 }
 
-func newFakeLicenseKeys(fake *FakeProjectcalicoV3) projectcalicov3.LicenseKeyInterface {
+func newFakeLicenseKeys(fake *FakeProjectcalicoV3) typedprojectcalicov3.LicenseKeyInterface {
 	return &fakeLicenseKeys{
-		gentype.NewFakeClientWithList[*v3.LicenseKey, *v3.LicenseKeyList](
+		gentype.NewFakeClientWithListAndApply[*v3.LicenseKey, *v3.LicenseKeyList, *projectcalicov3.LicenseKeyApplyConfiguration](
 			fake.Fake,
 			"",
 			v3.SchemeGroupVersion.WithResource("licensekeys"),

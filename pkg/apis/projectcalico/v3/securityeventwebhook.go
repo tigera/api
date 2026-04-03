@@ -38,6 +38,7 @@ type SecurityEventWebhook struct {
 	Spec              SecurityEventWebhookSpec `json:"spec" validate:"required"`
 
 	// +optional
+	// +listType=atomic
 	Status []metav1.Condition `json:"status,omitempty" validate:"omitempty"`
 }
 
@@ -47,7 +48,7 @@ type SecurityEventWebhook struct {
 
 type SecurityEventWebhookList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata"`
+	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 	Items           []SecurityEventWebhook `json:"items"`
 }
 
@@ -59,6 +60,7 @@ type SecurityEventWebhookSpec struct {
 	// defines the SecurityEventWebhook query to be executed against fields of SecurityEvents
 	Query string `json:"query" validate:"required"`
 	// contains the SecurityEventWebhook's configuration associated with the intended Consumer
+	// +listType=atomic
 	Config []SecurityEventWebhookConfigVar `json:"config" validate:"required"`
 }
 

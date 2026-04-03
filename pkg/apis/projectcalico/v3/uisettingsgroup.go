@@ -63,7 +63,7 @@ type UISettingsGroupSpec struct {
 // UISettingsGroupList contains a list of UISettingsGroup resources.
 type UISettingsGroupList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata"`
+	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 	Items           []UISettingsGroup `json:"items"`
 }
 

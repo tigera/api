@@ -6,19 +6,20 @@ package fake
 
 import (
 	v3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	projectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
+	projectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
+	typedprojectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
 	gentype "k8s.io/client-go/gentype"
 )
 
 // fakeAuthorizationReviews implements AuthorizationReviewInterface
 type fakeAuthorizationReviews struct {
-	*gentype.FakeClientWithList[*v3.AuthorizationReview, *v3.AuthorizationReviewList]
+	*gentype.FakeClientWithListAndApply[*v3.AuthorizationReview, *v3.AuthorizationReviewList, *projectcalicov3.AuthorizationReviewApplyConfiguration]
 	Fake *FakeProjectcalicoV3
 }
 
-func newFakeAuthorizationReviews(fake *FakeProjectcalicoV3) projectcalicov3.AuthorizationReviewInterface {
+func newFakeAuthorizationReviews(fake *FakeProjectcalicoV3) typedprojectcalicov3.AuthorizationReviewInterface {
 	return &fakeAuthorizationReviews{
-		gentype.NewFakeClientWithList[*v3.AuthorizationReview, *v3.AuthorizationReviewList](
+		gentype.NewFakeClientWithListAndApply[*v3.AuthorizationReview, *v3.AuthorizationReviewList, *projectcalicov3.AuthorizationReviewApplyConfiguration](
 			fake.Fake,
 			"",
 			v3.SchemeGroupVersion.WithResource("authorizationreviews"),
