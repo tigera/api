@@ -67,6 +67,7 @@ type GlobalAlertSpec struct {
 	Query string `json:"query,omitempty" validate:"omitempty"`
 	// An optional list of fields to aggregate results.
 	// Only used if Type is RuleBased.
+	// +listType=atomic
 	AggregateBy []string `json:"aggregateBy,omitempty" validate:"omitempty"`
 	// Which field to aggregate results by if using a metric other than count.
 	// Only used if Type is RuleBased.
@@ -83,6 +84,7 @@ type GlobalAlertSpec struct {
 	Threshold float64 `json:"threshold,omitempty" validate:"omitempty"`
 	// An optional list of values to replace variable names in query.
 	// Only used if Type is RuleBased.
+	// +listType=atomic
 	Substitutions []GlobalAlertSubstitution `json:"substitutions,omitempty" validate:"omitempty"`
 	// Parameters for configuring an AnomalyDetection run.
 	// Only used if Type is AnomalyDetection.
@@ -110,11 +112,12 @@ func (t *GlobalAlertType) UnmarshalJSON(b []byte) error {
 }
 
 type GlobalAlertStatus struct {
-	LastUpdate      *metav1.Time     `json:"lastUpdate,omitempty"`
-	Active          bool             `json:"active"`
-	Healthy         bool             `json:"healthy"`
-	LastExecuted    *metav1.Time     `json:"lastExecuted,omitempty"`
-	LastEvent       *metav1.Time     `json:"lastEvent,omitempty"`
+	LastUpdate   *metav1.Time `json:"lastUpdate,omitempty"`
+	Active       bool         `json:"active"`
+	Healthy      bool         `json:"healthy"`
+	LastExecuted *metav1.Time `json:"lastExecuted,omitempty"`
+	LastEvent    *metav1.Time `json:"lastEvent,omitempty"`
+	// +listType=atomic
 	ErrorConditions []ErrorCondition `json:"errorConditions,omitempty"`
 }
 
@@ -130,13 +133,14 @@ type DetectorParams struct {
 // GlobalAlertList contains a list of GlobalAlert resources.
 type GlobalAlertList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata"`
+	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 	Items           []GlobalAlert `json:"items"`
 }
 
 // GlobalAlertSubstitution substitutes for the variables in the set operators of a Query.
 type GlobalAlertSubstitution struct {
-	Name   string   `json:"name" validate:"required"`
+	Name string `json:"name" validate:"required"`
+	// +listType=atomic
 	Values []string `json:"values,omitempty"`
 }
 

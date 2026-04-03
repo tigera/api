@@ -36,33 +36,39 @@ type ReportData struct {
 	GenerationTime metav1.Time    `json:"generationTime"`
 
 	// The set of in-scope endpoints.
+	// +listType=atomic
 	Endpoints []EndpointsReportEndpoint `json:"endpoints,omitempty"`
 
 	// Endpoint stats in a reporting period.
 	EndpointsSummary EndpointsSummary `json:"endpointsSummary,omitempty"`
 
 	// The set of namespaces containing in-scope endpoints.
+	// +listType=atomic
 	Namespaces []EndpointsReportNamespace `json:"namespaces,omitempty"`
 
 	// Endpoint stats for given namespaces in a reporting period.
 	NamespacesSummary EndpointsSummary `json:"namespacesSummary,omitempty"`
 
 	// The set of services containing in-scope endpoints.
+	// +listType=atomic
 	Services []EndpointsReportService `json:"services,omitempty"`
 
 	// Endpoint stats for services in a reporting period.
 	ServicesSummary EndpointsSummary `json:"servicesSummary,omitempty"`
 
 	// The time-ordered set of in-scope audit events that occurred within the reporting interval.
+	// +listType=atomic
 	AuditEvents []audit.Event `json:"auditEvents,omitempty"`
 
 	// Audit log stats in a reporting period.
 	AuditSummary AuditSummary `json:"auditSummary,omitempty"`
 
 	// Flows for in-scope endpoints that have been recorded within the reporting period.
+	// +listType=atomic
 	Flows []EndpointsReportFlow `json:"flows,omitempty"`
 
 	// CISBenchmark contains the per-node results of a cis benchmark scan.
+	// +listType=atomic
 	CISBenchmark []CISBenchmarkNode `json:"cisBenchmark,omitempty"`
 
 	// CISBenchmarkSummary high level test results.
@@ -258,11 +264,13 @@ type EndpointsReportEndpoint struct {
 
 	// The set of policies that apply to an endpoint may change within the reporting interval, this is the superset of all
 	// policies that applied to the endpoint during that interval.
+	// +listType=atomic
 	AppliedPolicies []ResourceID `json:"appliedPolicies,omitempty"`
 
 	// The list of services that exposed this endpoint at any moment during the reporting interval.
 	//
 	// Source: Determined from the Kubernetes endpoints resource associated with the service.
+	// +listType=atomic
 	Services []ResourceID `json:"services,omitempty"`
 
 	// The ServiceAccount configured on this endpoint.
@@ -386,6 +394,7 @@ type CISBenchmarkNode struct {
 	Summary CISBenchmarkNodeSummary `json:"summary"`
 
 	// Results is the detailed set of results for this set of node-specific benchmarks.
+	// +listType=atomic
 	Results []CISBenchmarkSectionResult `json:"results"`
 }
 
@@ -401,12 +410,13 @@ type CISBenchmarkNodeSummary struct {
 
 // CISBenchmarkSectionResult describes the result of running the CIS benchmark on a single component.
 type CISBenchmarkSectionResult struct {
-	Status  string               `json:"status"`
-	Section string               `json:"section"`
-	Desc    string               `json:"desc"`
-	Pass    int                  `json:"pass"`
-	Fail    int                  `json:"fail"`
-	Info    int                  `json:"info"`
+	Status  string `json:"status"`
+	Section string `json:"section"`
+	Desc    string `json:"desc"`
+	Pass    int    `json:"pass"`
+	Fail    int    `json:"fail"`
+	Info    int    `json:"info"`
+	// +listType=atomic
 	Results []CISBenchmarkResult `json:"results"`
 }
 
