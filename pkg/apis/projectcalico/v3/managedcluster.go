@@ -54,6 +54,7 @@ type ManagedClusterSpec struct {
 }
 
 type ManagedClusterStatus struct {
+	// +listType=atomic
 	Conditions []ManagedClusterStatusCondition `json:"conditions,omitempty"`
 }
 
@@ -72,7 +73,7 @@ type ManagedClusterStatusCondition struct {
 // ManagedClusterList contains a list of ManagedCluster resources.
 type ManagedClusterList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata"`
+	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 	Items           []ManagedCluster `json:"items"`
 }
 

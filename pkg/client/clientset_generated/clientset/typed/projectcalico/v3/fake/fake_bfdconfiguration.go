@@ -6,19 +6,20 @@ package fake
 
 import (
 	v3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	projectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
+	projectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
+	typedprojectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
 	gentype "k8s.io/client-go/gentype"
 )
 
 // fakeBFDConfigurations implements BFDConfigurationInterface
 type fakeBFDConfigurations struct {
-	*gentype.FakeClientWithList[*v3.BFDConfiguration, *v3.BFDConfigurationList]
+	*gentype.FakeClientWithListAndApply[*v3.BFDConfiguration, *v3.BFDConfigurationList, *projectcalicov3.BFDConfigurationApplyConfiguration]
 	Fake *FakeProjectcalicoV3
 }
 
-func newFakeBFDConfigurations(fake *FakeProjectcalicoV3) projectcalicov3.BFDConfigurationInterface {
+func newFakeBFDConfigurations(fake *FakeProjectcalicoV3) typedprojectcalicov3.BFDConfigurationInterface {
 	return &fakeBFDConfigurations{
-		gentype.NewFakeClientWithList[*v3.BFDConfiguration, *v3.BFDConfigurationList](
+		gentype.NewFakeClientWithListAndApply[*v3.BFDConfiguration, *v3.BFDConfigurationList, *projectcalicov3.BFDConfigurationApplyConfiguration](
 			fake.Fake,
 			"",
 			v3.SchemeGroupVersion.WithResource("bfdconfigurations"),
