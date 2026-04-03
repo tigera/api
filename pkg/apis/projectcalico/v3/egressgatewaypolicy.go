@@ -30,7 +30,7 @@ const (
 // EgressGatewayPolicyList is a list of EgressGatewayPolicy resources.
 type EgressGatewayPolicyList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata" protobuf:"bytes,1,opt,name=metadata"`
+	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 	Items           []EgressGatewayPolicy `json:"items" protobuf:"bytes,2,rep,name=items"`
 }
 
@@ -48,6 +48,7 @@ type EgressGatewayPolicy struct {
 // EgressGatewayPolicySpec contains the egress policy rules for each destination network
 type EgressGatewayPolicySpec struct {
 	// The ordered set of Egress Gateway Policies to define how traffic exit a cluster
+	// +listType=atomic
 	Rules []EgressGatewayRule `json:"rules,omitempty" validate:"required"`
 }
 
