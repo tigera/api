@@ -77,7 +77,6 @@ spec:
                             type: string
                         type: object
                       type: array
-                      x-kubernetes-list-type: atomic
                   type: object
                 description:
                   type: string
@@ -106,7 +105,6 @@ spec:
                           - type
                         type: object
                       type: array
-                      x-kubernetes-list-type: atomic
                   required:
                     - nodes
                   type: object
@@ -130,12 +128,10 @@ spec:
                           - selector
                         type: object
                       type: array
-                      x-kubernetes-list-type: atomic
                     layers:
                       items:
                         type: string
                       type: array
-                      x-kubernetes-list-type: atomic
                     layoutType:
                       type: string
                     nodes:
@@ -169,7 +165,6 @@ spec:
                           - type
                         type: object
                       type: array
-                      x-kubernetes-list-type: atomic
                     positions:
                       items:
                         properties:
@@ -188,7 +183,6 @@ spec:
                           - zPos
                         type: object
                       type: array
-                      x-kubernetes-list-type: atomic
                     splitIngressEgress:
                       type: boolean
                   type: object

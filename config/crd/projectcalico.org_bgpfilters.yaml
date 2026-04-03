@@ -39,7 +39,6 @@ spec:
                           format: int32
                           type: integer
                         type: array
-                        x-kubernetes-list-type: atomic
                       cidr:
                         format: cidr
                         maxLength: 18
@@ -54,13 +53,11 @@ spec:
                             maxItems: 1
                             minItems: 1
                             type: array
-                            x-kubernetes-list-type: atomic
                         required:
                           - values
                         type: object
                         x-kubernetes-map-type: atomic
                       interface:
-                        maxLength: 15
                         type: string
                       matchOperator:
                         enum:
@@ -93,7 +90,6 @@ spec:
                                   maxItems: 10
                                   minItems: 1
                                   type: array
-                                  x-kubernetes-list-type: atomic
                               required:
                                 - prefix
                               type: object
@@ -113,7 +109,6 @@ spec:
                         maxItems: 10
                         minItems: 1
                         type: array
-                        x-kubernetes-list-type: atomic
                       peerType:
                         enum:
                           - eBGP
@@ -161,7 +156,6 @@ spec:
                           "!has(self.operations) || size(self.operations) == 0 ||
                           self.action == 'Accept'"
                   type: array
-                  x-kubernetes-list-type: atomic
                 exportV6:
                   items:
                     properties:
@@ -175,7 +169,6 @@ spec:
                           format: int32
                           type: integer
                         type: array
-                        x-kubernetes-list-type: atomic
                       cidr:
                         format: cidr
                         maxLength: 43
@@ -190,13 +183,11 @@ spec:
                             maxItems: 1
                             minItems: 1
                             type: array
-                            x-kubernetes-list-type: atomic
                         required:
                           - values
                         type: object
                         x-kubernetes-map-type: atomic
                       interface:
-                        maxLength: 15
                         type: string
                       matchOperator:
                         enum:
@@ -229,7 +220,6 @@ spec:
                                   maxItems: 10
                                   minItems: 1
                                   type: array
-                                  x-kubernetes-list-type: atomic
                               required:
                                 - prefix
                               type: object
@@ -249,7 +239,6 @@ spec:
                         maxItems: 10
                         minItems: 1
                         type: array
-                        x-kubernetes-list-type: atomic
                       peerType:
                         enum:
                           - eBGP
@@ -297,7 +286,6 @@ spec:
                           "!has(self.operations) || size(self.operations) == 0 ||
                           self.action == 'Accept'"
                   type: array
-                  x-kubernetes-list-type: atomic
                 importV4:
                   items:
                     properties:
@@ -311,7 +299,6 @@ spec:
                           format: int32
                           type: integer
                         type: array
-                        x-kubernetes-list-type: atomic
                       cidr:
                         format: cidr
                         maxLength: 18
@@ -326,13 +313,11 @@ spec:
                             maxItems: 1
                             minItems: 1
                             type: array
-                            x-kubernetes-list-type: atomic
                         required:
                           - values
                         type: object
                         x-kubernetes-map-type: atomic
                       interface:
-                        maxLength: 15
                         type: string
                       matchOperator:
                         enum:
@@ -365,7 +350,6 @@ spec:
                                   maxItems: 10
                                   minItems: 1
                                   type: array
-                                  x-kubernetes-list-type: atomic
                               required:
                                 - prefix
                               type: object
@@ -385,7 +369,6 @@ spec:
                         maxItems: 10
                         minItems: 1
                         type: array
-                        x-kubernetes-list-type: atomic
                       peerType:
                         enum:
                           - eBGP
@@ -433,7 +416,6 @@ spec:
                           "!has(self.operations) || size(self.operations) == 0 ||
                           self.action == 'Accept'"
                   type: array
-                  x-kubernetes-list-type: atomic
                 importV6:
                   items:
                     properties:
@@ -447,7 +429,6 @@ spec:
                           format: int32
                           type: integer
                         type: array
-                        x-kubernetes-list-type: atomic
                       cidr:
                         format: cidr
                         maxLength: 43
@@ -462,13 +443,11 @@ spec:
                             maxItems: 1
                             minItems: 1
                             type: array
-                            x-kubernetes-list-type: atomic
                         required:
                           - values
                         type: object
                         x-kubernetes-map-type: atomic
                       interface:
-                        maxLength: 15
                         type: string
                       matchOperator:
                         enum:
@@ -501,7 +480,6 @@ spec:
                                   maxItems: 10
                                   minItems: 1
                                   type: array
-                                  x-kubernetes-list-type: atomic
                               required:
                                 - prefix
                               type: object
@@ -521,7 +499,6 @@ spec:
                         maxItems: 10
                         minItems: 1
                         type: array
-                        x-kubernetes-list-type: atomic
                       peerType:
                         enum:
                           - eBGP
@@ -569,7 +546,6 @@ spec:
                           "!has(self.operations) || size(self.operations) == 0 ||
                           self.action == 'Accept'"
                   type: array
-                  x-kubernetes-list-type: atomic
               type: object
           required:
             - metadata
