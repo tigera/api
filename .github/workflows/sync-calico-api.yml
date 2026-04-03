@@ -59,6 +59,9 @@ jobs:
       - name: Sync API from calico-private
         run: make -f Makefile.local update
 
+      - name: Regenerate clientset and fix formatting
+        run: make gen-files
+
       - uses: peter-evans/create-pull-request@c0f553fe549906ede9cf27b5156039d195d2ece0  # v8.1.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
