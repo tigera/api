@@ -47,10 +47,12 @@ else
 	CALICO_REFERENCE_PARAMS := 
 endif
 
-# List of files that we should keep even if they've changed upstream;
-# At the moment, we keep the README because this repository has
-# its own README; the upstream one isn't relevant to this repository.
-KEEP_LOCAL_FILES := README.md Makefile
+# List of files that we should keep even if they've changed upstream.
+# - README.md: this repo has its own README.
+# - Makefile: the monorepo Makefile requires kind, etc.
+# - build/update-client-gen.sh: the monorepo version references
+#   applyconfiguration-gen and patch files that don't exist here.
+KEEP_LOCAL_FILES := README.md Makefile build/update-client-gen.sh
 
 # The commit message/PR title to use when we commit our changes
 ifneq ($(origin CALICO_GIT_REF), file)
