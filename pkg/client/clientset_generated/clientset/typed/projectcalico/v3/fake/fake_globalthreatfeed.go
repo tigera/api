@@ -6,19 +6,20 @@ package fake
 
 import (
 	v3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
-	projectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
+	projectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
+	typedprojectcalicov3 "github.com/tigera/api/pkg/client/clientset_generated/clientset/typed/projectcalico/v3"
 	gentype "k8s.io/client-go/gentype"
 )
 
 // fakeGlobalThreatFeeds implements GlobalThreatFeedInterface
 type fakeGlobalThreatFeeds struct {
-	*gentype.FakeClientWithList[*v3.GlobalThreatFeed, *v3.GlobalThreatFeedList]
+	*gentype.FakeClientWithListAndApply[*v3.GlobalThreatFeed, *v3.GlobalThreatFeedList, *projectcalicov3.GlobalThreatFeedApplyConfiguration]
 	Fake *FakeProjectcalicoV3
 }
 
-func newFakeGlobalThreatFeeds(fake *FakeProjectcalicoV3) projectcalicov3.GlobalThreatFeedInterface {
+func newFakeGlobalThreatFeeds(fake *FakeProjectcalicoV3) typedprojectcalicov3.GlobalThreatFeedInterface {
 	return &fakeGlobalThreatFeeds{
-		gentype.NewFakeClientWithList[*v3.GlobalThreatFeed, *v3.GlobalThreatFeedList](
+		gentype.NewFakeClientWithListAndApply[*v3.GlobalThreatFeed, *v3.GlobalThreatFeedList, *projectcalicov3.GlobalThreatFeedApplyConfiguration](
 			fake.Fake,
 			"",
 			v3.SchemeGroupVersion.WithResource("globalthreatfeeds"),
