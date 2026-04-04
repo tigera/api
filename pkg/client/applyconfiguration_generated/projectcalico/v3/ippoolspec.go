@@ -36,8 +36,8 @@ type IPPoolSpecApplyConfiguration struct {
 	// Allows IPPool to allocate for a specific namespace by label selector.
 	// If specified, both namespaceSelector and nodeSelector must match for the pool to be used.
 	NamespaceSelector *string `json:"namespaceSelector,omitempty"`
-	// AllowedUse controls what the IP pool will be used for.  If not specified or empty, defaults to
-	// ["Tunnel", "Workload"] for back-compatibility
+	// AllowedUses controls what the IP pool will be used for. If not specified or empty, defaults to
+	// ["Tunnel", "Workload"] for back-compatibility. Valid values: "Tunnel", "Workload", "LoadBalancer".
 	AllowedUses []projectcalicov3.IPPoolAllowedUse `json:"allowedUses,omitempty"`
 	// AWSSubnetID if specified Calico will attempt to ensure that IPs chosen from this IP pool are routed
 	// to the corresponding node by adding one or more secondary ENIs to the node and explicitly assigning

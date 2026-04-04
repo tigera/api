@@ -597,7 +597,7 @@ type FelixConfigurationSpecApplyConfiguration struct {
 	// A generic log level terminology is used [None, Notice, Info, Debug, Verbose].
 	// [Default: Info]
 	IPSecLogLevel *string `json:"ipsecLogLevel,omitempty"`
-	// IPSecPolicyRefreshInterval is the interval at which Felix will check the kernel's IPsec policy tables and
+	// IPSecPolicyRefreshInterval is the interval at which Felix will check the kernel’s IPsec policy tables and
 	// repair any inconsistencies. [Default: 600s]
 	IPSecPolicyRefreshInterval *v1.Duration `json:"ipsecPolicyRefreshInterval,omitempty"`
 	// BPFAttachType controls how are the BPF programs at the network interfaces attached.
