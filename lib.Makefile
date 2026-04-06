@@ -119,7 +119,7 @@ else
     THIRD_PARTY_REGISTRY?=gcr.io/tigera-dev/third-party-ci
 endif
 
-THIRD_PARTY_BASE_IMAGES_TO_RETAG = elasticsearch fluentd-base istio-ztunnel kibana snort3
+THIRD_PARTY_BASE_IMAGES_TO_RETAG = elasticsearch fluentd-base kibana snort3
 release-retag-third-party-base-images: var-require-one-of-CONFIRM-DRYRUN var-require-all-RELEASE_BRANCH
 	$(MAKE) $(addprefix release-retag-third-party-base-images-,$(THIRD_PARTY_BASE_IMAGES_TO_RETAG))
 
