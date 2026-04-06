@@ -8,6 +8,7 @@ import (
 	context "context"
 
 	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
+	applyconfigurationgeneratedprojectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
 	scheme "github.com/tigera/api/pkg/client/clientset_generated/clientset/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
@@ -33,18 +34,21 @@ type AuthorizationReviewInterface interface {
 	List(ctx context.Context, opts v1.ListOptions) (*projectcalicov3.AuthorizationReviewList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
 	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *projectcalicov3.AuthorizationReview, err error)
+	Apply(ctx context.Context, authorizationReview *applyconfigurationgeneratedprojectcalicov3.AuthorizationReviewApplyConfiguration, opts v1.ApplyOptions) (result *projectcalicov3.AuthorizationReview, err error)
+	// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
+	ApplyStatus(ctx context.Context, authorizationReview *applyconfigurationgeneratedprojectcalicov3.AuthorizationReviewApplyConfiguration, opts v1.ApplyOptions) (result *projectcalicov3.AuthorizationReview, err error)
 	AuthorizationReviewExpansion
 }
 
 // authorizationReviews implements AuthorizationReviewInterface
 type authorizationReviews struct {
-	*gentype.ClientWithList[*projectcalicov3.AuthorizationReview, *projectcalicov3.AuthorizationReviewList]
+	*gentype.ClientWithListAndApply[*projectcalicov3.AuthorizationReview, *projectcalicov3.AuthorizationReviewList, *applyconfigurationgeneratedprojectcalicov3.AuthorizationReviewApplyConfiguration]
 }
 
 // newAuthorizationReviews returns a AuthorizationReviews
 func newAuthorizationReviews(c *ProjectcalicoV3Client) *authorizationReviews {
 	return &authorizationReviews{
-		gentype.NewClientWithList[*projectcalicov3.AuthorizationReview, *projectcalicov3.AuthorizationReviewList](
+		gentype.NewClientWithListAndApply[*projectcalicov3.AuthorizationReview, *projectcalicov3.AuthorizationReviewList, *applyconfigurationgeneratedprojectcalicov3.AuthorizationReviewApplyConfiguration](
 			"authorizationreviews",
 			c.RESTClient(),
 			scheme.ParameterCodec,

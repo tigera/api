@@ -8,6 +8,7 @@ import (
 	context "context"
 
 	projectcalicov3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
+	applyconfigurationgeneratedprojectcalicov3 "github.com/tigera/api/pkg/client/applyconfiguration_generated/projectcalico/v3"
 	scheme "github.com/tigera/api/pkg/client/clientset_generated/clientset/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
@@ -33,18 +34,21 @@ type AlertExceptionInterface interface {
 	List(ctx context.Context, opts v1.ListOptions) (*projectcalicov3.AlertExceptionList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
 	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *projectcalicov3.AlertException, err error)
+	Apply(ctx context.Context, alertException *applyconfigurationgeneratedprojectcalicov3.AlertExceptionApplyConfiguration, opts v1.ApplyOptions) (result *projectcalicov3.AlertException, err error)
+	// Add a +genclient:noStatus comment above the type to avoid generating ApplyStatus().
+	ApplyStatus(ctx context.Context, alertException *applyconfigurationgeneratedprojectcalicov3.AlertExceptionApplyConfiguration, opts v1.ApplyOptions) (result *projectcalicov3.AlertException, err error)
 	AlertExceptionExpansion
 }
 
 // alertExceptions implements AlertExceptionInterface
 type alertExceptions struct {
-	*gentype.ClientWithList[*projectcalicov3.AlertException, *projectcalicov3.AlertExceptionList]
+	*gentype.ClientWithListAndApply[*projectcalicov3.AlertException, *projectcalicov3.AlertExceptionList, *applyconfigurationgeneratedprojectcalicov3.AlertExceptionApplyConfiguration]
 }
 
 // newAlertExceptions returns a AlertExceptions
 func newAlertExceptions(c *ProjectcalicoV3Client) *alertExceptions {
 	return &alertExceptions{
-		gentype.NewClientWithList[*projectcalicov3.AlertException, *projectcalicov3.AlertExceptionList](
+		gentype.NewClientWithListAndApply[*projectcalicov3.AlertException, *projectcalicov3.AlertExceptionList, *applyconfigurationgeneratedprojectcalicov3.AlertExceptionApplyConfiguration](
 			"alertexceptions",
 			c.RESTClient(),
 			scheme.ParameterCodec,
