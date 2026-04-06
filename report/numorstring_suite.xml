@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  <testsuites tests="101" disabled="0" errors="0" failures="0" time="0.008240578">
+      <testsuite name="Numorstring Suite" package="/go/src/github.com/tigera/api/pkg/lib/numorstring" tests="101" disabled="0" skipped="0" errors="0" failures="0" time="0.008240578" timestamp="2026-04-01T16:25:13">
+          <properties>
+              <property name="SuiteSucceeded" value="true"></property>
+              <property name="SuiteHasProgrammaticFocus" value="false"></property>
+              <property name="SpecialSuiteFailureReason" value=""></property>
+              <property name="SuiteLabels" value="[]"></property>
+              <property name="SuiteSemVerConstraints" value="[]"></property>
+              <property name="SuiteComponentSemVerConstraints" value="[]"></property>
+              <property name="RandomSeed" value="1775060699"></property>
+              <property name="RandomizeAllSpecs" value="false"></property>
+              <property name="LabelFilter" value=""></property>
+              <property name="SemVerFilter" value=""></property>
+              <property name="FocusStrings" value=".*"></property>
+              <property name="SkipStrings" value=""></property>
+              <property name="FocusFiles" value=""></property>
+              <property name="SkipFiles" value=""></property>
+              <property name="FailOnPending" value="false"></property>
+              <property name="FailOnEmpty" value="false"></property>
+              <property name="FailFast" value="false"></property>
+              <property name="FlakeAttempts" value="0"></property>
+              <property name="DryRun" value="false"></property>
+              <property name="ParallelTotal" value="1"></property>
+              <property name="OutputInterceptorMode" value=""></property>
+          </properties>
+          <testcase name="[It] NumOrStringDSCP ToUint8 returns valid values dscp BE" classname="Numorstring Suite" status="passed" time="0.000265996">
+              <system-err>&gt; Enter [It] dscp BE - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:229 @ 04/01/26 16:25:13.532&#xA;&lt; Exit [It] dscp BE - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:229 @ 04/01/26 16:25:13.532 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringDSCP ToUint8 returns valid values dscp AF33" classname="Numorstring Suite" status="passed" time="5.5699e-05">
+              <system-err>&gt; Enter [It] dscp AF33 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:230 @ 04/01/26 16:25:13.532&#xA;&lt; Exit [It] dscp AF33 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:230 @ 04/01/26 16:25:13.532 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringDSCP ToUint8 returns valid values dscp CS5" classname="Numorstring Suite" status="passed" time="5.2435e-05">
+              <system-err>&gt; Enter [It] dscp CS5 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:231 @ 04/01/26 16:25:13.532&#xA;&lt; Exit [It] dscp CS5 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:231 @ 04/01/26 16:25:13.532 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONMarshaling should marshal ASN of 0" classname="Numorstring Suite" status="passed" time="7.726e-05">
+              <system-err>&gt; Enter [It] should marshal ASN of 0 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:116 @ 04/01/26 16:25:13.532&#xA;&lt; Exit [It] should marshal ASN of 0 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:116 @ 04/01/26 16:25:13.532 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONMarshaling should marshal ASN of 4294967295" classname="Numorstring Suite" status="passed" time="5.2343e-05">
+              <system-err>&gt; Enter [It] should marshal ASN of 4294967295 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:117 @ 04/01/26 16:25:13.532&#xA;&lt; Exit [It] should marshal ASN of 4294967295 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:117 @ 04/01/26 16:25:13.533 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONMarshaling should marshal port of 0" classname="Numorstring Suite" status="passed" time="8.9125e-05">
+              <system-err>&gt; Enter [It] should marshal port of 0 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:120 @ 04/01/26 16:25:13.533&#xA;&lt; Exit [It] should marshal port of 0 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:120 @ 04/01/26 16:25:13.533 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONMarshaling should marshal port of 65535" classname="Numorstring Suite" status="passed" time="5.4641e-05">
+              <system-err>&gt; Enter [It] should marshal port of 65535 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:121 @ 04/01/26 16:25:13.533&#xA;&lt; Exit [It] should marshal port of 65535 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:121 @ 04/01/26 16:25:13.533 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONMarshaling should marshal port of 10" classname="Numorstring Suite" status="passed" time="4.1055e-05">
+              <system-err>&gt; Enter [It] should marshal port of 10 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:122 @ 04/01/26 16:25:13.533&#xA;&lt; Exit [It] should marshal port of 10 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:122 @ 04/01/26 16:25:13.533 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONMarshaling should marshal port range of 10:20" classname="Numorstring Suite" status="passed" time="3.5527e-05">
+              <system-err>&gt; Enter [It] should marshal port range of 10:20 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:123 @ 04/01/26 16:25:13.533&#xA;&lt; Exit [It] should marshal port range of 10:20 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:123 @ 04/01/26 16:25:13.533 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONMarshaling should marshal port range of 20:30" classname="Numorstring Suite" status="passed" time="3.1059e-05">
+              <system-err>&gt; Enter [It] should marshal port range of 20:30 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:124 @ 04/01/26 16:25:13.533&#xA;&lt; Exit [It] should marshal port range of 20:30 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:124 @ 04/01/26 16:25:13.533 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONMarshaling should marshal named port" classname="Numorstring Suite" status="passed" time="2.7739e-05">
+              <system-err>&gt; Enter [It] should marshal named port - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:125 @ 04/01/26 16:25:13.533&#xA;&lt; Exit [It] should marshal named port - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:125 @ 04/01/26 16:25:13.533 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONMarshaling should marshal protocol of 0" classname="Numorstring Suite" status="passed" time="4.0112e-05">
+              <system-err>&gt; Enter [It] should marshal protocol of 0 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:128 @ 04/01/26 16:25:13.533&#xA;&lt; Exit [It] should marshal protocol of 0 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:128 @ 04/01/26 16:25:13.533 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONMarshaling should marshal protocol of udp" classname="Numorstring Suite" status="passed" time="3.593e-05">
+              <system-err>&gt; Enter [It] should marshal protocol of udp - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:129 @ 04/01/26 16:25:13.533&#xA;&lt; Exit [It] should marshal protocol of udp - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:129 @ 04/01/26 16:25:13.533 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONMarshaling should marshal dscp of 0" classname="Numorstring Suite" status="passed" time="3.7507e-05">
+              <system-err>&gt; Enter [It] should marshal dscp of 0 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:132 @ 04/01/26 16:25:13.533&#xA;&lt; Exit [It] should marshal dscp of 0 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:132 @ 04/01/26 16:25:13.533 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONMarshaling should marshal dscp of 120" classname="Numorstring Suite" status="passed" time="3.3084e-05">
+              <system-err>&gt; Enter [It] should marshal dscp of 120 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:133 @ 04/01/26 16:25:13.533&#xA;&lt; Exit [It] should marshal dscp of 120 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:133 @ 04/01/26 16:25:13.533 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONMarshaling should marshal dscp of DF" classname="Numorstring Suite" status="passed" time="3.9657e-05">
+              <system-err>&gt; Enter [It] should marshal dscp of DF - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:134 @ 04/01/26 16:25:13.533&#xA;&lt; Exit [It] should marshal dscp of DF - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:134 @ 04/01/26 16:25:13.533 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringProtocols FromStringV1 is lowercase protocol udp -&gt; UDP" classname="Numorstring Suite" status="passed" time="2.919e-05">
+              <system-err>&gt; Enter [It] protocol udp -&gt; UDP - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:193 @ 04/01/26 16:25:13.533&#xA;&lt; Exit [It] protocol udp -&gt; UDP - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:193 @ 04/01/26 16:25:13.533 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringProtocols FromStringV1 is lowercase protocol tcp -&gt; TCP" classname="Numorstring Suite" status="passed" time="4.6907e-05">
+              <system-err>&gt; Enter [It] protocol tcp -&gt; TCP - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:194 @ 04/01/26 16:25:13.533&#xA;&lt; Exit [It] protocol tcp -&gt; TCP - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:194 @ 04/01/26 16:25:13.533 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringProtocols FromStringV1 is lowercase protocol updlite -&gt; UDPLite" classname="Numorstring Suite" status="passed" time="3.7398e-05">
+              <system-err>&gt; Enter [It] protocol updlite -&gt; UDPLite - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:195 @ 04/01/26 16:25:13.533&#xA;&lt; Exit [It] protocol updlite -&gt; UDPLite - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:195 @ 04/01/26 16:25:13.533 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringProtocols FromStringV1 is lowercase unknown protocol xxxXXX" classname="Numorstring Suite" status="passed" time="4.0778e-05">
+              <system-err>&gt; Enter [It] unknown protocol xxxXXX - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:196 @ 04/01/26 16:25:13.533&#xA;&lt; Exit [It] unknown protocol xxxXXX - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:196 @ 04/01/26 16:25:13.533 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringDSCP FromString is not case-sensitive dscp cs6 -&gt; CS6" classname="Numorstring Suite" status="passed" time="4.5177e-05">
+              <system-err>&gt; Enter [It] dscp cs6 -&gt; CS6 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:216 @ 04/01/26 16:25:13.534&#xA;&lt; Exit [It] dscp cs6 -&gt; CS6 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:216 @ 04/01/26 16:25:13.534 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringDSCP FromString is not case-sensitive dscp Af11 -&gt; AF11" classname="Numorstring Suite" status="passed" time="2.6598e-05">
+              <system-err>&gt; Enter [It] dscp Af11 -&gt; AF11 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:217 @ 04/01/26 16:25:13.534&#xA;&lt; Exit [It] dscp Af11 -&gt; AF11 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:217 @ 04/01/26 16:25:13.534 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringDSCP FromString is not case-sensitive dscp ef -&gt; EF" classname="Numorstring Suite" status="passed" time="4.1002e-05">
+              <system-err>&gt; Enter [It] dscp ef -&gt; EF - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:218 @ 04/01/26 16:25:13.534&#xA;&lt; Exit [It] dscp ef -&gt; EF - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:218 @ 04/01/26 16:25:13.534 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringDSCP FromString is not case-sensitive unknown dscp xxxXXX" classname="Numorstring Suite" status="passed" time="2.5897e-05">
+              <system-err>&gt; Enter [It] unknown dscp xxxXXX - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:219 @ 04/01/26 16:25:13.534&#xA;&lt; Exit [It] unknown dscp xxxXXX - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:219 @ 04/01/26 16:25:13.534 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringDSCP Validate method validates string inputs correctly should accept EF" classname="Numorstring Suite" status="passed" time="3.4537e-05">
+              <system-err>&gt; Enter [It] should accept EF - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:245 @ 04/01/26 16:25:13.534&#xA;&lt; Exit [It] should accept EF - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:245 @ 04/01/26 16:25:13.534 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringDSCP Validate method validates string inputs correctly should accept AF11" classname="Numorstring Suite" status="passed" time="2.9416e-05">
+              <system-err>&gt; Enter [It] should accept AF11 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:246 @ 04/01/26 16:25:13.534&#xA;&lt; Exit [It] should accept AF11 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:246 @ 04/01/26 16:25:13.534 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringDSCP Validate method validates string inputs correctly should accept CS2" classname="Numorstring Suite" status="passed" time="2.2063e-05">
+              <system-err>&gt; Enter [It] should accept CS2 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:247 @ 04/01/26 16:25:13.534&#xA;&lt; Exit [It] should accept CS2 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:247 @ 04/01/26 16:25:13.534 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringDSCP Validate method validates string inputs correctly should accept 0" classname="Numorstring Suite" status="passed" time="2.5335e-05">
+              <system-err>&gt; Enter [It] should accept 0 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:248 @ 04/01/26 16:25:13.534&#xA;&lt; Exit [It] should accept 0 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:248 @ 04/01/26 16:25:13.534 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringDSCP Validate method validates string inputs correctly should accept 40" classname="Numorstring Suite" status="passed" time="2.7471e-05">
+              <system-err>&gt; Enter [It] should accept 40 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:249 @ 04/01/26 16:25:13.534&#xA;&lt; Exit [It] should accept 40 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:249 @ 04/01/26 16:25:13.534 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringDSCP Validate method validates string inputs correctly should accept 63" classname="Numorstring Suite" status="passed" time="2.1307e-05">
+              <system-err>&gt; Enter [It] should accept 63 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:250 @ 04/01/26 16:25:13.534&#xA;&lt; Exit [It] should accept 63 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:250 @ 04/01/26 16:25:13.534 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringDSCP Validate method validates string inputs correctly should reject 64" classname="Numorstring Suite" status="passed" time="1.9889e-05">
+              <system-err>&gt; Enter [It] should reject 64 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:251 @ 04/01/26 16:25:13.534&#xA;&lt; Exit [It] should reject 64 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:251 @ 04/01/26 16:25:13.534 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringDSCP Validate method validates string inputs correctly should reject 120" classname="Numorstring Suite" status="passed" time="2.0935e-05">
+              <system-err>&gt; Enter [It] should reject 120 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:252 @ 04/01/26 16:25:13.534&#xA;&lt; Exit [It] should reject 120 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:252 @ 04/01/26 16:25:13.534 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringDSCP Validate method validates string inputs correctly should reject -1" classname="Numorstring Suite" status="passed" time="3.6978e-05">
+              <system-err>&gt; Enter [It] should reject -1 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:253 @ 04/01/26 16:25:13.534&#xA;&lt; Exit [It] should reject -1 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:253 @ 04/01/26 16:25:13.534 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringDSCP Validate method validates string inputs correctly should reject CS9" classname="Numorstring Suite" status="passed" time="3.9041e-05">
+              <system-err>&gt; Enter [It] should reject CS9 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:254 @ 04/01/26 16:25:13.534&#xA;&lt; Exit [It] should reject CS9 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:254 @ 04/01/26 16:25:13.534 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringDSCP Validate method validates string inputs correctly should reject xxx" classname="Numorstring Suite" status="passed" time="2.6375e-05">
+              <system-err>&gt; Enter [It] should reject xxx - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:255 @ 04/01/26 16:25:13.534&#xA;&lt; Exit [It] should reject xxx - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:255 @ 04/01/26 16:25:13.534 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringDSCP Validate method validates string inputs correctly should reject empty string" classname="Numorstring Suite" status="passed" time="3.0816e-05">
+              <system-err>&gt; Enter [It] should reject empty string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:256 @ 04/01/26 16:25:13.534&#xA;&lt; Exit [It] should reject empty string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:256 @ 04/01/26 16:25:13.534 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringDSCP Validate method validates string inputs correctly should reject empty string" classname="Numorstring Suite" status="passed" time="5.304e-05">
+              <system-err>&gt; Enter [It] should reject empty string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:257 @ 04/01/26 16:25:13.534&#xA;&lt; Exit [It] should reject empty string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:257 @ 04/01/26 16:25:13.534 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringProtocolsSupportingPorts protocol 6 supports ports" classname="Numorstring Suite" status="passed" time="3.7062e-05">
+              <system-err>&gt; Enter [It] protocol 6 supports ports - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:167 @ 04/01/26 16:25:13.534&#xA;&lt; Exit [It] protocol 6 supports ports - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:167 @ 04/01/26 16:25:13.534 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringProtocolsSupportingPorts protocol 17 supports ports" classname="Numorstring Suite" status="passed" time="3.0315e-05">
+              <system-err>&gt; Enter [It] protocol 17 supports ports - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:168 @ 04/01/26 16:25:13.534&#xA;&lt; Exit [It] protocol 17 supports ports - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:168 @ 04/01/26 16:25:13.534 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringProtocolsSupportingPorts protocol udp supports ports" classname="Numorstring Suite" status="passed" time="3.2194e-05">
+              <system-err>&gt; Enter [It] protocol udp supports ports - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:169 @ 04/01/26 16:25:13.534&#xA;&lt; Exit [It] protocol udp supports ports - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:169 @ 04/01/26 16:25:13.534 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringProtocolsSupportingPorts protocol udp supports ports" classname="Numorstring Suite" status="passed" time="4.2048e-05">
+              <system-err>&gt; Enter [It] protocol udp supports ports - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:170 @ 04/01/26 16:25:13.535&#xA;&lt; Exit [It] protocol udp supports ports - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:170 @ 04/01/26 16:25:13.535 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringProtocolsSupportingPorts protocol foo does not support ports" classname="Numorstring Suite" status="passed" time="3.0522e-05">
+              <system-err>&gt; Enter [It] protocol foo does not support ports - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:171 @ 04/01/26 16:25:13.535&#xA;&lt; Exit [It] protocol foo does not support ports - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:171 @ 04/01/26 16:25:13.535 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringProtocolsSupportingPorts protocol 2 does not support ports" classname="Numorstring Suite" status="passed" time="0.000425879">
+              <system-err>&gt; Enter [It] protocol 2 does not support ports - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:172 @ 04/01/26 16:25:13.535&#xA;&lt; Exit [It] protocol 2 does not support ports - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:172 @ 04/01/26 16:25:13.535 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringProtocols FromString is not case-sensitive protocol udp -&gt; UDP" classname="Numorstring Suite" status="passed" time="9.4108e-05">
+              <system-err>&gt; Enter [It] protocol udp -&gt; UDP - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:181 @ 04/01/26 16:25:13.535&#xA;&lt; Exit [It] protocol udp -&gt; UDP - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:181 @ 04/01/26 16:25:13.535 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringProtocols FromString is not case-sensitive protocol tcp -&gt; TCP" classname="Numorstring Suite" status="passed" time="9.5181e-05">
+              <system-err>&gt; Enter [It] protocol tcp -&gt; TCP - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:182 @ 04/01/26 16:25:13.535&#xA;&lt; Exit [It] protocol tcp -&gt; TCP - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:182 @ 04/01/26 16:25:13.536 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringProtocols FromString is not case-sensitive protocol updlite -&gt; UDPLite" classname="Numorstring Suite" status="passed" time="0.000432454">
+              <system-err>&gt; Enter [It] protocol updlite -&gt; UDPLite - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:183 @ 04/01/26 16:25:13.536&#xA;&lt; Exit [It] protocol updlite -&gt; UDPLite - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:183 @ 04/01/26 16:25:13.536 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringProtocols FromString is not case-sensitive unknown protocol xxxXXX" classname="Numorstring Suite" status="passed" time="4.1716e-05">
+              <system-err>&gt; Enter [It] unknown protocol xxxXXX - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:184 @ 04/01/26 16:25:13.536&#xA;&lt; Exit [It] unknown protocol xxxXXX - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:184 @ 04/01/26 16:25:13.536 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringProtocols FromStringV1 is lowercase protocol udp -&gt; UDP" classname="Numorstring Suite" status="passed" time="4.9073e-05">
+              <system-err>&gt; Enter [It] protocol udp -&gt; UDP - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:206 @ 04/01/26 16:25:13.536&#xA;&lt; Exit [It] protocol udp -&gt; UDP - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:206 @ 04/01/26 16:25:13.536 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringProtocols FromStringV1 is lowercase protocol tcp -&gt; TCP" classname="Numorstring Suite" status="passed" time="3.4155e-05">
+              <system-err>&gt; Enter [It] protocol tcp -&gt; TCP - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:207 @ 04/01/26 16:25:13.536&#xA;&lt; Exit [It] protocol tcp -&gt; TCP - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:207 @ 04/01/26 16:25:13.536 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONUnmarshaling should accept 0 AS number as int" classname="Numorstring Suite" status="passed" time="7.8762e-05">
+              <system-err>&gt; Enter [It] should accept 0 AS number as int - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:54 @ 04/01/26 16:25:13.536&#xA;&lt; Exit [It] should accept 0 AS number as int - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:54 @ 04/01/26 16:25:13.536 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONUnmarshaling should accept 4294967295 AS number as int" classname="Numorstring Suite" status="passed" time="5.2275e-05">
+              <system-err>&gt; Enter [It] should accept 4294967295 AS number as int - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:55 @ 04/01/26 16:25:13.536&#xA;&lt; Exit [It] should accept 4294967295 AS number as int - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:55 @ 04/01/26 16:25:13.536 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONUnmarshaling should accept 0 AS number as string" classname="Numorstring Suite" status="passed" time="4.4178e-05">
+              <system-err>&gt; Enter [It] should accept 0 AS number as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:56 @ 04/01/26 16:25:13.536&#xA;&lt; Exit [It] should accept 0 AS number as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:56 @ 04/01/26 16:25:13.536 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONUnmarshaling should accept 4294967295 AS number as string" classname="Numorstring Suite" status="passed" time="6.0308e-05">
+              <system-err>&gt; Enter [It] should accept 4294967295 AS number as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:57 @ 04/01/26 16:25:13.536&#xA;&lt; Exit [It] should accept 4294967295 AS number as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:57 @ 04/01/26 16:25:13.537 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONUnmarshaling should accept 1.10 AS number as string" classname="Numorstring Suite" status="passed" time="4.2404e-05">
+              <system-err>&gt; Enter [It] should accept 1.10 AS number as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:58 @ 04/01/26 16:25:13.537&#xA;&lt; Exit [It] should accept 1.10 AS number as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:58 @ 04/01/26 16:25:13.537 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONUnmarshaling should accept 00.00 AS number as string" classname="Numorstring Suite" status="passed" time="4.9237e-05">
+              <system-err>&gt; Enter [It] should accept 00.00 AS number as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:59 @ 04/01/26 16:25:13.537&#xA;&lt; Exit [It] should accept 00.00 AS number as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:59 @ 04/01/26 16:25:13.537 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONUnmarshaling should accept 00.01 AS number as string" classname="Numorstring Suite" status="passed" time="4.4556e-05">
+              <system-err>&gt; Enter [It] should accept 00.01 AS number as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:60 @ 04/01/26 16:25:13.537&#xA;&lt; Exit [It] should accept 00.01 AS number as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:60 @ 04/01/26 16:25:13.537 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONUnmarshaling should accept 65535.65535 AS number as string" classname="Numorstring Suite" status="passed" time="3.8208e-05">
+              <system-err>&gt; Enter [It] should accept 65535.65535 AS number as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:61 @ 04/01/26 16:25:13.537&#xA;&lt; Exit [It] should accept 65535.65535 AS number as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:61 @ 04/01/26 16:25:13.537 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONUnmarshaling should reject 1.1.1 AS number as string" classname="Numorstring Suite" status="passed" time="4.1683e-05">
+              <system-err>&gt; Enter [It] should reject 1.1.1 AS number as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:62 @ 04/01/26 16:25:13.537&#xA;&lt; Exit [It] should reject 1.1.1 AS number as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:62 @ 04/01/26 16:25:13.537 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONUnmarshaling should reject 65536.65535 AS number as string" classname="Numorstring Suite" status="passed" time="3.7774e-05">
+              <system-err>&gt; Enter [It] should reject 65536.65535 AS number as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:63 @ 04/01/26 16:25:13.537&#xA;&lt; Exit [It] should reject 65536.65535 AS number as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:63 @ 04/01/26 16:25:13.537 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONUnmarshaling should reject 65535.65536 AS number as string" classname="Numorstring Suite" status="passed" time="3.7496e-05">
+              <system-err>&gt; Enter [It] should reject 65535.65536 AS number as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:64 @ 04/01/26 16:25:13.537&#xA;&lt; Exit [It] should reject 65535.65536 AS number as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:64 @ 04/01/26 16:25:13.537 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONUnmarshaling should reject 0.-1 AS number as string" classname="Numorstring Suite" status="passed" time="4.1682e-05">
+              <system-err>&gt; Enter [It] should reject 0.-1 AS number as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:65 @ 04/01/26 16:25:13.537&#xA;&lt; Exit [It] should reject 0.-1 AS number as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:65 @ 04/01/26 16:25:13.537 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONUnmarshaling should reject -1 AS number as int" classname="Numorstring Suite" status="passed" time="4.1731e-05">
+              <system-err>&gt; Enter [It] should reject -1 AS number as int - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:66 @ 04/01/26 16:25:13.537&#xA;&lt; Exit [It] should reject -1 AS number as int - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:66 @ 04/01/26 16:25:13.537 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONUnmarshaling should reject 4294967296 AS number as int" classname="Numorstring Suite" status="passed" time="5.116e-05">
+              <system-err>&gt; Enter [It] should reject 4294967296 AS number as int - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:67 @ 04/01/26 16:25:13.537&#xA;&lt; Exit [It] should reject 4294967296 AS number as int - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:67 @ 04/01/26 16:25:13.537 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONUnmarshaling should accept 0 port as int" classname="Numorstring Suite" status="passed" time="5.7865e-05">
+              <system-err>&gt; Enter [It] should accept 0 port as int - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:70 @ 04/01/26 16:25:13.537&#xA;&lt; Exit [It] should accept 0 port as int - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:70 @ 04/01/26 16:25:13.537 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONUnmarshaling should accept 65535 port as int" classname="Numorstring Suite" status="passed" time="3.6382e-05">
+              <system-err>&gt; Enter [It] should accept 65535 port as int - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:71 @ 04/01/26 16:25:13.537&#xA;&lt; Exit [It] should accept 65535 port as int - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:71 @ 04/01/26 16:25:13.537 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONUnmarshaling should accept 0:65535 port range as string" classname="Numorstring Suite" status="passed" time="6.1207e-05">
+              <system-err>&gt; Enter [It] should accept 0:65535 port range as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:72 @ 04/01/26 16:25:13.537&#xA;&lt; Exit [It] should accept 0:65535 port range as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:72 @ 04/01/26 16:25:13.537 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONUnmarshaling should accept 1:10 port range as string" classname="Numorstring Suite" status="passed" time="3.8537e-05">
+              <system-err>&gt; Enter [It] should accept 1:10 port range as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:73 @ 04/01/26 16:25:13.537&#xA;&lt; Exit [It] should accept 1:10 port range as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:73 @ 04/01/26 16:25:13.537 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONUnmarshaling should accept foo-bar as named port" classname="Numorstring Suite" status="passed" time="6.199e-05">
+              <system-err>&gt; Enter [It] should accept foo-bar as named port - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:74 @ 04/01/26 16:25:13.537&#xA;&lt; Exit [It] should accept foo-bar as named port - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:74 @ 04/01/26 16:25:13.537 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONUnmarshaling should reject -1 port as int" classname="Numorstring Suite" status="passed" time="5.0603e-05">
+              <system-err>&gt; Enter [It] should reject -1 port as int - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:75 @ 04/01/26 16:25:13.538&#xA;&lt; Exit [It] should reject -1 port as int - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:75 @ 04/01/26 16:25:13.538 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONUnmarshaling should reject 65536 port as int" classname="Numorstring Suite" status="passed" time="3.4951e-05">
+              <system-err>&gt; Enter [It] should reject 65536 port as int - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:76 @ 04/01/26 16:25:13.538&#xA;&lt; Exit [It] should reject 65536 port as int - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:76 @ 04/01/26 16:25:13.538 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONUnmarshaling should reject 0:65536 port range as string" classname="Numorstring Suite" status="passed" time="4.4645e-05">
+              <system-err>&gt; Enter [It] should reject 0:65536 port range as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:77 @ 04/01/26 16:25:13.538&#xA;&lt; Exit [It] should reject 0:65536 port range as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:77 @ 04/01/26 16:25:13.538 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONUnmarshaling should reject -1:65535 port range as string" classname="Numorstring Suite" status="passed" time="3.6664e-05">
+              <system-err>&gt; Enter [It] should reject -1:65535 port range as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:78 @ 04/01/26 16:25:13.538&#xA;&lt; Exit [It] should reject -1:65535 port range as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:78 @ 04/01/26 16:25:13.538 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONUnmarshaling should reject 10:1 port range as string" classname="Numorstring Suite" status="passed" time="4.5292e-05">
+              <system-err>&gt; Enter [It] should reject 10:1 port range as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:79 @ 04/01/26 16:25:13.538&#xA;&lt; Exit [It] should reject 10:1 port range as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:79 @ 04/01/26 16:25:13.538 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONUnmarshaling should reject 1:2:3 port range as string" classname="Numorstring Suite" status="passed" time="3.8322e-05">
+              <system-err>&gt; Enter [It] should reject 1:2:3 port range as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:80 @ 04/01/26 16:25:13.538&#xA;&lt; Exit [It] should reject 1:2:3 port range as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:80 @ 04/01/26 16:25:13.538 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONUnmarshaling should reject bad named port string" classname="Numorstring Suite" status="passed" time="3.6794e-05">
+              <system-err>&gt; Enter [It] should reject bad named port string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:81 @ 04/01/26 16:25:13.538&#xA;&lt; Exit [It] should reject bad named port string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:81 @ 04/01/26 16:25:13.538 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONUnmarshaling should reject bad port string" classname="Numorstring Suite" status="passed" time="4.0547e-05">
+              <system-err>&gt; Enter [It] should reject bad port string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:82 @ 04/01/26 16:25:13.538&#xA;&lt; Exit [It] should reject bad port string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:82 @ 04/01/26 16:25:13.538 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONUnmarshaling should accept 0 protocol as int" classname="Numorstring Suite" status="passed" time="4.9838e-05">
+              <system-err>&gt; Enter [It] should accept 0 protocol as int - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:85 @ 04/01/26 16:25:13.538&#xA;&lt; Exit [It] should accept 0 protocol as int - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:85 @ 04/01/26 16:25:13.538 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONUnmarshaling should accept 255 protocol as int" classname="Numorstring Suite" status="passed" time="3.7615e-05">
+              <system-err>&gt; Enter [It] should accept 255 protocol as int - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:86 @ 04/01/26 16:25:13.538&#xA;&lt; Exit [It] should accept 255 protocol as int - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:86 @ 04/01/26 16:25:13.538 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONUnmarshaling should accept tcp protocol as string" classname="Numorstring Suite" status="passed" time="4.8576e-05">
+              <system-err>&gt; Enter [It] should accept tcp protocol as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:87 @ 04/01/26 16:25:13.538&#xA;&lt; Exit [It] should accept tcp protocol as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:87 @ 04/01/26 16:25:13.538 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONUnmarshaling should accept tcp protocol as string" classname="Numorstring Suite" status="passed" time="3.7518e-05">
+              <system-err>&gt; Enter [It] should accept tcp protocol as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:88 @ 04/01/26 16:25:13.538&#xA;&lt; Exit [It] should accept tcp protocol as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:88 @ 04/01/26 16:25:13.538 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONUnmarshaling should accept 0 protocol as string" classname="Numorstring Suite" status="passed" time="4.0202e-05">
+              <system-err>&gt; Enter [It] should accept 0 protocol as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:89 @ 04/01/26 16:25:13.538&#xA;&lt; Exit [It] should accept 0 protocol as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:89 @ 04/01/26 16:25:13.538 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONUnmarshaling should accept 0 protocol as string" classname="Numorstring Suite" status="passed" time="4.8053e-05">
+              <system-err>&gt; Enter [It] should accept 0 protocol as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:90 @ 04/01/26 16:25:13.538&#xA;&lt; Exit [It] should accept 0 protocol as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:90 @ 04/01/26 16:25:13.538 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONUnmarshaling should accept 256 protocol as string" classname="Numorstring Suite" status="passed" time="3.6578e-05">
+              <system-err>&gt; Enter [It] should accept 256 protocol as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:91 @ 04/01/26 16:25:13.538&#xA;&lt; Exit [It] should accept 256 protocol as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:91 @ 04/01/26 16:25:13.538 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONUnmarshaling should reject bad protocol string" classname="Numorstring Suite" status="passed" time="5.3821e-05">
+              <system-err>&gt; Enter [It] should reject bad protocol string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:92 @ 04/01/26 16:25:13.538&#xA;&lt; Exit [It] should reject bad protocol string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:92 @ 04/01/26 16:25:13.538 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONUnmarshaling should accept 0 DSCP as int" classname="Numorstring Suite" status="passed" time="6.2558e-05">
+              <system-err>&gt; Enter [It] should accept 0 DSCP as int - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:95 @ 04/01/26 16:25:13.539&#xA;&lt; Exit [It] should accept 0 DSCP as int - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:95 @ 04/01/26 16:25:13.539 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONUnmarshaling should accept 63 DSCP as int" classname="Numorstring Suite" status="passed" time="4.8648e-05">
+              <system-err>&gt; Enter [It] should accept 63 DSCP as int - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:96 @ 04/01/26 16:25:13.539&#xA;&lt; Exit [It] should accept 63 DSCP as int - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:96 @ 04/01/26 16:25:13.539 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONUnmarshaling should accept DF DSCP as string" classname="Numorstring Suite" status="passed" time="4.5137e-05">
+              <system-err>&gt; Enter [It] should accept DF DSCP as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:97 @ 04/01/26 16:25:13.539&#xA;&lt; Exit [It] should accept DF DSCP as string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:97 @ 04/01/26 16:25:13.539 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringJSONUnmarshaling should reject bad DSCP string" classname="Numorstring Suite" status="passed" time="3.2632e-05">
+              <system-err>&gt; Enter [It] should reject bad DSCP string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:98 @ 04/01/26 16:25:13.539&#xA;&lt; Exit [It] should reject bad DSCP string - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:98 @ 04/01/26 16:25:13.539 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringDSCP Validate method validates numerical inputs correctly should accept 0" classname="Numorstring Suite" status="passed" time="6.9621e-05">
+              <system-err>&gt; Enter [It] should accept 0 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:271 @ 04/01/26 16:25:13.539&#xA;&lt; Exit [It] should accept 0 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:271 @ 04/01/26 16:25:13.539 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringDSCP Validate method validates numerical inputs correctly should accept 40" classname="Numorstring Suite" status="passed" time="2.3953e-05">
+              <system-err>&gt; Enter [It] should accept 40 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:272 @ 04/01/26 16:25:13.539&#xA;&lt; Exit [It] should accept 40 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:272 @ 04/01/26 16:25:13.539 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringDSCP Validate method validates numerical inputs correctly should accept 63" classname="Numorstring Suite" status="passed" time="2.0815e-05">
+              <system-err>&gt; Enter [It] should accept 63 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:273 @ 04/01/26 16:25:13.539&#xA;&lt; Exit [It] should accept 63 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:273 @ 04/01/26 16:25:13.539 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringDSCP Validate method validates numerical inputs correctly should reject 64" classname="Numorstring Suite" status="passed" time="2.1282e-05">
+              <system-err>&gt; Enter [It] should reject 64 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:274 @ 04/01/26 16:25:13.539&#xA;&lt; Exit [It] should reject 64 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:274 @ 04/01/26 16:25:13.539 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringDSCP Validate method validates numerical inputs correctly should reject 120" classname="Numorstring Suite" status="passed" time="1.9635e-05">
+              <system-err>&gt; Enter [It] should reject 120 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:275 @ 04/01/26 16:25:13.539&#xA;&lt; Exit [It] should reject 120 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:275 @ 04/01/26 16:25:13.539 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringStringify should stringify ASN of 0" classname="Numorstring Suite" status="passed" time="4.8028e-05">
+              <system-err>&gt; Enter [It] should stringify ASN of 0 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:145 @ 04/01/26 16:25:13.539&#xA;&lt; Exit [It] should stringify ASN of 0 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:145 @ 04/01/26 16:25:13.539 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringStringify should stringify ASN of 4294967295" classname="Numorstring Suite" status="passed" time="3.1503e-05">
+              <system-err>&gt; Enter [It] should stringify ASN of 4294967295 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:146 @ 04/01/26 16:25:13.539&#xA;&lt; Exit [It] should stringify ASN of 4294967295 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:146 @ 04/01/26 16:25:13.539 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringStringify should stringify port of 20" classname="Numorstring Suite" status="passed" time="3.7971e-05">
+              <system-err>&gt; Enter [It] should stringify port of 20 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:149 @ 04/01/26 16:25:13.539&#xA;&lt; Exit [It] should stringify port of 20 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:149 @ 04/01/26 16:25:13.539 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringStringify should stringify port range of 10:20" classname="Numorstring Suite" status="passed" time="4.5703e-05">
+              <system-err>&gt; Enter [It] should stringify port range of 10:20 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:150 @ 04/01/26 16:25:13.539&#xA;&lt; Exit [It] should stringify port range of 10:20 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:150 @ 04/01/26 16:25:13.539 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringStringify should stringify protocol of 0" classname="Numorstring Suite" status="passed" time="5.0421e-05">
+              <system-err>&gt; Enter [It] should stringify protocol of 0 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:153 @ 04/01/26 16:25:13.539&#xA;&lt; Exit [It] should stringify protocol of 0 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:153 @ 04/01/26 16:25:13.539 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringStringify should stringify protocol of udp" classname="Numorstring Suite" status="passed" time="2.9091e-05">
+              <system-err>&gt; Enter [It] should stringify protocol of udp - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:154 @ 04/01/26 16:25:13.539&#xA;&lt; Exit [It] should stringify protocol of udp - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:154 @ 04/01/26 16:25:13.539 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringStringify should stringify DSCP of 0" classname="Numorstring Suite" status="passed" time="3.0392e-05">
+              <system-err>&gt; Enter [It] should stringify DSCP of 0 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:157 @ 04/01/26 16:25:13.539&#xA;&lt; Exit [It] should stringify DSCP of 0 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:157 @ 04/01/26 16:25:13.539 (0s)&#xA;</system-err>
+          </testcase>
+          <testcase name="[It] NumOrStringStringify should stringify DSCP of AF22" classname="Numorstring Suite" status="passed" time="2.6859e-05">
+              <system-err>&gt; Enter [It] should stringify DSCP of AF22 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:158 @ 04/01/26 16:25:13.539&#xA;&lt; Exit [It] should stringify DSCP of AF22 - /go/src/github.com/tigera/api/pkg/lib/numorstring/numorstring_test.go:158 @ 04/01/26 16:25:13.539 (0s)&#xA;</system-err>
+          </testcase>
+      </testsuite>
+  </testsuites>
