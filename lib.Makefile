@@ -1786,33 +1786,47 @@ KIND_IMAGE_MARKERS = \
 
 $(REPO_ROOT)/node/.image.created-$(ARCH): $(call local-deps-go-files,node)
 	$(MAKE) -C $(REPO_ROOT)/node image
+	touch $@
 
 $(REPO_ROOT)/typha/.image.created-$(ARCH): $(call local-deps-go-files,typha)
 	$(MAKE) -C $(REPO_ROOT)/typha image
+	touch $@
 
 $(REPO_ROOT)/apiserver/.image.created-$(ARCH): $(call local-deps-go-files,apiserver)
 	$(MAKE) -C $(REPO_ROOT)/apiserver image
+	touch $@
 
 $(REPO_ROOT)/cni-plugin/.image.created-$(ARCH): $(call local-deps-go-files,cni-plugin)
 	$(MAKE) -C $(REPO_ROOT)/cni-plugin image
+	touch $@
 
 $(REPO_ROOT)/pod2daemon/.image.created-$(ARCH): $(call local-deps-go-files,pod2daemon)
 	$(MAKE) -C $(REPO_ROOT)/pod2daemon image
+	touch $@
 
 $(REPO_ROOT)/calicoctl/.image.created-$(ARCH): $(call local-deps-go-files,calicoctl)
 	$(MAKE) -C $(REPO_ROOT)/calicoctl image
+	touch $@
 
 $(REPO_ROOT)/kube-controllers/.image.created-$(ARCH): $(call local-deps-go-files,kube-controllers)
 	$(MAKE) -C $(REPO_ROOT)/kube-controllers image
+	touch $@
+
+$(REPO_ROOT)/goldmane/.image.created-$(ARCH): $(call local-deps-go-files,goldmane)
+	$(MAKE) -C $(REPO_ROOT)/goldmane image
+	touch $@
 
 $(REPO_ROOT)/webhooks/.image.created-$(ARCH): $(call local-deps-go-files,webhooks)
 	$(MAKE) -C $(REPO_ROOT)/webhooks image
+	touch $@
 
 $(REPO_ROOT)/whisker/.image.created-$(ARCH):
 	$(MAKE) -C $(REPO_ROOT)/whisker image
+	touch $@
 
 $(REPO_ROOT)/whisker-backend/.image.created-$(ARCH): $(call local-deps-go-files,whisker-backend)
 	$(MAKE) -C $(REPO_ROOT)/whisker-backend image
+	touch $@
 
 # Operator is built from a separate repo/branch. It only needs the
 # calico_versions.yml and enterprise_versions.yml files (static files with
@@ -1904,42 +1918,55 @@ kind-reload:
 # .image.created pattern as OSS components so Make tracks source changes.
 $(REPO_ROOT)/egress-gateway/.image.created-$(ARCH): $(call local-deps-go-files,egress-gateway)
 	$(MAKE) -C $(REPO_ROOT)/egress-gateway image
+	touch $@
 
 $(REPO_ROOT)/queryserver/.image.created-$(ARCH): $(call local-deps-go-files,queryserver)
 	$(MAKE) -C $(REPO_ROOT)/queryserver image
+	touch $@
 
 $(REPO_ROOT)/prometheus-service/.image.created-$(ARCH): $(call local-deps-go-files,prometheus-service)
 	$(MAKE) -C $(REPO_ROOT)/prometheus-service image
+	touch $@
 
 $(REPO_ROOT)/fluentd/.image.created-$(ARCH): $(call local-deps-go-files,fluentd)
 	$(MAKE) -C $(REPO_ROOT)/fluentd image THIRD_PARTY_REGISTRY=$(THIRD_PARTY_REGISTRY_CD)
+	touch $@
 
 $(REPO_ROOT)/policy-recommendation/.image.created-$(ARCH): $(call local-deps-go-files,policy-recommendation)
 	$(MAKE) -C $(REPO_ROOT)/policy-recommendation image
+	touch $@
 
 $(REPO_ROOT)/voltron/.image.created-$(ARCH): $(call local-deps-go-files,voltron)
 	$(MAKE) -C $(REPO_ROOT)/voltron image
+	touch $@
 
 $(REPO_ROOT)/ui-apis/.image.created-$(ARCH): $(call local-deps-go-files,ui-apis)
 	$(MAKE) -C $(REPO_ROOT)/ui-apis image
+	touch $@
 
 $(REPO_ROOT)/es-gateway/.image.created-$(ARCH): $(call local-deps-go-files,es-gateway)
 	$(MAKE) -C $(REPO_ROOT)/es-gateway image
+	touch $@
 
 $(REPO_ROOT)/linseed/.image.created-$(ARCH): $(call local-deps-go-files,linseed)
 	$(MAKE) -C $(REPO_ROOT)/linseed image
+	touch $@
 
 $(REPO_ROOT)/intrusion-detection-controller/.image.created-$(ARCH): $(call local-deps-go-files,intrusion-detection-controller)
 	$(MAKE) -C $(REPO_ROOT)/intrusion-detection-controller image
+	touch $@
 
 $(REPO_ROOT)/webhooks-processor/.image.created-$(ARCH): $(call local-deps-go-files,webhooks-processor)
 	$(MAKE) -C $(REPO_ROOT)/webhooks-processor image
+	touch $@
 
 $(REPO_ROOT)/intrusion-detection-controller/.dashboards-installer.image.created-$(ARCH): $(call local-deps-go-files,intrusion-detection-controller)
 	$(MAKE) -C $(REPO_ROOT)/intrusion-detection-controller intrusion-detection-job-installer
+	touch $@
 
 $(REPO_ROOT)/elasticsearch-metrics/.image.created-$(ARCH): $(call local-deps-go-files,elasticsearch-metrics)
 	$(MAKE) -C $(REPO_ROOT)/elasticsearch-metrics image
+	touch $@
 
 # Third-party locally-built images: use find for source deps since these
 # don't have deps.txt. The component Makefiles create the marker files.
@@ -2023,6 +2050,21 @@ $(ENVTEST_MIN_ASSETS_MARKER):
 		'go run sigs.k8s.io/controller-runtime/tools/setup-envtest@latest \
 		use --bin-dir $(ENVTEST_CONTAINER_DIR) -p path $(ENVTEST_MIN_K8S_VERSION)'
 	touch $@
+
+###############################################################################
+# Dev image build variables. Targets that use these are in the root Makefile.
+###############################################################################
+DEV_IMAGE_PATH ?= calico
+DEV_IMAGE_TAG ?= $(GIT_VERSION)
+DEV_IMAGE_REGISTRY ?= gcr.io/unique-caldron-775/dev
+DEV_STAMP_DIR := $(REPO_ROOT)/.dev-stamps
+
+# Map tigera/<name>:test-build → $(DEV_IMAGE_REGISTRY)/$(DEV_IMAGE_PATH)/<name>:$(DEV_IMAGE_TAG)
+# notdir strips the org prefix (tigera/ or calico/) to get just the image name.
+DEV_IMAGE_PREFIX = $(if $(filter docker.io,$(DEV_IMAGE_REGISTRY)),$(DEV_IMAGE_PATH),$(DEV_IMAGE_REGISTRY)/$(DEV_IMAGE_PATH))
+DEV_CALICO_IMAGES = $(foreach img,$(KIND_CALICO_IMAGES),$(DEV_IMAGE_PREFIX)/$(notdir $(firstword $(subst :, ,$(img)))):$(DEV_IMAGE_TAG))
+DEV_ENTERPRISE_IMAGES = $(foreach img,$(KIND_ENTERPRISE_LOCAL_IMAGES) $(KIND_ENTERPRISE_PULLED_IMAGES),$(DEV_IMAGE_PREFIX)/$(notdir $(firstword $(subst :, ,$(img)))):$(DEV_IMAGE_TAG))
+DEV_OPERATOR_IMAGE = $(DEV_IMAGE_PREFIX)/operator:$(DEV_IMAGE_TAG)
 
 ###############################################################################
 # Common functions for launching a local etcd instance.
