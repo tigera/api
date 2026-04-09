@@ -8,6 +8,7 @@
 package openapi
 
 import (
+	v3 "github.com/tigera/api/pkg/apis/projectcalico/v3"
 	numorstring "github.com/tigera/api/pkg/lib/numorstring"
 	v1 "k8s.io/api/core/v1"
 	networkingv1 "k8s.io/api/networking/v1"
@@ -21,594 +22,594 @@ import (
 
 func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenAPIDefinition {
 	return map[string]common.OpenAPIDefinition{
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.AlertException":                            schema_pkg_apis_projectcalico_v3_AlertException(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.AlertExceptionList":                        schema_pkg_apis_projectcalico_v3_AlertExceptionList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.AlertExceptionSpec":                        schema_pkg_apis_projectcalico_v3_AlertExceptionSpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.AlertExceptionStatus":                      schema_pkg_apis_projectcalico_v3_AlertExceptionStatus(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.AllocationAttribute":                       schema_pkg_apis_projectcalico_v3_AllocationAttribute(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.AuditEventsSelection":                      schema_pkg_apis_projectcalico_v3_AuditEventsSelection(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.AuditResource":                             schema_pkg_apis_projectcalico_v3_AuditResource(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.AuditSummary":                              schema_pkg_apis_projectcalico_v3_AuditSummary(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.AuthorizationReview":                       schema_pkg_apis_projectcalico_v3_AuthorizationReview(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.AuthorizationReviewList":                   schema_pkg_apis_projectcalico_v3_AuthorizationReviewList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.AuthorizationReviewResourceAttributes":     schema_pkg_apis_projectcalico_v3_AuthorizationReviewResourceAttributes(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.AuthorizationReviewSpec":                   schema_pkg_apis_projectcalico_v3_AuthorizationReviewSpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.AuthorizationReviewStatus":                 schema_pkg_apis_projectcalico_v3_AuthorizationReviewStatus(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.AuthorizedResourceGroup":                   schema_pkg_apis_projectcalico_v3_AuthorizedResourceGroup(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.AuthorizedResourceVerb":                    schema_pkg_apis_projectcalico_v3_AuthorizedResourceVerb(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.AuthorizedResourceVerbs":                   schema_pkg_apis_projectcalico_v3_AuthorizedResourceVerbs(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.AutoHostEndpointConfig":                    schema_pkg_apis_projectcalico_v3_AutoHostEndpointConfig(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.BFDConfiguration":                          schema_pkg_apis_projectcalico_v3_BFDConfiguration(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.BFDConfigurationList":                      schema_pkg_apis_projectcalico_v3_BFDConfigurationList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.BFDConfigurationSpec":                      schema_pkg_apis_projectcalico_v3_BFDConfigurationSpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.BFDInterface":                              schema_pkg_apis_projectcalico_v3_BFDInterface(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.BGPConfiguration":                          schema_pkg_apis_projectcalico_v3_BGPConfiguration(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.BGPConfigurationList":                      schema_pkg_apis_projectcalico_v3_BGPConfigurationList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.BGPConfigurationSpec":                      schema_pkg_apis_projectcalico_v3_BGPConfigurationSpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.BGPDaemonStatus":                           schema_pkg_apis_projectcalico_v3_BGPDaemonStatus(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.BGPFilter":                                 schema_pkg_apis_projectcalico_v3_BGPFilter(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.BGPFilterAddCommunity":                     schema_pkg_apis_projectcalico_v3_BGPFilterAddCommunity(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.BGPFilterCommunityMatch":                   schema_pkg_apis_projectcalico_v3_BGPFilterCommunityMatch(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.BGPFilterList":                             schema_pkg_apis_projectcalico_v3_BGPFilterList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.BGPFilterOperation":                        schema_pkg_apis_projectcalico_v3_BGPFilterOperation(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.BGPFilterPrefixLengthV4":                   schema_pkg_apis_projectcalico_v3_BGPFilterPrefixLengthV4(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.BGPFilterPrefixLengthV6":                   schema_pkg_apis_projectcalico_v3_BGPFilterPrefixLengthV6(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.BGPFilterPrependASPath":                    schema_pkg_apis_projectcalico_v3_BGPFilterPrependASPath(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.BGPFilterRuleV4":                           schema_pkg_apis_projectcalico_v3_BGPFilterRuleV4(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.BGPFilterRuleV6":                           schema_pkg_apis_projectcalico_v3_BGPFilterRuleV6(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.BGPFilterSetPriority":                      schema_pkg_apis_projectcalico_v3_BGPFilterSetPriority(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.BGPFilterSpec":                             schema_pkg_apis_projectcalico_v3_BGPFilterSpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.BGPPassword":                               schema_pkg_apis_projectcalico_v3_BGPPassword(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.BGPPeer":                                   schema_pkg_apis_projectcalico_v3_BGPPeer(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.BGPPeerList":                               schema_pkg_apis_projectcalico_v3_BGPPeerList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.BGPPeerSpec":                               schema_pkg_apis_projectcalico_v3_BGPPeerSpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.BPFConntrackTimeouts":                      schema_pkg_apis_projectcalico_v3_BPFConntrackTimeouts(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.BlockAffinity":                             schema_pkg_apis_projectcalico_v3_BlockAffinity(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.BlockAffinityList":                         schema_pkg_apis_projectcalico_v3_BlockAffinityList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.BlockAffinitySpec":                         schema_pkg_apis_projectcalico_v3_BlockAffinitySpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.CISBenchmarkFilter":                        schema_pkg_apis_projectcalico_v3_CISBenchmarkFilter(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.CISBenchmarkNode":                          schema_pkg_apis_projectcalico_v3_CISBenchmarkNode(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.CISBenchmarkNodeSummary":                   schema_pkg_apis_projectcalico_v3_CISBenchmarkNodeSummary(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.CISBenchmarkParams":                        schema_pkg_apis_projectcalico_v3_CISBenchmarkParams(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.CISBenchmarkResult":                        schema_pkg_apis_projectcalico_v3_CISBenchmarkResult(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.CISBenchmarkResultCount":                   schema_pkg_apis_projectcalico_v3_CISBenchmarkResultCount(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.CISBenchmarkSectionResult":                 schema_pkg_apis_projectcalico_v3_CISBenchmarkSectionResult(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.CISBenchmarkSelection":                     schema_pkg_apis_projectcalico_v3_CISBenchmarkSelection(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.CISBenchmarkSummary":                       schema_pkg_apis_projectcalico_v3_CISBenchmarkSummary(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.CalicoNodeAgentStatus":                     schema_pkg_apis_projectcalico_v3_CalicoNodeAgentStatus(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.CalicoNodeBGPRouteStatus":                  schema_pkg_apis_projectcalico_v3_CalicoNodeBGPRouteStatus(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.CalicoNodeBGPStatus":                       schema_pkg_apis_projectcalico_v3_CalicoNodeBGPStatus(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.CalicoNodePeer":                            schema_pkg_apis_projectcalico_v3_CalicoNodePeer(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.CalicoNodeRoute":                           schema_pkg_apis_projectcalico_v3_CalicoNodeRoute(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.CalicoNodeRouteLearnedFrom":                schema_pkg_apis_projectcalico_v3_CalicoNodeRouteLearnedFrom(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.CalicoNodeStatus":                          schema_pkg_apis_projectcalico_v3_CalicoNodeStatus(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.CalicoNodeStatusList":                      schema_pkg_apis_projectcalico_v3_CalicoNodeStatusList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.CalicoNodeStatusSpec":                      schema_pkg_apis_projectcalico_v3_CalicoNodeStatusSpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.CalicoNodeStatusStatus":                    schema_pkg_apis_projectcalico_v3_CalicoNodeStatusStatus(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.ClusterInformation":                        schema_pkg_apis_projectcalico_v3_ClusterInformation(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.ClusterInformationList":                    schema_pkg_apis_projectcalico_v3_ClusterInformationList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.ClusterInformationSpec":                    schema_pkg_apis_projectcalico_v3_ClusterInformationSpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.Community":                                 schema_pkg_apis_projectcalico_v3_Community(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.CompletedReportJob":                        schema_pkg_apis_projectcalico_v3_CompletedReportJob(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.ControllersConfig":                         schema_pkg_apis_projectcalico_v3_ControllersConfig(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.DPIActive":                                 schema_pkg_apis_projectcalico_v3_DPIActive(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.DPIErrorCondition":                         schema_pkg_apis_projectcalico_v3_DPIErrorCondition(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.DPINode":                                   schema_pkg_apis_projectcalico_v3_DPINode(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.DashboardData":                             schema_pkg_apis_projectcalico_v3_DashboardData(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.DashboardLayout":                           schema_pkg_apis_projectcalico_v3_DashboardLayout(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.DeepPacketInspection":                      schema_pkg_apis_projectcalico_v3_DeepPacketInspection(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.DeepPacketInspectionList":                  schema_pkg_apis_projectcalico_v3_DeepPacketInspectionList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.DeepPacketInspectionSpec":                  schema_pkg_apis_projectcalico_v3_DeepPacketInspectionSpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.DeepPacketInspectionStatus":                schema_pkg_apis_projectcalico_v3_DeepPacketInspectionStatus(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.DetectorParams":                            schema_pkg_apis_projectcalico_v3_DetectorParams(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.EgressGatewayPolicy":                       schema_pkg_apis_projectcalico_v3_EgressGatewayPolicy(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.EgressGatewayPolicyDestinationSpec":        schema_pkg_apis_projectcalico_v3_EgressGatewayPolicyDestinationSpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.EgressGatewayPolicyList":                   schema_pkg_apis_projectcalico_v3_EgressGatewayPolicyList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.EgressGatewayPolicySpec":                   schema_pkg_apis_projectcalico_v3_EgressGatewayPolicySpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.EgressGatewayRule":                         schema_pkg_apis_projectcalico_v3_EgressGatewayRule(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.EgressGatewaySpec":                         schema_pkg_apis_projectcalico_v3_EgressGatewaySpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.EgressSpec":                                schema_pkg_apis_projectcalico_v3_EgressSpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.EndpointPort":                              schema_pkg_apis_projectcalico_v3_EndpointPort(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.EndpointsReportEndpoint":                   schema_pkg_apis_projectcalico_v3_EndpointsReportEndpoint(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.EndpointsReportFlow":                       schema_pkg_apis_projectcalico_v3_EndpointsReportFlow(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.EndpointsReportNamespace":                  schema_pkg_apis_projectcalico_v3_EndpointsReportNamespace(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.EndpointsReportService":                    schema_pkg_apis_projectcalico_v3_EndpointsReportService(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.EndpointsSelection":                        schema_pkg_apis_projectcalico_v3_EndpointsSelection(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.EndpointsSummary":                          schema_pkg_apis_projectcalico_v3_EndpointsSummary(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.EntityRule":                                schema_pkg_apis_projectcalico_v3_EntityRule(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.ErrorCondition":                            schema_pkg_apis_projectcalico_v3_ErrorCondition(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.EtcdConfig":                                schema_pkg_apis_projectcalico_v3_EtcdConfig(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.ExternalNetwork":                           schema_pkg_apis_projectcalico_v3_ExternalNetwork(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.ExternalNetworkList":                       schema_pkg_apis_projectcalico_v3_ExternalNetworkList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.ExternalNetworkSpec":                       schema_pkg_apis_projectcalico_v3_ExternalNetworkSpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.FederatedServicesControllerConfig":         schema_pkg_apis_projectcalico_v3_FederatedServicesControllerConfig(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.FelixConfiguration":                        schema_pkg_apis_projectcalico_v3_FelixConfiguration(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.FelixConfigurationList":                    schema_pkg_apis_projectcalico_v3_FelixConfigurationList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.FelixConfigurationSpec":                    schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.FlowEndpoint":                              schema_pkg_apis_projectcalico_v3_FlowEndpoint(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalAlert":                               schema_pkg_apis_projectcalico_v3_GlobalAlert(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalAlertList":                           schema_pkg_apis_projectcalico_v3_GlobalAlertList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalAlertSpec":                           schema_pkg_apis_projectcalico_v3_GlobalAlertSpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalAlertStatus":                         schema_pkg_apis_projectcalico_v3_GlobalAlertStatus(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalAlertSubstitution":                   schema_pkg_apis_projectcalico_v3_GlobalAlertSubstitution(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalAlertTemplate":                       schema_pkg_apis_projectcalico_v3_GlobalAlertTemplate(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalAlertTemplateList":                   schema_pkg_apis_projectcalico_v3_GlobalAlertTemplateList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalNetworkPolicy":                       schema_pkg_apis_projectcalico_v3_GlobalNetworkPolicy(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalNetworkPolicyList":                   schema_pkg_apis_projectcalico_v3_GlobalNetworkPolicyList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalNetworkPolicySpec":                   schema_pkg_apis_projectcalico_v3_GlobalNetworkPolicySpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalNetworkSet":                          schema_pkg_apis_projectcalico_v3_GlobalNetworkSet(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalNetworkSetList":                      schema_pkg_apis_projectcalico_v3_GlobalNetworkSetList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalNetworkSetSpec":                      schema_pkg_apis_projectcalico_v3_GlobalNetworkSetSpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalNetworkSetSync":                      schema_pkg_apis_projectcalico_v3_GlobalNetworkSetSync(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalReport":                              schema_pkg_apis_projectcalico_v3_GlobalReport(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalReportList":                          schema_pkg_apis_projectcalico_v3_GlobalReportList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalReportType":                          schema_pkg_apis_projectcalico_v3_GlobalReportType(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalReportTypeList":                      schema_pkg_apis_projectcalico_v3_GlobalReportTypeList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalThreatFeed":                          schema_pkg_apis_projectcalico_v3_GlobalThreatFeed(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalThreatFeedList":                      schema_pkg_apis_projectcalico_v3_GlobalThreatFeedList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalThreatFeedSpec":                      schema_pkg_apis_projectcalico_v3_GlobalThreatFeedSpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalThreatFeedStatus":                    schema_pkg_apis_projectcalico_v3_GlobalThreatFeedStatus(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.HTTPHeader":                                schema_pkg_apis_projectcalico_v3_HTTPHeader(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.HTTPHeaderCriteria":                        schema_pkg_apis_projectcalico_v3_HTTPHeaderCriteria(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.HTTPHeaderSource":                          schema_pkg_apis_projectcalico_v3_HTTPHeaderSource(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.HTTPMatch":                                 schema_pkg_apis_projectcalico_v3_HTTPMatch(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.HTTPPath":                                  schema_pkg_apis_projectcalico_v3_HTTPPath(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.HTTPPull":                                  schema_pkg_apis_projectcalico_v3_HTTPPull(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.HealthTimeoutOverride":                     schema_pkg_apis_projectcalico_v3_HealthTimeoutOverride(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.HostEndpoint":                              schema_pkg_apis_projectcalico_v3_HostEndpoint(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.HostEndpointList":                          schema_pkg_apis_projectcalico_v3_HostEndpointList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.HostEndpointSpec":                          schema_pkg_apis_projectcalico_v3_HostEndpointSpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.ICMPFields":                                schema_pkg_apis_projectcalico_v3_ICMPFields(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.IPAMBlock":                                 schema_pkg_apis_projectcalico_v3_IPAMBlock(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.IPAMBlockList":                             schema_pkg_apis_projectcalico_v3_IPAMBlockList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.IPAMBlockSpec":                             schema_pkg_apis_projectcalico_v3_IPAMBlockSpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.IPAMConfiguration":                         schema_pkg_apis_projectcalico_v3_IPAMConfiguration(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.IPAMConfigurationList":                     schema_pkg_apis_projectcalico_v3_IPAMConfigurationList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.IPAMConfigurationSpec":                     schema_pkg_apis_projectcalico_v3_IPAMConfigurationSpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.IPAMHandle":                                schema_pkg_apis_projectcalico_v3_IPAMHandle(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.IPAMHandleList":                            schema_pkg_apis_projectcalico_v3_IPAMHandleList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.IPAMHandleSpec":                            schema_pkg_apis_projectcalico_v3_IPAMHandleSpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.IPIPConfiguration":                         schema_pkg_apis_projectcalico_v3_IPIPConfiguration(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.IPPool":                                    schema_pkg_apis_projectcalico_v3_IPPool(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.IPPoolList":                                schema_pkg_apis_projectcalico_v3_IPPoolList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.IPPoolSpec":                                schema_pkg_apis_projectcalico_v3_IPPoolSpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.IPPoolStatus":                              schema_pkg_apis_projectcalico_v3_IPPoolStatus(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.IPReservation":                             schema_pkg_apis_projectcalico_v3_IPReservation(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.IPReservationList":                         schema_pkg_apis_projectcalico_v3_IPReservationList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.IPReservationSpec":                         schema_pkg_apis_projectcalico_v3_IPReservationSpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.KubeConfig":                                schema_pkg_apis_projectcalico_v3_KubeConfig(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.KubeControllersConfiguration":              schema_pkg_apis_projectcalico_v3_KubeControllersConfiguration(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.KubeControllersConfigurationList":          schema_pkg_apis_projectcalico_v3_KubeControllersConfigurationList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.KubeControllersConfigurationSpec":          schema_pkg_apis_projectcalico_v3_KubeControllersConfigurationSpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.KubeControllersConfigurationStatus":        schema_pkg_apis_projectcalico_v3_KubeControllersConfigurationStatus(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.LicenseKey":                                schema_pkg_apis_projectcalico_v3_LicenseKey(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.LicenseKeyList":                            schema_pkg_apis_projectcalico_v3_LicenseKeyList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.LicenseKeySpec":                            schema_pkg_apis_projectcalico_v3_LicenseKeySpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.LicenseKeyStatus":                          schema_pkg_apis_projectcalico_v3_LicenseKeyStatus(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.LoadBalancerControllerConfig":              schema_pkg_apis_projectcalico_v3_LoadBalancerControllerConfig(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.ManagedCluster":                            schema_pkg_apis_projectcalico_v3_ManagedCluster(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.ManagedClusterList":                        schema_pkg_apis_projectcalico_v3_ManagedClusterList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.ManagedClusterSpec":                        schema_pkg_apis_projectcalico_v3_ManagedClusterSpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.ManagedClusterStatus":                      schema_pkg_apis_projectcalico_v3_ManagedClusterStatus(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.ManagedClusterStatusCondition":             schema_pkg_apis_projectcalico_v3_ManagedClusterStatusCondition(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.MigrationControllerConfig":                 schema_pkg_apis_projectcalico_v3_MigrationControllerConfig(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.NamedSelector":                             schema_pkg_apis_projectcalico_v3_NamedSelector(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.NamesAndLabelsMatch":                       schema_pkg_apis_projectcalico_v3_NamesAndLabelsMatch(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.NamespaceControllerConfig":                 schema_pkg_apis_projectcalico_v3_NamespaceControllerConfig(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.NetworkPolicy":                             schema_pkg_apis_projectcalico_v3_NetworkPolicy(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.NetworkPolicyList":                         schema_pkg_apis_projectcalico_v3_NetworkPolicyList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.NetworkPolicySpec":                         schema_pkg_apis_projectcalico_v3_NetworkPolicySpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.NetworkSet":                                schema_pkg_apis_projectcalico_v3_NetworkSet(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.NetworkSetList":                            schema_pkg_apis_projectcalico_v3_NetworkSetList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.NetworkSetSpec":                            schema_pkg_apis_projectcalico_v3_NetworkSetSpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.NodeControllerConfig":                      schema_pkg_apis_projectcalico_v3_NodeControllerConfig(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCapture":                             schema_pkg_apis_projectcalico_v3_PacketCapture(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCaptureFile":                         schema_pkg_apis_projectcalico_v3_PacketCaptureFile(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCaptureList":                         schema_pkg_apis_projectcalico_v3_PacketCaptureList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCaptureRule":                         schema_pkg_apis_projectcalico_v3_PacketCaptureRule(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCaptureSpec":                         schema_pkg_apis_projectcalico_v3_PacketCaptureSpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCaptureStatus":                       schema_pkg_apis_projectcalico_v3_PacketCaptureStatus(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.PolicyControllerConfig":                    schema_pkg_apis_projectcalico_v3_PolicyControllerConfig(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.PolicyRecommendationScope":                 schema_pkg_apis_projectcalico_v3_PolicyRecommendationScope(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.PolicyRecommendationScopeHostEndpointSpec": schema_pkg_apis_projectcalico_v3_PolicyRecommendationScopeHostEndpointSpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.PolicyRecommendationScopeList":             schema_pkg_apis_projectcalico_v3_PolicyRecommendationScopeList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.PolicyRecommendationScopeNamespaceSpec":    schema_pkg_apis_projectcalico_v3_PolicyRecommendationScopeNamespaceSpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.PolicyRecommendationScopeSpec":             schema_pkg_apis_projectcalico_v3_PolicyRecommendationScopeSpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.PolicyRecommendationScopeStatus":           schema_pkg_apis_projectcalico_v3_PolicyRecommendationScopeStatus(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.PolicyRecommendationScopeStatusCondition":  schema_pkg_apis_projectcalico_v3_PolicyRecommendationScopeStatusCondition(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.Position":                                  schema_pkg_apis_projectcalico_v3_Position(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.PrefixAdvertisement":                       schema_pkg_apis_projectcalico_v3_PrefixAdvertisement(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.Profile":                                   schema_pkg_apis_projectcalico_v3_Profile(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.ProfileList":                               schema_pkg_apis_projectcalico_v3_ProfileList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.ProfileSpec":                               schema_pkg_apis_projectcalico_v3_ProfileSpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.ProtoPort":                                 schema_pkg_apis_projectcalico_v3_ProtoPort(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.Pull":                                      schema_pkg_apis_projectcalico_v3_Pull(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.RemoteClusterConfiguration":                schema_pkg_apis_projectcalico_v3_RemoteClusterConfiguration(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.RemoteClusterConfigurationList":            schema_pkg_apis_projectcalico_v3_RemoteClusterConfigurationList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.RemoteClusterConfigurationSpec":            schema_pkg_apis_projectcalico_v3_RemoteClusterConfigurationSpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.RemoteClusterSyncOptions":                  schema_pkg_apis_projectcalico_v3_RemoteClusterSyncOptions(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.ReportData":                                schema_pkg_apis_projectcalico_v3_ReportData(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.ReportJob":                                 schema_pkg_apis_projectcalico_v3_ReportJob(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.ReportSpec":                                schema_pkg_apis_projectcalico_v3_ReportSpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.ReportStatus":                              schema_pkg_apis_projectcalico_v3_ReportStatus(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.ReportTemplate":                            schema_pkg_apis_projectcalico_v3_ReportTemplate(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.ReportTypeSpec":                            schema_pkg_apis_projectcalico_v3_ReportTypeSpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.ResourceID":                                schema_pkg_apis_projectcalico_v3_ResourceID(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.RouteTableIDRange":                         schema_pkg_apis_projectcalico_v3_RouteTableIDRange(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.RouteTableRange":                           schema_pkg_apis_projectcalico_v3_RouteTableRange(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.Rule":                                      schema_pkg_apis_projectcalico_v3_Rule(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.RuleMetadata":                              schema_pkg_apis_projectcalico_v3_RuleMetadata(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.SecurityEventWebhook":                      schema_pkg_apis_projectcalico_v3_SecurityEventWebhook(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.SecurityEventWebhookConfigVar":             schema_pkg_apis_projectcalico_v3_SecurityEventWebhookConfigVar(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.SecurityEventWebhookConfigVarSource":       schema_pkg_apis_projectcalico_v3_SecurityEventWebhookConfigVarSource(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.SecurityEventWebhookList":                  schema_pkg_apis_projectcalico_v3_SecurityEventWebhookList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.SecurityEventWebhookSpec":                  schema_pkg_apis_projectcalico_v3_SecurityEventWebhookSpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.ServiceAccountControllerConfig":            schema_pkg_apis_projectcalico_v3_ServiceAccountControllerConfig(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.ServiceAccountMatch":                       schema_pkg_apis_projectcalico_v3_ServiceAccountMatch(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.ServiceClusterIPBlock":                     schema_pkg_apis_projectcalico_v3_ServiceClusterIPBlock(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.ServiceExternalIPBlock":                    schema_pkg_apis_projectcalico_v3_ServiceExternalIPBlock(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.ServiceLoadBalancerIPBlock":                schema_pkg_apis_projectcalico_v3_ServiceLoadBalancerIPBlock(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.ServiceMatch":                              schema_pkg_apis_projectcalico_v3_ServiceMatch(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.StagedGlobalNetworkPolicy":                 schema_pkg_apis_projectcalico_v3_StagedGlobalNetworkPolicy(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.StagedGlobalNetworkPolicyList":             schema_pkg_apis_projectcalico_v3_StagedGlobalNetworkPolicyList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.StagedGlobalNetworkPolicySpec":             schema_pkg_apis_projectcalico_v3_StagedGlobalNetworkPolicySpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.StagedKubernetesNetworkPolicy":             schema_pkg_apis_projectcalico_v3_StagedKubernetesNetworkPolicy(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.StagedKubernetesNetworkPolicyList":         schema_pkg_apis_projectcalico_v3_StagedKubernetesNetworkPolicyList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.StagedKubernetesNetworkPolicySpec":         schema_pkg_apis_projectcalico_v3_StagedKubernetesNetworkPolicySpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.StagedNetworkPolicy":                       schema_pkg_apis_projectcalico_v3_StagedNetworkPolicy(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.StagedNetworkPolicyList":                   schema_pkg_apis_projectcalico_v3_StagedNetworkPolicyList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.StagedNetworkPolicySpec":                   schema_pkg_apis_projectcalico_v3_StagedNetworkPolicySpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.Template":                                  schema_pkg_apis_projectcalico_v3_Template(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.ThreatFeedFormat":                          schema_pkg_apis_projectcalico_v3_ThreatFeedFormat(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.ThreatFeedFormatCSV":                       schema_pkg_apis_projectcalico_v3_ThreatFeedFormatCSV(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.ThreatFeedFormatJSON":                      schema_pkg_apis_projectcalico_v3_ThreatFeedFormatJSON(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.ThreatFeedFormatNewlineDelimited":          schema_pkg_apis_projectcalico_v3_ThreatFeedFormatNewlineDelimited(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.Tier":                                      schema_pkg_apis_projectcalico_v3_Tier(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.TierList":                                  schema_pkg_apis_projectcalico_v3_TierList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.TierSpec":                                  schema_pkg_apis_projectcalico_v3_TierSpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.TierStatus":                                schema_pkg_apis_projectcalico_v3_TierStatus(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.UIDashboard":                               schema_pkg_apis_projectcalico_v3_UIDashboard(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.UIGraphLayer":                              schema_pkg_apis_projectcalico_v3_UIGraphLayer(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.UIGraphNode":                               schema_pkg_apis_projectcalico_v3_UIGraphNode(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.UIGraphNodeView":                           schema_pkg_apis_projectcalico_v3_UIGraphNodeView(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.UIGraphView":                               schema_pkg_apis_projectcalico_v3_UIGraphView(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.UISettings":                                schema_pkg_apis_projectcalico_v3_UISettings(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.UISettingsGroup":                           schema_pkg_apis_projectcalico_v3_UISettingsGroup(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.UISettingsGroupList":                       schema_pkg_apis_projectcalico_v3_UISettingsGroupList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.UISettingsGroupSpec":                       schema_pkg_apis_projectcalico_v3_UISettingsGroupSpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.UISettingsList":                            schema_pkg_apis_projectcalico_v3_UISettingsList(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.UISettingsSpec":                            schema_pkg_apis_projectcalico_v3_UISettingsSpec(ref),
-		"github.com/tigera/api/pkg/apis/projectcalico/v3.WorkloadEndpointControllerConfig":          schema_pkg_apis_projectcalico_v3_WorkloadEndpointControllerConfig(ref),
-		"github.com/tigera/api/pkg/lib/numorstring.DSCP":                                            schema_api_pkg_lib_numorstring_DSCP(ref),
-		"github.com/tigera/api/pkg/lib/numorstring.Port":                                            schema_api_pkg_lib_numorstring_Port(ref),
-		"github.com/tigera/api/pkg/lib/numorstring.Protocol":                                        schema_api_pkg_lib_numorstring_Protocol(ref),
-		"github.com/tigera/api/pkg/lib/numorstring.Uint8OrString":                                   schema_api_pkg_lib_numorstring_Uint8OrString(ref),
-		v1.AWSElasticBlockStoreVolumeSource{}.OpenAPIModelName():                                    schema_k8sio_api_core_v1_AWSElasticBlockStoreVolumeSource(ref),
-		v1.Affinity{}.OpenAPIModelName():                                                            schema_k8sio_api_core_v1_Affinity(ref),
-		v1.AppArmorProfile{}.OpenAPIModelName():                                                     schema_k8sio_api_core_v1_AppArmorProfile(ref),
-		v1.AttachedVolume{}.OpenAPIModelName():                                                      schema_k8sio_api_core_v1_AttachedVolume(ref),
-		v1.AvoidPods{}.OpenAPIModelName():                                                           schema_k8sio_api_core_v1_AvoidPods(ref),
-		v1.AzureDiskVolumeSource{}.OpenAPIModelName():                                               schema_k8sio_api_core_v1_AzureDiskVolumeSource(ref),
-		v1.AzureFilePersistentVolumeSource{}.OpenAPIModelName():                                     schema_k8sio_api_core_v1_AzureFilePersistentVolumeSource(ref),
-		v1.AzureFileVolumeSource{}.OpenAPIModelName():                                               schema_k8sio_api_core_v1_AzureFileVolumeSource(ref),
-		v1.Binding{}.OpenAPIModelName():                                                             schema_k8sio_api_core_v1_Binding(ref),
-		v1.CSIPersistentVolumeSource{}.OpenAPIModelName():                                           schema_k8sio_api_core_v1_CSIPersistentVolumeSource(ref),
-		v1.CSIVolumeSource{}.OpenAPIModelName():                                                     schema_k8sio_api_core_v1_CSIVolumeSource(ref),
-		v1.Capabilities{}.OpenAPIModelName():                                                        schema_k8sio_api_core_v1_Capabilities(ref),
-		v1.CephFSPersistentVolumeSource{}.OpenAPIModelName():                                        schema_k8sio_api_core_v1_CephFSPersistentVolumeSource(ref),
-		v1.CephFSVolumeSource{}.OpenAPIModelName():                                                  schema_k8sio_api_core_v1_CephFSVolumeSource(ref),
-		v1.CinderPersistentVolumeSource{}.OpenAPIModelName():                                        schema_k8sio_api_core_v1_CinderPersistentVolumeSource(ref),
-		v1.CinderVolumeSource{}.OpenAPIModelName():                                                  schema_k8sio_api_core_v1_CinderVolumeSource(ref),
-		v1.ClientIPConfig{}.OpenAPIModelName():                                                      schema_k8sio_api_core_v1_ClientIPConfig(ref),
-		v1.ClusterTrustBundleProjection{}.OpenAPIModelName():                                        schema_k8sio_api_core_v1_ClusterTrustBundleProjection(ref),
-		v1.ComponentCondition{}.OpenAPIModelName():                                                  schema_k8sio_api_core_v1_ComponentCondition(ref),
-		v1.ComponentStatus{}.OpenAPIModelName():                                                     schema_k8sio_api_core_v1_ComponentStatus(ref),
-		v1.ComponentStatusList{}.OpenAPIModelName():                                                 schema_k8sio_api_core_v1_ComponentStatusList(ref),
-		v1.ConfigMap{}.OpenAPIModelName():                                                           schema_k8sio_api_core_v1_ConfigMap(ref),
-		v1.ConfigMapEnvSource{}.OpenAPIModelName():                                                  schema_k8sio_api_core_v1_ConfigMapEnvSource(ref),
-		v1.ConfigMapKeySelector{}.OpenAPIModelName():                                                schema_k8sio_api_core_v1_ConfigMapKeySelector(ref),
-		v1.ConfigMapList{}.OpenAPIModelName():                                                       schema_k8sio_api_core_v1_ConfigMapList(ref),
-		v1.ConfigMapNodeConfigSource{}.OpenAPIModelName():                                           schema_k8sio_api_core_v1_ConfigMapNodeConfigSource(ref),
-		v1.ConfigMapProjection{}.OpenAPIModelName():                                                 schema_k8sio_api_core_v1_ConfigMapProjection(ref),
-		v1.ConfigMapVolumeSource{}.OpenAPIModelName():                                               schema_k8sio_api_core_v1_ConfigMapVolumeSource(ref),
-		v1.Container{}.OpenAPIModelName():                                                           schema_k8sio_api_core_v1_Container(ref),
-		v1.ContainerExtendedResourceRequest{}.OpenAPIModelName():                                    schema_k8sio_api_core_v1_ContainerExtendedResourceRequest(ref),
-		v1.ContainerImage{}.OpenAPIModelName():                                                      schema_k8sio_api_core_v1_ContainerImage(ref),
-		v1.ContainerPort{}.OpenAPIModelName():                                                       schema_k8sio_api_core_v1_ContainerPort(ref),
-		v1.ContainerResizePolicy{}.OpenAPIModelName():                                               schema_k8sio_api_core_v1_ContainerResizePolicy(ref),
-		v1.ContainerRestartRule{}.OpenAPIModelName():                                                schema_k8sio_api_core_v1_ContainerRestartRule(ref),
-		v1.ContainerRestartRuleOnExitCodes{}.OpenAPIModelName():                                     schema_k8sio_api_core_v1_ContainerRestartRuleOnExitCodes(ref),
-		v1.ContainerState{}.OpenAPIModelName():                                                      schema_k8sio_api_core_v1_ContainerState(ref),
-		v1.ContainerStateRunning{}.OpenAPIModelName():                                               schema_k8sio_api_core_v1_ContainerStateRunning(ref),
-		v1.ContainerStateTerminated{}.OpenAPIModelName():                                            schema_k8sio_api_core_v1_ContainerStateTerminated(ref),
-		v1.ContainerStateWaiting{}.OpenAPIModelName():                                               schema_k8sio_api_core_v1_ContainerStateWaiting(ref),
-		v1.ContainerStatus{}.OpenAPIModelName():                                                     schema_k8sio_api_core_v1_ContainerStatus(ref),
-		v1.ContainerUser{}.OpenAPIModelName():                                                       schema_k8sio_api_core_v1_ContainerUser(ref),
-		v1.DaemonEndpoint{}.OpenAPIModelName():                                                      schema_k8sio_api_core_v1_DaemonEndpoint(ref),
-		v1.DownwardAPIProjection{}.OpenAPIModelName():                                               schema_k8sio_api_core_v1_DownwardAPIProjection(ref),
-		v1.DownwardAPIVolumeFile{}.OpenAPIModelName():                                               schema_k8sio_api_core_v1_DownwardAPIVolumeFile(ref),
-		v1.DownwardAPIVolumeSource{}.OpenAPIModelName():                                             schema_k8sio_api_core_v1_DownwardAPIVolumeSource(ref),
-		v1.EmptyDirVolumeSource{}.OpenAPIModelName():                                                schema_k8sio_api_core_v1_EmptyDirVolumeSource(ref),
-		v1.EndpointAddress{}.OpenAPIModelName():                                                     schema_k8sio_api_core_v1_EndpointAddress(ref),
-		v1.EndpointPort{}.OpenAPIModelName():                                                        schema_k8sio_api_core_v1_EndpointPort(ref),
-		v1.EndpointSubset{}.OpenAPIModelName():                                                      schema_k8sio_api_core_v1_EndpointSubset(ref),
-		v1.Endpoints{}.OpenAPIModelName():                                                           schema_k8sio_api_core_v1_Endpoints(ref),
-		v1.EndpointsList{}.OpenAPIModelName():                                                       schema_k8sio_api_core_v1_EndpointsList(ref),
-		v1.EnvFromSource{}.OpenAPIModelName():                                                       schema_k8sio_api_core_v1_EnvFromSource(ref),
-		v1.EnvVar{}.OpenAPIModelName():                                                              schema_k8sio_api_core_v1_EnvVar(ref),
-		v1.EnvVarSource{}.OpenAPIModelName():                                                        schema_k8sio_api_core_v1_EnvVarSource(ref),
-		v1.EphemeralContainer{}.OpenAPIModelName():                                                  schema_k8sio_api_core_v1_EphemeralContainer(ref),
-		v1.EphemeralContainerCommon{}.OpenAPIModelName():                                            schema_k8sio_api_core_v1_EphemeralContainerCommon(ref),
-		v1.EphemeralVolumeSource{}.OpenAPIModelName():                                               schema_k8sio_api_core_v1_EphemeralVolumeSource(ref),
-		v1.Event{}.OpenAPIModelName():                                                               schema_k8sio_api_core_v1_Event(ref),
-		v1.EventList{}.OpenAPIModelName():                                                           schema_k8sio_api_core_v1_EventList(ref),
-		v1.EventSeries{}.OpenAPIModelName():                                                         schema_k8sio_api_core_v1_EventSeries(ref),
-		v1.EventSource{}.OpenAPIModelName():                                                         schema_k8sio_api_core_v1_EventSource(ref),
-		v1.ExecAction{}.OpenAPIModelName():                                                          schema_k8sio_api_core_v1_ExecAction(ref),
-		v1.FCVolumeSource{}.OpenAPIModelName():                                                      schema_k8sio_api_core_v1_FCVolumeSource(ref),
-		v1.FileKeySelector{}.OpenAPIModelName():                                                     schema_k8sio_api_core_v1_FileKeySelector(ref),
-		v1.FlexPersistentVolumeSource{}.OpenAPIModelName():                                          schema_k8sio_api_core_v1_FlexPersistentVolumeSource(ref),
-		v1.FlexVolumeSource{}.OpenAPIModelName():                                                    schema_k8sio_api_core_v1_FlexVolumeSource(ref),
-		v1.FlockerVolumeSource{}.OpenAPIModelName():                                                 schema_k8sio_api_core_v1_FlockerVolumeSource(ref),
-		v1.GCEPersistentDiskVolumeSource{}.OpenAPIModelName():                                       schema_k8sio_api_core_v1_GCEPersistentDiskVolumeSource(ref),
-		v1.GRPCAction{}.OpenAPIModelName():                                                          schema_k8sio_api_core_v1_GRPCAction(ref),
-		v1.GitRepoVolumeSource{}.OpenAPIModelName():                                                 schema_k8sio_api_core_v1_GitRepoVolumeSource(ref),
-		v1.GlusterfsPersistentVolumeSource{}.OpenAPIModelName():                                     schema_k8sio_api_core_v1_GlusterfsPersistentVolumeSource(ref),
-		v1.GlusterfsVolumeSource{}.OpenAPIModelName():                                               schema_k8sio_api_core_v1_GlusterfsVolumeSource(ref),
-		v1.HTTPGetAction{}.OpenAPIModelName():                                                       schema_k8sio_api_core_v1_HTTPGetAction(ref),
-		v1.HTTPHeader{}.OpenAPIModelName():                                                          schema_k8sio_api_core_v1_HTTPHeader(ref),
-		v1.HostAlias{}.OpenAPIModelName():                                                           schema_k8sio_api_core_v1_HostAlias(ref),
-		v1.HostIP{}.OpenAPIModelName():                                                              schema_k8sio_api_core_v1_HostIP(ref),
-		v1.HostPathVolumeSource{}.OpenAPIModelName():                                                schema_k8sio_api_core_v1_HostPathVolumeSource(ref),
-		v1.ISCSIPersistentVolumeSource{}.OpenAPIModelName():                                         schema_k8sio_api_core_v1_ISCSIPersistentVolumeSource(ref),
-		v1.ISCSIVolumeSource{}.OpenAPIModelName():                                                   schema_k8sio_api_core_v1_ISCSIVolumeSource(ref),
-		v1.ImageVolumeSource{}.OpenAPIModelName():                                                   schema_k8sio_api_core_v1_ImageVolumeSource(ref),
-		v1.KeyToPath{}.OpenAPIModelName():                                                           schema_k8sio_api_core_v1_KeyToPath(ref),
-		v1.Lifecycle{}.OpenAPIModelName():                                                           schema_k8sio_api_core_v1_Lifecycle(ref),
-		v1.LifecycleHandler{}.OpenAPIModelName():                                                    schema_k8sio_api_core_v1_LifecycleHandler(ref),
-		v1.LimitRange{}.OpenAPIModelName():                                                          schema_k8sio_api_core_v1_LimitRange(ref),
-		v1.LimitRangeItem{}.OpenAPIModelName():                                                      schema_k8sio_api_core_v1_LimitRangeItem(ref),
-		v1.LimitRangeList{}.OpenAPIModelName():                                                      schema_k8sio_api_core_v1_LimitRangeList(ref),
-		v1.LimitRangeSpec{}.OpenAPIModelName():                                                      schema_k8sio_api_core_v1_LimitRangeSpec(ref),
-		v1.LinuxContainerUser{}.OpenAPIModelName():                                                  schema_k8sio_api_core_v1_LinuxContainerUser(ref),
-		v1.List{}.OpenAPIModelName():                                                                schema_k8sio_api_core_v1_List(ref),
-		v1.LoadBalancerIngress{}.OpenAPIModelName():                                                 schema_k8sio_api_core_v1_LoadBalancerIngress(ref),
-		v1.LoadBalancerStatus{}.OpenAPIModelName():                                                  schema_k8sio_api_core_v1_LoadBalancerStatus(ref),
-		v1.LocalObjectReference{}.OpenAPIModelName():                                                schema_k8sio_api_core_v1_LocalObjectReference(ref),
-		v1.LocalVolumeSource{}.OpenAPIModelName():                                                   schema_k8sio_api_core_v1_LocalVolumeSource(ref),
-		v1.ModifyVolumeStatus{}.OpenAPIModelName():                                                  schema_k8sio_api_core_v1_ModifyVolumeStatus(ref),
-		v1.NFSVolumeSource{}.OpenAPIModelName():                                                     schema_k8sio_api_core_v1_NFSVolumeSource(ref),
-		v1.Namespace{}.OpenAPIModelName():                                                           schema_k8sio_api_core_v1_Namespace(ref),
-		v1.NamespaceCondition{}.OpenAPIModelName():                                                  schema_k8sio_api_core_v1_NamespaceCondition(ref),
-		v1.NamespaceList{}.OpenAPIModelName():                                                       schema_k8sio_api_core_v1_NamespaceList(ref),
-		v1.NamespaceSpec{}.OpenAPIModelName():                                                       schema_k8sio_api_core_v1_NamespaceSpec(ref),
-		v1.NamespaceStatus{}.OpenAPIModelName():                                                     schema_k8sio_api_core_v1_NamespaceStatus(ref),
-		v1.Node{}.OpenAPIModelName():                                                                schema_k8sio_api_core_v1_Node(ref),
-		v1.NodeAddress{}.OpenAPIModelName():                                                         schema_k8sio_api_core_v1_NodeAddress(ref),
-		v1.NodeAffinity{}.OpenAPIModelName():                                                        schema_k8sio_api_core_v1_NodeAffinity(ref),
-		v1.NodeCondition{}.OpenAPIModelName():                                                       schema_k8sio_api_core_v1_NodeCondition(ref),
-		v1.NodeConfigSource{}.OpenAPIModelName():                                                    schema_k8sio_api_core_v1_NodeConfigSource(ref),
-		v1.NodeConfigStatus{}.OpenAPIModelName():                                                    schema_k8sio_api_core_v1_NodeConfigStatus(ref),
-		v1.NodeDaemonEndpoints{}.OpenAPIModelName():                                                 schema_k8sio_api_core_v1_NodeDaemonEndpoints(ref),
-		v1.NodeFeatures{}.OpenAPIModelName():                                                        schema_k8sio_api_core_v1_NodeFeatures(ref),
-		v1.NodeList{}.OpenAPIModelName():                                                            schema_k8sio_api_core_v1_NodeList(ref),
-		v1.NodeProxyOptions{}.OpenAPIModelName():                                                    schema_k8sio_api_core_v1_NodeProxyOptions(ref),
-		v1.NodeRuntimeHandler{}.OpenAPIModelName():                                                  schema_k8sio_api_core_v1_NodeRuntimeHandler(ref),
-		v1.NodeRuntimeHandlerFeatures{}.OpenAPIModelName():                                          schema_k8sio_api_core_v1_NodeRuntimeHandlerFeatures(ref),
-		v1.NodeSelector{}.OpenAPIModelName():                                                        schema_k8sio_api_core_v1_NodeSelector(ref),
-		v1.NodeSelectorRequirement{}.OpenAPIModelName():                                             schema_k8sio_api_core_v1_NodeSelectorRequirement(ref),
-		v1.NodeSelectorTerm{}.OpenAPIModelName():                                                    schema_k8sio_api_core_v1_NodeSelectorTerm(ref),
-		v1.NodeSpec{}.OpenAPIModelName():                                                            schema_k8sio_api_core_v1_NodeSpec(ref),
-		v1.NodeStatus{}.OpenAPIModelName():                                                          schema_k8sio_api_core_v1_NodeStatus(ref),
-		v1.NodeSwapStatus{}.OpenAPIModelName():                                                      schema_k8sio_api_core_v1_NodeSwapStatus(ref),
-		v1.NodeSystemInfo{}.OpenAPIModelName():                                                      schema_k8sio_api_core_v1_NodeSystemInfo(ref),
-		v1.ObjectFieldSelector{}.OpenAPIModelName():                                                 schema_k8sio_api_core_v1_ObjectFieldSelector(ref),
-		v1.ObjectReference{}.OpenAPIModelName():                                                     schema_k8sio_api_core_v1_ObjectReference(ref),
-		v1.PersistentVolume{}.OpenAPIModelName():                                                    schema_k8sio_api_core_v1_PersistentVolume(ref),
-		v1.PersistentVolumeClaim{}.OpenAPIModelName():                                               schema_k8sio_api_core_v1_PersistentVolumeClaim(ref),
-		v1.PersistentVolumeClaimCondition{}.OpenAPIModelName():                                      schema_k8sio_api_core_v1_PersistentVolumeClaimCondition(ref),
-		v1.PersistentVolumeClaimList{}.OpenAPIModelName():                                           schema_k8sio_api_core_v1_PersistentVolumeClaimList(ref),
-		v1.PersistentVolumeClaimSpec{}.OpenAPIModelName():                                           schema_k8sio_api_core_v1_PersistentVolumeClaimSpec(ref),
-		v1.PersistentVolumeClaimStatus{}.OpenAPIModelName():                                         schema_k8sio_api_core_v1_PersistentVolumeClaimStatus(ref),
-		v1.PersistentVolumeClaimTemplate{}.OpenAPIModelName():                                       schema_k8sio_api_core_v1_PersistentVolumeClaimTemplate(ref),
-		v1.PersistentVolumeClaimVolumeSource{}.OpenAPIModelName():                                   schema_k8sio_api_core_v1_PersistentVolumeClaimVolumeSource(ref),
-		v1.PersistentVolumeList{}.OpenAPIModelName():                                                schema_k8sio_api_core_v1_PersistentVolumeList(ref),
-		v1.PersistentVolumeSource{}.OpenAPIModelName():                                              schema_k8sio_api_core_v1_PersistentVolumeSource(ref),
-		v1.PersistentVolumeSpec{}.OpenAPIModelName():                                                schema_k8sio_api_core_v1_PersistentVolumeSpec(ref),
-		v1.PersistentVolumeStatus{}.OpenAPIModelName():                                              schema_k8sio_api_core_v1_PersistentVolumeStatus(ref),
-		v1.PhotonPersistentDiskVolumeSource{}.OpenAPIModelName():                                    schema_k8sio_api_core_v1_PhotonPersistentDiskVolumeSource(ref),
-		v1.Pod{}.OpenAPIModelName():                                                                 schema_k8sio_api_core_v1_Pod(ref),
-		v1.PodAffinity{}.OpenAPIModelName():                                                         schema_k8sio_api_core_v1_PodAffinity(ref),
-		v1.PodAffinityTerm{}.OpenAPIModelName():                                                     schema_k8sio_api_core_v1_PodAffinityTerm(ref),
-		v1.PodAntiAffinity{}.OpenAPIModelName():                                                     schema_k8sio_api_core_v1_PodAntiAffinity(ref),
-		v1.PodAttachOptions{}.OpenAPIModelName():                                                    schema_k8sio_api_core_v1_PodAttachOptions(ref),
-		v1.PodCertificateProjection{}.OpenAPIModelName():                                            schema_k8sio_api_core_v1_PodCertificateProjection(ref),
-		v1.PodCondition{}.OpenAPIModelName():                                                        schema_k8sio_api_core_v1_PodCondition(ref),
-		v1.PodDNSConfig{}.OpenAPIModelName():                                                        schema_k8sio_api_core_v1_PodDNSConfig(ref),
-		v1.PodDNSConfigOption{}.OpenAPIModelName():                                                  schema_k8sio_api_core_v1_PodDNSConfigOption(ref),
-		v1.PodExecOptions{}.OpenAPIModelName():                                                      schema_k8sio_api_core_v1_PodExecOptions(ref),
-		v1.PodExtendedResourceClaimStatus{}.OpenAPIModelName():                                      schema_k8sio_api_core_v1_PodExtendedResourceClaimStatus(ref),
-		v1.PodIP{}.OpenAPIModelName():                                                               schema_k8sio_api_core_v1_PodIP(ref),
-		v1.PodList{}.OpenAPIModelName():                                                             schema_k8sio_api_core_v1_PodList(ref),
-		v1.PodLogOptions{}.OpenAPIModelName():                                                       schema_k8sio_api_core_v1_PodLogOptions(ref),
-		v1.PodOS{}.OpenAPIModelName():                                                               schema_k8sio_api_core_v1_PodOS(ref),
-		v1.PodPortForwardOptions{}.OpenAPIModelName():                                               schema_k8sio_api_core_v1_PodPortForwardOptions(ref),
-		v1.PodProxyOptions{}.OpenAPIModelName():                                                     schema_k8sio_api_core_v1_PodProxyOptions(ref),
-		v1.PodReadinessGate{}.OpenAPIModelName():                                                    schema_k8sio_api_core_v1_PodReadinessGate(ref),
-		v1.PodResourceClaim{}.OpenAPIModelName():                                                    schema_k8sio_api_core_v1_PodResourceClaim(ref),
-		v1.PodResourceClaimStatus{}.OpenAPIModelName():                                              schema_k8sio_api_core_v1_PodResourceClaimStatus(ref),
-		v1.PodSchedulingGate{}.OpenAPIModelName():                                                   schema_k8sio_api_core_v1_PodSchedulingGate(ref),
-		v1.PodSecurityContext{}.OpenAPIModelName():                                                  schema_k8sio_api_core_v1_PodSecurityContext(ref),
-		v1.PodSignature{}.OpenAPIModelName():                                                        schema_k8sio_api_core_v1_PodSignature(ref),
-		v1.PodSpec{}.OpenAPIModelName():                                                             schema_k8sio_api_core_v1_PodSpec(ref),
-		v1.PodStatus{}.OpenAPIModelName():                                                           schema_k8sio_api_core_v1_PodStatus(ref),
-		v1.PodStatusResult{}.OpenAPIModelName():                                                     schema_k8sio_api_core_v1_PodStatusResult(ref),
-		v1.PodTemplate{}.OpenAPIModelName():                                                         schema_k8sio_api_core_v1_PodTemplate(ref),
-		v1.PodTemplateList{}.OpenAPIModelName():                                                     schema_k8sio_api_core_v1_PodTemplateList(ref),
-		v1.PodTemplateSpec{}.OpenAPIModelName():                                                     schema_k8sio_api_core_v1_PodTemplateSpec(ref),
-		v1.PortStatus{}.OpenAPIModelName():                                                          schema_k8sio_api_core_v1_PortStatus(ref),
-		v1.PortworxVolumeSource{}.OpenAPIModelName():                                                schema_k8sio_api_core_v1_PortworxVolumeSource(ref),
-		v1.PreferAvoidPodsEntry{}.OpenAPIModelName():                                                schema_k8sio_api_core_v1_PreferAvoidPodsEntry(ref),
-		v1.PreferredSchedulingTerm{}.OpenAPIModelName():                                             schema_k8sio_api_core_v1_PreferredSchedulingTerm(ref),
-		v1.Probe{}.OpenAPIModelName():                                                               schema_k8sio_api_core_v1_Probe(ref),
-		v1.ProbeHandler{}.OpenAPIModelName():                                                        schema_k8sio_api_core_v1_ProbeHandler(ref),
-		v1.ProjectedVolumeSource{}.OpenAPIModelName():                                               schema_k8sio_api_core_v1_ProjectedVolumeSource(ref),
-		v1.QuobyteVolumeSource{}.OpenAPIModelName():                                                 schema_k8sio_api_core_v1_QuobyteVolumeSource(ref),
-		v1.RBDPersistentVolumeSource{}.OpenAPIModelName():                                           schema_k8sio_api_core_v1_RBDPersistentVolumeSource(ref),
-		v1.RBDVolumeSource{}.OpenAPIModelName():                                                     schema_k8sio_api_core_v1_RBDVolumeSource(ref),
-		v1.RangeAllocation{}.OpenAPIModelName():                                                     schema_k8sio_api_core_v1_RangeAllocation(ref),
-		v1.ReplicationController{}.OpenAPIModelName():                                               schema_k8sio_api_core_v1_ReplicationController(ref),
-		v1.ReplicationControllerCondition{}.OpenAPIModelName():                                      schema_k8sio_api_core_v1_ReplicationControllerCondition(ref),
-		v1.ReplicationControllerList{}.OpenAPIModelName():                                           schema_k8sio_api_core_v1_ReplicationControllerList(ref),
-		v1.ReplicationControllerSpec{}.OpenAPIModelName():                                           schema_k8sio_api_core_v1_ReplicationControllerSpec(ref),
-		v1.ReplicationControllerStatus{}.OpenAPIModelName():                                         schema_k8sio_api_core_v1_ReplicationControllerStatus(ref),
-		v1.ResourceClaim{}.OpenAPIModelName():                                                       schema_k8sio_api_core_v1_ResourceClaim(ref),
-		v1.ResourceFieldSelector{}.OpenAPIModelName():                                               schema_k8sio_api_core_v1_ResourceFieldSelector(ref),
-		v1.ResourceHealth{}.OpenAPIModelName():                                                      schema_k8sio_api_core_v1_ResourceHealth(ref),
-		v1.ResourceQuota{}.OpenAPIModelName():                                                       schema_k8sio_api_core_v1_ResourceQuota(ref),
-		v1.ResourceQuotaList{}.OpenAPIModelName():                                                   schema_k8sio_api_core_v1_ResourceQuotaList(ref),
-		v1.ResourceQuotaSpec{}.OpenAPIModelName():                                                   schema_k8sio_api_core_v1_ResourceQuotaSpec(ref),
-		v1.ResourceQuotaStatus{}.OpenAPIModelName():                                                 schema_k8sio_api_core_v1_ResourceQuotaStatus(ref),
-		v1.ResourceRequirements{}.OpenAPIModelName():                                                schema_k8sio_api_core_v1_ResourceRequirements(ref),
-		v1.ResourceStatus{}.OpenAPIModelName():                                                      schema_k8sio_api_core_v1_ResourceStatus(ref),
-		v1.SELinuxOptions{}.OpenAPIModelName():                                                      schema_k8sio_api_core_v1_SELinuxOptions(ref),
-		v1.ScaleIOPersistentVolumeSource{}.OpenAPIModelName():                                       schema_k8sio_api_core_v1_ScaleIOPersistentVolumeSource(ref),
-		v1.ScaleIOVolumeSource{}.OpenAPIModelName():                                                 schema_k8sio_api_core_v1_ScaleIOVolumeSource(ref),
-		v1.ScopeSelector{}.OpenAPIModelName():                                                       schema_k8sio_api_core_v1_ScopeSelector(ref),
-		v1.ScopedResourceSelectorRequirement{}.OpenAPIModelName():                                   schema_k8sio_api_core_v1_ScopedResourceSelectorRequirement(ref),
-		v1.SeccompProfile{}.OpenAPIModelName():                                                      schema_k8sio_api_core_v1_SeccompProfile(ref),
-		v1.Secret{}.OpenAPIModelName():                                                              schema_k8sio_api_core_v1_Secret(ref),
-		v1.SecretEnvSource{}.OpenAPIModelName():                                                     schema_k8sio_api_core_v1_SecretEnvSource(ref),
-		v1.SecretKeySelector{}.OpenAPIModelName():                                                   schema_k8sio_api_core_v1_SecretKeySelector(ref),
-		v1.SecretList{}.OpenAPIModelName():                                                          schema_k8sio_api_core_v1_SecretList(ref),
-		v1.SecretProjection{}.OpenAPIModelName():                                                    schema_k8sio_api_core_v1_SecretProjection(ref),
-		v1.SecretReference{}.OpenAPIModelName():                                                     schema_k8sio_api_core_v1_SecretReference(ref),
-		v1.SecretVolumeSource{}.OpenAPIModelName():                                                  schema_k8sio_api_core_v1_SecretVolumeSource(ref),
-		v1.SecurityContext{}.OpenAPIModelName():                                                     schema_k8sio_api_core_v1_SecurityContext(ref),
-		v1.SerializedReference{}.OpenAPIModelName():                                                 schema_k8sio_api_core_v1_SerializedReference(ref),
-		v1.Service{}.OpenAPIModelName():                                                             schema_k8sio_api_core_v1_Service(ref),
-		v1.ServiceAccount{}.OpenAPIModelName():                                                      schema_k8sio_api_core_v1_ServiceAccount(ref),
-		v1.ServiceAccountList{}.OpenAPIModelName():                                                  schema_k8sio_api_core_v1_ServiceAccountList(ref),
-		v1.ServiceAccountTokenProjection{}.OpenAPIModelName():                                       schema_k8sio_api_core_v1_ServiceAccountTokenProjection(ref),
-		v1.ServiceList{}.OpenAPIModelName():                                                         schema_k8sio_api_core_v1_ServiceList(ref),
-		v1.ServicePort{}.OpenAPIModelName():                                                         schema_k8sio_api_core_v1_ServicePort(ref),
-		v1.ServiceProxyOptions{}.OpenAPIModelName():                                                 schema_k8sio_api_core_v1_ServiceProxyOptions(ref),
-		v1.ServiceSpec{}.OpenAPIModelName():                                                         schema_k8sio_api_core_v1_ServiceSpec(ref),
-		v1.ServiceStatus{}.OpenAPIModelName():                                                       schema_k8sio_api_core_v1_ServiceStatus(ref),
-		v1.SessionAffinityConfig{}.OpenAPIModelName():                                               schema_k8sio_api_core_v1_SessionAffinityConfig(ref),
-		v1.SleepAction{}.OpenAPIModelName():                                                         schema_k8sio_api_core_v1_SleepAction(ref),
-		v1.StorageOSPersistentVolumeSource{}.OpenAPIModelName():                                     schema_k8sio_api_core_v1_StorageOSPersistentVolumeSource(ref),
-		v1.StorageOSVolumeSource{}.OpenAPIModelName():                                               schema_k8sio_api_core_v1_StorageOSVolumeSource(ref),
-		v1.Sysctl{}.OpenAPIModelName():                                                              schema_k8sio_api_core_v1_Sysctl(ref),
-		v1.TCPSocketAction{}.OpenAPIModelName():                                                     schema_k8sio_api_core_v1_TCPSocketAction(ref),
-		v1.Taint{}.OpenAPIModelName():                                                               schema_k8sio_api_core_v1_Taint(ref),
-		v1.Toleration{}.OpenAPIModelName():                                                          schema_k8sio_api_core_v1_Toleration(ref),
-		v1.TopologySelectorLabelRequirement{}.OpenAPIModelName():                                    schema_k8sio_api_core_v1_TopologySelectorLabelRequirement(ref),
-		v1.TopologySelectorTerm{}.OpenAPIModelName():                                                schema_k8sio_api_core_v1_TopologySelectorTerm(ref),
-		v1.TopologySpreadConstraint{}.OpenAPIModelName():                                            schema_k8sio_api_core_v1_TopologySpreadConstraint(ref),
-		v1.TypedLocalObjectReference{}.OpenAPIModelName():                                           schema_k8sio_api_core_v1_TypedLocalObjectReference(ref),
-		v1.TypedObjectReference{}.OpenAPIModelName():                                                schema_k8sio_api_core_v1_TypedObjectReference(ref),
-		v1.Volume{}.OpenAPIModelName():                                                              schema_k8sio_api_core_v1_Volume(ref),
-		v1.VolumeDevice{}.OpenAPIModelName():                                                        schema_k8sio_api_core_v1_VolumeDevice(ref),
-		v1.VolumeMount{}.OpenAPIModelName():                                                         schema_k8sio_api_core_v1_VolumeMount(ref),
-		v1.VolumeMountStatus{}.OpenAPIModelName():                                                   schema_k8sio_api_core_v1_VolumeMountStatus(ref),
-		v1.VolumeNodeAffinity{}.OpenAPIModelName():                                                  schema_k8sio_api_core_v1_VolumeNodeAffinity(ref),
-		v1.VolumeProjection{}.OpenAPIModelName():                                                    schema_k8sio_api_core_v1_VolumeProjection(ref),
-		v1.VolumeResourceRequirements{}.OpenAPIModelName():                                          schema_k8sio_api_core_v1_VolumeResourceRequirements(ref),
-		v1.VolumeSource{}.OpenAPIModelName():                                                        schema_k8sio_api_core_v1_VolumeSource(ref),
-		v1.VsphereVirtualDiskVolumeSource{}.OpenAPIModelName():                                      schema_k8sio_api_core_v1_VsphereVirtualDiskVolumeSource(ref),
-		v1.WeightedPodAffinityTerm{}.OpenAPIModelName():                                             schema_k8sio_api_core_v1_WeightedPodAffinityTerm(ref),
-		v1.WindowsSecurityContextOptions{}.OpenAPIModelName():                                       schema_k8sio_api_core_v1_WindowsSecurityContextOptions(ref),
-		v1.WorkloadReference{}.OpenAPIModelName():                                                   schema_k8sio_api_core_v1_WorkloadReference(ref),
-		networkingv1.HTTPIngressPath{}.OpenAPIModelName():                                           schema_k8sio_api_networking_v1_HTTPIngressPath(ref),
-		networkingv1.HTTPIngressRuleValue{}.OpenAPIModelName():                                      schema_k8sio_api_networking_v1_HTTPIngressRuleValue(ref),
-		networkingv1.IPAddress{}.OpenAPIModelName():                                                 schema_k8sio_api_networking_v1_IPAddress(ref),
-		networkingv1.IPAddressList{}.OpenAPIModelName():                                             schema_k8sio_api_networking_v1_IPAddressList(ref),
-		networkingv1.IPAddressSpec{}.OpenAPIModelName():                                             schema_k8sio_api_networking_v1_IPAddressSpec(ref),
-		networkingv1.IPBlock{}.OpenAPIModelName():                                                   schema_k8sio_api_networking_v1_IPBlock(ref),
-		networkingv1.Ingress{}.OpenAPIModelName():                                                   schema_k8sio_api_networking_v1_Ingress(ref),
-		networkingv1.IngressBackend{}.OpenAPIModelName():                                            schema_k8sio_api_networking_v1_IngressBackend(ref),
-		networkingv1.IngressClass{}.OpenAPIModelName():                                              schema_k8sio_api_networking_v1_IngressClass(ref),
-		networkingv1.IngressClassList{}.OpenAPIModelName():                                          schema_k8sio_api_networking_v1_IngressClassList(ref),
-		networkingv1.IngressClassParametersReference{}.OpenAPIModelName():                           schema_k8sio_api_networking_v1_IngressClassParametersReference(ref),
-		networkingv1.IngressClassSpec{}.OpenAPIModelName():                                          schema_k8sio_api_networking_v1_IngressClassSpec(ref),
-		networkingv1.IngressList{}.OpenAPIModelName():                                               schema_k8sio_api_networking_v1_IngressList(ref),
-		networkingv1.IngressLoadBalancerIngress{}.OpenAPIModelName():                                schema_k8sio_api_networking_v1_IngressLoadBalancerIngress(ref),
-		networkingv1.IngressLoadBalancerStatus{}.OpenAPIModelName():                                 schema_k8sio_api_networking_v1_IngressLoadBalancerStatus(ref),
-		networkingv1.IngressPortStatus{}.OpenAPIModelName():                                         schema_k8sio_api_networking_v1_IngressPortStatus(ref),
-		networkingv1.IngressRule{}.OpenAPIModelName():                                               schema_k8sio_api_networking_v1_IngressRule(ref),
-		networkingv1.IngressRuleValue{}.OpenAPIModelName():                                          schema_k8sio_api_networking_v1_IngressRuleValue(ref),
-		networkingv1.IngressServiceBackend{}.OpenAPIModelName():                                     schema_k8sio_api_networking_v1_IngressServiceBackend(ref),
-		networkingv1.IngressSpec{}.OpenAPIModelName():                                               schema_k8sio_api_networking_v1_IngressSpec(ref),
-		networkingv1.IngressStatus{}.OpenAPIModelName():                                             schema_k8sio_api_networking_v1_IngressStatus(ref),
-		networkingv1.IngressTLS{}.OpenAPIModelName():                                                schema_k8sio_api_networking_v1_IngressTLS(ref),
-		networkingv1.NetworkPolicy{}.OpenAPIModelName():                                             schema_k8sio_api_networking_v1_NetworkPolicy(ref),
-		networkingv1.NetworkPolicyEgressRule{}.OpenAPIModelName():                                   schema_k8sio_api_networking_v1_NetworkPolicyEgressRule(ref),
-		networkingv1.NetworkPolicyIngressRule{}.OpenAPIModelName():                                  schema_k8sio_api_networking_v1_NetworkPolicyIngressRule(ref),
-		networkingv1.NetworkPolicyList{}.OpenAPIModelName():                                         schema_k8sio_api_networking_v1_NetworkPolicyList(ref),
-		networkingv1.NetworkPolicyPeer{}.OpenAPIModelName():                                         schema_k8sio_api_networking_v1_NetworkPolicyPeer(ref),
-		networkingv1.NetworkPolicyPort{}.OpenAPIModelName():                                         schema_k8sio_api_networking_v1_NetworkPolicyPort(ref),
-		networkingv1.NetworkPolicySpec{}.OpenAPIModelName():                                         schema_k8sio_api_networking_v1_NetworkPolicySpec(ref),
-		networkingv1.ParentReference{}.OpenAPIModelName():                                           schema_k8sio_api_networking_v1_ParentReference(ref),
-		networkingv1.ServiceBackendPort{}.OpenAPIModelName():                                        schema_k8sio_api_networking_v1_ServiceBackendPort(ref),
-		networkingv1.ServiceCIDR{}.OpenAPIModelName():                                               schema_k8sio_api_networking_v1_ServiceCIDR(ref),
-		networkingv1.ServiceCIDRList{}.OpenAPIModelName():                                           schema_k8sio_api_networking_v1_ServiceCIDRList(ref),
-		networkingv1.ServiceCIDRSpec{}.OpenAPIModelName():                                           schema_k8sio_api_networking_v1_ServiceCIDRSpec(ref),
-		networkingv1.ServiceCIDRStatus{}.OpenAPIModelName():                                         schema_k8sio_api_networking_v1_ServiceCIDRStatus(ref),
-		metav1.APIGroup{}.OpenAPIModelName():                                                        schema_pkg_apis_meta_v1_APIGroup(ref),
-		metav1.APIGroupList{}.OpenAPIModelName():                                                    schema_pkg_apis_meta_v1_APIGroupList(ref),
-		metav1.APIResource{}.OpenAPIModelName():                                                     schema_pkg_apis_meta_v1_APIResource(ref),
-		metav1.APIResourceList{}.OpenAPIModelName():                                                 schema_pkg_apis_meta_v1_APIResourceList(ref),
-		metav1.APIVersions{}.OpenAPIModelName():                                                     schema_pkg_apis_meta_v1_APIVersions(ref),
-		metav1.ApplyOptions{}.OpenAPIModelName():                                                    schema_pkg_apis_meta_v1_ApplyOptions(ref),
-		metav1.Condition{}.OpenAPIModelName():                                                       schema_pkg_apis_meta_v1_Condition(ref),
-		metav1.CreateOptions{}.OpenAPIModelName():                                                   schema_pkg_apis_meta_v1_CreateOptions(ref),
-		metav1.DeleteOptions{}.OpenAPIModelName():                                                   schema_pkg_apis_meta_v1_DeleteOptions(ref),
-		metav1.Duration{}.OpenAPIModelName():                                                        schema_pkg_apis_meta_v1_Duration(ref),
-		metav1.FieldSelectorRequirement{}.OpenAPIModelName():                                        schema_pkg_apis_meta_v1_FieldSelectorRequirement(ref),
-		metav1.FieldsV1{}.OpenAPIModelName():                                                        schema_pkg_apis_meta_v1_FieldsV1(ref),
-		metav1.GetOptions{}.OpenAPIModelName():                                                      schema_pkg_apis_meta_v1_GetOptions(ref),
-		metav1.GroupKind{}.OpenAPIModelName():                                                       schema_pkg_apis_meta_v1_GroupKind(ref),
-		metav1.GroupResource{}.OpenAPIModelName():                                                   schema_pkg_apis_meta_v1_GroupResource(ref),
-		metav1.GroupVersion{}.OpenAPIModelName():                                                    schema_pkg_apis_meta_v1_GroupVersion(ref),
-		metav1.GroupVersionForDiscovery{}.OpenAPIModelName():                                        schema_pkg_apis_meta_v1_GroupVersionForDiscovery(ref),
-		metav1.GroupVersionKind{}.OpenAPIModelName():                                                schema_pkg_apis_meta_v1_GroupVersionKind(ref),
-		metav1.GroupVersionResource{}.OpenAPIModelName():                                            schema_pkg_apis_meta_v1_GroupVersionResource(ref),
-		metav1.InternalEvent{}.OpenAPIModelName():                                                   schema_pkg_apis_meta_v1_InternalEvent(ref),
-		metav1.LabelSelector{}.OpenAPIModelName():                                                   schema_pkg_apis_meta_v1_LabelSelector(ref),
-		metav1.LabelSelectorRequirement{}.OpenAPIModelName():                                        schema_pkg_apis_meta_v1_LabelSelectorRequirement(ref),
-		metav1.List{}.OpenAPIModelName():                                                            schema_pkg_apis_meta_v1_List(ref),
-		metav1.ListMeta{}.OpenAPIModelName():                                                        schema_pkg_apis_meta_v1_ListMeta(ref),
-		metav1.ListOptions{}.OpenAPIModelName():                                                     schema_pkg_apis_meta_v1_ListOptions(ref),
-		metav1.ManagedFieldsEntry{}.OpenAPIModelName():                                              schema_pkg_apis_meta_v1_ManagedFieldsEntry(ref),
-		metav1.MicroTime{}.OpenAPIModelName():                                                       schema_pkg_apis_meta_v1_MicroTime(ref),
-		metav1.ObjectMeta{}.OpenAPIModelName():                                                      schema_pkg_apis_meta_v1_ObjectMeta(ref),
-		metav1.OwnerReference{}.OpenAPIModelName():                                                  schema_pkg_apis_meta_v1_OwnerReference(ref),
-		metav1.PartialObjectMetadata{}.OpenAPIModelName():                                           schema_pkg_apis_meta_v1_PartialObjectMetadata(ref),
-		metav1.PartialObjectMetadataList{}.OpenAPIModelName():                                       schema_pkg_apis_meta_v1_PartialObjectMetadataList(ref),
-		metav1.Patch{}.OpenAPIModelName():                                                           schema_pkg_apis_meta_v1_Patch(ref),
-		metav1.PatchOptions{}.OpenAPIModelName():                                                    schema_pkg_apis_meta_v1_PatchOptions(ref),
-		metav1.Preconditions{}.OpenAPIModelName():                                                   schema_pkg_apis_meta_v1_Preconditions(ref),
-		metav1.RootPaths{}.OpenAPIModelName():                                                       schema_pkg_apis_meta_v1_RootPaths(ref),
-		metav1.ServerAddressByClientCIDR{}.OpenAPIModelName():                                       schema_pkg_apis_meta_v1_ServerAddressByClientCIDR(ref),
-		metav1.Status{}.OpenAPIModelName():                                                          schema_pkg_apis_meta_v1_Status(ref),
-		metav1.StatusCause{}.OpenAPIModelName():                                                     schema_pkg_apis_meta_v1_StatusCause(ref),
-		metav1.StatusDetails{}.OpenAPIModelName():                                                   schema_pkg_apis_meta_v1_StatusDetails(ref),
-		metav1.Table{}.OpenAPIModelName():                                                           schema_pkg_apis_meta_v1_Table(ref),
-		metav1.TableColumnDefinition{}.OpenAPIModelName():                                           schema_pkg_apis_meta_v1_TableColumnDefinition(ref),
-		metav1.TableOptions{}.OpenAPIModelName():                                                    schema_pkg_apis_meta_v1_TableOptions(ref),
-		metav1.TableRow{}.OpenAPIModelName():                                                        schema_pkg_apis_meta_v1_TableRow(ref),
-		metav1.TableRowCondition{}.OpenAPIModelName():                                               schema_pkg_apis_meta_v1_TableRowCondition(ref),
-		metav1.Time{}.OpenAPIModelName():                                                            schema_pkg_apis_meta_v1_Time(ref),
-		metav1.Timestamp{}.OpenAPIModelName():                                                       schema_pkg_apis_meta_v1_Timestamp(ref),
-		metav1.TypeMeta{}.OpenAPIModelName():                                                        schema_pkg_apis_meta_v1_TypeMeta(ref),
-		metav1.UpdateOptions{}.OpenAPIModelName():                                                   schema_pkg_apis_meta_v1_UpdateOptions(ref),
-		metav1.WatchEvent{}.OpenAPIModelName():                                                      schema_pkg_apis_meta_v1_WatchEvent(ref),
-		runtime.RawExtension{}.OpenAPIModelName():                                                   schema_k8sio_apimachinery_pkg_runtime_RawExtension(ref),
-		runtime.TypeMeta{}.OpenAPIModelName():                                                       schema_k8sio_apimachinery_pkg_runtime_TypeMeta(ref),
-		runtime.Unknown{}.OpenAPIModelName():                                                        schema_k8sio_apimachinery_pkg_runtime_Unknown(ref),
-		intstr.IntOrString{}.OpenAPIModelName():                                                     schema_apimachinery_pkg_util_intstr_IntOrString(ref),
-		version.Info{}.OpenAPIModelName():                                                           schema_k8sio_apimachinery_pkg_version_Info(ref),
+		v3.AlertException{}.OpenAPIModelName():                            schema_pkg_apis_projectcalico_v3_AlertException(ref),
+		v3.AlertExceptionList{}.OpenAPIModelName():                        schema_pkg_apis_projectcalico_v3_AlertExceptionList(ref),
+		v3.AlertExceptionSpec{}.OpenAPIModelName():                        schema_pkg_apis_projectcalico_v3_AlertExceptionSpec(ref),
+		v3.AlertExceptionStatus{}.OpenAPIModelName():                      schema_pkg_apis_projectcalico_v3_AlertExceptionStatus(ref),
+		v3.AllocationAttribute{}.OpenAPIModelName():                       schema_pkg_apis_projectcalico_v3_AllocationAttribute(ref),
+		v3.AuditEventsSelection{}.OpenAPIModelName():                      schema_pkg_apis_projectcalico_v3_AuditEventsSelection(ref),
+		v3.AuditResource{}.OpenAPIModelName():                             schema_pkg_apis_projectcalico_v3_AuditResource(ref),
+		v3.AuditSummary{}.OpenAPIModelName():                              schema_pkg_apis_projectcalico_v3_AuditSummary(ref),
+		v3.AuthorizationReview{}.OpenAPIModelName():                       schema_pkg_apis_projectcalico_v3_AuthorizationReview(ref),
+		v3.AuthorizationReviewList{}.OpenAPIModelName():                   schema_pkg_apis_projectcalico_v3_AuthorizationReviewList(ref),
+		v3.AuthorizationReviewResourceAttributes{}.OpenAPIModelName():     schema_pkg_apis_projectcalico_v3_AuthorizationReviewResourceAttributes(ref),
+		v3.AuthorizationReviewSpec{}.OpenAPIModelName():                   schema_pkg_apis_projectcalico_v3_AuthorizationReviewSpec(ref),
+		v3.AuthorizationReviewStatus{}.OpenAPIModelName():                 schema_pkg_apis_projectcalico_v3_AuthorizationReviewStatus(ref),
+		v3.AuthorizedResourceGroup{}.OpenAPIModelName():                   schema_pkg_apis_projectcalico_v3_AuthorizedResourceGroup(ref),
+		v3.AuthorizedResourceVerb{}.OpenAPIModelName():                    schema_pkg_apis_projectcalico_v3_AuthorizedResourceVerb(ref),
+		v3.AuthorizedResourceVerbs{}.OpenAPIModelName():                   schema_pkg_apis_projectcalico_v3_AuthorizedResourceVerbs(ref),
+		v3.AutoHostEndpointConfig{}.OpenAPIModelName():                    schema_pkg_apis_projectcalico_v3_AutoHostEndpointConfig(ref),
+		v3.BFDConfiguration{}.OpenAPIModelName():                          schema_pkg_apis_projectcalico_v3_BFDConfiguration(ref),
+		v3.BFDConfigurationList{}.OpenAPIModelName():                      schema_pkg_apis_projectcalico_v3_BFDConfigurationList(ref),
+		v3.BFDConfigurationSpec{}.OpenAPIModelName():                      schema_pkg_apis_projectcalico_v3_BFDConfigurationSpec(ref),
+		v3.BFDInterface{}.OpenAPIModelName():                              schema_pkg_apis_projectcalico_v3_BFDInterface(ref),
+		v3.BGPConfiguration{}.OpenAPIModelName():                          schema_pkg_apis_projectcalico_v3_BGPConfiguration(ref),
+		v3.BGPConfigurationList{}.OpenAPIModelName():                      schema_pkg_apis_projectcalico_v3_BGPConfigurationList(ref),
+		v3.BGPConfigurationSpec{}.OpenAPIModelName():                      schema_pkg_apis_projectcalico_v3_BGPConfigurationSpec(ref),
+		v3.BGPDaemonStatus{}.OpenAPIModelName():                           schema_pkg_apis_projectcalico_v3_BGPDaemonStatus(ref),
+		v3.BGPFilter{}.OpenAPIModelName():                                 schema_pkg_apis_projectcalico_v3_BGPFilter(ref),
+		v3.BGPFilterAddCommunity{}.OpenAPIModelName():                     schema_pkg_apis_projectcalico_v3_BGPFilterAddCommunity(ref),
+		v3.BGPFilterCommunityMatch{}.OpenAPIModelName():                   schema_pkg_apis_projectcalico_v3_BGPFilterCommunityMatch(ref),
+		v3.BGPFilterList{}.OpenAPIModelName():                             schema_pkg_apis_projectcalico_v3_BGPFilterList(ref),
+		v3.BGPFilterOperation{}.OpenAPIModelName():                        schema_pkg_apis_projectcalico_v3_BGPFilterOperation(ref),
+		v3.BGPFilterPrefixLengthV4{}.OpenAPIModelName():                   schema_pkg_apis_projectcalico_v3_BGPFilterPrefixLengthV4(ref),
+		v3.BGPFilterPrefixLengthV6{}.OpenAPIModelName():                   schema_pkg_apis_projectcalico_v3_BGPFilterPrefixLengthV6(ref),
+		v3.BGPFilterPrependASPath{}.OpenAPIModelName():                    schema_pkg_apis_projectcalico_v3_BGPFilterPrependASPath(ref),
+		v3.BGPFilterRuleV4{}.OpenAPIModelName():                           schema_pkg_apis_projectcalico_v3_BGPFilterRuleV4(ref),
+		v3.BGPFilterRuleV6{}.OpenAPIModelName():                           schema_pkg_apis_projectcalico_v3_BGPFilterRuleV6(ref),
+		v3.BGPFilterSetPriority{}.OpenAPIModelName():                      schema_pkg_apis_projectcalico_v3_BGPFilterSetPriority(ref),
+		v3.BGPFilterSpec{}.OpenAPIModelName():                             schema_pkg_apis_projectcalico_v3_BGPFilterSpec(ref),
+		v3.BGPPassword{}.OpenAPIModelName():                               schema_pkg_apis_projectcalico_v3_BGPPassword(ref),
+		v3.BGPPeer{}.OpenAPIModelName():                                   schema_pkg_apis_projectcalico_v3_BGPPeer(ref),
+		v3.BGPPeerList{}.OpenAPIModelName():                               schema_pkg_apis_projectcalico_v3_BGPPeerList(ref),
+		v3.BGPPeerSpec{}.OpenAPIModelName():                               schema_pkg_apis_projectcalico_v3_BGPPeerSpec(ref),
+		v3.BPFConntrackTimeouts{}.OpenAPIModelName():                      schema_pkg_apis_projectcalico_v3_BPFConntrackTimeouts(ref),
+		v3.BlockAffinity{}.OpenAPIModelName():                             schema_pkg_apis_projectcalico_v3_BlockAffinity(ref),
+		v3.BlockAffinityList{}.OpenAPIModelName():                         schema_pkg_apis_projectcalico_v3_BlockAffinityList(ref),
+		v3.BlockAffinitySpec{}.OpenAPIModelName():                         schema_pkg_apis_projectcalico_v3_BlockAffinitySpec(ref),
+		v3.CISBenchmarkFilter{}.OpenAPIModelName():                        schema_pkg_apis_projectcalico_v3_CISBenchmarkFilter(ref),
+		v3.CISBenchmarkNode{}.OpenAPIModelName():                          schema_pkg_apis_projectcalico_v3_CISBenchmarkNode(ref),
+		v3.CISBenchmarkNodeSummary{}.OpenAPIModelName():                   schema_pkg_apis_projectcalico_v3_CISBenchmarkNodeSummary(ref),
+		v3.CISBenchmarkParams{}.OpenAPIModelName():                        schema_pkg_apis_projectcalico_v3_CISBenchmarkParams(ref),
+		v3.CISBenchmarkResult{}.OpenAPIModelName():                        schema_pkg_apis_projectcalico_v3_CISBenchmarkResult(ref),
+		v3.CISBenchmarkResultCount{}.OpenAPIModelName():                   schema_pkg_apis_projectcalico_v3_CISBenchmarkResultCount(ref),
+		v3.CISBenchmarkSectionResult{}.OpenAPIModelName():                 schema_pkg_apis_projectcalico_v3_CISBenchmarkSectionResult(ref),
+		v3.CISBenchmarkSelection{}.OpenAPIModelName():                     schema_pkg_apis_projectcalico_v3_CISBenchmarkSelection(ref),
+		v3.CISBenchmarkSummary{}.OpenAPIModelName():                       schema_pkg_apis_projectcalico_v3_CISBenchmarkSummary(ref),
+		v3.CalicoNodeAgentStatus{}.OpenAPIModelName():                     schema_pkg_apis_projectcalico_v3_CalicoNodeAgentStatus(ref),
+		v3.CalicoNodeBGPRouteStatus{}.OpenAPIModelName():                  schema_pkg_apis_projectcalico_v3_CalicoNodeBGPRouteStatus(ref),
+		v3.CalicoNodeBGPStatus{}.OpenAPIModelName():                       schema_pkg_apis_projectcalico_v3_CalicoNodeBGPStatus(ref),
+		v3.CalicoNodePeer{}.OpenAPIModelName():                            schema_pkg_apis_projectcalico_v3_CalicoNodePeer(ref),
+		v3.CalicoNodeRoute{}.OpenAPIModelName():                           schema_pkg_apis_projectcalico_v3_CalicoNodeRoute(ref),
+		v3.CalicoNodeRouteLearnedFrom{}.OpenAPIModelName():                schema_pkg_apis_projectcalico_v3_CalicoNodeRouteLearnedFrom(ref),
+		v3.CalicoNodeStatus{}.OpenAPIModelName():                          schema_pkg_apis_projectcalico_v3_CalicoNodeStatus(ref),
+		v3.CalicoNodeStatusList{}.OpenAPIModelName():                      schema_pkg_apis_projectcalico_v3_CalicoNodeStatusList(ref),
+		v3.CalicoNodeStatusSpec{}.OpenAPIModelName():                      schema_pkg_apis_projectcalico_v3_CalicoNodeStatusSpec(ref),
+		v3.CalicoNodeStatusStatus{}.OpenAPIModelName():                    schema_pkg_apis_projectcalico_v3_CalicoNodeStatusStatus(ref),
+		v3.ClusterInformation{}.OpenAPIModelName():                        schema_pkg_apis_projectcalico_v3_ClusterInformation(ref),
+		v3.ClusterInformationList{}.OpenAPIModelName():                    schema_pkg_apis_projectcalico_v3_ClusterInformationList(ref),
+		v3.ClusterInformationSpec{}.OpenAPIModelName():                    schema_pkg_apis_projectcalico_v3_ClusterInformationSpec(ref),
+		v3.Community{}.OpenAPIModelName():                                 schema_pkg_apis_projectcalico_v3_Community(ref),
+		v3.CompletedReportJob{}.OpenAPIModelName():                        schema_pkg_apis_projectcalico_v3_CompletedReportJob(ref),
+		v3.ControllersConfig{}.OpenAPIModelName():                         schema_pkg_apis_projectcalico_v3_ControllersConfig(ref),
+		v3.DPIActive{}.OpenAPIModelName():                                 schema_pkg_apis_projectcalico_v3_DPIActive(ref),
+		v3.DPIErrorCondition{}.OpenAPIModelName():                         schema_pkg_apis_projectcalico_v3_DPIErrorCondition(ref),
+		v3.DPINode{}.OpenAPIModelName():                                   schema_pkg_apis_projectcalico_v3_DPINode(ref),
+		v3.DashboardData{}.OpenAPIModelName():                             schema_pkg_apis_projectcalico_v3_DashboardData(ref),
+		v3.DashboardLayout{}.OpenAPIModelName():                           schema_pkg_apis_projectcalico_v3_DashboardLayout(ref),
+		v3.DeepPacketInspection{}.OpenAPIModelName():                      schema_pkg_apis_projectcalico_v3_DeepPacketInspection(ref),
+		v3.DeepPacketInspectionList{}.OpenAPIModelName():                  schema_pkg_apis_projectcalico_v3_DeepPacketInspectionList(ref),
+		v3.DeepPacketInspectionSpec{}.OpenAPIModelName():                  schema_pkg_apis_projectcalico_v3_DeepPacketInspectionSpec(ref),
+		v3.DeepPacketInspectionStatus{}.OpenAPIModelName():                schema_pkg_apis_projectcalico_v3_DeepPacketInspectionStatus(ref),
+		v3.DetectorParams{}.OpenAPIModelName():                            schema_pkg_apis_projectcalico_v3_DetectorParams(ref),
+		v3.EgressGatewayPolicy{}.OpenAPIModelName():                       schema_pkg_apis_projectcalico_v3_EgressGatewayPolicy(ref),
+		v3.EgressGatewayPolicyDestinationSpec{}.OpenAPIModelName():        schema_pkg_apis_projectcalico_v3_EgressGatewayPolicyDestinationSpec(ref),
+		v3.EgressGatewayPolicyList{}.OpenAPIModelName():                   schema_pkg_apis_projectcalico_v3_EgressGatewayPolicyList(ref),
+		v3.EgressGatewayPolicySpec{}.OpenAPIModelName():                   schema_pkg_apis_projectcalico_v3_EgressGatewayPolicySpec(ref),
+		v3.EgressGatewayRule{}.OpenAPIModelName():                         schema_pkg_apis_projectcalico_v3_EgressGatewayRule(ref),
+		v3.EgressGatewaySpec{}.OpenAPIModelName():                         schema_pkg_apis_projectcalico_v3_EgressGatewaySpec(ref),
+		v3.EgressSpec{}.OpenAPIModelName():                                schema_pkg_apis_projectcalico_v3_EgressSpec(ref),
+		v3.EndpointPort{}.OpenAPIModelName():                              schema_pkg_apis_projectcalico_v3_EndpointPort(ref),
+		v3.EndpointsReportEndpoint{}.OpenAPIModelName():                   schema_pkg_apis_projectcalico_v3_EndpointsReportEndpoint(ref),
+		v3.EndpointsReportFlow{}.OpenAPIModelName():                       schema_pkg_apis_projectcalico_v3_EndpointsReportFlow(ref),
+		v3.EndpointsReportNamespace{}.OpenAPIModelName():                  schema_pkg_apis_projectcalico_v3_EndpointsReportNamespace(ref),
+		v3.EndpointsReportService{}.OpenAPIModelName():                    schema_pkg_apis_projectcalico_v3_EndpointsReportService(ref),
+		v3.EndpointsSelection{}.OpenAPIModelName():                        schema_pkg_apis_projectcalico_v3_EndpointsSelection(ref),
+		v3.EndpointsSummary{}.OpenAPIModelName():                          schema_pkg_apis_projectcalico_v3_EndpointsSummary(ref),
+		v3.EntityRule{}.OpenAPIModelName():                                schema_pkg_apis_projectcalico_v3_EntityRule(ref),
+		v3.ErrorCondition{}.OpenAPIModelName():                            schema_pkg_apis_projectcalico_v3_ErrorCondition(ref),
+		v3.EtcdConfig{}.OpenAPIModelName():                                schema_pkg_apis_projectcalico_v3_EtcdConfig(ref),
+		v3.ExternalNetwork{}.OpenAPIModelName():                           schema_pkg_apis_projectcalico_v3_ExternalNetwork(ref),
+		v3.ExternalNetworkList{}.OpenAPIModelName():                       schema_pkg_apis_projectcalico_v3_ExternalNetworkList(ref),
+		v3.ExternalNetworkSpec{}.OpenAPIModelName():                       schema_pkg_apis_projectcalico_v3_ExternalNetworkSpec(ref),
+		v3.FederatedServicesControllerConfig{}.OpenAPIModelName():         schema_pkg_apis_projectcalico_v3_FederatedServicesControllerConfig(ref),
+		v3.FelixConfiguration{}.OpenAPIModelName():                        schema_pkg_apis_projectcalico_v3_FelixConfiguration(ref),
+		v3.FelixConfigurationList{}.OpenAPIModelName():                    schema_pkg_apis_projectcalico_v3_FelixConfigurationList(ref),
+		v3.FelixConfigurationSpec{}.OpenAPIModelName():                    schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref),
+		v3.FlowEndpoint{}.OpenAPIModelName():                              schema_pkg_apis_projectcalico_v3_FlowEndpoint(ref),
+		v3.GlobalAlert{}.OpenAPIModelName():                               schema_pkg_apis_projectcalico_v3_GlobalAlert(ref),
+		v3.GlobalAlertList{}.OpenAPIModelName():                           schema_pkg_apis_projectcalico_v3_GlobalAlertList(ref),
+		v3.GlobalAlertSpec{}.OpenAPIModelName():                           schema_pkg_apis_projectcalico_v3_GlobalAlertSpec(ref),
+		v3.GlobalAlertStatus{}.OpenAPIModelName():                         schema_pkg_apis_projectcalico_v3_GlobalAlertStatus(ref),
+		v3.GlobalAlertSubstitution{}.OpenAPIModelName():                   schema_pkg_apis_projectcalico_v3_GlobalAlertSubstitution(ref),
+		v3.GlobalAlertTemplate{}.OpenAPIModelName():                       schema_pkg_apis_projectcalico_v3_GlobalAlertTemplate(ref),
+		v3.GlobalAlertTemplateList{}.OpenAPIModelName():                   schema_pkg_apis_projectcalico_v3_GlobalAlertTemplateList(ref),
+		v3.GlobalNetworkPolicy{}.OpenAPIModelName():                       schema_pkg_apis_projectcalico_v3_GlobalNetworkPolicy(ref),
+		v3.GlobalNetworkPolicyList{}.OpenAPIModelName():                   schema_pkg_apis_projectcalico_v3_GlobalNetworkPolicyList(ref),
+		v3.GlobalNetworkPolicySpec{}.OpenAPIModelName():                   schema_pkg_apis_projectcalico_v3_GlobalNetworkPolicySpec(ref),
+		v3.GlobalNetworkSet{}.OpenAPIModelName():                          schema_pkg_apis_projectcalico_v3_GlobalNetworkSet(ref),
+		v3.GlobalNetworkSetList{}.OpenAPIModelName():                      schema_pkg_apis_projectcalico_v3_GlobalNetworkSetList(ref),
+		v3.GlobalNetworkSetSpec{}.OpenAPIModelName():                      schema_pkg_apis_projectcalico_v3_GlobalNetworkSetSpec(ref),
+		v3.GlobalNetworkSetSync{}.OpenAPIModelName():                      schema_pkg_apis_projectcalico_v3_GlobalNetworkSetSync(ref),
+		v3.GlobalReport{}.OpenAPIModelName():                              schema_pkg_apis_projectcalico_v3_GlobalReport(ref),
+		v3.GlobalReportList{}.OpenAPIModelName():                          schema_pkg_apis_projectcalico_v3_GlobalReportList(ref),
+		v3.GlobalReportType{}.OpenAPIModelName():                          schema_pkg_apis_projectcalico_v3_GlobalReportType(ref),
+		v3.GlobalReportTypeList{}.OpenAPIModelName():                      schema_pkg_apis_projectcalico_v3_GlobalReportTypeList(ref),
+		v3.GlobalThreatFeed{}.OpenAPIModelName():                          schema_pkg_apis_projectcalico_v3_GlobalThreatFeed(ref),
+		v3.GlobalThreatFeedList{}.OpenAPIModelName():                      schema_pkg_apis_projectcalico_v3_GlobalThreatFeedList(ref),
+		v3.GlobalThreatFeedSpec{}.OpenAPIModelName():                      schema_pkg_apis_projectcalico_v3_GlobalThreatFeedSpec(ref),
+		v3.GlobalThreatFeedStatus{}.OpenAPIModelName():                    schema_pkg_apis_projectcalico_v3_GlobalThreatFeedStatus(ref),
+		v3.HTTPHeader{}.OpenAPIModelName():                                schema_pkg_apis_projectcalico_v3_HTTPHeader(ref),
+		v3.HTTPHeaderCriteria{}.OpenAPIModelName():                        schema_pkg_apis_projectcalico_v3_HTTPHeaderCriteria(ref),
+		v3.HTTPHeaderSource{}.OpenAPIModelName():                          schema_pkg_apis_projectcalico_v3_HTTPHeaderSource(ref),
+		v3.HTTPMatch{}.OpenAPIModelName():                                 schema_pkg_apis_projectcalico_v3_HTTPMatch(ref),
+		v3.HTTPPath{}.OpenAPIModelName():                                  schema_pkg_apis_projectcalico_v3_HTTPPath(ref),
+		v3.HTTPPull{}.OpenAPIModelName():                                  schema_pkg_apis_projectcalico_v3_HTTPPull(ref),
+		v3.HealthTimeoutOverride{}.OpenAPIModelName():                     schema_pkg_apis_projectcalico_v3_HealthTimeoutOverride(ref),
+		v3.HostEndpoint{}.OpenAPIModelName():                              schema_pkg_apis_projectcalico_v3_HostEndpoint(ref),
+		v3.HostEndpointList{}.OpenAPIModelName():                          schema_pkg_apis_projectcalico_v3_HostEndpointList(ref),
+		v3.HostEndpointSpec{}.OpenAPIModelName():                          schema_pkg_apis_projectcalico_v3_HostEndpointSpec(ref),
+		v3.ICMPFields{}.OpenAPIModelName():                                schema_pkg_apis_projectcalico_v3_ICMPFields(ref),
+		v3.IPAMBlock{}.OpenAPIModelName():                                 schema_pkg_apis_projectcalico_v3_IPAMBlock(ref),
+		v3.IPAMBlockList{}.OpenAPIModelName():                             schema_pkg_apis_projectcalico_v3_IPAMBlockList(ref),
+		v3.IPAMBlockSpec{}.OpenAPIModelName():                             schema_pkg_apis_projectcalico_v3_IPAMBlockSpec(ref),
+		v3.IPAMConfiguration{}.OpenAPIModelName():                         schema_pkg_apis_projectcalico_v3_IPAMConfiguration(ref),
+		v3.IPAMConfigurationList{}.OpenAPIModelName():                     schema_pkg_apis_projectcalico_v3_IPAMConfigurationList(ref),
+		v3.IPAMConfigurationSpec{}.OpenAPIModelName():                     schema_pkg_apis_projectcalico_v3_IPAMConfigurationSpec(ref),
+		v3.IPAMHandle{}.OpenAPIModelName():                                schema_pkg_apis_projectcalico_v3_IPAMHandle(ref),
+		v3.IPAMHandleList{}.OpenAPIModelName():                            schema_pkg_apis_projectcalico_v3_IPAMHandleList(ref),
+		v3.IPAMHandleSpec{}.OpenAPIModelName():                            schema_pkg_apis_projectcalico_v3_IPAMHandleSpec(ref),
+		v3.IPIPConfiguration{}.OpenAPIModelName():                         schema_pkg_apis_projectcalico_v3_IPIPConfiguration(ref),
+		v3.IPPool{}.OpenAPIModelName():                                    schema_pkg_apis_projectcalico_v3_IPPool(ref),
+		v3.IPPoolList{}.OpenAPIModelName():                                schema_pkg_apis_projectcalico_v3_IPPoolList(ref),
+		v3.IPPoolSpec{}.OpenAPIModelName():                                schema_pkg_apis_projectcalico_v3_IPPoolSpec(ref),
+		v3.IPPoolStatus{}.OpenAPIModelName():                              schema_pkg_apis_projectcalico_v3_IPPoolStatus(ref),
+		v3.IPReservation{}.OpenAPIModelName():                             schema_pkg_apis_projectcalico_v3_IPReservation(ref),
+		v3.IPReservationList{}.OpenAPIModelName():                         schema_pkg_apis_projectcalico_v3_IPReservationList(ref),
+		v3.IPReservationSpec{}.OpenAPIModelName():                         schema_pkg_apis_projectcalico_v3_IPReservationSpec(ref),
+		v3.KubeConfig{}.OpenAPIModelName():                                schema_pkg_apis_projectcalico_v3_KubeConfig(ref),
+		v3.KubeControllersConfiguration{}.OpenAPIModelName():              schema_pkg_apis_projectcalico_v3_KubeControllersConfiguration(ref),
+		v3.KubeControllersConfigurationList{}.OpenAPIModelName():          schema_pkg_apis_projectcalico_v3_KubeControllersConfigurationList(ref),
+		v3.KubeControllersConfigurationSpec{}.OpenAPIModelName():          schema_pkg_apis_projectcalico_v3_KubeControllersConfigurationSpec(ref),
+		v3.KubeControllersConfigurationStatus{}.OpenAPIModelName():        schema_pkg_apis_projectcalico_v3_KubeControllersConfigurationStatus(ref),
+		v3.LicenseKey{}.OpenAPIModelName():                                schema_pkg_apis_projectcalico_v3_LicenseKey(ref),
+		v3.LicenseKeyList{}.OpenAPIModelName():                            schema_pkg_apis_projectcalico_v3_LicenseKeyList(ref),
+		v3.LicenseKeySpec{}.OpenAPIModelName():                            schema_pkg_apis_projectcalico_v3_LicenseKeySpec(ref),
+		v3.LicenseKeyStatus{}.OpenAPIModelName():                          schema_pkg_apis_projectcalico_v3_LicenseKeyStatus(ref),
+		v3.LoadBalancerControllerConfig{}.OpenAPIModelName():              schema_pkg_apis_projectcalico_v3_LoadBalancerControllerConfig(ref),
+		v3.ManagedCluster{}.OpenAPIModelName():                            schema_pkg_apis_projectcalico_v3_ManagedCluster(ref),
+		v3.ManagedClusterList{}.OpenAPIModelName():                        schema_pkg_apis_projectcalico_v3_ManagedClusterList(ref),
+		v3.ManagedClusterSpec{}.OpenAPIModelName():                        schema_pkg_apis_projectcalico_v3_ManagedClusterSpec(ref),
+		v3.ManagedClusterStatus{}.OpenAPIModelName():                      schema_pkg_apis_projectcalico_v3_ManagedClusterStatus(ref),
+		v3.ManagedClusterStatusCondition{}.OpenAPIModelName():             schema_pkg_apis_projectcalico_v3_ManagedClusterStatusCondition(ref),
+		v3.MigrationControllerConfig{}.OpenAPIModelName():                 schema_pkg_apis_projectcalico_v3_MigrationControllerConfig(ref),
+		v3.NamedSelector{}.OpenAPIModelName():                             schema_pkg_apis_projectcalico_v3_NamedSelector(ref),
+		v3.NamesAndLabelsMatch{}.OpenAPIModelName():                       schema_pkg_apis_projectcalico_v3_NamesAndLabelsMatch(ref),
+		v3.NamespaceControllerConfig{}.OpenAPIModelName():                 schema_pkg_apis_projectcalico_v3_NamespaceControllerConfig(ref),
+		v3.NetworkPolicy{}.OpenAPIModelName():                             schema_pkg_apis_projectcalico_v3_NetworkPolicy(ref),
+		v3.NetworkPolicyList{}.OpenAPIModelName():                         schema_pkg_apis_projectcalico_v3_NetworkPolicyList(ref),
+		v3.NetworkPolicySpec{}.OpenAPIModelName():                         schema_pkg_apis_projectcalico_v3_NetworkPolicySpec(ref),
+		v3.NetworkSet{}.OpenAPIModelName():                                schema_pkg_apis_projectcalico_v3_NetworkSet(ref),
+		v3.NetworkSetList{}.OpenAPIModelName():                            schema_pkg_apis_projectcalico_v3_NetworkSetList(ref),
+		v3.NetworkSetSpec{}.OpenAPIModelName():                            schema_pkg_apis_projectcalico_v3_NetworkSetSpec(ref),
+		v3.NodeControllerConfig{}.OpenAPIModelName():                      schema_pkg_apis_projectcalico_v3_NodeControllerConfig(ref),
+		v3.PacketCapture{}.OpenAPIModelName():                             schema_pkg_apis_projectcalico_v3_PacketCapture(ref),
+		v3.PacketCaptureFile{}.OpenAPIModelName():                         schema_pkg_apis_projectcalico_v3_PacketCaptureFile(ref),
+		v3.PacketCaptureList{}.OpenAPIModelName():                         schema_pkg_apis_projectcalico_v3_PacketCaptureList(ref),
+		v3.PacketCaptureRule{}.OpenAPIModelName():                         schema_pkg_apis_projectcalico_v3_PacketCaptureRule(ref),
+		v3.PacketCaptureSpec{}.OpenAPIModelName():                         schema_pkg_apis_projectcalico_v3_PacketCaptureSpec(ref),
+		v3.PacketCaptureStatus{}.OpenAPIModelName():                       schema_pkg_apis_projectcalico_v3_PacketCaptureStatus(ref),
+		v3.PolicyControllerConfig{}.OpenAPIModelName():                    schema_pkg_apis_projectcalico_v3_PolicyControllerConfig(ref),
+		v3.PolicyRecommendationScope{}.OpenAPIModelName():                 schema_pkg_apis_projectcalico_v3_PolicyRecommendationScope(ref),
+		v3.PolicyRecommendationScopeHostEndpointSpec{}.OpenAPIModelName(): schema_pkg_apis_projectcalico_v3_PolicyRecommendationScopeHostEndpointSpec(ref),
+		v3.PolicyRecommendationScopeList{}.OpenAPIModelName():             schema_pkg_apis_projectcalico_v3_PolicyRecommendationScopeList(ref),
+		v3.PolicyRecommendationScopeNamespaceSpec{}.OpenAPIModelName():    schema_pkg_apis_projectcalico_v3_PolicyRecommendationScopeNamespaceSpec(ref),
+		v3.PolicyRecommendationScopeSpec{}.OpenAPIModelName():             schema_pkg_apis_projectcalico_v3_PolicyRecommendationScopeSpec(ref),
+		v3.PolicyRecommendationScopeStatus{}.OpenAPIModelName():           schema_pkg_apis_projectcalico_v3_PolicyRecommendationScopeStatus(ref),
+		v3.PolicyRecommendationScopeStatusCondition{}.OpenAPIModelName():  schema_pkg_apis_projectcalico_v3_PolicyRecommendationScopeStatusCondition(ref),
+		v3.Position{}.OpenAPIModelName():                                  schema_pkg_apis_projectcalico_v3_Position(ref),
+		v3.PrefixAdvertisement{}.OpenAPIModelName():                       schema_pkg_apis_projectcalico_v3_PrefixAdvertisement(ref),
+		v3.Profile{}.OpenAPIModelName():                                   schema_pkg_apis_projectcalico_v3_Profile(ref),
+		v3.ProfileList{}.OpenAPIModelName():                               schema_pkg_apis_projectcalico_v3_ProfileList(ref),
+		v3.ProfileSpec{}.OpenAPIModelName():                               schema_pkg_apis_projectcalico_v3_ProfileSpec(ref),
+		v3.ProtoPort{}.OpenAPIModelName():                                 schema_pkg_apis_projectcalico_v3_ProtoPort(ref),
+		v3.Pull{}.OpenAPIModelName():                                      schema_pkg_apis_projectcalico_v3_Pull(ref),
+		v3.RemoteClusterConfiguration{}.OpenAPIModelName():                schema_pkg_apis_projectcalico_v3_RemoteClusterConfiguration(ref),
+		v3.RemoteClusterConfigurationList{}.OpenAPIModelName():            schema_pkg_apis_projectcalico_v3_RemoteClusterConfigurationList(ref),
+		v3.RemoteClusterConfigurationSpec{}.OpenAPIModelName():            schema_pkg_apis_projectcalico_v3_RemoteClusterConfigurationSpec(ref),
+		v3.RemoteClusterSyncOptions{}.OpenAPIModelName():                  schema_pkg_apis_projectcalico_v3_RemoteClusterSyncOptions(ref),
+		v3.ReportData{}.OpenAPIModelName():                                schema_pkg_apis_projectcalico_v3_ReportData(ref),
+		v3.ReportJob{}.OpenAPIModelName():                                 schema_pkg_apis_projectcalico_v3_ReportJob(ref),
+		v3.ReportSpec{}.OpenAPIModelName():                                schema_pkg_apis_projectcalico_v3_ReportSpec(ref),
+		v3.ReportStatus{}.OpenAPIModelName():                              schema_pkg_apis_projectcalico_v3_ReportStatus(ref),
+		v3.ReportTemplate{}.OpenAPIModelName():                            schema_pkg_apis_projectcalico_v3_ReportTemplate(ref),
+		v3.ReportTypeSpec{}.OpenAPIModelName():                            schema_pkg_apis_projectcalico_v3_ReportTypeSpec(ref),
+		v3.ResourceID{}.OpenAPIModelName():                                schema_pkg_apis_projectcalico_v3_ResourceID(ref),
+		v3.RouteTableIDRange{}.OpenAPIModelName():                         schema_pkg_apis_projectcalico_v3_RouteTableIDRange(ref),
+		v3.RouteTableRange{}.OpenAPIModelName():                           schema_pkg_apis_projectcalico_v3_RouteTableRange(ref),
+		v3.Rule{}.OpenAPIModelName():                                      schema_pkg_apis_projectcalico_v3_Rule(ref),
+		v3.RuleMetadata{}.OpenAPIModelName():                              schema_pkg_apis_projectcalico_v3_RuleMetadata(ref),
+		v3.SecurityEventWebhook{}.OpenAPIModelName():                      schema_pkg_apis_projectcalico_v3_SecurityEventWebhook(ref),
+		v3.SecurityEventWebhookConfigVar{}.OpenAPIModelName():             schema_pkg_apis_projectcalico_v3_SecurityEventWebhookConfigVar(ref),
+		v3.SecurityEventWebhookConfigVarSource{}.OpenAPIModelName():       schema_pkg_apis_projectcalico_v3_SecurityEventWebhookConfigVarSource(ref),
+		v3.SecurityEventWebhookList{}.OpenAPIModelName():                  schema_pkg_apis_projectcalico_v3_SecurityEventWebhookList(ref),
+		v3.SecurityEventWebhookSpec{}.OpenAPIModelName():                  schema_pkg_apis_projectcalico_v3_SecurityEventWebhookSpec(ref),
+		v3.ServiceAccountControllerConfig{}.OpenAPIModelName():            schema_pkg_apis_projectcalico_v3_ServiceAccountControllerConfig(ref),
+		v3.ServiceAccountMatch{}.OpenAPIModelName():                       schema_pkg_apis_projectcalico_v3_ServiceAccountMatch(ref),
+		v3.ServiceClusterIPBlock{}.OpenAPIModelName():                     schema_pkg_apis_projectcalico_v3_ServiceClusterIPBlock(ref),
+		v3.ServiceExternalIPBlock{}.OpenAPIModelName():                    schema_pkg_apis_projectcalico_v3_ServiceExternalIPBlock(ref),
+		v3.ServiceLoadBalancerIPBlock{}.OpenAPIModelName():                schema_pkg_apis_projectcalico_v3_ServiceLoadBalancerIPBlock(ref),
+		v3.ServiceMatch{}.OpenAPIModelName():                              schema_pkg_apis_projectcalico_v3_ServiceMatch(ref),
+		v3.StagedGlobalNetworkPolicy{}.OpenAPIModelName():                 schema_pkg_apis_projectcalico_v3_StagedGlobalNetworkPolicy(ref),
+		v3.StagedGlobalNetworkPolicyList{}.OpenAPIModelName():             schema_pkg_apis_projectcalico_v3_StagedGlobalNetworkPolicyList(ref),
+		v3.StagedGlobalNetworkPolicySpec{}.OpenAPIModelName():             schema_pkg_apis_projectcalico_v3_StagedGlobalNetworkPolicySpec(ref),
+		v3.StagedKubernetesNetworkPolicy{}.OpenAPIModelName():             schema_pkg_apis_projectcalico_v3_StagedKubernetesNetworkPolicy(ref),
+		v3.StagedKubernetesNetworkPolicyList{}.OpenAPIModelName():         schema_pkg_apis_projectcalico_v3_StagedKubernetesNetworkPolicyList(ref),
+		v3.StagedKubernetesNetworkPolicySpec{}.OpenAPIModelName():         schema_pkg_apis_projectcalico_v3_StagedKubernetesNetworkPolicySpec(ref),
+		v3.StagedNetworkPolicy{}.OpenAPIModelName():                       schema_pkg_apis_projectcalico_v3_StagedNetworkPolicy(ref),
+		v3.StagedNetworkPolicyList{}.OpenAPIModelName():                   schema_pkg_apis_projectcalico_v3_StagedNetworkPolicyList(ref),
+		v3.StagedNetworkPolicySpec{}.OpenAPIModelName():                   schema_pkg_apis_projectcalico_v3_StagedNetworkPolicySpec(ref),
+		v3.Template{}.OpenAPIModelName():                                  schema_pkg_apis_projectcalico_v3_Template(ref),
+		v3.ThreatFeedFormat{}.OpenAPIModelName():                          schema_pkg_apis_projectcalico_v3_ThreatFeedFormat(ref),
+		v3.ThreatFeedFormatCSV{}.OpenAPIModelName():                       schema_pkg_apis_projectcalico_v3_ThreatFeedFormatCSV(ref),
+		v3.ThreatFeedFormatJSON{}.OpenAPIModelName():                      schema_pkg_apis_projectcalico_v3_ThreatFeedFormatJSON(ref),
+		v3.ThreatFeedFormatNewlineDelimited{}.OpenAPIModelName():          schema_pkg_apis_projectcalico_v3_ThreatFeedFormatNewlineDelimited(ref),
+		v3.Tier{}.OpenAPIModelName():                                      schema_pkg_apis_projectcalico_v3_Tier(ref),
+		v3.TierList{}.OpenAPIModelName():                                  schema_pkg_apis_projectcalico_v3_TierList(ref),
+		v3.TierSpec{}.OpenAPIModelName():                                  schema_pkg_apis_projectcalico_v3_TierSpec(ref),
+		v3.TierStatus{}.OpenAPIModelName():                                schema_pkg_apis_projectcalico_v3_TierStatus(ref),
+		v3.UIDashboard{}.OpenAPIModelName():                               schema_pkg_apis_projectcalico_v3_UIDashboard(ref),
+		v3.UIGraphLayer{}.OpenAPIModelName():                              schema_pkg_apis_projectcalico_v3_UIGraphLayer(ref),
+		v3.UIGraphNode{}.OpenAPIModelName():                               schema_pkg_apis_projectcalico_v3_UIGraphNode(ref),
+		v3.UIGraphNodeView{}.OpenAPIModelName():                           schema_pkg_apis_projectcalico_v3_UIGraphNodeView(ref),
+		v3.UIGraphView{}.OpenAPIModelName():                               schema_pkg_apis_projectcalico_v3_UIGraphView(ref),
+		v3.UISettings{}.OpenAPIModelName():                                schema_pkg_apis_projectcalico_v3_UISettings(ref),
+		v3.UISettingsGroup{}.OpenAPIModelName():                           schema_pkg_apis_projectcalico_v3_UISettingsGroup(ref),
+		v3.UISettingsGroupList{}.OpenAPIModelName():                       schema_pkg_apis_projectcalico_v3_UISettingsGroupList(ref),
+		v3.UISettingsGroupSpec{}.OpenAPIModelName():                       schema_pkg_apis_projectcalico_v3_UISettingsGroupSpec(ref),
+		v3.UISettingsList{}.OpenAPIModelName():                            schema_pkg_apis_projectcalico_v3_UISettingsList(ref),
+		v3.UISettingsSpec{}.OpenAPIModelName():                            schema_pkg_apis_projectcalico_v3_UISettingsSpec(ref),
+		v3.WorkloadEndpointControllerConfig{}.OpenAPIModelName():          schema_pkg_apis_projectcalico_v3_WorkloadEndpointControllerConfig(ref),
+		numorstring.DSCP{}.OpenAPIModelName():                             schema_api_pkg_lib_numorstring_DSCP(ref),
+		numorstring.Port{}.OpenAPIModelName():                             schema_api_pkg_lib_numorstring_Port(ref),
+		numorstring.Protocol{}.OpenAPIModelName():                         schema_api_pkg_lib_numorstring_Protocol(ref),
+		numorstring.Uint8OrString{}.OpenAPIModelName():                    schema_api_pkg_lib_numorstring_Uint8OrString(ref),
+		v1.AWSElasticBlockStoreVolumeSource{}.OpenAPIModelName():          schema_k8sio_api_core_v1_AWSElasticBlockStoreVolumeSource(ref),
+		v1.Affinity{}.OpenAPIModelName():                                  schema_k8sio_api_core_v1_Affinity(ref),
+		v1.AppArmorProfile{}.OpenAPIModelName():                           schema_k8sio_api_core_v1_AppArmorProfile(ref),
+		v1.AttachedVolume{}.OpenAPIModelName():                            schema_k8sio_api_core_v1_AttachedVolume(ref),
+		v1.AvoidPods{}.OpenAPIModelName():                                 schema_k8sio_api_core_v1_AvoidPods(ref),
+		v1.AzureDiskVolumeSource{}.OpenAPIModelName():                     schema_k8sio_api_core_v1_AzureDiskVolumeSource(ref),
+		v1.AzureFilePersistentVolumeSource{}.OpenAPIModelName():           schema_k8sio_api_core_v1_AzureFilePersistentVolumeSource(ref),
+		v1.AzureFileVolumeSource{}.OpenAPIModelName():                     schema_k8sio_api_core_v1_AzureFileVolumeSource(ref),
+		v1.Binding{}.OpenAPIModelName():                                   schema_k8sio_api_core_v1_Binding(ref),
+		v1.CSIPersistentVolumeSource{}.OpenAPIModelName():                 schema_k8sio_api_core_v1_CSIPersistentVolumeSource(ref),
+		v1.CSIVolumeSource{}.OpenAPIModelName():                           schema_k8sio_api_core_v1_CSIVolumeSource(ref),
+		v1.Capabilities{}.OpenAPIModelName():                              schema_k8sio_api_core_v1_Capabilities(ref),
+		v1.CephFSPersistentVolumeSource{}.OpenAPIModelName():              schema_k8sio_api_core_v1_CephFSPersistentVolumeSource(ref),
+		v1.CephFSVolumeSource{}.OpenAPIModelName():                        schema_k8sio_api_core_v1_CephFSVolumeSource(ref),
+		v1.CinderPersistentVolumeSource{}.OpenAPIModelName():              schema_k8sio_api_core_v1_CinderPersistentVolumeSource(ref),
+		v1.CinderVolumeSource{}.OpenAPIModelName():                        schema_k8sio_api_core_v1_CinderVolumeSource(ref),
+		v1.ClientIPConfig{}.OpenAPIModelName():                            schema_k8sio_api_core_v1_ClientIPConfig(ref),
+		v1.ClusterTrustBundleProjection{}.OpenAPIModelName():              schema_k8sio_api_core_v1_ClusterTrustBundleProjection(ref),
+		v1.ComponentCondition{}.OpenAPIModelName():                        schema_k8sio_api_core_v1_ComponentCondition(ref),
+		v1.ComponentStatus{}.OpenAPIModelName():                           schema_k8sio_api_core_v1_ComponentStatus(ref),
+		v1.ComponentStatusList{}.OpenAPIModelName():                       schema_k8sio_api_core_v1_ComponentStatusList(ref),
+		v1.ConfigMap{}.OpenAPIModelName():                                 schema_k8sio_api_core_v1_ConfigMap(ref),
+		v1.ConfigMapEnvSource{}.OpenAPIModelName():                        schema_k8sio_api_core_v1_ConfigMapEnvSource(ref),
+		v1.ConfigMapKeySelector{}.OpenAPIModelName():                      schema_k8sio_api_core_v1_ConfigMapKeySelector(ref),
+		v1.ConfigMapList{}.OpenAPIModelName():                             schema_k8sio_api_core_v1_ConfigMapList(ref),
+		v1.ConfigMapNodeConfigSource{}.OpenAPIModelName():                 schema_k8sio_api_core_v1_ConfigMapNodeConfigSource(ref),
+		v1.ConfigMapProjection{}.OpenAPIModelName():                       schema_k8sio_api_core_v1_ConfigMapProjection(ref),
+		v1.ConfigMapVolumeSource{}.OpenAPIModelName():                     schema_k8sio_api_core_v1_ConfigMapVolumeSource(ref),
+		v1.Container{}.OpenAPIModelName():                                 schema_k8sio_api_core_v1_Container(ref),
+		v1.ContainerExtendedResourceRequest{}.OpenAPIModelName():          schema_k8sio_api_core_v1_ContainerExtendedResourceRequest(ref),
+		v1.ContainerImage{}.OpenAPIModelName():                            schema_k8sio_api_core_v1_ContainerImage(ref),
+		v1.ContainerPort{}.OpenAPIModelName():                             schema_k8sio_api_core_v1_ContainerPort(ref),
+		v1.ContainerResizePolicy{}.OpenAPIModelName():                     schema_k8sio_api_core_v1_ContainerResizePolicy(ref),
+		v1.ContainerRestartRule{}.OpenAPIModelName():                      schema_k8sio_api_core_v1_ContainerRestartRule(ref),
+		v1.ContainerRestartRuleOnExitCodes{}.OpenAPIModelName():           schema_k8sio_api_core_v1_ContainerRestartRuleOnExitCodes(ref),
+		v1.ContainerState{}.OpenAPIModelName():                            schema_k8sio_api_core_v1_ContainerState(ref),
+		v1.ContainerStateRunning{}.OpenAPIModelName():                     schema_k8sio_api_core_v1_ContainerStateRunning(ref),
+		v1.ContainerStateTerminated{}.OpenAPIModelName():                  schema_k8sio_api_core_v1_ContainerStateTerminated(ref),
+		v1.ContainerStateWaiting{}.OpenAPIModelName():                     schema_k8sio_api_core_v1_ContainerStateWaiting(ref),
+		v1.ContainerStatus{}.OpenAPIModelName():                           schema_k8sio_api_core_v1_ContainerStatus(ref),
+		v1.ContainerUser{}.OpenAPIModelName():                             schema_k8sio_api_core_v1_ContainerUser(ref),
+		v1.DaemonEndpoint{}.OpenAPIModelName():                            schema_k8sio_api_core_v1_DaemonEndpoint(ref),
+		v1.DownwardAPIProjection{}.OpenAPIModelName():                     schema_k8sio_api_core_v1_DownwardAPIProjection(ref),
+		v1.DownwardAPIVolumeFile{}.OpenAPIModelName():                     schema_k8sio_api_core_v1_DownwardAPIVolumeFile(ref),
+		v1.DownwardAPIVolumeSource{}.OpenAPIModelName():                   schema_k8sio_api_core_v1_DownwardAPIVolumeSource(ref),
+		v1.EmptyDirVolumeSource{}.OpenAPIModelName():                      schema_k8sio_api_core_v1_EmptyDirVolumeSource(ref),
+		v1.EndpointAddress{}.OpenAPIModelName():                           schema_k8sio_api_core_v1_EndpointAddress(ref),
+		v1.EndpointPort{}.OpenAPIModelName():                              schema_k8sio_api_core_v1_EndpointPort(ref),
+		v1.EndpointSubset{}.OpenAPIModelName():                            schema_k8sio_api_core_v1_EndpointSubset(ref),
+		v1.Endpoints{}.OpenAPIModelName():                                 schema_k8sio_api_core_v1_Endpoints(ref),
+		v1.EndpointsList{}.OpenAPIModelName():                             schema_k8sio_api_core_v1_EndpointsList(ref),
+		v1.EnvFromSource{}.OpenAPIModelName():                             schema_k8sio_api_core_v1_EnvFromSource(ref),
+		v1.EnvVar{}.OpenAPIModelName():                                    schema_k8sio_api_core_v1_EnvVar(ref),
+		v1.EnvVarSource{}.OpenAPIModelName():                              schema_k8sio_api_core_v1_EnvVarSource(ref),
+		v1.EphemeralContainer{}.OpenAPIModelName():                        schema_k8sio_api_core_v1_EphemeralContainer(ref),
+		v1.EphemeralContainerCommon{}.OpenAPIModelName():                  schema_k8sio_api_core_v1_EphemeralContainerCommon(ref),
+		v1.EphemeralVolumeSource{}.OpenAPIModelName():                     schema_k8sio_api_core_v1_EphemeralVolumeSource(ref),
+		v1.Event{}.OpenAPIModelName():                                     schema_k8sio_api_core_v1_Event(ref),
+		v1.EventList{}.OpenAPIModelName():                                 schema_k8sio_api_core_v1_EventList(ref),
+		v1.EventSeries{}.OpenAPIModelName():                               schema_k8sio_api_core_v1_EventSeries(ref),
+		v1.EventSource{}.OpenAPIModelName():                               schema_k8sio_api_core_v1_EventSource(ref),
+		v1.ExecAction{}.OpenAPIModelName():                                schema_k8sio_api_core_v1_ExecAction(ref),
+		v1.FCVolumeSource{}.OpenAPIModelName():                            schema_k8sio_api_core_v1_FCVolumeSource(ref),
+		v1.FileKeySelector{}.OpenAPIModelName():                           schema_k8sio_api_core_v1_FileKeySelector(ref),
+		v1.FlexPersistentVolumeSource{}.OpenAPIModelName():                schema_k8sio_api_core_v1_FlexPersistentVolumeSource(ref),
+		v1.FlexVolumeSource{}.OpenAPIModelName():                          schema_k8sio_api_core_v1_FlexVolumeSource(ref),
+		v1.FlockerVolumeSource{}.OpenAPIModelName():                       schema_k8sio_api_core_v1_FlockerVolumeSource(ref),
+		v1.GCEPersistentDiskVolumeSource{}.OpenAPIModelName():             schema_k8sio_api_core_v1_GCEPersistentDiskVolumeSource(ref),
+		v1.GRPCAction{}.OpenAPIModelName():                                schema_k8sio_api_core_v1_GRPCAction(ref),
+		v1.GitRepoVolumeSource{}.OpenAPIModelName():                       schema_k8sio_api_core_v1_GitRepoVolumeSource(ref),
+		v1.GlusterfsPersistentVolumeSource{}.OpenAPIModelName():           schema_k8sio_api_core_v1_GlusterfsPersistentVolumeSource(ref),
+		v1.GlusterfsVolumeSource{}.OpenAPIModelName():                     schema_k8sio_api_core_v1_GlusterfsVolumeSource(ref),
+		v1.HTTPGetAction{}.OpenAPIModelName():                             schema_k8sio_api_core_v1_HTTPGetAction(ref),
+		v1.HTTPHeader{}.OpenAPIModelName():                                schema_k8sio_api_core_v1_HTTPHeader(ref),
+		v1.HostAlias{}.OpenAPIModelName():                                 schema_k8sio_api_core_v1_HostAlias(ref),
+		v1.HostIP{}.OpenAPIModelName():                                    schema_k8sio_api_core_v1_HostIP(ref),
+		v1.HostPathVolumeSource{}.OpenAPIModelName():                      schema_k8sio_api_core_v1_HostPathVolumeSource(ref),
+		v1.ISCSIPersistentVolumeSource{}.OpenAPIModelName():               schema_k8sio_api_core_v1_ISCSIPersistentVolumeSource(ref),
+		v1.ISCSIVolumeSource{}.OpenAPIModelName():                         schema_k8sio_api_core_v1_ISCSIVolumeSource(ref),
+		v1.ImageVolumeSource{}.OpenAPIModelName():                         schema_k8sio_api_core_v1_ImageVolumeSource(ref),
+		v1.KeyToPath{}.OpenAPIModelName():                                 schema_k8sio_api_core_v1_KeyToPath(ref),
+		v1.Lifecycle{}.OpenAPIModelName():                                 schema_k8sio_api_core_v1_Lifecycle(ref),
+		v1.LifecycleHandler{}.OpenAPIModelName():                          schema_k8sio_api_core_v1_LifecycleHandler(ref),
+		v1.LimitRange{}.OpenAPIModelName():                                schema_k8sio_api_core_v1_LimitRange(ref),
+		v1.LimitRangeItem{}.OpenAPIModelName():                            schema_k8sio_api_core_v1_LimitRangeItem(ref),
+		v1.LimitRangeList{}.OpenAPIModelName():                            schema_k8sio_api_core_v1_LimitRangeList(ref),
+		v1.LimitRangeSpec{}.OpenAPIModelName():                            schema_k8sio_api_core_v1_LimitRangeSpec(ref),
+		v1.LinuxContainerUser{}.OpenAPIModelName():                        schema_k8sio_api_core_v1_LinuxContainerUser(ref),
+		v1.List{}.OpenAPIModelName():                                      schema_k8sio_api_core_v1_List(ref),
+		v1.LoadBalancerIngress{}.OpenAPIModelName():                       schema_k8sio_api_core_v1_LoadBalancerIngress(ref),
+		v1.LoadBalancerStatus{}.OpenAPIModelName():                        schema_k8sio_api_core_v1_LoadBalancerStatus(ref),
+		v1.LocalObjectReference{}.OpenAPIModelName():                      schema_k8sio_api_core_v1_LocalObjectReference(ref),
+		v1.LocalVolumeSource{}.OpenAPIModelName():                         schema_k8sio_api_core_v1_LocalVolumeSource(ref),
+		v1.ModifyVolumeStatus{}.OpenAPIModelName():                        schema_k8sio_api_core_v1_ModifyVolumeStatus(ref),
+		v1.NFSVolumeSource{}.OpenAPIModelName():                           schema_k8sio_api_core_v1_NFSVolumeSource(ref),
+		v1.Namespace{}.OpenAPIModelName():                                 schema_k8sio_api_core_v1_Namespace(ref),
+		v1.NamespaceCondition{}.OpenAPIModelName():                        schema_k8sio_api_core_v1_NamespaceCondition(ref),
+		v1.NamespaceList{}.OpenAPIModelName():                             schema_k8sio_api_core_v1_NamespaceList(ref),
+		v1.NamespaceSpec{}.OpenAPIModelName():                             schema_k8sio_api_core_v1_NamespaceSpec(ref),
+		v1.NamespaceStatus{}.OpenAPIModelName():                           schema_k8sio_api_core_v1_NamespaceStatus(ref),
+		v1.Node{}.OpenAPIModelName():                                      schema_k8sio_api_core_v1_Node(ref),
+		v1.NodeAddress{}.OpenAPIModelName():                               schema_k8sio_api_core_v1_NodeAddress(ref),
+		v1.NodeAffinity{}.OpenAPIModelName():                              schema_k8sio_api_core_v1_NodeAffinity(ref),
+		v1.NodeCondition{}.OpenAPIModelName():                             schema_k8sio_api_core_v1_NodeCondition(ref),
+		v1.NodeConfigSource{}.OpenAPIModelName():                          schema_k8sio_api_core_v1_NodeConfigSource(ref),
+		v1.NodeConfigStatus{}.OpenAPIModelName():                          schema_k8sio_api_core_v1_NodeConfigStatus(ref),
+		v1.NodeDaemonEndpoints{}.OpenAPIModelName():                       schema_k8sio_api_core_v1_NodeDaemonEndpoints(ref),
+		v1.NodeFeatures{}.OpenAPIModelName():                              schema_k8sio_api_core_v1_NodeFeatures(ref),
+		v1.NodeList{}.OpenAPIModelName():                                  schema_k8sio_api_core_v1_NodeList(ref),
+		v1.NodeProxyOptions{}.OpenAPIModelName():                          schema_k8sio_api_core_v1_NodeProxyOptions(ref),
+		v1.NodeRuntimeHandler{}.OpenAPIModelName():                        schema_k8sio_api_core_v1_NodeRuntimeHandler(ref),
+		v1.NodeRuntimeHandlerFeatures{}.OpenAPIModelName():                schema_k8sio_api_core_v1_NodeRuntimeHandlerFeatures(ref),
+		v1.NodeSelector{}.OpenAPIModelName():                              schema_k8sio_api_core_v1_NodeSelector(ref),
+		v1.NodeSelectorRequirement{}.OpenAPIModelName():                   schema_k8sio_api_core_v1_NodeSelectorRequirement(ref),
+		v1.NodeSelectorTerm{}.OpenAPIModelName():                          schema_k8sio_api_core_v1_NodeSelectorTerm(ref),
+		v1.NodeSpec{}.OpenAPIModelName():                                  schema_k8sio_api_core_v1_NodeSpec(ref),
+		v1.NodeStatus{}.OpenAPIModelName():                                schema_k8sio_api_core_v1_NodeStatus(ref),
+		v1.NodeSwapStatus{}.OpenAPIModelName():                            schema_k8sio_api_core_v1_NodeSwapStatus(ref),
+		v1.NodeSystemInfo{}.OpenAPIModelName():                            schema_k8sio_api_core_v1_NodeSystemInfo(ref),
+		v1.ObjectFieldSelector{}.OpenAPIModelName():                       schema_k8sio_api_core_v1_ObjectFieldSelector(ref),
+		v1.ObjectReference{}.OpenAPIModelName():                           schema_k8sio_api_core_v1_ObjectReference(ref),
+		v1.PersistentVolume{}.OpenAPIModelName():                          schema_k8sio_api_core_v1_PersistentVolume(ref),
+		v1.PersistentVolumeClaim{}.OpenAPIModelName():                     schema_k8sio_api_core_v1_PersistentVolumeClaim(ref),
+		v1.PersistentVolumeClaimCondition{}.OpenAPIModelName():            schema_k8sio_api_core_v1_PersistentVolumeClaimCondition(ref),
+		v1.PersistentVolumeClaimList{}.OpenAPIModelName():                 schema_k8sio_api_core_v1_PersistentVolumeClaimList(ref),
+		v1.PersistentVolumeClaimSpec{}.OpenAPIModelName():                 schema_k8sio_api_core_v1_PersistentVolumeClaimSpec(ref),
+		v1.PersistentVolumeClaimStatus{}.OpenAPIModelName():               schema_k8sio_api_core_v1_PersistentVolumeClaimStatus(ref),
+		v1.PersistentVolumeClaimTemplate{}.OpenAPIModelName():             schema_k8sio_api_core_v1_PersistentVolumeClaimTemplate(ref),
+		v1.PersistentVolumeClaimVolumeSource{}.OpenAPIModelName():         schema_k8sio_api_core_v1_PersistentVolumeClaimVolumeSource(ref),
+		v1.PersistentVolumeList{}.OpenAPIModelName():                      schema_k8sio_api_core_v1_PersistentVolumeList(ref),
+		v1.PersistentVolumeSource{}.OpenAPIModelName():                    schema_k8sio_api_core_v1_PersistentVolumeSource(ref),
+		v1.PersistentVolumeSpec{}.OpenAPIModelName():                      schema_k8sio_api_core_v1_PersistentVolumeSpec(ref),
+		v1.PersistentVolumeStatus{}.OpenAPIModelName():                    schema_k8sio_api_core_v1_PersistentVolumeStatus(ref),
+		v1.PhotonPersistentDiskVolumeSource{}.OpenAPIModelName():          schema_k8sio_api_core_v1_PhotonPersistentDiskVolumeSource(ref),
+		v1.Pod{}.OpenAPIModelName():                                       schema_k8sio_api_core_v1_Pod(ref),
+		v1.PodAffinity{}.OpenAPIModelName():                               schema_k8sio_api_core_v1_PodAffinity(ref),
+		v1.PodAffinityTerm{}.OpenAPIModelName():                           schema_k8sio_api_core_v1_PodAffinityTerm(ref),
+		v1.PodAntiAffinity{}.OpenAPIModelName():                           schema_k8sio_api_core_v1_PodAntiAffinity(ref),
+		v1.PodAttachOptions{}.OpenAPIModelName():                          schema_k8sio_api_core_v1_PodAttachOptions(ref),
+		v1.PodCertificateProjection{}.OpenAPIModelName():                  schema_k8sio_api_core_v1_PodCertificateProjection(ref),
+		v1.PodCondition{}.OpenAPIModelName():                              schema_k8sio_api_core_v1_PodCondition(ref),
+		v1.PodDNSConfig{}.OpenAPIModelName():                              schema_k8sio_api_core_v1_PodDNSConfig(ref),
+		v1.PodDNSConfigOption{}.OpenAPIModelName():                        schema_k8sio_api_core_v1_PodDNSConfigOption(ref),
+		v1.PodExecOptions{}.OpenAPIModelName():                            schema_k8sio_api_core_v1_PodExecOptions(ref),
+		v1.PodExtendedResourceClaimStatus{}.OpenAPIModelName():            schema_k8sio_api_core_v1_PodExtendedResourceClaimStatus(ref),
+		v1.PodIP{}.OpenAPIModelName():                                     schema_k8sio_api_core_v1_PodIP(ref),
+		v1.PodList{}.OpenAPIModelName():                                   schema_k8sio_api_core_v1_PodList(ref),
+		v1.PodLogOptions{}.OpenAPIModelName():                             schema_k8sio_api_core_v1_PodLogOptions(ref),
+		v1.PodOS{}.OpenAPIModelName():                                     schema_k8sio_api_core_v1_PodOS(ref),
+		v1.PodPortForwardOptions{}.OpenAPIModelName():                     schema_k8sio_api_core_v1_PodPortForwardOptions(ref),
+		v1.PodProxyOptions{}.OpenAPIModelName():                           schema_k8sio_api_core_v1_PodProxyOptions(ref),
+		v1.PodReadinessGate{}.OpenAPIModelName():                          schema_k8sio_api_core_v1_PodReadinessGate(ref),
+		v1.PodResourceClaim{}.OpenAPIModelName():                          schema_k8sio_api_core_v1_PodResourceClaim(ref),
+		v1.PodResourceClaimStatus{}.OpenAPIModelName():                    schema_k8sio_api_core_v1_PodResourceClaimStatus(ref),
+		v1.PodSchedulingGate{}.OpenAPIModelName():                         schema_k8sio_api_core_v1_PodSchedulingGate(ref),
+		v1.PodSecurityContext{}.OpenAPIModelName():                        schema_k8sio_api_core_v1_PodSecurityContext(ref),
+		v1.PodSignature{}.OpenAPIModelName():                              schema_k8sio_api_core_v1_PodSignature(ref),
+		v1.PodSpec{}.OpenAPIModelName():                                   schema_k8sio_api_core_v1_PodSpec(ref),
+		v1.PodStatus{}.OpenAPIModelName():                                 schema_k8sio_api_core_v1_PodStatus(ref),
+		v1.PodStatusResult{}.OpenAPIModelName():                           schema_k8sio_api_core_v1_PodStatusResult(ref),
+		v1.PodTemplate{}.OpenAPIModelName():                               schema_k8sio_api_core_v1_PodTemplate(ref),
+		v1.PodTemplateList{}.OpenAPIModelName():                           schema_k8sio_api_core_v1_PodTemplateList(ref),
+		v1.PodTemplateSpec{}.OpenAPIModelName():                           schema_k8sio_api_core_v1_PodTemplateSpec(ref),
+		v1.PortStatus{}.OpenAPIModelName():                                schema_k8sio_api_core_v1_PortStatus(ref),
+		v1.PortworxVolumeSource{}.OpenAPIModelName():                      schema_k8sio_api_core_v1_PortworxVolumeSource(ref),
+		v1.PreferAvoidPodsEntry{}.OpenAPIModelName():                      schema_k8sio_api_core_v1_PreferAvoidPodsEntry(ref),
+		v1.PreferredSchedulingTerm{}.OpenAPIModelName():                   schema_k8sio_api_core_v1_PreferredSchedulingTerm(ref),
+		v1.Probe{}.OpenAPIModelName():                                     schema_k8sio_api_core_v1_Probe(ref),
+		v1.ProbeHandler{}.OpenAPIModelName():                              schema_k8sio_api_core_v1_ProbeHandler(ref),
+		v1.ProjectedVolumeSource{}.OpenAPIModelName():                     schema_k8sio_api_core_v1_ProjectedVolumeSource(ref),
+		v1.QuobyteVolumeSource{}.OpenAPIModelName():                       schema_k8sio_api_core_v1_QuobyteVolumeSource(ref),
+		v1.RBDPersistentVolumeSource{}.OpenAPIModelName():                 schema_k8sio_api_core_v1_RBDPersistentVolumeSource(ref),
+		v1.RBDVolumeSource{}.OpenAPIModelName():                           schema_k8sio_api_core_v1_RBDVolumeSource(ref),
+		v1.RangeAllocation{}.OpenAPIModelName():                           schema_k8sio_api_core_v1_RangeAllocation(ref),
+		v1.ReplicationController{}.OpenAPIModelName():                     schema_k8sio_api_core_v1_ReplicationController(ref),
+		v1.ReplicationControllerCondition{}.OpenAPIModelName():            schema_k8sio_api_core_v1_ReplicationControllerCondition(ref),
+		v1.ReplicationControllerList{}.OpenAPIModelName():                 schema_k8sio_api_core_v1_ReplicationControllerList(ref),
+		v1.ReplicationControllerSpec{}.OpenAPIModelName():                 schema_k8sio_api_core_v1_ReplicationControllerSpec(ref),
+		v1.ReplicationControllerStatus{}.OpenAPIModelName():               schema_k8sio_api_core_v1_ReplicationControllerStatus(ref),
+		v1.ResourceClaim{}.OpenAPIModelName():                             schema_k8sio_api_core_v1_ResourceClaim(ref),
+		v1.ResourceFieldSelector{}.OpenAPIModelName():                     schema_k8sio_api_core_v1_ResourceFieldSelector(ref),
+		v1.ResourceHealth{}.OpenAPIModelName():                            schema_k8sio_api_core_v1_ResourceHealth(ref),
+		v1.ResourceQuota{}.OpenAPIModelName():                             schema_k8sio_api_core_v1_ResourceQuota(ref),
+		v1.ResourceQuotaList{}.OpenAPIModelName():                         schema_k8sio_api_core_v1_ResourceQuotaList(ref),
+		v1.ResourceQuotaSpec{}.OpenAPIModelName():                         schema_k8sio_api_core_v1_ResourceQuotaSpec(ref),
+		v1.ResourceQuotaStatus{}.OpenAPIModelName():                       schema_k8sio_api_core_v1_ResourceQuotaStatus(ref),
+		v1.ResourceRequirements{}.OpenAPIModelName():                      schema_k8sio_api_core_v1_ResourceRequirements(ref),
+		v1.ResourceStatus{}.OpenAPIModelName():                            schema_k8sio_api_core_v1_ResourceStatus(ref),
+		v1.SELinuxOptions{}.OpenAPIModelName():                            schema_k8sio_api_core_v1_SELinuxOptions(ref),
+		v1.ScaleIOPersistentVolumeSource{}.OpenAPIModelName():             schema_k8sio_api_core_v1_ScaleIOPersistentVolumeSource(ref),
+		v1.ScaleIOVolumeSource{}.OpenAPIModelName():                       schema_k8sio_api_core_v1_ScaleIOVolumeSource(ref),
+		v1.ScopeSelector{}.OpenAPIModelName():                             schema_k8sio_api_core_v1_ScopeSelector(ref),
+		v1.ScopedResourceSelectorRequirement{}.OpenAPIModelName():         schema_k8sio_api_core_v1_ScopedResourceSelectorRequirement(ref),
+		v1.SeccompProfile{}.OpenAPIModelName():                            schema_k8sio_api_core_v1_SeccompProfile(ref),
+		v1.Secret{}.OpenAPIModelName():                                    schema_k8sio_api_core_v1_Secret(ref),
+		v1.SecretEnvSource{}.OpenAPIModelName():                           schema_k8sio_api_core_v1_SecretEnvSource(ref),
+		v1.SecretKeySelector{}.OpenAPIModelName():                         schema_k8sio_api_core_v1_SecretKeySelector(ref),
+		v1.SecretList{}.OpenAPIModelName():                                schema_k8sio_api_core_v1_SecretList(ref),
+		v1.SecretProjection{}.OpenAPIModelName():                          schema_k8sio_api_core_v1_SecretProjection(ref),
+		v1.SecretReference{}.OpenAPIModelName():                           schema_k8sio_api_core_v1_SecretReference(ref),
+		v1.SecretVolumeSource{}.OpenAPIModelName():                        schema_k8sio_api_core_v1_SecretVolumeSource(ref),
+		v1.SecurityContext{}.OpenAPIModelName():                           schema_k8sio_api_core_v1_SecurityContext(ref),
+		v1.SerializedReference{}.OpenAPIModelName():                       schema_k8sio_api_core_v1_SerializedReference(ref),
+		v1.Service{}.OpenAPIModelName():                                   schema_k8sio_api_core_v1_Service(ref),
+		v1.ServiceAccount{}.OpenAPIModelName():                            schema_k8sio_api_core_v1_ServiceAccount(ref),
+		v1.ServiceAccountList{}.OpenAPIModelName():                        schema_k8sio_api_core_v1_ServiceAccountList(ref),
+		v1.ServiceAccountTokenProjection{}.OpenAPIModelName():             schema_k8sio_api_core_v1_ServiceAccountTokenProjection(ref),
+		v1.ServiceList{}.OpenAPIModelName():                               schema_k8sio_api_core_v1_ServiceList(ref),
+		v1.ServicePort{}.OpenAPIModelName():                               schema_k8sio_api_core_v1_ServicePort(ref),
+		v1.ServiceProxyOptions{}.OpenAPIModelName():                       schema_k8sio_api_core_v1_ServiceProxyOptions(ref),
+		v1.ServiceSpec{}.OpenAPIModelName():                               schema_k8sio_api_core_v1_ServiceSpec(ref),
+		v1.ServiceStatus{}.OpenAPIModelName():                             schema_k8sio_api_core_v1_ServiceStatus(ref),
+		v1.SessionAffinityConfig{}.OpenAPIModelName():                     schema_k8sio_api_core_v1_SessionAffinityConfig(ref),
+		v1.SleepAction{}.OpenAPIModelName():                               schema_k8sio_api_core_v1_SleepAction(ref),
+		v1.StorageOSPersistentVolumeSource{}.OpenAPIModelName():           schema_k8sio_api_core_v1_StorageOSPersistentVolumeSource(ref),
+		v1.StorageOSVolumeSource{}.OpenAPIModelName():                     schema_k8sio_api_core_v1_StorageOSVolumeSource(ref),
+		v1.Sysctl{}.OpenAPIModelName():                                    schema_k8sio_api_core_v1_Sysctl(ref),
+		v1.TCPSocketAction{}.OpenAPIModelName():                           schema_k8sio_api_core_v1_TCPSocketAction(ref),
+		v1.Taint{}.OpenAPIModelName():                                     schema_k8sio_api_core_v1_Taint(ref),
+		v1.Toleration{}.OpenAPIModelName():                                schema_k8sio_api_core_v1_Toleration(ref),
+		v1.TopologySelectorLabelRequirement{}.OpenAPIModelName():          schema_k8sio_api_core_v1_TopologySelectorLabelRequirement(ref),
+		v1.TopologySelectorTerm{}.OpenAPIModelName():                      schema_k8sio_api_core_v1_TopologySelectorTerm(ref),
+		v1.TopologySpreadConstraint{}.OpenAPIModelName():                  schema_k8sio_api_core_v1_TopologySpreadConstraint(ref),
+		v1.TypedLocalObjectReference{}.OpenAPIModelName():                 schema_k8sio_api_core_v1_TypedLocalObjectReference(ref),
+		v1.TypedObjectReference{}.OpenAPIModelName():                      schema_k8sio_api_core_v1_TypedObjectReference(ref),
+		v1.Volume{}.OpenAPIModelName():                                    schema_k8sio_api_core_v1_Volume(ref),
+		v1.VolumeDevice{}.OpenAPIModelName():                              schema_k8sio_api_core_v1_VolumeDevice(ref),
+		v1.VolumeMount{}.OpenAPIModelName():                               schema_k8sio_api_core_v1_VolumeMount(ref),
+		v1.VolumeMountStatus{}.OpenAPIModelName():                         schema_k8sio_api_core_v1_VolumeMountStatus(ref),
+		v1.VolumeNodeAffinity{}.OpenAPIModelName():                        schema_k8sio_api_core_v1_VolumeNodeAffinity(ref),
+		v1.VolumeProjection{}.OpenAPIModelName():                          schema_k8sio_api_core_v1_VolumeProjection(ref),
+		v1.VolumeResourceRequirements{}.OpenAPIModelName():                schema_k8sio_api_core_v1_VolumeResourceRequirements(ref),
+		v1.VolumeSource{}.OpenAPIModelName():                              schema_k8sio_api_core_v1_VolumeSource(ref),
+		v1.VsphereVirtualDiskVolumeSource{}.OpenAPIModelName():            schema_k8sio_api_core_v1_VsphereVirtualDiskVolumeSource(ref),
+		v1.WeightedPodAffinityTerm{}.OpenAPIModelName():                   schema_k8sio_api_core_v1_WeightedPodAffinityTerm(ref),
+		v1.WindowsSecurityContextOptions{}.OpenAPIModelName():             schema_k8sio_api_core_v1_WindowsSecurityContextOptions(ref),
+		v1.WorkloadReference{}.OpenAPIModelName():                         schema_k8sio_api_core_v1_WorkloadReference(ref),
+		networkingv1.HTTPIngressPath{}.OpenAPIModelName():                 schema_k8sio_api_networking_v1_HTTPIngressPath(ref),
+		networkingv1.HTTPIngressRuleValue{}.OpenAPIModelName():            schema_k8sio_api_networking_v1_HTTPIngressRuleValue(ref),
+		networkingv1.IPAddress{}.OpenAPIModelName():                       schema_k8sio_api_networking_v1_IPAddress(ref),
+		networkingv1.IPAddressList{}.OpenAPIModelName():                   schema_k8sio_api_networking_v1_IPAddressList(ref),
+		networkingv1.IPAddressSpec{}.OpenAPIModelName():                   schema_k8sio_api_networking_v1_IPAddressSpec(ref),
+		networkingv1.IPBlock{}.OpenAPIModelName():                         schema_k8sio_api_networking_v1_IPBlock(ref),
+		networkingv1.Ingress{}.OpenAPIModelName():                         schema_k8sio_api_networking_v1_Ingress(ref),
+		networkingv1.IngressBackend{}.OpenAPIModelName():                  schema_k8sio_api_networking_v1_IngressBackend(ref),
+		networkingv1.IngressClass{}.OpenAPIModelName():                    schema_k8sio_api_networking_v1_IngressClass(ref),
+		networkingv1.IngressClassList{}.OpenAPIModelName():                schema_k8sio_api_networking_v1_IngressClassList(ref),
+		networkingv1.IngressClassParametersReference{}.OpenAPIModelName(): schema_k8sio_api_networking_v1_IngressClassParametersReference(ref),
+		networkingv1.IngressClassSpec{}.OpenAPIModelName():                schema_k8sio_api_networking_v1_IngressClassSpec(ref),
+		networkingv1.IngressList{}.OpenAPIModelName():                     schema_k8sio_api_networking_v1_IngressList(ref),
+		networkingv1.IngressLoadBalancerIngress{}.OpenAPIModelName():      schema_k8sio_api_networking_v1_IngressLoadBalancerIngress(ref),
+		networkingv1.IngressLoadBalancerStatus{}.OpenAPIModelName():       schema_k8sio_api_networking_v1_IngressLoadBalancerStatus(ref),
+		networkingv1.IngressPortStatus{}.OpenAPIModelName():               schema_k8sio_api_networking_v1_IngressPortStatus(ref),
+		networkingv1.IngressRule{}.OpenAPIModelName():                     schema_k8sio_api_networking_v1_IngressRule(ref),
+		networkingv1.IngressRuleValue{}.OpenAPIModelName():                schema_k8sio_api_networking_v1_IngressRuleValue(ref),
+		networkingv1.IngressServiceBackend{}.OpenAPIModelName():           schema_k8sio_api_networking_v1_IngressServiceBackend(ref),
+		networkingv1.IngressSpec{}.OpenAPIModelName():                     schema_k8sio_api_networking_v1_IngressSpec(ref),
+		networkingv1.IngressStatus{}.OpenAPIModelName():                   schema_k8sio_api_networking_v1_IngressStatus(ref),
+		networkingv1.IngressTLS{}.OpenAPIModelName():                      schema_k8sio_api_networking_v1_IngressTLS(ref),
+		networkingv1.NetworkPolicy{}.OpenAPIModelName():                   schema_k8sio_api_networking_v1_NetworkPolicy(ref),
+		networkingv1.NetworkPolicyEgressRule{}.OpenAPIModelName():         schema_k8sio_api_networking_v1_NetworkPolicyEgressRule(ref),
+		networkingv1.NetworkPolicyIngressRule{}.OpenAPIModelName():        schema_k8sio_api_networking_v1_NetworkPolicyIngressRule(ref),
+		networkingv1.NetworkPolicyList{}.OpenAPIModelName():               schema_k8sio_api_networking_v1_NetworkPolicyList(ref),
+		networkingv1.NetworkPolicyPeer{}.OpenAPIModelName():               schema_k8sio_api_networking_v1_NetworkPolicyPeer(ref),
+		networkingv1.NetworkPolicyPort{}.OpenAPIModelName():               schema_k8sio_api_networking_v1_NetworkPolicyPort(ref),
+		networkingv1.NetworkPolicySpec{}.OpenAPIModelName():               schema_k8sio_api_networking_v1_NetworkPolicySpec(ref),
+		networkingv1.ParentReference{}.OpenAPIModelName():                 schema_k8sio_api_networking_v1_ParentReference(ref),
+		networkingv1.ServiceBackendPort{}.OpenAPIModelName():              schema_k8sio_api_networking_v1_ServiceBackendPort(ref),
+		networkingv1.ServiceCIDR{}.OpenAPIModelName():                     schema_k8sio_api_networking_v1_ServiceCIDR(ref),
+		networkingv1.ServiceCIDRList{}.OpenAPIModelName():                 schema_k8sio_api_networking_v1_ServiceCIDRList(ref),
+		networkingv1.ServiceCIDRSpec{}.OpenAPIModelName():                 schema_k8sio_api_networking_v1_ServiceCIDRSpec(ref),
+		networkingv1.ServiceCIDRStatus{}.OpenAPIModelName():               schema_k8sio_api_networking_v1_ServiceCIDRStatus(ref),
+		metav1.APIGroup{}.OpenAPIModelName():                              schema_pkg_apis_meta_v1_APIGroup(ref),
+		metav1.APIGroupList{}.OpenAPIModelName():                          schema_pkg_apis_meta_v1_APIGroupList(ref),
+		metav1.APIResource{}.OpenAPIModelName():                           schema_pkg_apis_meta_v1_APIResource(ref),
+		metav1.APIResourceList{}.OpenAPIModelName():                       schema_pkg_apis_meta_v1_APIResourceList(ref),
+		metav1.APIVersions{}.OpenAPIModelName():                           schema_pkg_apis_meta_v1_APIVersions(ref),
+		metav1.ApplyOptions{}.OpenAPIModelName():                          schema_pkg_apis_meta_v1_ApplyOptions(ref),
+		metav1.Condition{}.OpenAPIModelName():                             schema_pkg_apis_meta_v1_Condition(ref),
+		metav1.CreateOptions{}.OpenAPIModelName():                         schema_pkg_apis_meta_v1_CreateOptions(ref),
+		metav1.DeleteOptions{}.OpenAPIModelName():                         schema_pkg_apis_meta_v1_DeleteOptions(ref),
+		metav1.Duration{}.OpenAPIModelName():                              schema_pkg_apis_meta_v1_Duration(ref),
+		metav1.FieldSelectorRequirement{}.OpenAPIModelName():              schema_pkg_apis_meta_v1_FieldSelectorRequirement(ref),
+		metav1.FieldsV1{}.OpenAPIModelName():                              schema_pkg_apis_meta_v1_FieldsV1(ref),
+		metav1.GetOptions{}.OpenAPIModelName():                            schema_pkg_apis_meta_v1_GetOptions(ref),
+		metav1.GroupKind{}.OpenAPIModelName():                             schema_pkg_apis_meta_v1_GroupKind(ref),
+		metav1.GroupResource{}.OpenAPIModelName():                         schema_pkg_apis_meta_v1_GroupResource(ref),
+		metav1.GroupVersion{}.OpenAPIModelName():                          schema_pkg_apis_meta_v1_GroupVersion(ref),
+		metav1.GroupVersionForDiscovery{}.OpenAPIModelName():              schema_pkg_apis_meta_v1_GroupVersionForDiscovery(ref),
+		metav1.GroupVersionKind{}.OpenAPIModelName():                      schema_pkg_apis_meta_v1_GroupVersionKind(ref),
+		metav1.GroupVersionResource{}.OpenAPIModelName():                  schema_pkg_apis_meta_v1_GroupVersionResource(ref),
+		metav1.InternalEvent{}.OpenAPIModelName():                         schema_pkg_apis_meta_v1_InternalEvent(ref),
+		metav1.LabelSelector{}.OpenAPIModelName():                         schema_pkg_apis_meta_v1_LabelSelector(ref),
+		metav1.LabelSelectorRequirement{}.OpenAPIModelName():              schema_pkg_apis_meta_v1_LabelSelectorRequirement(ref),
+		metav1.List{}.OpenAPIModelName():                                  schema_pkg_apis_meta_v1_List(ref),
+		metav1.ListMeta{}.OpenAPIModelName():                              schema_pkg_apis_meta_v1_ListMeta(ref),
+		metav1.ListOptions{}.OpenAPIModelName():                           schema_pkg_apis_meta_v1_ListOptions(ref),
+		metav1.ManagedFieldsEntry{}.OpenAPIModelName():                    schema_pkg_apis_meta_v1_ManagedFieldsEntry(ref),
+		metav1.MicroTime{}.OpenAPIModelName():                             schema_pkg_apis_meta_v1_MicroTime(ref),
+		metav1.ObjectMeta{}.OpenAPIModelName():                            schema_pkg_apis_meta_v1_ObjectMeta(ref),
+		metav1.OwnerReference{}.OpenAPIModelName():                        schema_pkg_apis_meta_v1_OwnerReference(ref),
+		metav1.PartialObjectMetadata{}.OpenAPIModelName():                 schema_pkg_apis_meta_v1_PartialObjectMetadata(ref),
+		metav1.PartialObjectMetadataList{}.OpenAPIModelName():             schema_pkg_apis_meta_v1_PartialObjectMetadataList(ref),
+		metav1.Patch{}.OpenAPIModelName():                                 schema_pkg_apis_meta_v1_Patch(ref),
+		metav1.PatchOptions{}.OpenAPIModelName():                          schema_pkg_apis_meta_v1_PatchOptions(ref),
+		metav1.Preconditions{}.OpenAPIModelName():                         schema_pkg_apis_meta_v1_Preconditions(ref),
+		metav1.RootPaths{}.OpenAPIModelName():                             schema_pkg_apis_meta_v1_RootPaths(ref),
+		metav1.ServerAddressByClientCIDR{}.OpenAPIModelName():             schema_pkg_apis_meta_v1_ServerAddressByClientCIDR(ref),
+		metav1.Status{}.OpenAPIModelName():                                schema_pkg_apis_meta_v1_Status(ref),
+		metav1.StatusCause{}.OpenAPIModelName():                           schema_pkg_apis_meta_v1_StatusCause(ref),
+		metav1.StatusDetails{}.OpenAPIModelName():                         schema_pkg_apis_meta_v1_StatusDetails(ref),
+		metav1.Table{}.OpenAPIModelName():                                 schema_pkg_apis_meta_v1_Table(ref),
+		metav1.TableColumnDefinition{}.OpenAPIModelName():                 schema_pkg_apis_meta_v1_TableColumnDefinition(ref),
+		metav1.TableOptions{}.OpenAPIModelName():                          schema_pkg_apis_meta_v1_TableOptions(ref),
+		metav1.TableRow{}.OpenAPIModelName():                              schema_pkg_apis_meta_v1_TableRow(ref),
+		metav1.TableRowCondition{}.OpenAPIModelName():                     schema_pkg_apis_meta_v1_TableRowCondition(ref),
+		metav1.Time{}.OpenAPIModelName():                                  schema_pkg_apis_meta_v1_Time(ref),
+		metav1.Timestamp{}.OpenAPIModelName():                             schema_pkg_apis_meta_v1_Timestamp(ref),
+		metav1.TypeMeta{}.OpenAPIModelName():                              schema_pkg_apis_meta_v1_TypeMeta(ref),
+		metav1.UpdateOptions{}.OpenAPIModelName():                         schema_pkg_apis_meta_v1_UpdateOptions(ref),
+		metav1.WatchEvent{}.OpenAPIModelName():                            schema_pkg_apis_meta_v1_WatchEvent(ref),
+		runtime.RawExtension{}.OpenAPIModelName():                         schema_k8sio_apimachinery_pkg_runtime_RawExtension(ref),
+		runtime.TypeMeta{}.OpenAPIModelName():                             schema_k8sio_apimachinery_pkg_runtime_TypeMeta(ref),
+		runtime.Unknown{}.OpenAPIModelName():                              schema_k8sio_apimachinery_pkg_runtime_Unknown(ref),
+		intstr.IntOrString{}.OpenAPIModelName():                           schema_apimachinery_pkg_util_intstr_IntOrString(ref),
+		version.Info{}.OpenAPIModelName():                                 schema_k8sio_apimachinery_pkg_version_Info(ref),
 	}
 }
 
@@ -642,13 +643,13 @@ func schema_pkg_apis_projectcalico_v3_AlertException(ref common.ReferenceCallbac
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.AlertExceptionSpec"),
+							Ref:     ref(v3.AlertExceptionSpec{}.OpenAPIModelName()),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.AlertExceptionStatus"),
+							Ref:     ref(v3.AlertExceptionStatus{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -656,7 +657,7 @@ func schema_pkg_apis_projectcalico_v3_AlertException(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.AlertExceptionSpec", "github.com/tigera/api/pkg/apis/projectcalico/v3.AlertExceptionStatus", metav1.ObjectMeta{}.OpenAPIModelName()},
+			v3.AlertExceptionSpec{}.OpenAPIModelName(), v3.AlertExceptionStatus{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -694,7 +695,7 @@ func schema_pkg_apis_projectcalico_v3_AlertExceptionList(ref common.ReferenceCal
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.AlertException"),
+										Ref:     ref(v3.AlertException{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -705,7 +706,7 @@ func schema_pkg_apis_projectcalico_v3_AlertExceptionList(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.AlertException", metav1.ListMeta{}.OpenAPIModelName()},
+			v3.AlertException{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -836,7 +837,7 @@ func schema_pkg_apis_projectcalico_v3_AuditEventsSelection(ref common.ReferenceC
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.AuditResource"),
+										Ref:     ref(v3.AuditResource{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -846,7 +847,7 @@ func schema_pkg_apis_projectcalico_v3_AuditEventsSelection(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.AuditResource"},
+			v3.AuditResource{}.OpenAPIModelName()},
 	}
 }
 
@@ -967,13 +968,13 @@ func schema_pkg_apis_projectcalico_v3_AuthorizationReview(ref common.ReferenceCa
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.AuthorizationReviewSpec"),
+							Ref:     ref(v3.AuthorizationReviewSpec{}.OpenAPIModelName()),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.AuthorizationReviewStatus"),
+							Ref:     ref(v3.AuthorizationReviewStatus{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -981,7 +982,7 @@ func schema_pkg_apis_projectcalico_v3_AuthorizationReview(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.AuthorizationReviewSpec", "github.com/tigera/api/pkg/apis/projectcalico/v3.AuthorizationReviewStatus", metav1.ObjectMeta{}.OpenAPIModelName()},
+			v3.AuthorizationReviewSpec{}.OpenAPIModelName(), v3.AuthorizationReviewStatus{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -1019,7 +1020,7 @@ func schema_pkg_apis_projectcalico_v3_AuthorizationReviewList(ref common.Referen
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.AuthorizationReview"),
+										Ref:     ref(v3.AuthorizationReview{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -1030,7 +1031,7 @@ func schema_pkg_apis_projectcalico_v3_AuthorizationReviewList(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.AuthorizationReview", metav1.ListMeta{}.OpenAPIModelName()},
+			v3.AuthorizationReview{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -1112,7 +1113,7 @@ func schema_pkg_apis_projectcalico_v3_AuthorizationReviewSpec(ref common.Referen
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.AuthorizationReviewResourceAttributes"),
+										Ref:     ref(v3.AuthorizationReviewResourceAttributes{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -1179,7 +1180,7 @@ func schema_pkg_apis_projectcalico_v3_AuthorizationReviewSpec(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.AuthorizationReviewResourceAttributes"},
+			v3.AuthorizationReviewResourceAttributes{}.OpenAPIModelName()},
 	}
 }
 
@@ -1202,7 +1203,7 @@ func schema_pkg_apis_projectcalico_v3_AuthorizationReviewStatus(ref common.Refer
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.AuthorizedResourceVerbs"),
+										Ref:     ref(v3.AuthorizedResourceVerbs{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -1212,7 +1213,7 @@ func schema_pkg_apis_projectcalico_v3_AuthorizationReviewStatus(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.AuthorizedResourceVerbs"},
+			v3.AuthorizedResourceVerbs{}.OpenAPIModelName()},
 	}
 }
 
@@ -1287,7 +1288,7 @@ func schema_pkg_apis_projectcalico_v3_AuthorizedResourceVerb(ref common.Referenc
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.AuthorizedResourceGroup"),
+										Ref:     ref(v3.AuthorizedResourceGroup{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -1298,7 +1299,7 @@ func schema_pkg_apis_projectcalico_v3_AuthorizedResourceVerb(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.AuthorizedResourceGroup"},
+			v3.AuthorizedResourceGroup{}.OpenAPIModelName()},
 	}
 }
 
@@ -1335,7 +1336,7 @@ func schema_pkg_apis_projectcalico_v3_AuthorizedResourceVerbs(ref common.Referen
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.AuthorizedResourceVerb"),
+										Ref:     ref(v3.AuthorizedResourceVerb{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -1345,7 +1346,7 @@ func schema_pkg_apis_projectcalico_v3_AuthorizedResourceVerbs(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.AuthorizedResourceVerb"},
+			v3.AuthorizedResourceVerb{}.OpenAPIModelName()},
 	}
 }
 
@@ -1381,7 +1382,7 @@ func schema_pkg_apis_projectcalico_v3_AutoHostEndpointConfig(ref common.Referenc
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.Template"),
+										Ref:     ref(v3.Template{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -1391,7 +1392,7 @@ func schema_pkg_apis_projectcalico_v3_AutoHostEndpointConfig(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.Template"},
+			v3.Template{}.OpenAPIModelName()},
 	}
 }
 
@@ -1424,7 +1425,7 @@ func schema_pkg_apis_projectcalico_v3_BFDConfiguration(ref common.ReferenceCallb
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.BFDConfigurationSpec"),
+							Ref:     ref(v3.BFDConfigurationSpec{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -1432,7 +1433,7 @@ func schema_pkg_apis_projectcalico_v3_BFDConfiguration(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.BFDConfigurationSpec", metav1.ObjectMeta{}.OpenAPIModelName()},
+			v3.BFDConfigurationSpec{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -1470,7 +1471,7 @@ func schema_pkg_apis_projectcalico_v3_BFDConfigurationList(ref common.ReferenceC
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.BFDConfiguration"),
+										Ref:     ref(v3.BFDConfiguration{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -1481,7 +1482,7 @@ func schema_pkg_apis_projectcalico_v3_BFDConfigurationList(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.BFDConfiguration", metav1.ListMeta{}.OpenAPIModelName()},
+			v3.BFDConfiguration{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -1510,7 +1511,7 @@ func schema_pkg_apis_projectcalico_v3_BFDConfigurationSpec(ref common.ReferenceC
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.BFDInterface"),
+										Ref:     ref(v3.BFDInterface{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -1520,7 +1521,7 @@ func schema_pkg_apis_projectcalico_v3_BFDConfigurationSpec(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.BFDInterface"},
+			v3.BFDInterface{}.OpenAPIModelName()},
 	}
 }
 
@@ -1601,7 +1602,7 @@ func schema_pkg_apis_projectcalico_v3_BGPConfiguration(ref common.ReferenceCallb
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.BGPConfigurationSpec"),
+							Ref:     ref(v3.BGPConfigurationSpec{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -1609,7 +1610,7 @@ func schema_pkg_apis_projectcalico_v3_BGPConfiguration(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.BGPConfigurationSpec", metav1.ObjectMeta{}.OpenAPIModelName()},
+			v3.BGPConfigurationSpec{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -1647,7 +1648,7 @@ func schema_pkg_apis_projectcalico_v3_BGPConfigurationList(ref common.ReferenceC
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.BGPConfiguration"),
+										Ref:     ref(v3.BGPConfiguration{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -1658,7 +1659,7 @@ func schema_pkg_apis_projectcalico_v3_BGPConfigurationList(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.BGPConfiguration", metav1.ListMeta{}.OpenAPIModelName()},
+			v3.BGPConfiguration{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -1719,7 +1720,7 @@ func schema_pkg_apis_projectcalico_v3_BGPConfigurationSpec(ref common.ReferenceC
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ServiceLoadBalancerIPBlock"),
+										Ref:     ref(v3.ServiceLoadBalancerIPBlock{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -1738,7 +1739,7 @@ func schema_pkg_apis_projectcalico_v3_BGPConfigurationSpec(ref common.ReferenceC
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ServiceExternalIPBlock"),
+										Ref:     ref(v3.ServiceExternalIPBlock{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -1757,7 +1758,7 @@ func schema_pkg_apis_projectcalico_v3_BGPConfigurationSpec(ref common.ReferenceC
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ServiceClusterIPBlock"),
+										Ref:     ref(v3.ServiceClusterIPBlock{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -1783,7 +1784,7 @@ func schema_pkg_apis_projectcalico_v3_BGPConfigurationSpec(ref common.ReferenceC
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.Community"),
+										Ref:     ref(v3.Community{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -1802,7 +1803,7 @@ func schema_pkg_apis_projectcalico_v3_BGPConfigurationSpec(ref common.ReferenceC
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.PrefixAdvertisement"),
+										Ref:     ref(v3.PrefixAdvertisement{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -1818,7 +1819,7 @@ func schema_pkg_apis_projectcalico_v3_BGPConfigurationSpec(ref common.ReferenceC
 					"nodeMeshPassword": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Optional BGP password for full node-to-mesh peerings. This field can only be set on the default BGPConfiguration instance and requires that NodeMesh is enabled",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.BGPPassword"),
+							Ref:         ref(v3.BGPPassword{}.OpenAPIModelName()),
 						},
 					},
 					"nodeMeshMaxRestartTime": {
@@ -1893,7 +1894,7 @@ func schema_pkg_apis_projectcalico_v3_BGPConfigurationSpec(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.BGPPassword", "github.com/tigera/api/pkg/apis/projectcalico/v3.Community", "github.com/tigera/api/pkg/apis/projectcalico/v3.PrefixAdvertisement", "github.com/tigera/api/pkg/apis/projectcalico/v3.ServiceClusterIPBlock", "github.com/tigera/api/pkg/apis/projectcalico/v3.ServiceExternalIPBlock", "github.com/tigera/api/pkg/apis/projectcalico/v3.ServiceLoadBalancerIPBlock", metav1.Duration{}.OpenAPIModelName()},
+			v3.BGPPassword{}.OpenAPIModelName(), v3.Community{}.OpenAPIModelName(), v3.PrefixAdvertisement{}.OpenAPIModelName(), v3.ServiceClusterIPBlock{}.OpenAPIModelName(), v3.ServiceExternalIPBlock{}.OpenAPIModelName(), v3.ServiceLoadBalancerIPBlock{}.OpenAPIModelName(), metav1.Duration{}.OpenAPIModelName()},
 	}
 }
 
@@ -1974,7 +1975,7 @@ func schema_pkg_apis_projectcalico_v3_BGPFilter(ref common.ReferenceCallback) co
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.BGPFilterSpec"),
+							Ref:     ref(v3.BGPFilterSpec{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -1982,7 +1983,7 @@ func schema_pkg_apis_projectcalico_v3_BGPFilter(ref common.ReferenceCallback) co
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.BGPFilterSpec", metav1.ObjectMeta{}.OpenAPIModelName()},
+			v3.BGPFilterSpec{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -2085,7 +2086,7 @@ func schema_pkg_apis_projectcalico_v3_BGPFilterList(ref common.ReferenceCallback
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.BGPFilter"),
+										Ref:     ref(v3.BGPFilter{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -2096,7 +2097,7 @@ func schema_pkg_apis_projectcalico_v3_BGPFilterList(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.BGPFilter", metav1.ListMeta{}.OpenAPIModelName()},
+			v3.BGPFilter{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -2110,19 +2111,19 @@ func schema_pkg_apis_projectcalico_v3_BGPFilterOperation(ref common.ReferenceCal
 					"addCommunity": {
 						SchemaProps: spec.SchemaProps{
 							Description: "AddCommunity adds the specified BGP community to the route.",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.BGPFilterAddCommunity"),
+							Ref:         ref(v3.BGPFilterAddCommunity{}.OpenAPIModelName()),
 						},
 					},
 					"prependASPath": {
 						SchemaProps: spec.SchemaProps{
 							Description: "PrependASPath prepends the specified AS numbers to the route's AS path.",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.BGPFilterPrependASPath"),
+							Ref:         ref(v3.BGPFilterPrependASPath{}.OpenAPIModelName()),
 						},
 					},
 					"setPriority": {
 						SchemaProps: spec.SchemaProps{
 							Description: "SetPriority sets the route's priority (metric), in the same units as the ...RoutePriority fields in FelixConfiguration.",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.BGPFilterSetPriority"),
+							Ref:         ref(v3.BGPFilterSetPriority{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -2134,7 +2135,7 @@ func schema_pkg_apis_projectcalico_v3_BGPFilterOperation(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.BGPFilterAddCommunity", "github.com/tigera/api/pkg/apis/projectcalico/v3.BGPFilterPrependASPath", "github.com/tigera/api/pkg/apis/projectcalico/v3.BGPFilterSetPriority"},
+			v3.BGPFilterAddCommunity{}.OpenAPIModelName(), v3.BGPFilterPrependASPath{}.OpenAPIModelName(), v3.BGPFilterSetPriority{}.OpenAPIModelName()},
 	}
 }
 
@@ -2252,7 +2253,7 @@ func schema_pkg_apis_projectcalico_v3_BGPFilterRuleV4(ref common.ReferenceCallba
 					"prefixLength": {
 						SchemaProps: spec.SchemaProps{
 							Description: "PrefixLength further constrains the CIDR match by restricting the range of allowed prefix lengths.  For example, CIDR \"10.0.0.0/8\" with MatchOperator \"In\" and PrefixLength {min: 16, max: 24} matches any route within 10.0.0.0/8 whose prefix length is between /16 and /24.  Requires CIDR to be set; if CIDR is omitted, PrefixLength is ignored.  If PrefixLength is nil and CIDR is set, the CIDR's own prefix length is used as the minimum and /32 (for V4) as the maximum.",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.BGPFilterPrefixLengthV4"),
+							Ref:         ref(v3.BGPFilterPrefixLengthV4{}.OpenAPIModelName()),
 						},
 					},
 					"source": {
@@ -2286,7 +2287,7 @@ func schema_pkg_apis_projectcalico_v3_BGPFilterRuleV4(ref common.ReferenceCallba
 					"communities": {
 						SchemaProps: spec.SchemaProps{
 							Description: "If set, this filter rule will only apply to routes that carry the specified BGP community.  On import, this matches communities set by the remote peer.  On export, this matches communities already present on the route, whether received from a BGP peer (e.g. on a route reflector re-advertising to an eBGP peer) or added locally by an import filter or an earlier export rule's AddCommunity operation.",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.BGPFilterCommunityMatch"),
+							Ref:         ref(v3.BGPFilterCommunityMatch{}.OpenAPIModelName()),
 						},
 					},
 					"asPathPrefix": {
@@ -2336,7 +2337,7 @@ func schema_pkg_apis_projectcalico_v3_BGPFilterRuleV4(ref common.ReferenceCallba
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.BGPFilterOperation"),
+										Ref:     ref(v3.BGPFilterOperation{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -2352,7 +2353,7 @@ func schema_pkg_apis_projectcalico_v3_BGPFilterRuleV4(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.BGPFilterCommunityMatch", "github.com/tigera/api/pkg/apis/projectcalico/v3.BGPFilterOperation", "github.com/tigera/api/pkg/apis/projectcalico/v3.BGPFilterPrefixLengthV4"},
+			v3.BGPFilterCommunityMatch{}.OpenAPIModelName(), v3.BGPFilterOperation{}.OpenAPIModelName(), v3.BGPFilterPrefixLengthV4{}.OpenAPIModelName()},
 	}
 }
 
@@ -2373,7 +2374,7 @@ func schema_pkg_apis_projectcalico_v3_BGPFilterRuleV6(ref common.ReferenceCallba
 					"prefixLength": {
 						SchemaProps: spec.SchemaProps{
 							Description: "PrefixLength further constrains the CIDR match by restricting the range of allowed prefix lengths.  For example, CIDR \"fd00::/8\" with MatchOperator \"In\" and PrefixLength {min: 48, max: 64} matches any route within fd00::/8 whose prefix length is between /48 and /64.  Requires CIDR to be set; if CIDR is omitted, PrefixLength is ignored.  If PrefixLength is nil and CIDR is set, the CIDR's own prefix length is used as the minimum and /128 (for V6) as the maximum.",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.BGPFilterPrefixLengthV6"),
+							Ref:         ref(v3.BGPFilterPrefixLengthV6{}.OpenAPIModelName()),
 						},
 					},
 					"source": {
@@ -2407,7 +2408,7 @@ func schema_pkg_apis_projectcalico_v3_BGPFilterRuleV6(ref common.ReferenceCallba
 					"communities": {
 						SchemaProps: spec.SchemaProps{
 							Description: "If set, this filter rule will only apply to routes that carry the specified BGP community.  On import, this matches communities set by the remote peer.  On export, this matches communities already present on the route, whether received from a BGP peer (e.g. on a route reflector re-advertising to an eBGP peer) or added locally by an import filter or an earlier export rule's AddCommunity operation.",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.BGPFilterCommunityMatch"),
+							Ref:         ref(v3.BGPFilterCommunityMatch{}.OpenAPIModelName()),
 						},
 					},
 					"asPathPrefix": {
@@ -2457,7 +2458,7 @@ func schema_pkg_apis_projectcalico_v3_BGPFilterRuleV6(ref common.ReferenceCallba
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.BGPFilterOperation"),
+										Ref:     ref(v3.BGPFilterOperation{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -2473,7 +2474,7 @@ func schema_pkg_apis_projectcalico_v3_BGPFilterRuleV6(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.BGPFilterCommunityMatch", "github.com/tigera/api/pkg/apis/projectcalico/v3.BGPFilterOperation", "github.com/tigera/api/pkg/apis/projectcalico/v3.BGPFilterPrefixLengthV6"},
+			v3.BGPFilterCommunityMatch{}.OpenAPIModelName(), v3.BGPFilterOperation{}.OpenAPIModelName(), v3.BGPFilterPrefixLengthV6{}.OpenAPIModelName()},
 	}
 }
 
@@ -2523,7 +2524,7 @@ func schema_pkg_apis_projectcalico_v3_BGPFilterSpec(ref common.ReferenceCallback
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.BGPFilterRuleV4"),
+										Ref:     ref(v3.BGPFilterRuleV4{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -2542,7 +2543,7 @@ func schema_pkg_apis_projectcalico_v3_BGPFilterSpec(ref common.ReferenceCallback
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.BGPFilterRuleV4"),
+										Ref:     ref(v3.BGPFilterRuleV4{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -2561,7 +2562,7 @@ func schema_pkg_apis_projectcalico_v3_BGPFilterSpec(ref common.ReferenceCallback
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.BGPFilterRuleV6"),
+										Ref:     ref(v3.BGPFilterRuleV6{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -2580,7 +2581,7 @@ func schema_pkg_apis_projectcalico_v3_BGPFilterSpec(ref common.ReferenceCallback
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.BGPFilterRuleV6"),
+										Ref:     ref(v3.BGPFilterRuleV6{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -2590,7 +2591,7 @@ func schema_pkg_apis_projectcalico_v3_BGPFilterSpec(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.BGPFilterRuleV4", "github.com/tigera/api/pkg/apis/projectcalico/v3.BGPFilterRuleV6"},
+			v3.BGPFilterRuleV4{}.OpenAPIModelName(), v3.BGPFilterRuleV6{}.OpenAPIModelName()},
 	}
 }
 
@@ -2644,7 +2645,7 @@ func schema_pkg_apis_projectcalico_v3_BGPPeer(ref common.ReferenceCallback) comm
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.BGPPeerSpec"),
+							Ref:     ref(v3.BGPPeerSpec{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -2652,7 +2653,7 @@ func schema_pkg_apis_projectcalico_v3_BGPPeer(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.BGPPeerSpec", metav1.ObjectMeta{}.OpenAPIModelName()},
+			v3.BGPPeerSpec{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -2690,7 +2691,7 @@ func schema_pkg_apis_projectcalico_v3_BGPPeerList(ref common.ReferenceCallback) 
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.BGPPeer"),
+										Ref:     ref(v3.BGPPeer{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -2701,7 +2702,7 @@ func schema_pkg_apis_projectcalico_v3_BGPPeerList(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.BGPPeer", metav1.ListMeta{}.OpenAPIModelName()},
+			v3.BGPPeer{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -2787,7 +2788,7 @@ func schema_pkg_apis_projectcalico_v3_BGPPeerSpec(ref common.ReferenceCallback) 
 					"password": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Optional BGP password for the peerings generated by this BGPPeer resource.",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.BGPPassword"),
+							Ref:         ref(v3.BGPPassword{}.OpenAPIModelName()),
 						},
 					},
 					"sourceAddress": {
@@ -2896,7 +2897,7 @@ func schema_pkg_apis_projectcalico_v3_BGPPeerSpec(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.BGPPassword", metav1.Duration{}.OpenAPIModelName()},
+			v3.BGPPassword{}.OpenAPIModelName(), metav1.Duration{}.OpenAPIModelName()},
 	}
 }
 
@@ -2998,7 +2999,7 @@ func schema_pkg_apis_projectcalico_v3_BlockAffinity(ref common.ReferenceCallback
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.BlockAffinitySpec"),
+							Ref:     ref(v3.BlockAffinitySpec{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -3006,7 +3007,7 @@ func schema_pkg_apis_projectcalico_v3_BlockAffinity(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.BlockAffinitySpec", metav1.ObjectMeta{}.OpenAPIModelName()},
+			v3.BlockAffinitySpec{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -3044,7 +3045,7 @@ func schema_pkg_apis_projectcalico_v3_BlockAffinityList(ref common.ReferenceCall
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.BlockAffinity"),
+										Ref:     ref(v3.BlockAffinity{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -3055,7 +3056,7 @@ func schema_pkg_apis_projectcalico_v3_BlockAffinityList(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.BlockAffinity", metav1.ListMeta{}.OpenAPIModelName()},
+			v3.BlockAffinity{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -3122,7 +3123,7 @@ func schema_pkg_apis_projectcalico_v3_CISBenchmarkFilter(ref common.ReferenceCal
 					"benchmarkSelection": {
 						SchemaProps: spec.SchemaProps{
 							Description: "BenchmarkSelection specifies which benchmarks this filter applies to. If not specified, applies to all.",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.CISBenchmarkSelection"),
+							Ref:         ref(v3.CISBenchmarkSelection{}.OpenAPIModelName()),
 						},
 					},
 					"exclude": {
@@ -3169,7 +3170,7 @@ func schema_pkg_apis_projectcalico_v3_CISBenchmarkFilter(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.CISBenchmarkSelection"},
+			v3.CISBenchmarkSelection{}.OpenAPIModelName()},
 	}
 }
 
@@ -3208,7 +3209,7 @@ func schema_pkg_apis_projectcalico_v3_CISBenchmarkNode(ref common.ReferenceCallb
 						SchemaProps: spec.SchemaProps{
 							Description: "Summary is a set of summary stats for this set of node-specific benchmarks.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.CISBenchmarkNodeSummary"),
+							Ref:         ref(v3.CISBenchmarkNodeSummary{}.OpenAPIModelName()),
 						},
 					},
 					"results": {
@@ -3224,7 +3225,7 @@ func schema_pkg_apis_projectcalico_v3_CISBenchmarkNode(ref common.ReferenceCallb
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.CISBenchmarkSectionResult"),
+										Ref:     ref(v3.CISBenchmarkSectionResult{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -3235,7 +3236,7 @@ func schema_pkg_apis_projectcalico_v3_CISBenchmarkNode(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.CISBenchmarkNodeSummary", "github.com/tigera/api/pkg/apis/projectcalico/v3.CISBenchmarkSectionResult"},
+			v3.CISBenchmarkNodeSummary{}.OpenAPIModelName(), v3.CISBenchmarkSectionResult{}.OpenAPIModelName()},
 	}
 }
 
@@ -3322,7 +3323,7 @@ func schema_pkg_apis_projectcalico_v3_CISBenchmarkParams(ref common.ReferenceCal
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.CISBenchmarkFilter"),
+										Ref:     ref(v3.CISBenchmarkFilter{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -3345,7 +3346,7 @@ func schema_pkg_apis_projectcalico_v3_CISBenchmarkParams(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.CISBenchmarkFilter"},
+			v3.CISBenchmarkFilter{}.OpenAPIModelName()},
 	}
 }
 
@@ -3408,7 +3409,7 @@ func schema_pkg_apis_projectcalico_v3_CISBenchmarkResultCount(ref common.Referen
 					"CISBenchmarkResult": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.CISBenchmarkResult"),
+							Ref:     ref(v3.CISBenchmarkResult{}.OpenAPIModelName()),
 						},
 					},
 					"count": {
@@ -3423,7 +3424,7 @@ func schema_pkg_apis_projectcalico_v3_CISBenchmarkResultCount(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.CISBenchmarkResult"},
+			v3.CISBenchmarkResult{}.OpenAPIModelName()},
 	}
 }
 
@@ -3488,7 +3489,7 @@ func schema_pkg_apis_projectcalico_v3_CISBenchmarkSectionResult(ref common.Refer
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.CISBenchmarkResult"),
+										Ref:     ref(v3.CISBenchmarkResult{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -3499,7 +3500,7 @@ func schema_pkg_apis_projectcalico_v3_CISBenchmarkSectionResult(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.CISBenchmarkResult"},
+			v3.CISBenchmarkResult{}.OpenAPIModelName()},
 	}
 }
 
@@ -3576,21 +3577,21 @@ func schema_pkg_apis_projectcalico_v3_CalicoNodeAgentStatus(ref common.Reference
 						SchemaProps: spec.SchemaProps{
 							Description: "BIRDV4 represents the latest observed status of bird4.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.BGPDaemonStatus"),
+							Ref:         ref(v3.BGPDaemonStatus{}.OpenAPIModelName()),
 						},
 					},
 					"birdV6": {
 						SchemaProps: spec.SchemaProps{
 							Description: "BIRDV6 represents the latest observed status of bird6.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.BGPDaemonStatus"),
+							Ref:         ref(v3.BGPDaemonStatus{}.OpenAPIModelName()),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.BGPDaemonStatus"},
+			v3.BGPDaemonStatus{}.OpenAPIModelName()},
 	}
 }
 
@@ -3614,7 +3615,7 @@ func schema_pkg_apis_projectcalico_v3_CalicoNodeBGPRouteStatus(ref common.Refere
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.CalicoNodeRoute"),
+										Ref:     ref(v3.CalicoNodeRoute{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -3633,7 +3634,7 @@ func schema_pkg_apis_projectcalico_v3_CalicoNodeBGPRouteStatus(ref common.Refere
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.CalicoNodeRoute"),
+										Ref:     ref(v3.CalicoNodeRoute{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -3643,7 +3644,7 @@ func schema_pkg_apis_projectcalico_v3_CalicoNodeBGPRouteStatus(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.CalicoNodeRoute"},
+			v3.CalicoNodeRoute{}.OpenAPIModelName()},
 	}
 }
 
@@ -3699,7 +3700,7 @@ func schema_pkg_apis_projectcalico_v3_CalicoNodeBGPStatus(ref common.ReferenceCa
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.CalicoNodePeer"),
+										Ref:     ref(v3.CalicoNodePeer{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -3718,7 +3719,7 @@ func schema_pkg_apis_projectcalico_v3_CalicoNodeBGPStatus(ref common.ReferenceCa
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.CalicoNodePeer"),
+										Ref:     ref(v3.CalicoNodePeer{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -3729,7 +3730,7 @@ func schema_pkg_apis_projectcalico_v3_CalicoNodeBGPStatus(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.CalicoNodePeer"},
+			v3.CalicoNodePeer{}.OpenAPIModelName()},
 	}
 }
 
@@ -3813,14 +3814,14 @@ func schema_pkg_apis_projectcalico_v3_CalicoNodeRoute(ref common.ReferenceCallba
 						SchemaProps: spec.SchemaProps{
 							Description: "LearnedFrom contains information regarding where this route originated.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.CalicoNodeRouteLearnedFrom"),
+							Ref:         ref(v3.CalicoNodeRouteLearnedFrom{}.OpenAPIModelName()),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.CalicoNodeRouteLearnedFrom"},
+			v3.CalicoNodeRouteLearnedFrom{}.OpenAPIModelName()},
 	}
 }
 
@@ -3880,13 +3881,13 @@ func schema_pkg_apis_projectcalico_v3_CalicoNodeStatus(ref common.ReferenceCallb
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.CalicoNodeStatusSpec"),
+							Ref:     ref(v3.CalicoNodeStatusSpec{}.OpenAPIModelName()),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.CalicoNodeStatusStatus"),
+							Ref:     ref(v3.CalicoNodeStatusStatus{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -3894,7 +3895,7 @@ func schema_pkg_apis_projectcalico_v3_CalicoNodeStatus(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.CalicoNodeStatusSpec", "github.com/tigera/api/pkg/apis/projectcalico/v3.CalicoNodeStatusStatus", metav1.ObjectMeta{}.OpenAPIModelName()},
+			v3.CalicoNodeStatusSpec{}.OpenAPIModelName(), v3.CalicoNodeStatusStatus{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -3932,7 +3933,7 @@ func schema_pkg_apis_projectcalico_v3_CalicoNodeStatusList(ref common.ReferenceC
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.CalicoNodeStatus"),
+										Ref:     ref(v3.CalicoNodeStatus{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -3943,7 +3944,7 @@ func schema_pkg_apis_projectcalico_v3_CalicoNodeStatusList(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.CalicoNodeStatus", metav1.ListMeta{}.OpenAPIModelName()},
+			v3.CalicoNodeStatus{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -4011,28 +4012,28 @@ func schema_pkg_apis_projectcalico_v3_CalicoNodeStatusStatus(ref common.Referenc
 						SchemaProps: spec.SchemaProps{
 							Description: "Agent holds agent status on the node.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.CalicoNodeAgentStatus"),
+							Ref:         ref(v3.CalicoNodeAgentStatus{}.OpenAPIModelName()),
 						},
 					},
 					"bgp": {
 						SchemaProps: spec.SchemaProps{
 							Description: "BGP holds node BGP status.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.CalicoNodeBGPStatus"),
+							Ref:         ref(v3.CalicoNodeBGPStatus{}.OpenAPIModelName()),
 						},
 					},
 					"routes": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Routes reports routes known to the Calico BGP daemon on the node.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.CalicoNodeBGPRouteStatus"),
+							Ref:         ref(v3.CalicoNodeBGPRouteStatus{}.OpenAPIModelName()),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.CalicoNodeAgentStatus", "github.com/tigera/api/pkg/apis/projectcalico/v3.CalicoNodeBGPRouteStatus", "github.com/tigera/api/pkg/apis/projectcalico/v3.CalicoNodeBGPStatus", metav1.Time{}.OpenAPIModelName()},
+			v3.CalicoNodeAgentStatus{}.OpenAPIModelName(), v3.CalicoNodeBGPRouteStatus{}.OpenAPIModelName(), v3.CalicoNodeBGPStatus{}.OpenAPIModelName(), metav1.Time{}.OpenAPIModelName()},
 	}
 }
 
@@ -4065,7 +4066,7 @@ func schema_pkg_apis_projectcalico_v3_ClusterInformation(ref common.ReferenceCal
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ClusterInformationSpec"),
+							Ref:     ref(v3.ClusterInformationSpec{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -4073,7 +4074,7 @@ func schema_pkg_apis_projectcalico_v3_ClusterInformation(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.ClusterInformationSpec", metav1.ObjectMeta{}.OpenAPIModelName()},
+			v3.ClusterInformationSpec{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -4111,7 +4112,7 @@ func schema_pkg_apis_projectcalico_v3_ClusterInformationList(ref common.Referenc
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ClusterInformation"),
+										Ref:     ref(v3.ClusterInformation{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -4122,7 +4123,7 @@ func schema_pkg_apis_projectcalico_v3_ClusterInformationList(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.ClusterInformation", metav1.ListMeta{}.OpenAPIModelName()},
+			v3.ClusterInformation{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -4270,56 +4271,56 @@ func schema_pkg_apis_projectcalico_v3_ControllersConfig(ref common.ReferenceCall
 					"node": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Node enables and configures the node controller. Enabled by default, set to nil to disable.",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.NodeControllerConfig"),
+							Ref:         ref(v3.NodeControllerConfig{}.OpenAPIModelName()),
 						},
 					},
 					"policy": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Policy enables and configures the policy controller. Enabled by default, set to nil to disable.",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.PolicyControllerConfig"),
+							Ref:         ref(v3.PolicyControllerConfig{}.OpenAPIModelName()),
 						},
 					},
 					"workloadEndpoint": {
 						SchemaProps: spec.SchemaProps{
 							Description: "WorkloadEndpoint enables and configures the workload endpoint controller. Enabled by default, set to nil to disable.",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.WorkloadEndpointControllerConfig"),
+							Ref:         ref(v3.WorkloadEndpointControllerConfig{}.OpenAPIModelName()),
 						},
 					},
 					"serviceAccount": {
 						SchemaProps: spec.SchemaProps{
 							Description: "ServiceAccount enables and configures the service account controller. Enabled by default, set to nil to disable.",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ServiceAccountControllerConfig"),
+							Ref:         ref(v3.ServiceAccountControllerConfig{}.OpenAPIModelName()),
 						},
 					},
 					"namespace": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Namespace enables and configures the namespace controller. Enabled by default, set to nil to disable.",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.NamespaceControllerConfig"),
+							Ref:         ref(v3.NamespaceControllerConfig{}.OpenAPIModelName()),
 						},
 					},
 					"federatedServices": {
 						SchemaProps: spec.SchemaProps{
 							Description: "FederatedServices enables and configures the federatedservices controller. Disabled by default.",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.FederatedServicesControllerConfig"),
+							Ref:         ref(v3.FederatedServicesControllerConfig{}.OpenAPIModelName()),
 						},
 					},
 					"loadBalancer": {
 						SchemaProps: spec.SchemaProps{
 							Description: "LoadBalancer enables and configures the LoadBalancer controller. Enabled by default, set to nil to disable.",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.LoadBalancerControllerConfig"),
+							Ref:         ref(v3.LoadBalancerControllerConfig{}.OpenAPIModelName()),
 						},
 					},
 					"migration": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Migration enables and configures migration controllers.",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.MigrationControllerConfig"),
+							Ref:         ref(v3.MigrationControllerConfig{}.OpenAPIModelName()),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.FederatedServicesControllerConfig", "github.com/tigera/api/pkg/apis/projectcalico/v3.LoadBalancerControllerConfig", "github.com/tigera/api/pkg/apis/projectcalico/v3.MigrationControllerConfig", "github.com/tigera/api/pkg/apis/projectcalico/v3.NamespaceControllerConfig", "github.com/tigera/api/pkg/apis/projectcalico/v3.NodeControllerConfig", "github.com/tigera/api/pkg/apis/projectcalico/v3.PolicyControllerConfig", "github.com/tigera/api/pkg/apis/projectcalico/v3.ServiceAccountControllerConfig", "github.com/tigera/api/pkg/apis/projectcalico/v3.WorkloadEndpointControllerConfig"},
+			v3.FederatedServicesControllerConfig{}.OpenAPIModelName(), v3.LoadBalancerControllerConfig{}.OpenAPIModelName(), v3.MigrationControllerConfig{}.OpenAPIModelName(), v3.NamespaceControllerConfig{}.OpenAPIModelName(), v3.NodeControllerConfig{}.OpenAPIModelName(), v3.PolicyControllerConfig{}.OpenAPIModelName(), v3.ServiceAccountControllerConfig{}.OpenAPIModelName(), v3.WorkloadEndpointControllerConfig{}.OpenAPIModelName()},
 	}
 }
 
@@ -4393,7 +4394,7 @@ func schema_pkg_apis_projectcalico_v3_DPINode(ref common.ReferenceCallback) comm
 					"active": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.DPIActive"),
+							Ref:     ref(v3.DPIActive{}.OpenAPIModelName()),
 						},
 					},
 					"errorConditions": {
@@ -4408,7 +4409,7 @@ func schema_pkg_apis_projectcalico_v3_DPINode(ref common.ReferenceCallback) comm
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.DPIErrorCondition"),
+										Ref:     ref(v3.DPIErrorCondition{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -4418,7 +4419,7 @@ func schema_pkg_apis_projectcalico_v3_DPINode(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.DPIActive", "github.com/tigera/api/pkg/apis/projectcalico/v3.DPIErrorCondition"},
+			v3.DPIActive{}.OpenAPIModelName(), v3.DPIErrorCondition{}.OpenAPIModelName()},
 	}
 }
 
@@ -4446,14 +4447,14 @@ func schema_pkg_apis_projectcalico_v3_DashboardData(ref common.ReferenceCallback
 						SchemaProps: spec.SchemaProps{
 							Description: "Layout information of the dashboard card",
 							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.DashboardLayout"),
+							Ref:         ref(v3.DashboardLayout{}.OpenAPIModelName()),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.DashboardLayout"},
+			v3.DashboardLayout{}.OpenAPIModelName()},
 	}
 }
 
@@ -4589,21 +4590,21 @@ func schema_pkg_apis_projectcalico_v3_DeepPacketInspection(ref common.ReferenceC
 						SchemaProps: spec.SchemaProps{
 							Description: "Specification of the DeepPacketInspection.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.DeepPacketInspectionSpec"),
+							Ref:         ref(v3.DeepPacketInspectionSpec{}.OpenAPIModelName()),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Status of the DeepPacketInspection.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.DeepPacketInspectionStatus"),
+							Ref:         ref(v3.DeepPacketInspectionStatus{}.OpenAPIModelName()),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.DeepPacketInspectionSpec", "github.com/tigera/api/pkg/apis/projectcalico/v3.DeepPacketInspectionStatus", metav1.ObjectMeta{}.OpenAPIModelName()},
+			v3.DeepPacketInspectionSpec{}.OpenAPIModelName(), v3.DeepPacketInspectionStatus{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -4641,7 +4642,7 @@ func schema_pkg_apis_projectcalico_v3_DeepPacketInspectionList(ref common.Refere
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.DeepPacketInspection"),
+										Ref:     ref(v3.DeepPacketInspection{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -4652,7 +4653,7 @@ func schema_pkg_apis_projectcalico_v3_DeepPacketInspectionList(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.DeepPacketInspection", metav1.ListMeta{}.OpenAPIModelName()},
+			v3.DeepPacketInspection{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -4695,7 +4696,7 @@ func schema_pkg_apis_projectcalico_v3_DeepPacketInspectionStatus(ref common.Refe
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.DPINode"),
+										Ref:     ref(v3.DPINode{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -4705,7 +4706,7 @@ func schema_pkg_apis_projectcalico_v3_DeepPacketInspectionStatus(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.DPINode"},
+			v3.DPINode{}.OpenAPIModelName()},
 	}
 }
 
@@ -4759,7 +4760,7 @@ func schema_pkg_apis_projectcalico_v3_EgressGatewayPolicy(ref common.ReferenceCa
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.EgressGatewayPolicySpec"),
+							Ref:     ref(v3.EgressGatewayPolicySpec{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -4767,7 +4768,7 @@ func schema_pkg_apis_projectcalico_v3_EgressGatewayPolicy(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.EgressGatewayPolicySpec", metav1.ObjectMeta{}.OpenAPIModelName()},
+			v3.EgressGatewayPolicySpec{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -4825,7 +4826,7 @@ func schema_pkg_apis_projectcalico_v3_EgressGatewayPolicyList(ref common.Referen
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.EgressGatewayPolicy"),
+										Ref:     ref(v3.EgressGatewayPolicy{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -4836,7 +4837,7 @@ func schema_pkg_apis_projectcalico_v3_EgressGatewayPolicyList(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.EgressGatewayPolicy", metav1.ListMeta{}.OpenAPIModelName()},
+			v3.EgressGatewayPolicy{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -4860,7 +4861,7 @@ func schema_pkg_apis_projectcalico_v3_EgressGatewayPolicySpec(ref common.Referen
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.EgressGatewayRule"),
+										Ref:     ref(v3.EgressGatewayRule{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -4870,7 +4871,7 @@ func schema_pkg_apis_projectcalico_v3_EgressGatewayPolicySpec(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.EgressGatewayRule"},
+			v3.EgressGatewayRule{}.OpenAPIModelName()},
 	}
 }
 
@@ -4884,7 +4885,7 @@ func schema_pkg_apis_projectcalico_v3_EgressGatewayRule(ref common.ReferenceCall
 					"destination": {
 						SchemaProps: spec.SchemaProps{
 							Description: "The destination network that can be reached via egress gateway. If no destination is set, the default route, 0.0.0.0/0, is used instead.",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.EgressGatewayPolicyDestinationSpec"),
+							Ref:         ref(v3.EgressGatewayPolicyDestinationSpec{}.OpenAPIModelName()),
 						},
 					},
 					"description": {
@@ -4897,7 +4898,7 @@ func schema_pkg_apis_projectcalico_v3_EgressGatewayRule(ref common.ReferenceCall
 					"gateway": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Gateway specifies the egress gateway that should be used for the specified destination. If no gateway is set then the destination is routed normally rather than via an egress gateway.",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.EgressSpec"),
+							Ref:         ref(v3.EgressSpec{}.OpenAPIModelName()),
 						},
 					},
 					"gatewayPreference": {
@@ -4911,7 +4912,7 @@ func schema_pkg_apis_projectcalico_v3_EgressGatewayRule(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.EgressGatewayPolicyDestinationSpec", "github.com/tigera/api/pkg/apis/projectcalico/v3.EgressSpec"},
+			v3.EgressGatewayPolicyDestinationSpec{}.OpenAPIModelName(), v3.EgressSpec{}.OpenAPIModelName()},
 	}
 }
 
@@ -4932,14 +4933,14 @@ func schema_pkg_apis_projectcalico_v3_EgressGatewaySpec(ref common.ReferenceCall
 					"gateway": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Reference to a specific EgressGateway to use.",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.EgressSpec"),
+							Ref:         ref(v3.EgressSpec{}.OpenAPIModelName()),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.EgressSpec"},
+			v3.EgressSpec{}.OpenAPIModelName()},
 	}
 }
 
@@ -4992,7 +4993,7 @@ func schema_pkg_apis_projectcalico_v3_EndpointPort(ref common.ReferenceCallback)
 					},
 					"protocol": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/tigera/api/pkg/lib/numorstring.Protocol"),
+							Ref: ref(numorstring.Protocol{}.OpenAPIModelName()),
 						},
 					},
 					"port": {
@@ -5007,7 +5008,7 @@ func schema_pkg_apis_projectcalico_v3_EndpointPort(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/lib/numorstring.Protocol"},
+			numorstring.Protocol{}.OpenAPIModelName()},
 	}
 }
 
@@ -5020,7 +5021,7 @@ func schema_pkg_apis_projectcalico_v3_EndpointsReportEndpoint(ref common.Referen
 					"endpoint": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ResourceID"),
+							Ref:     ref(v3.ResourceID{}.OpenAPIModelName()),
 						},
 					},
 					"ingressProtected": {
@@ -5085,7 +5086,7 @@ func schema_pkg_apis_projectcalico_v3_EndpointsReportEndpoint(ref common.Referen
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ResourceID"),
+										Ref:     ref(v3.ResourceID{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -5104,7 +5105,7 @@ func schema_pkg_apis_projectcalico_v3_EndpointsReportEndpoint(ref common.Referen
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ResourceID"),
+										Ref:     ref(v3.ResourceID{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -5128,7 +5129,7 @@ func schema_pkg_apis_projectcalico_v3_EndpointsReportEndpoint(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.ResourceID"},
+			v3.ResourceID{}.OpenAPIModelName()},
 	}
 }
 
@@ -5142,14 +5143,14 @@ func schema_pkg_apis_projectcalico_v3_EndpointsReportFlow(ref common.ReferenceCa
 						SchemaProps: spec.SchemaProps{
 							Description: "The source of the flow log.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.FlowEndpoint"),
+							Ref:         ref(v3.FlowEndpoint{}.OpenAPIModelName()),
 						},
 					},
 					"destination": {
 						SchemaProps: spec.SchemaProps{
 							Description: "The destination of the flow log.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.FlowEndpoint"),
+							Ref:         ref(v3.FlowEndpoint{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -5157,7 +5158,7 @@ func schema_pkg_apis_projectcalico_v3_EndpointsReportFlow(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.FlowEndpoint"},
+			v3.FlowEndpoint{}.OpenAPIModelName()},
 	}
 }
 
@@ -5170,7 +5171,7 @@ func schema_pkg_apis_projectcalico_v3_EndpointsReportNamespace(ref common.Refere
 					"namespace": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ResourceID"),
+							Ref:     ref(v3.ResourceID{}.OpenAPIModelName()),
 						},
 					},
 					"ingressProtected": {
@@ -5226,7 +5227,7 @@ func schema_pkg_apis_projectcalico_v3_EndpointsReportNamespace(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.ResourceID"},
+			v3.ResourceID{}.OpenAPIModelName()},
 	}
 }
 
@@ -5239,7 +5240,7 @@ func schema_pkg_apis_projectcalico_v3_EndpointsReportService(ref common.Referenc
 					"service": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ResourceID"),
+							Ref:     ref(v3.ResourceID{}.OpenAPIModelName()),
 						},
 					},
 					"ingressProtected": {
@@ -5274,7 +5275,7 @@ func schema_pkg_apis_projectcalico_v3_EndpointsReportService(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.ResourceID"},
+			v3.ResourceID{}.OpenAPIModelName()},
 	}
 }
 
@@ -5295,20 +5296,20 @@ func schema_pkg_apis_projectcalico_v3_EndpointsSelection(ref common.ReferenceCal
 					"namespaces": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Namespace match restricts endpoint selection to those in the selected namespaces.",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.NamesAndLabelsMatch"),
+							Ref:         ref(v3.NamesAndLabelsMatch{}.OpenAPIModelName()),
 						},
 					},
 					"serviceAccounts": {
 						SchemaProps: spec.SchemaProps{
 							Description: "ServiceAccount match restricts endpoint selection to those in the selected service accounts.",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.NamesAndLabelsMatch"),
+							Ref:         ref(v3.NamesAndLabelsMatch{}.OpenAPIModelName()),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.NamesAndLabelsMatch"},
+			v3.NamesAndLabelsMatch{}.OpenAPIModelName()},
 	}
 }
 
@@ -5432,7 +5433,7 @@ func schema_pkg_apis_projectcalico_v3_EntityRule(ref common.ReferenceCallback) c
 					"services": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Services is an optional field that contains options for matching Kubernetes Services. If specified, only traffic that originates from or terminates at endpoints within the selected service(s) will be matched, and only to/from each endpoint's port.\n\nServices cannot be specified on the same rule as Selector, NotSelector, NamespaceSelector, Nets, NotNets or ServiceAccounts.\n\nPorts and NotPorts can only be specified with Services on ingress rules.",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ServiceMatch"),
+							Ref:         ref(v3.ServiceMatch{}.OpenAPIModelName()),
 						},
 					},
 					"ports": {
@@ -5447,7 +5448,7 @@ func schema_pkg_apis_projectcalico_v3_EntityRule(ref common.ReferenceCallback) c
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("github.com/tigera/api/pkg/lib/numorstring.Port"),
+										Ref: ref(numorstring.Port{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -5512,7 +5513,7 @@ func schema_pkg_apis_projectcalico_v3_EntityRule(ref common.ReferenceCallback) c
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("github.com/tigera/api/pkg/lib/numorstring.Port"),
+										Ref: ref(numorstring.Port{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -5521,14 +5522,14 @@ func schema_pkg_apis_projectcalico_v3_EntityRule(ref common.ReferenceCallback) c
 					"serviceAccounts": {
 						SchemaProps: spec.SchemaProps{
 							Description: "ServiceAccounts is an optional field that restricts the rule to only apply to traffic that originates from (or terminates at) a pod running as a matching service account.",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ServiceAccountMatch"),
+							Ref:         ref(v3.ServiceAccountMatch{}.OpenAPIModelName()),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.ServiceAccountMatch", "github.com/tigera/api/pkg/apis/projectcalico/v3.ServiceMatch", "github.com/tigera/api/pkg/lib/numorstring.Port"},
+			v3.ServiceAccountMatch{}.OpenAPIModelName(), v3.ServiceMatch{}.OpenAPIModelName(), numorstring.Port{}.OpenAPIModelName()},
 	}
 }
 
@@ -5661,7 +5662,7 @@ func schema_pkg_apis_projectcalico_v3_ExternalNetwork(ref common.ReferenceCallba
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ExternalNetworkSpec"),
+							Ref:     ref(v3.ExternalNetworkSpec{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -5669,7 +5670,7 @@ func schema_pkg_apis_projectcalico_v3_ExternalNetwork(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.ExternalNetworkSpec", metav1.ObjectMeta{}.OpenAPIModelName()},
+			v3.ExternalNetworkSpec{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -5707,7 +5708,7 @@ func schema_pkg_apis_projectcalico_v3_ExternalNetworkList(ref common.ReferenceCa
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ExternalNetwork"),
+										Ref:     ref(v3.ExternalNetwork{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -5718,7 +5719,7 @@ func schema_pkg_apis_projectcalico_v3_ExternalNetworkList(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.ExternalNetwork", metav1.ListMeta{}.OpenAPIModelName()},
+			v3.ExternalNetwork{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -5793,7 +5794,7 @@ func schema_pkg_apis_projectcalico_v3_FelixConfiguration(ref common.ReferenceCal
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.FelixConfigurationSpec"),
+							Ref:     ref(v3.FelixConfigurationSpec{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -5801,7 +5802,7 @@ func schema_pkg_apis_projectcalico_v3_FelixConfiguration(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.FelixConfigurationSpec", metav1.ObjectMeta{}.OpenAPIModelName()},
+			v3.FelixConfigurationSpec{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -5839,7 +5840,7 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationList(ref common.Referenc
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.FelixConfiguration"),
+										Ref:     ref(v3.FelixConfiguration{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -5850,7 +5851,7 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationList(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.FelixConfiguration", metav1.ListMeta{}.OpenAPIModelName()},
+			v3.FelixConfiguration{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -6240,7 +6241,7 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.HealthTimeoutOverride"),
+										Ref:     ref(v3.HealthTimeoutOverride{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -6324,7 +6325,7 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ProtoPort"),
+										Ref:     ref(v3.ProtoPort{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -6338,7 +6339,7 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ProtoPort"),
+										Ref:     ref(v3.ProtoPort{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -6358,7 +6359,7 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("github.com/tigera/api/pkg/lib/numorstring.Port"),
+										Ref: ref(numorstring.Port{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -6393,7 +6394,7 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 					"natPortRange": {
 						SchemaProps: spec.SchemaProps{
 							Description: "NATPortRange specifies the range of ports that is used for port mapping when doing outgoing NAT. When unset the default behavior of the network stack is used.",
-							Ref:         ref("github.com/tigera/api/pkg/lib/numorstring.Port"),
+							Ref:         ref(numorstring.Port{}.OpenAPIModelName()),
 						},
 					},
 					"natOutgoingAddress": {
@@ -6691,7 +6692,7 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 					"bpfConntrackTimeouts": {
 						SchemaProps: spec.SchemaProps{
 							Description: "BPFConntrackTimers overrides the default values for the specified conntrack timer if set. Each value can be either a duration or `Auto` to pick the value from a Linux conntrack timeout.\n\nConfigurable timers are: CreationGracePeriod, TCPSynSent, TCPEstablished, TCPFinsSeen, TCPResetSeen, UDPTimeout, GenericTimeout, ICMPTimeout.\n\nUnset values are replaced by the default values with a warning log for incorrect values.",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.BPFConntrackTimeouts"),
+							Ref:         ref(v3.BPFConntrackTimeouts{}.OpenAPIModelName()),
 						},
 					},
 					"bpfLogFilters": {
@@ -6804,7 +6805,7 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 					"bpfPSNATPorts": {
 						SchemaProps: spec.SchemaProps{
 							Description: "BPFPSNATPorts sets the range from which we randomly pick a port if there is a source port collision. This should be within the ephemeral range as defined by RFC 6056 (1024–65535) and preferably outside the  ephemeral ranges used by common operating systems. Linux uses 32768–60999, while others mostly use the IANA defined range 49152–65535. It is not necessarily a problem if this range overlaps with the operating systems. Both ends of the range are inclusive. [Default: 20000:29999]",
-							Ref:         ref("github.com/tigera/api/pkg/lib/numorstring.Port"),
+							Ref:         ref(numorstring.Port{}.OpenAPIModelName()),
 						},
 					},
 					"bpfMapSizeNATFrontend": {
@@ -6952,7 +6953,7 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 					"istioDSCPMark": {
 						SchemaProps: spec.SchemaProps{
 							Description: "IstioDSCPMark sets the value to use when directing traffic to Istio ZTunnel, when Istio is enabled. The mark is set only on SYN packets at the final hop to avoid interference with other protocols. This value is reserved by Calico and must not be used with other Istio installation. [Default: 23]",
-							Ref:         ref("github.com/tigera/api/pkg/lib/numorstring.DSCP"),
+							Ref:         ref(numorstring.DSCP{}.OpenAPIModelName()),
 						},
 					},
 					"cgroupV2Path": {
@@ -7647,7 +7648,7 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.RouteTableIDRange"),
+										Ref:     ref(v3.RouteTableIDRange{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -7656,7 +7657,7 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 					"routeTableRange": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Deprecated in favor of RouteTableRanges. Calico programs additional Linux route tables for various purposes. RouteTableRange specifies the indices of the route tables that Calico should use.",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.RouteTableRange"),
+							Ref:         ref(v3.RouteTableRange{}.OpenAPIModelName()),
 						},
 					},
 					"egressIPSupport": {
@@ -8002,7 +8003,7 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.BPFConntrackTimeouts", "github.com/tigera/api/pkg/apis/projectcalico/v3.HealthTimeoutOverride", "github.com/tigera/api/pkg/apis/projectcalico/v3.ProtoPort", "github.com/tigera/api/pkg/apis/projectcalico/v3.RouteTableIDRange", "github.com/tigera/api/pkg/apis/projectcalico/v3.RouteTableRange", "github.com/tigera/api/pkg/lib/numorstring.DSCP", "github.com/tigera/api/pkg/lib/numorstring.Port", metav1.Duration{}.OpenAPIModelName()},
+			v3.BPFConntrackTimeouts{}.OpenAPIModelName(), v3.HealthTimeoutOverride{}.OpenAPIModelName(), v3.ProtoPort{}.OpenAPIModelName(), v3.RouteTableIDRange{}.OpenAPIModelName(), v3.RouteTableRange{}.OpenAPIModelName(), numorstring.DSCP{}.OpenAPIModelName(), numorstring.Port{}.OpenAPIModelName(), metav1.Duration{}.OpenAPIModelName()},
 	}
 }
 
@@ -8078,13 +8079,13 @@ func schema_pkg_apis_projectcalico_v3_GlobalAlert(ref common.ReferenceCallback) 
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalAlertSpec"),
+							Ref:     ref(v3.GlobalAlertSpec{}.OpenAPIModelName()),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalAlertStatus"),
+							Ref:     ref(v3.GlobalAlertStatus{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -8092,7 +8093,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalAlert(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalAlertSpec", "github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalAlertStatus", metav1.ObjectMeta{}.OpenAPIModelName()},
+			v3.GlobalAlertSpec{}.OpenAPIModelName(), v3.GlobalAlertStatus{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -8130,7 +8131,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalAlertList(ref common.ReferenceCallba
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalAlert"),
+										Ref:     ref(v3.GlobalAlert{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -8141,7 +8142,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalAlertList(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalAlert", metav1.ListMeta{}.OpenAPIModelName()},
+			v3.GlobalAlert{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -8268,7 +8269,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalAlertSpec(ref common.ReferenceCallba
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalAlertSubstitution"),
+										Ref:     ref(v3.GlobalAlertSubstitution{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -8277,7 +8278,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalAlertSpec(ref common.ReferenceCallba
 					"detector": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Parameters for configuring an AnomalyDetection run. Only used if Type is AnomalyDetection.",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.DetectorParams"),
+							Ref:         ref(v3.DetectorParams{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -8285,7 +8286,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalAlertSpec(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.DetectorParams", "github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalAlertSubstitution", metav1.Duration{}.OpenAPIModelName()},
+			v3.DetectorParams{}.OpenAPIModelName(), v3.GlobalAlertSubstitution{}.OpenAPIModelName(), metav1.Duration{}.OpenAPIModelName()},
 	}
 }
 
@@ -8336,7 +8337,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalAlertStatus(ref common.ReferenceCall
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ErrorCondition"),
+										Ref:     ref(v3.ErrorCondition{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -8347,7 +8348,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalAlertStatus(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.ErrorCondition", metav1.Time{}.OpenAPIModelName()},
+			v3.ErrorCondition{}.OpenAPIModelName(), metav1.Time{}.OpenAPIModelName()},
 	}
 }
 
@@ -8420,7 +8421,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalAlertTemplate(ref common.ReferenceCa
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalAlertSpec"),
+							Ref:     ref(v3.GlobalAlertSpec{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -8428,7 +8429,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalAlertTemplate(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalAlertSpec", metav1.ObjectMeta{}.OpenAPIModelName()},
+			v3.GlobalAlertSpec{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -8466,7 +8467,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalAlertTemplateList(ref common.Referen
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalAlertTemplate"),
+										Ref:     ref(v3.GlobalAlertTemplate{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -8477,7 +8478,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalAlertTemplateList(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalAlertTemplate", metav1.ListMeta{}.OpenAPIModelName()},
+			v3.GlobalAlertTemplate{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -8510,7 +8511,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalNetworkPolicy(ref common.ReferenceCa
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalNetworkPolicySpec"),
+							Ref:     ref(v3.GlobalNetworkPolicySpec{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -8518,7 +8519,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalNetworkPolicy(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalNetworkPolicySpec", metav1.ObjectMeta{}.OpenAPIModelName()},
+			v3.GlobalNetworkPolicySpec{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -8556,7 +8557,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalNetworkPolicyList(ref common.Referen
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalNetworkPolicy"),
+										Ref:     ref(v3.GlobalNetworkPolicy{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -8567,7 +8568,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalNetworkPolicyList(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalNetworkPolicy", metav1.ListMeta{}.OpenAPIModelName()},
+			v3.GlobalNetworkPolicy{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -8604,7 +8605,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalNetworkPolicySpec(ref common.Referen
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.Rule"),
+										Ref:     ref(v3.Rule{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -8623,7 +8624,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalNetworkPolicySpec(ref common.Referen
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.Rule"),
+										Ref:     ref(v3.Rule{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -8715,7 +8716,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalNetworkPolicySpec(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.Rule"},
+			v3.Rule{}.OpenAPIModelName()},
 	}
 }
 
@@ -8749,7 +8750,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalNetworkSet(ref common.ReferenceCallb
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalNetworkSetSpec"),
+							Ref:     ref(v3.GlobalNetworkSetSpec{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -8757,7 +8758,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalNetworkSet(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalNetworkSetSpec", metav1.ObjectMeta{}.OpenAPIModelName()},
+			v3.GlobalNetworkSetSpec{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -8795,7 +8796,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalNetworkSetList(ref common.ReferenceC
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalNetworkSet"),
+										Ref:     ref(v3.GlobalNetworkSet{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -8806,7 +8807,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalNetworkSetList(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalNetworkSet", metav1.ListMeta{}.OpenAPIModelName()},
+			v3.GlobalNetworkSet{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -8920,13 +8921,13 @@ func schema_pkg_apis_projectcalico_v3_GlobalReport(ref common.ReferenceCallback)
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ReportSpec"),
+							Ref:     ref(v3.ReportSpec{}.OpenAPIModelName()),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ReportStatus"),
+							Ref:     ref(v3.ReportStatus{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -8934,7 +8935,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalReport(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.ReportSpec", "github.com/tigera/api/pkg/apis/projectcalico/v3.ReportStatus", metav1.ObjectMeta{}.OpenAPIModelName()},
+			v3.ReportSpec{}.OpenAPIModelName(), v3.ReportStatus{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -8972,7 +8973,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalReportList(ref common.ReferenceCallb
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalReport"),
+										Ref:     ref(v3.GlobalReport{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -8983,7 +8984,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalReportList(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalReport", metav1.ListMeta{}.OpenAPIModelName()},
+			v3.GlobalReport{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -9017,7 +9018,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalReportType(ref common.ReferenceCallb
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ReportTypeSpec"),
+							Ref:     ref(v3.ReportTypeSpec{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -9025,7 +9026,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalReportType(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.ReportTypeSpec", metav1.ObjectMeta{}.OpenAPIModelName()},
+			v3.ReportTypeSpec{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -9063,7 +9064,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalReportTypeList(ref common.ReferenceC
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalReportType"),
+										Ref:     ref(v3.GlobalReportType{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -9074,7 +9075,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalReportTypeList(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalReportType", metav1.ListMeta{}.OpenAPIModelName()},
+			v3.GlobalReportType{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -9108,13 +9109,13 @@ func schema_pkg_apis_projectcalico_v3_GlobalThreatFeed(ref common.ReferenceCallb
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalThreatFeedSpec"),
+							Ref:     ref(v3.GlobalThreatFeedSpec{}.OpenAPIModelName()),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalThreatFeedStatus"),
+							Ref:     ref(v3.GlobalThreatFeedStatus{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -9122,7 +9123,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalThreatFeed(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalThreatFeedSpec", "github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalThreatFeedStatus", metav1.ObjectMeta{}.OpenAPIModelName()},
+			v3.GlobalThreatFeedSpec{}.OpenAPIModelName(), v3.GlobalThreatFeedStatus{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -9160,7 +9161,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalThreatFeedList(ref common.ReferenceC
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalThreatFeed"),
+										Ref:     ref(v3.GlobalThreatFeed{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -9171,7 +9172,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalThreatFeedList(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalThreatFeed", metav1.ListMeta{}.OpenAPIModelName()},
+			v3.GlobalThreatFeed{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -9212,19 +9213,19 @@ func schema_pkg_apis_projectcalico_v3_GlobalThreatFeedSpec(ref common.ReferenceC
 					},
 					"globalNetworkSet": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalNetworkSetSync"),
+							Ref: ref(v3.GlobalNetworkSetSync{}.OpenAPIModelName()),
 						},
 					},
 					"pull": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/tigera/api/pkg/apis/projectcalico/v3.Pull"),
+							Ref: ref(v3.Pull{}.OpenAPIModelName()),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.GlobalNetworkSetSync", "github.com/tigera/api/pkg/apis/projectcalico/v3.Pull"},
+			v3.GlobalNetworkSetSync{}.OpenAPIModelName(), v3.Pull{}.OpenAPIModelName()},
 	}
 }
 
@@ -9256,7 +9257,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalThreatFeedStatus(ref common.Referenc
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ErrorCondition"),
+										Ref:     ref(v3.ErrorCondition{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -9266,7 +9267,7 @@ func schema_pkg_apis_projectcalico_v3_GlobalThreatFeedStatus(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.ErrorCondition", metav1.Time{}.OpenAPIModelName()},
+			v3.ErrorCondition{}.OpenAPIModelName(), metav1.Time{}.OpenAPIModelName()},
 	}
 }
 
@@ -9291,7 +9292,7 @@ func schema_pkg_apis_projectcalico_v3_HTTPHeader(ref common.ReferenceCallback) c
 					},
 					"valueFrom": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/tigera/api/pkg/apis/projectcalico/v3.HTTPHeaderSource"),
+							Ref: ref(v3.HTTPHeaderSource{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -9299,7 +9300,7 @@ func schema_pkg_apis_projectcalico_v3_HTTPHeader(ref common.ReferenceCallback) c
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.HTTPHeaderSource"},
+			v3.HTTPHeaderSource{}.OpenAPIModelName()},
 	}
 }
 
@@ -9416,7 +9417,7 @@ func schema_pkg_apis_projectcalico_v3_HTTPMatch(ref common.ReferenceCallback) co
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.HTTPPath"),
+										Ref:     ref(v3.HTTPPath{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -9435,7 +9436,7 @@ func schema_pkg_apis_projectcalico_v3_HTTPMatch(ref common.ReferenceCallback) co
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.HTTPHeaderCriteria"),
+										Ref:     ref(v3.HTTPHeaderCriteria{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -9445,7 +9446,7 @@ func schema_pkg_apis_projectcalico_v3_HTTPMatch(ref common.ReferenceCallback) co
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.HTTPHeaderCriteria", "github.com/tigera/api/pkg/apis/projectcalico/v3.HTTPPath"},
+			v3.HTTPHeaderCriteria{}.OpenAPIModelName(), v3.HTTPPath{}.OpenAPIModelName()},
 	}
 }
 
@@ -9483,7 +9484,7 @@ func schema_pkg_apis_projectcalico_v3_HTTPPull(ref common.ReferenceCallback) com
 					"format": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ThreatFeedFormat"),
+							Ref:     ref(v3.ThreatFeedFormat{}.OpenAPIModelName()),
 						},
 					},
 					"url": {
@@ -9505,7 +9506,7 @@ func schema_pkg_apis_projectcalico_v3_HTTPPull(ref common.ReferenceCallback) com
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.HTTPHeader"),
+										Ref:     ref(v3.HTTPHeader{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -9516,7 +9517,7 @@ func schema_pkg_apis_projectcalico_v3_HTTPPull(ref common.ReferenceCallback) com
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.HTTPHeader", "github.com/tigera/api/pkg/apis/projectcalico/v3.ThreatFeedFormat"},
+			v3.HTTPHeader{}.OpenAPIModelName(), v3.ThreatFeedFormat{}.OpenAPIModelName()},
 	}
 }
 
@@ -9576,7 +9577,7 @@ func schema_pkg_apis_projectcalico_v3_HostEndpoint(ref common.ReferenceCallback)
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.HostEndpointSpec"),
+							Ref:     ref(v3.HostEndpointSpec{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -9584,7 +9585,7 @@ func schema_pkg_apis_projectcalico_v3_HostEndpoint(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.HostEndpointSpec", metav1.ObjectMeta{}.OpenAPIModelName()},
+			v3.HostEndpointSpec{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -9622,7 +9623,7 @@ func schema_pkg_apis_projectcalico_v3_HostEndpointList(ref common.ReferenceCallb
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.HostEndpoint"),
+										Ref:     ref(v3.HostEndpoint{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -9633,7 +9634,7 @@ func schema_pkg_apis_projectcalico_v3_HostEndpointList(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.HostEndpoint", metav1.ListMeta{}.OpenAPIModelName()},
+			v3.HostEndpoint{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -9711,7 +9712,7 @@ func schema_pkg_apis_projectcalico_v3_HostEndpointSpec(ref common.ReferenceCallb
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.EndpointPort"),
+										Ref:     ref(v3.EndpointPort{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -9721,7 +9722,7 @@ func schema_pkg_apis_projectcalico_v3_HostEndpointSpec(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.EndpointPort"},
+			v3.EndpointPort{}.OpenAPIModelName()},
 	}
 }
 
@@ -9781,7 +9782,7 @@ func schema_pkg_apis_projectcalico_v3_IPAMBlock(ref common.ReferenceCallback) co
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.IPAMBlockSpec"),
+							Ref:     ref(v3.IPAMBlockSpec{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -9789,7 +9790,7 @@ func schema_pkg_apis_projectcalico_v3_IPAMBlock(ref common.ReferenceCallback) co
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.IPAMBlockSpec", metav1.ObjectMeta{}.OpenAPIModelName()},
+			v3.IPAMBlockSpec{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -9827,7 +9828,7 @@ func schema_pkg_apis_projectcalico_v3_IPAMBlockList(ref common.ReferenceCallback
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.IPAMBlock"),
+										Ref:     ref(v3.IPAMBlock{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -9838,7 +9839,7 @@ func schema_pkg_apis_projectcalico_v3_IPAMBlockList(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.IPAMBlock", metav1.ListMeta{}.OpenAPIModelName()},
+			v3.IPAMBlock{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -9922,7 +9923,7 @@ func schema_pkg_apis_projectcalico_v3_IPAMBlockSpec(ref common.ReferenceCallback
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.AllocationAttribute"),
+										Ref:     ref(v3.AllocationAttribute{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -9973,7 +9974,7 @@ func schema_pkg_apis_projectcalico_v3_IPAMBlockSpec(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.AllocationAttribute", metav1.Time{}.OpenAPIModelName()},
+			v3.AllocationAttribute{}.OpenAPIModelName(), metav1.Time{}.OpenAPIModelName()},
 	}
 }
 
@@ -10007,7 +10008,7 @@ func schema_pkg_apis_projectcalico_v3_IPAMConfiguration(ref common.ReferenceCall
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.IPAMConfigurationSpec"),
+							Ref:     ref(v3.IPAMConfigurationSpec{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -10015,7 +10016,7 @@ func schema_pkg_apis_projectcalico_v3_IPAMConfiguration(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.IPAMConfigurationSpec", metav1.ObjectMeta{}.OpenAPIModelName()},
+			v3.IPAMConfigurationSpec{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -10053,7 +10054,7 @@ func schema_pkg_apis_projectcalico_v3_IPAMConfigurationList(ref common.Reference
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.IPAMConfiguration"),
+										Ref:     ref(v3.IPAMConfiguration{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -10064,7 +10065,7 @@ func schema_pkg_apis_projectcalico_v3_IPAMConfigurationList(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.IPAMConfiguration", metav1.ListMeta{}.OpenAPIModelName()},
+			v3.IPAMConfiguration{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -10141,7 +10142,7 @@ func schema_pkg_apis_projectcalico_v3_IPAMHandle(ref common.ReferenceCallback) c
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.IPAMHandleSpec"),
+							Ref:     ref(v3.IPAMHandleSpec{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -10149,7 +10150,7 @@ func schema_pkg_apis_projectcalico_v3_IPAMHandle(ref common.ReferenceCallback) c
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.IPAMHandleSpec", metav1.ObjectMeta{}.OpenAPIModelName()},
+			v3.IPAMHandleSpec{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -10187,7 +10188,7 @@ func schema_pkg_apis_projectcalico_v3_IPAMHandleList(ref common.ReferenceCallbac
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.IPAMHandle"),
+										Ref:     ref(v3.IPAMHandle{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -10198,7 +10199,7 @@ func schema_pkg_apis_projectcalico_v3_IPAMHandleList(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.IPAMHandle", metav1.ListMeta{}.OpenAPIModelName()},
+			v3.IPAMHandle{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -10303,12 +10304,12 @@ func schema_pkg_apis_projectcalico_v3_IPPool(ref common.ReferenceCallback) commo
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.IPPoolSpec"),
+							Ref:     ref(v3.IPPoolSpec{}.OpenAPIModelName()),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/tigera/api/pkg/apis/projectcalico/v3.IPPoolStatus"),
+							Ref: ref(v3.IPPoolStatus{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -10316,7 +10317,7 @@ func schema_pkg_apis_projectcalico_v3_IPPool(ref common.ReferenceCallback) commo
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.IPPoolSpec", "github.com/tigera/api/pkg/apis/projectcalico/v3.IPPoolStatus", metav1.ObjectMeta{}.OpenAPIModelName()},
+			v3.IPPoolSpec{}.OpenAPIModelName(), v3.IPPoolStatus{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -10354,7 +10355,7 @@ func schema_pkg_apis_projectcalico_v3_IPPoolList(ref common.ReferenceCallback) c
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.IPPool"),
+										Ref:     ref(v3.IPPool{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -10365,7 +10366,7 @@ func schema_pkg_apis_projectcalico_v3_IPPoolList(ref common.ReferenceCallback) c
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.IPPool", metav1.ListMeta{}.OpenAPIModelName()},
+			v3.IPPool{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -10546,7 +10547,7 @@ func schema_pkg_apis_projectcalico_v3_IPReservation(ref common.ReferenceCallback
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.IPReservationSpec"),
+							Ref:     ref(v3.IPReservationSpec{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -10554,7 +10555,7 @@ func schema_pkg_apis_projectcalico_v3_IPReservation(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.IPReservationSpec", metav1.ObjectMeta{}.OpenAPIModelName()},
+			v3.IPReservationSpec{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -10592,7 +10593,7 @@ func schema_pkg_apis_projectcalico_v3_IPReservationList(ref common.ReferenceCall
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.IPReservation"),
+										Ref:     ref(v3.IPReservation{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -10603,7 +10604,7 @@ func schema_pkg_apis_projectcalico_v3_IPReservationList(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.IPReservation", metav1.ListMeta{}.OpenAPIModelName()},
+			v3.IPReservation{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -10736,13 +10737,13 @@ func schema_pkg_apis_projectcalico_v3_KubeControllersConfiguration(ref common.Re
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.KubeControllersConfigurationSpec"),
+							Ref:     ref(v3.KubeControllersConfigurationSpec{}.OpenAPIModelName()),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.KubeControllersConfigurationStatus"),
+							Ref:     ref(v3.KubeControllersConfigurationStatus{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -10750,7 +10751,7 @@ func schema_pkg_apis_projectcalico_v3_KubeControllersConfiguration(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.KubeControllersConfigurationSpec", "github.com/tigera/api/pkg/apis/projectcalico/v3.KubeControllersConfigurationStatus", metav1.ObjectMeta{}.OpenAPIModelName()},
+			v3.KubeControllersConfigurationSpec{}.OpenAPIModelName(), v3.KubeControllersConfigurationStatus{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -10788,7 +10789,7 @@ func schema_pkg_apis_projectcalico_v3_KubeControllersConfigurationList(ref commo
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.KubeControllersConfiguration"),
+										Ref:     ref(v3.KubeControllersConfiguration{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -10799,7 +10800,7 @@ func schema_pkg_apis_projectcalico_v3_KubeControllersConfigurationList(ref commo
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.KubeControllersConfiguration", metav1.ListMeta{}.OpenAPIModelName()},
+			v3.KubeControllersConfiguration{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -10841,7 +10842,7 @@ func schema_pkg_apis_projectcalico_v3_KubeControllersConfigurationSpec(ref commo
 						SchemaProps: spec.SchemaProps{
 							Description: "Controllers enables and configures individual Kubernetes controllers",
 							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ControllersConfig"),
+							Ref:         ref(v3.ControllersConfig{}.OpenAPIModelName()),
 						},
 					},
 					"debugProfilePort": {
@@ -10856,7 +10857,7 @@ func schema_pkg_apis_projectcalico_v3_KubeControllersConfigurationSpec(ref commo
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.ControllersConfig", metav1.Duration{}.OpenAPIModelName()},
+			v3.ControllersConfig{}.OpenAPIModelName(), metav1.Duration{}.OpenAPIModelName()},
 	}
 }
 
@@ -10870,7 +10871,7 @@ func schema_pkg_apis_projectcalico_v3_KubeControllersConfigurationStatus(ref com
 					"runningConfig": {
 						SchemaProps: spec.SchemaProps{
 							Description: "RunningConfig contains the effective config that is running in the kube-controllers pod, after merging the API resource with any environment variables.",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.KubeControllersConfigurationSpec"),
+							Ref:         ref(v3.KubeControllersConfigurationSpec{}.OpenAPIModelName()),
 						},
 					},
 					"environmentVars": {
@@ -10893,7 +10894,7 @@ func schema_pkg_apis_projectcalico_v3_KubeControllersConfigurationStatus(ref com
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.KubeControllersConfigurationSpec"},
+			v3.KubeControllersConfigurationSpec{}.OpenAPIModelName()},
 	}
 }
 
@@ -10927,13 +10928,13 @@ func schema_pkg_apis_projectcalico_v3_LicenseKey(ref common.ReferenceCallback) c
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.LicenseKeySpec"),
+							Ref:     ref(v3.LicenseKeySpec{}.OpenAPIModelName()),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.LicenseKeyStatus"),
+							Ref:     ref(v3.LicenseKeyStatus{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -10941,7 +10942,7 @@ func schema_pkg_apis_projectcalico_v3_LicenseKey(ref common.ReferenceCallback) c
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.LicenseKeySpec", "github.com/tigera/api/pkg/apis/projectcalico/v3.LicenseKeyStatus", metav1.ObjectMeta{}.OpenAPIModelName()},
+			v3.LicenseKeySpec{}.OpenAPIModelName(), v3.LicenseKeyStatus{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -10979,7 +10980,7 @@ func schema_pkg_apis_projectcalico_v3_LicenseKeyList(ref common.ReferenceCallbac
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.LicenseKey"),
+										Ref:     ref(v3.LicenseKey{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -10990,7 +10991,7 @@ func schema_pkg_apis_projectcalico_v3_LicenseKeyList(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.LicenseKey", metav1.ListMeta{}.OpenAPIModelName()},
+			v3.LicenseKey{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -11156,13 +11157,13 @@ func schema_pkg_apis_projectcalico_v3_ManagedCluster(ref common.ReferenceCallbac
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ManagedClusterSpec"),
+							Ref:     ref(v3.ManagedClusterSpec{}.OpenAPIModelName()),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ManagedClusterStatus"),
+							Ref:     ref(v3.ManagedClusterStatus{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -11170,7 +11171,7 @@ func schema_pkg_apis_projectcalico_v3_ManagedCluster(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.ManagedClusterSpec", "github.com/tigera/api/pkg/apis/projectcalico/v3.ManagedClusterStatus", metav1.ObjectMeta{}.OpenAPIModelName()},
+			v3.ManagedClusterSpec{}.OpenAPIModelName(), v3.ManagedClusterStatus{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -11208,7 +11209,7 @@ func schema_pkg_apis_projectcalico_v3_ManagedClusterList(ref common.ReferenceCal
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ManagedCluster"),
+										Ref:     ref(v3.ManagedCluster{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -11219,7 +11220,7 @@ func schema_pkg_apis_projectcalico_v3_ManagedClusterList(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.ManagedCluster", metav1.ListMeta{}.OpenAPIModelName()},
+			v3.ManagedCluster{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -11275,7 +11276,7 @@ func schema_pkg_apis_projectcalico_v3_ManagedClusterStatus(ref common.ReferenceC
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ManagedClusterStatusCondition"),
+										Ref:     ref(v3.ManagedClusterStatusCondition{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -11285,7 +11286,7 @@ func schema_pkg_apis_projectcalico_v3_ManagedClusterStatus(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.ManagedClusterStatusCondition"},
+			v3.ManagedClusterStatusCondition{}.OpenAPIModelName()},
 	}
 }
 
@@ -11466,7 +11467,7 @@ func schema_pkg_apis_projectcalico_v3_NetworkPolicy(ref common.ReferenceCallback
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.NetworkPolicySpec"),
+							Ref:     ref(v3.NetworkPolicySpec{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -11474,7 +11475,7 @@ func schema_pkg_apis_projectcalico_v3_NetworkPolicy(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.NetworkPolicySpec", metav1.ObjectMeta{}.OpenAPIModelName()},
+			v3.NetworkPolicySpec{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -11512,7 +11513,7 @@ func schema_pkg_apis_projectcalico_v3_NetworkPolicyList(ref common.ReferenceCall
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.NetworkPolicy"),
+										Ref:     ref(v3.NetworkPolicy{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -11523,7 +11524,7 @@ func schema_pkg_apis_projectcalico_v3_NetworkPolicyList(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.NetworkPolicy", metav1.ListMeta{}.OpenAPIModelName()},
+			v3.NetworkPolicy{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -11560,7 +11561,7 @@ func schema_pkg_apis_projectcalico_v3_NetworkPolicySpec(ref common.ReferenceCall
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.Rule"),
+										Ref:     ref(v3.Rule{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -11579,7 +11580,7 @@ func schema_pkg_apis_projectcalico_v3_NetworkPolicySpec(ref common.ReferenceCall
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.Rule"),
+										Ref:     ref(v3.Rule{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -11643,7 +11644,7 @@ func schema_pkg_apis_projectcalico_v3_NetworkPolicySpec(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.Rule"},
+			v3.Rule{}.OpenAPIModelName()},
 	}
 }
 
@@ -11676,7 +11677,7 @@ func schema_pkg_apis_projectcalico_v3_NetworkSet(ref common.ReferenceCallback) c
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.NetworkSetSpec"),
+							Ref:     ref(v3.NetworkSetSpec{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -11684,7 +11685,7 @@ func schema_pkg_apis_projectcalico_v3_NetworkSet(ref common.ReferenceCallback) c
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.NetworkSetSpec", metav1.ObjectMeta{}.OpenAPIModelName()},
+			v3.NetworkSetSpec{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -11722,7 +11723,7 @@ func schema_pkg_apis_projectcalico_v3_NetworkSetList(ref common.ReferenceCallbac
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.NetworkSet"),
+										Ref:     ref(v3.NetworkSet{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -11733,7 +11734,7 @@ func schema_pkg_apis_projectcalico_v3_NetworkSetList(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.NetworkSet", metav1.ListMeta{}.OpenAPIModelName()},
+			v3.NetworkSet{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -11813,7 +11814,7 @@ func schema_pkg_apis_projectcalico_v3_NodeControllerConfig(ref common.ReferenceC
 					"hostEndpoint": {
 						SchemaProps: spec.SchemaProps{
 							Description: "HostEndpoint controls syncing nodes to host endpoints. Disabled by default, set to nil to disable.",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.AutoHostEndpointConfig"),
+							Ref:         ref(v3.AutoHostEndpointConfig{}.OpenAPIModelName()),
 						},
 					},
 					"leakGracePeriod": {
@@ -11826,7 +11827,7 @@ func schema_pkg_apis_projectcalico_v3_NodeControllerConfig(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.AutoHostEndpointConfig", metav1.Duration{}.OpenAPIModelName()},
+			v3.AutoHostEndpointConfig{}.OpenAPIModelName(), metav1.Duration{}.OpenAPIModelName()},
 	}
 }
 
@@ -11862,21 +11863,21 @@ func schema_pkg_apis_projectcalico_v3_PacketCapture(ref common.ReferenceCallback
 						SchemaProps: spec.SchemaProps{
 							Description: "Specification of the PacketCapture.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCaptureSpec"),
+							Ref:         ref(v3.PacketCaptureSpec{}.OpenAPIModelName()),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Status of the PacketCapture",
 							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCaptureStatus"),
+							Ref:         ref(v3.PacketCaptureStatus{}.OpenAPIModelName()),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCaptureSpec", "github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCaptureStatus", metav1.ObjectMeta{}.OpenAPIModelName()},
+			v3.PacketCaptureSpec{}.OpenAPIModelName(), v3.PacketCaptureStatus{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -11967,7 +11968,7 @@ func schema_pkg_apis_projectcalico_v3_PacketCaptureList(ref common.ReferenceCall
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCapture"),
+										Ref:     ref(v3.PacketCapture{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -11978,7 +11979,7 @@ func schema_pkg_apis_projectcalico_v3_PacketCaptureList(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCapture", metav1.ListMeta{}.OpenAPIModelName()},
+			v3.PacketCapture{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -11992,7 +11993,7 @@ func schema_pkg_apis_projectcalico_v3_PacketCaptureRule(ref common.ReferenceCall
 					"protocol": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Protocol is an optional field that defines a filter for all traffic for a specific IP protocol.\n\nMust be one of these string values: \"TCP\", \"UDP\", \"ICMP\", \"ICMPv6\", \"SCTP\", \"UDPLite\" or an integer in the range 1-255.",
-							Ref:         ref("github.com/tigera/api/pkg/lib/numorstring.Protocol"),
+							Ref:         ref(numorstring.Protocol{}.OpenAPIModelName()),
 						},
 					},
 					"ports": {
@@ -12007,7 +12008,7 @@ func schema_pkg_apis_projectcalico_v3_PacketCaptureRule(ref common.ReferenceCall
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("github.com/tigera/api/pkg/lib/numorstring.Port"),
+										Ref: ref(numorstring.Port{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -12017,7 +12018,7 @@ func schema_pkg_apis_projectcalico_v3_PacketCaptureRule(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/lib/numorstring.Port", "github.com/tigera/api/pkg/lib/numorstring.Protocol"},
+			numorstring.Port{}.OpenAPIModelName(), numorstring.Protocol{}.OpenAPIModelName()},
 	}
 }
 
@@ -12048,7 +12049,7 @@ func schema_pkg_apis_projectcalico_v3_PacketCaptureSpec(ref common.ReferenceCall
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCaptureRule"),
+										Ref:     ref(v3.PacketCaptureRule{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -12070,7 +12071,7 @@ func schema_pkg_apis_projectcalico_v3_PacketCaptureSpec(ref common.ReferenceCall
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCaptureRule", metav1.Time{}.OpenAPIModelName()},
+			v3.PacketCaptureRule{}.OpenAPIModelName(), metav1.Time{}.OpenAPIModelName()},
 	}
 }
 
@@ -12093,7 +12094,7 @@ func schema_pkg_apis_projectcalico_v3_PacketCaptureStatus(ref common.ReferenceCa
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCaptureFile"),
+										Ref:     ref(v3.PacketCaptureFile{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -12103,7 +12104,7 @@ func schema_pkg_apis_projectcalico_v3_PacketCaptureStatus(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.PacketCaptureFile"},
+			v3.PacketCaptureFile{}.OpenAPIModelName()},
 	}
 }
 
@@ -12157,13 +12158,13 @@ func schema_pkg_apis_projectcalico_v3_PolicyRecommendationScope(ref common.Refer
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.PolicyRecommendationScopeSpec"),
+							Ref:     ref(v3.PolicyRecommendationScopeSpec{}.OpenAPIModelName()),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.PolicyRecommendationScopeStatus"),
+							Ref:     ref(v3.PolicyRecommendationScopeStatus{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -12171,7 +12172,7 @@ func schema_pkg_apis_projectcalico_v3_PolicyRecommendationScope(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.PolicyRecommendationScopeSpec", "github.com/tigera/api/pkg/apis/projectcalico/v3.PolicyRecommendationScopeStatus", metav1.ObjectMeta{}.OpenAPIModelName()},
+			v3.PolicyRecommendationScopeSpec{}.OpenAPIModelName(), v3.PolicyRecommendationScopeStatus{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -12245,7 +12246,7 @@ func schema_pkg_apis_projectcalico_v3_PolicyRecommendationScopeList(ref common.R
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.PolicyRecommendationScope"),
+										Ref:     ref(v3.PolicyRecommendationScope{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -12256,7 +12257,7 @@ func schema_pkg_apis_projectcalico_v3_PolicyRecommendationScopeList(ref common.R
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.PolicyRecommendationScope", metav1.ListMeta{}.OpenAPIModelName()},
+			v3.PolicyRecommendationScope{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -12344,20 +12345,20 @@ func schema_pkg_apis_projectcalico_v3_PolicyRecommendationScopeSpec(ref common.R
 					"namespaceSpec": {
 						SchemaProps: spec.SchemaProps{
 							Description: "The namespace spec contains the namespace relative recommendation vars.",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.PolicyRecommendationScopeNamespaceSpec"),
+							Ref:         ref(v3.PolicyRecommendationScopeNamespaceSpec{}.OpenAPIModelName()),
 						},
 					},
 					"hostEndpointSpec": {
 						SchemaProps: spec.SchemaProps{
 							Description: "The host endpoint spec contains host endpoint relative recommendation vars.",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.PolicyRecommendationScopeHostEndpointSpec"),
+							Ref:         ref(v3.PolicyRecommendationScopeHostEndpointSpec{}.OpenAPIModelName()),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.PolicyRecommendationScopeHostEndpointSpec", "github.com/tigera/api/pkg/apis/projectcalico/v3.PolicyRecommendationScopeNamespaceSpec", metav1.Duration{}.OpenAPIModelName()},
+			v3.PolicyRecommendationScopeHostEndpointSpec{}.OpenAPIModelName(), v3.PolicyRecommendationScopeNamespaceSpec{}.OpenAPIModelName(), metav1.Duration{}.OpenAPIModelName()},
 	}
 }
 
@@ -12379,7 +12380,7 @@ func schema_pkg_apis_projectcalico_v3_PolicyRecommendationScopeStatus(ref common
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.PolicyRecommendationScopeStatusCondition"),
+										Ref:     ref(v3.PolicyRecommendationScopeStatusCondition{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -12389,7 +12390,7 @@ func schema_pkg_apis_projectcalico_v3_PolicyRecommendationScopeStatus(ref common
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.PolicyRecommendationScopeStatusCondition"},
+			v3.PolicyRecommendationScopeStatusCondition{}.OpenAPIModelName()},
 	}
 }
 
@@ -12549,7 +12550,7 @@ func schema_pkg_apis_projectcalico_v3_Profile(ref common.ReferenceCallback) comm
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ProfileSpec"),
+							Ref:     ref(v3.ProfileSpec{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -12557,7 +12558,7 @@ func schema_pkg_apis_projectcalico_v3_Profile(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.ProfileSpec", metav1.ObjectMeta{}.OpenAPIModelName()},
+			v3.ProfileSpec{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -12595,7 +12596,7 @@ func schema_pkg_apis_projectcalico_v3_ProfileList(ref common.ReferenceCallback) 
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.Profile"),
+										Ref:     ref(v3.Profile{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -12606,7 +12607,7 @@ func schema_pkg_apis_projectcalico_v3_ProfileList(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.Profile", metav1.ListMeta{}.OpenAPIModelName()},
+			v3.Profile{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -12630,7 +12631,7 @@ func schema_pkg_apis_projectcalico_v3_ProfileSpec(ref common.ReferenceCallback) 
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.Rule"),
+										Ref:     ref(v3.Rule{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -12649,7 +12650,7 @@ func schema_pkg_apis_projectcalico_v3_ProfileSpec(ref common.ReferenceCallback) 
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.Rule"),
+										Ref:     ref(v3.Rule{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -12674,14 +12675,14 @@ func schema_pkg_apis_projectcalico_v3_ProfileSpec(ref common.ReferenceCallback) 
 					"egressGateway": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Egress control.",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.EgressGatewaySpec"),
+							Ref:         ref(v3.EgressGatewaySpec{}.OpenAPIModelName()),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.EgressGatewaySpec", "github.com/tigera/api/pkg/apis/projectcalico/v3.Rule"},
+			v3.EgressGatewaySpec{}.OpenAPIModelName(), v3.Rule{}.OpenAPIModelName()},
 	}
 }
 
@@ -12732,7 +12733,7 @@ func schema_pkg_apis_projectcalico_v3_Pull(ref common.ReferenceCallback) common.
 					},
 					"http": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/tigera/api/pkg/apis/projectcalico/v3.HTTPPull"),
+							Ref: ref(v3.HTTPPull{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -12740,7 +12741,7 @@ func schema_pkg_apis_projectcalico_v3_Pull(ref common.ReferenceCallback) common.
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.HTTPPull"},
+			v3.HTTPPull{}.OpenAPIModelName()},
 	}
 }
 
@@ -12774,7 +12775,7 @@ func schema_pkg_apis_projectcalico_v3_RemoteClusterConfiguration(ref common.Refe
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.RemoteClusterConfigurationSpec"),
+							Ref:     ref(v3.RemoteClusterConfigurationSpec{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -12782,7 +12783,7 @@ func schema_pkg_apis_projectcalico_v3_RemoteClusterConfiguration(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.RemoteClusterConfigurationSpec", metav1.ObjectMeta{}.OpenAPIModelName()},
+			v3.RemoteClusterConfigurationSpec{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -12820,7 +12821,7 @@ func schema_pkg_apis_projectcalico_v3_RemoteClusterConfigurationList(ref common.
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.RemoteClusterConfiguration"),
+										Ref:     ref(v3.RemoteClusterConfiguration{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -12831,7 +12832,7 @@ func schema_pkg_apis_projectcalico_v3_RemoteClusterConfigurationList(ref common.
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.RemoteClusterConfiguration", metav1.ListMeta{}.OpenAPIModelName()},
+			v3.RemoteClusterConfiguration{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -12975,14 +12976,14 @@ func schema_pkg_apis_projectcalico_v3_RemoteClusterConfigurationSpec(ref common.
 						SchemaProps: spec.SchemaProps{
 							Description: "Configuration options that do not relate to the underlying datastore connection. These fields relate to the syncing of resources once the connection is established. These fields can be set independent of the other connection-oriented fields, e.g. they can be set when ClusterAccessSecret is non-nil.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.RemoteClusterSyncOptions"),
+							Ref:         ref(v3.RemoteClusterSyncOptions{}.OpenAPIModelName()),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.RemoteClusterSyncOptions", v1.ObjectReference{}.OpenAPIModelName()},
+			v3.RemoteClusterSyncOptions{}.OpenAPIModelName(), v1.ObjectReference{}.OpenAPIModelName()},
 	}
 }
 
@@ -13029,13 +13030,13 @@ func schema_pkg_apis_projectcalico_v3_ReportData(ref common.ReferenceCallback) c
 					"reportSpec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ReportSpec"),
+							Ref:     ref(v3.ReportSpec{}.OpenAPIModelName()),
 						},
 					},
 					"reportTypeSpec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ReportTypeSpec"),
+							Ref:     ref(v3.ReportTypeSpec{}.OpenAPIModelName()),
 						},
 					},
 					"startTime": {
@@ -13066,7 +13067,7 @@ func schema_pkg_apis_projectcalico_v3_ReportData(ref common.ReferenceCallback) c
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.EndpointsReportEndpoint"),
+										Ref:     ref(v3.EndpointsReportEndpoint{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -13076,7 +13077,7 @@ func schema_pkg_apis_projectcalico_v3_ReportData(ref common.ReferenceCallback) c
 						SchemaProps: spec.SchemaProps{
 							Description: "Endpoint stats in a reporting period.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.EndpointsSummary"),
+							Ref:         ref(v3.EndpointsSummary{}.OpenAPIModelName()),
 						},
 					},
 					"namespaces": {
@@ -13092,7 +13093,7 @@ func schema_pkg_apis_projectcalico_v3_ReportData(ref common.ReferenceCallback) c
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.EndpointsReportNamespace"),
+										Ref:     ref(v3.EndpointsReportNamespace{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -13102,7 +13103,7 @@ func schema_pkg_apis_projectcalico_v3_ReportData(ref common.ReferenceCallback) c
 						SchemaProps: spec.SchemaProps{
 							Description: "Endpoint stats for given namespaces in a reporting period.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.EndpointsSummary"),
+							Ref:         ref(v3.EndpointsSummary{}.OpenAPIModelName()),
 						},
 					},
 					"services": {
@@ -13118,7 +13119,7 @@ func schema_pkg_apis_projectcalico_v3_ReportData(ref common.ReferenceCallback) c
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.EndpointsReportService"),
+										Ref:     ref(v3.EndpointsReportService{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -13128,7 +13129,7 @@ func schema_pkg_apis_projectcalico_v3_ReportData(ref common.ReferenceCallback) c
 						SchemaProps: spec.SchemaProps{
 							Description: "Endpoint stats for services in a reporting period.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.EndpointsSummary"),
+							Ref:         ref(v3.EndpointsSummary{}.OpenAPIModelName()),
 						},
 					},
 					"auditEvents": {
@@ -13154,7 +13155,7 @@ func schema_pkg_apis_projectcalico_v3_ReportData(ref common.ReferenceCallback) c
 						SchemaProps: spec.SchemaProps{
 							Description: "Audit log stats in a reporting period.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.AuditSummary"),
+							Ref:         ref(v3.AuditSummary{}.OpenAPIModelName()),
 						},
 					},
 					"flows": {
@@ -13170,7 +13171,7 @@ func schema_pkg_apis_projectcalico_v3_ReportData(ref common.ReferenceCallback) c
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.EndpointsReportFlow"),
+										Ref:     ref(v3.EndpointsReportFlow{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -13189,7 +13190,7 @@ func schema_pkg_apis_projectcalico_v3_ReportData(ref common.ReferenceCallback) c
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.CISBenchmarkNode"),
+										Ref:     ref(v3.CISBenchmarkNode{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -13199,7 +13200,7 @@ func schema_pkg_apis_projectcalico_v3_ReportData(ref common.ReferenceCallback) c
 						SchemaProps: spec.SchemaProps{
 							Description: "CISBenchmarkSummary high level test results.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.CISBenchmarkSummary"),
+							Ref:         ref(v3.CISBenchmarkSummary{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -13207,7 +13208,7 @@ func schema_pkg_apis_projectcalico_v3_ReportData(ref common.ReferenceCallback) c
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.AuditSummary", "github.com/tigera/api/pkg/apis/projectcalico/v3.CISBenchmarkNode", "github.com/tigera/api/pkg/apis/projectcalico/v3.CISBenchmarkSummary", "github.com/tigera/api/pkg/apis/projectcalico/v3.EndpointsReportEndpoint", "github.com/tigera/api/pkg/apis/projectcalico/v3.EndpointsReportFlow", "github.com/tigera/api/pkg/apis/projectcalico/v3.EndpointsReportNamespace", "github.com/tigera/api/pkg/apis/projectcalico/v3.EndpointsReportService", "github.com/tigera/api/pkg/apis/projectcalico/v3.EndpointsSummary", "github.com/tigera/api/pkg/apis/projectcalico/v3.ReportSpec", "github.com/tigera/api/pkg/apis/projectcalico/v3.ReportTypeSpec", metav1.Time{}.OpenAPIModelName(), "k8s.io/apiserver/pkg/apis/audit.Event"},
+			v3.AuditSummary{}.OpenAPIModelName(), v3.CISBenchmarkNode{}.OpenAPIModelName(), v3.CISBenchmarkSummary{}.OpenAPIModelName(), v3.EndpointsReportEndpoint{}.OpenAPIModelName(), v3.EndpointsReportFlow{}.OpenAPIModelName(), v3.EndpointsReportNamespace{}.OpenAPIModelName(), v3.EndpointsReportService{}.OpenAPIModelName(), v3.EndpointsSummary{}.OpenAPIModelName(), v3.ReportSpec{}.OpenAPIModelName(), v3.ReportTypeSpec{}.OpenAPIModelName(), metav1.Time{}.OpenAPIModelName(), "k8s.io/apiserver/pkg/apis/audit.Event"},
 	}
 }
 
@@ -13263,7 +13264,7 @@ func schema_pkg_apis_projectcalico_v3_ReportSpec(ref common.ReferenceCallback) c
 					"endpoints": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Endpoints is used to specify which endpoints are in-scope and stored in the generated report data. Only used if endpoints data and/or audit logs are gathered in the report. If omitted, treated as everything in-scope.",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.EndpointsSelection"),
+							Ref:         ref(v3.EndpointsSelection{}.OpenAPIModelName()),
 						},
 					},
 					"schedule": {
@@ -13299,7 +13300,7 @@ func schema_pkg_apis_projectcalico_v3_ReportSpec(ref common.ReferenceCallback) c
 					"cis": {
 						SchemaProps: spec.SchemaProps{
 							Description: "This field contain all the parameters for configuring a CIS benchmark report.",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.CISBenchmarkParams"),
+							Ref:         ref(v3.CISBenchmarkParams{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -13307,7 +13308,7 @@ func schema_pkg_apis_projectcalico_v3_ReportSpec(ref common.ReferenceCallback) c
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.CISBenchmarkParams", "github.com/tigera/api/pkg/apis/projectcalico/v3.EndpointsSelection"},
+			v3.CISBenchmarkParams{}.OpenAPIModelName(), v3.EndpointsSelection{}.OpenAPIModelName()},
 	}
 }
 
@@ -13331,7 +13332,7 @@ func schema_pkg_apis_projectcalico_v3_ReportStatus(ref common.ReferenceCallback)
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.CompletedReportJob"),
+										Ref:     ref(v3.CompletedReportJob{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -13350,7 +13351,7 @@ func schema_pkg_apis_projectcalico_v3_ReportStatus(ref common.ReferenceCallback)
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.CompletedReportJob"),
+										Ref:     ref(v3.CompletedReportJob{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -13369,7 +13370,7 @@ func schema_pkg_apis_projectcalico_v3_ReportStatus(ref common.ReferenceCallback)
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ReportJob"),
+										Ref:     ref(v3.ReportJob{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -13378,14 +13379,14 @@ func schema_pkg_apis_projectcalico_v3_ReportStatus(ref common.ReferenceCallback)
 					"lastScheduledReportJob": {
 						SchemaProps: spec.SchemaProps{
 							Description: "The last scheduled report job.",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ReportJob"),
+							Ref:         ref(v3.ReportJob{}.OpenAPIModelName()),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.CompletedReportJob", "github.com/tigera/api/pkg/apis/projectcalico/v3.ReportJob"},
+			v3.CompletedReportJob{}.OpenAPIModelName(), v3.ReportJob{}.OpenAPIModelName()},
 	}
 }
 
@@ -13434,7 +13435,7 @@ func schema_pkg_apis_projectcalico_v3_ReportTypeSpec(ref common.ReferenceCallbac
 						SchemaProps: spec.SchemaProps{
 							Description: "The summary template, explicitly used by the UI to render a summary version of the report. This should render to json containing a sets of widgets that the UI can use to render the summary. The rendered data is returned on the list query of the reports.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ReportTemplate"),
+							Ref:         ref(v3.ReportTemplate{}.OpenAPIModelName()),
 						},
 					},
 					"downloadTemplates": {
@@ -13450,7 +13451,7 @@ func schema_pkg_apis_projectcalico_v3_ReportTypeSpec(ref common.ReferenceCallbac
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ReportTemplate"),
+										Ref:     ref(v3.ReportTemplate{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -13473,7 +13474,7 @@ func schema_pkg_apis_projectcalico_v3_ReportTypeSpec(ref common.ReferenceCallbac
 					"auditEventsSelection": {
 						SchemaProps: spec.SchemaProps{
 							Description: "What audit log data should be included in the report. If not specified, the report will contain no audit log data. The selection may be further filtered by the Report.",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.AuditEventsSelection"),
+							Ref:         ref(v3.AuditEventsSelection{}.OpenAPIModelName()),
 						},
 					},
 					"includeCISBenchmarkData": {
@@ -13487,7 +13488,7 @@ func schema_pkg_apis_projectcalico_v3_ReportTypeSpec(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.AuditEventsSelection", "github.com/tigera/api/pkg/apis/projectcalico/v3.ReportTemplate"},
+			v3.AuditEventsSelection{}.OpenAPIModelName(), v3.ReportTemplate{}.OpenAPIModelName()},
 	}
 }
 
@@ -13614,51 +13615,51 @@ func schema_pkg_apis_projectcalico_v3_Rule(ref common.ReferenceCallback) common.
 					"protocol": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Protocol is an optional field that restricts the rule to only apply to traffic of a specific IP protocol. Required if any of the EntityRules contain Ports (because ports only apply to certain protocols).\n\nMust be one of these string values: \"TCP\", \"UDP\", \"ICMP\", \"ICMPv6\", \"SCTP\", \"UDPLite\" or an integer in the range 1-255.",
-							Ref:         ref("github.com/tigera/api/pkg/lib/numorstring.Protocol"),
+							Ref:         ref(numorstring.Protocol{}.OpenAPIModelName()),
 						},
 					},
 					"icmp": {
 						SchemaProps: spec.SchemaProps{
 							Description: "ICMP is an optional field that restricts the rule to apply to a specific type and code of ICMP traffic.  This should only be specified if the Protocol field is set to \"ICMP\" or \"ICMPv6\".",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ICMPFields"),
+							Ref:         ref(v3.ICMPFields{}.OpenAPIModelName()),
 						},
 					},
 					"notProtocol": {
 						SchemaProps: spec.SchemaProps{
 							Description: "NotProtocol is the negated version of the Protocol field.",
-							Ref:         ref("github.com/tigera/api/pkg/lib/numorstring.Protocol"),
+							Ref:         ref(numorstring.Protocol{}.OpenAPIModelName()),
 						},
 					},
 					"notICMP": {
 						SchemaProps: spec.SchemaProps{
 							Description: "NotICMP is the negated version of the ICMP field.",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ICMPFields"),
+							Ref:         ref(v3.ICMPFields{}.OpenAPIModelName()),
 						},
 					},
 					"source": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Source contains the match criteria that apply to source entity.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.EntityRule"),
+							Ref:         ref(v3.EntityRule{}.OpenAPIModelName()),
 						},
 					},
 					"destination": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Destination contains the match criteria that apply to destination entity.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.EntityRule"),
+							Ref:         ref(v3.EntityRule{}.OpenAPIModelName()),
 						},
 					},
 					"http": {
 						SchemaProps: spec.SchemaProps{
 							Description: "HTTP contains match criteria that apply to HTTP requests.",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.HTTPMatch"),
+							Ref:         ref(v3.HTTPMatch{}.OpenAPIModelName()),
 						},
 					},
 					"metadata": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Metadata contains additional information for this rule",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.RuleMetadata"),
+							Ref:         ref(v3.RuleMetadata{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -13666,7 +13667,7 @@ func schema_pkg_apis_projectcalico_v3_Rule(ref common.ReferenceCallback) common.
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.EntityRule", "github.com/tigera/api/pkg/apis/projectcalico/v3.HTTPMatch", "github.com/tigera/api/pkg/apis/projectcalico/v3.ICMPFields", "github.com/tigera/api/pkg/apis/projectcalico/v3.RuleMetadata", "github.com/tigera/api/pkg/lib/numorstring.Protocol"},
+			v3.EntityRule{}.OpenAPIModelName(), v3.HTTPMatch{}.OpenAPIModelName(), v3.ICMPFields{}.OpenAPIModelName(), v3.RuleMetadata{}.OpenAPIModelName(), numorstring.Protocol{}.OpenAPIModelName()},
 	}
 }
 
@@ -13727,7 +13728,7 @@ func schema_pkg_apis_projectcalico_v3_SecurityEventWebhook(ref common.ReferenceC
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.SecurityEventWebhookSpec"),
+							Ref:     ref(v3.SecurityEventWebhookSpec{}.OpenAPIModelName()),
 						},
 					},
 					"status": {
@@ -13753,7 +13754,7 @@ func schema_pkg_apis_projectcalico_v3_SecurityEventWebhook(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.SecurityEventWebhookSpec", metav1.Condition{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
+			v3.SecurityEventWebhookSpec{}.OpenAPIModelName(), metav1.Condition{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -13778,7 +13779,7 @@ func schema_pkg_apis_projectcalico_v3_SecurityEventWebhookConfigVar(ref common.R
 					},
 					"valueFrom": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/tigera/api/pkg/apis/projectcalico/v3.SecurityEventWebhookConfigVarSource"),
+							Ref: ref(v3.SecurityEventWebhookConfigVarSource{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -13786,7 +13787,7 @@ func schema_pkg_apis_projectcalico_v3_SecurityEventWebhookConfigVar(ref common.R
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.SecurityEventWebhookConfigVarSource"},
+			v3.SecurityEventWebhookConfigVarSource{}.OpenAPIModelName()},
 	}
 }
 
@@ -13847,7 +13848,7 @@ func schema_pkg_apis_projectcalico_v3_SecurityEventWebhookList(ref common.Refere
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.SecurityEventWebhook"),
+										Ref:     ref(v3.SecurityEventWebhook{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -13858,7 +13859,7 @@ func schema_pkg_apis_projectcalico_v3_SecurityEventWebhookList(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.SecurityEventWebhook", metav1.ListMeta{}.OpenAPIModelName()},
+			v3.SecurityEventWebhook{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -13905,7 +13906,7 @@ func schema_pkg_apis_projectcalico_v3_SecurityEventWebhookSpec(ref common.Refere
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.SecurityEventWebhookConfigVar"),
+										Ref:     ref(v3.SecurityEventWebhookConfigVar{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -13916,7 +13917,7 @@ func schema_pkg_apis_projectcalico_v3_SecurityEventWebhookSpec(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.SecurityEventWebhookConfigVar"},
+			v3.SecurityEventWebhookConfigVar{}.OpenAPIModelName()},
 	}
 }
 
@@ -14108,7 +14109,7 @@ func schema_pkg_apis_projectcalico_v3_StagedGlobalNetworkPolicy(ref common.Refer
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.StagedGlobalNetworkPolicySpec"),
+							Ref:     ref(v3.StagedGlobalNetworkPolicySpec{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -14116,7 +14117,7 @@ func schema_pkg_apis_projectcalico_v3_StagedGlobalNetworkPolicy(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.StagedGlobalNetworkPolicySpec", metav1.ObjectMeta{}.OpenAPIModelName()},
+			v3.StagedGlobalNetworkPolicySpec{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -14154,7 +14155,7 @@ func schema_pkg_apis_projectcalico_v3_StagedGlobalNetworkPolicyList(ref common.R
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.StagedGlobalNetworkPolicy"),
+										Ref:     ref(v3.StagedGlobalNetworkPolicy{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -14165,7 +14166,7 @@ func schema_pkg_apis_projectcalico_v3_StagedGlobalNetworkPolicyList(ref common.R
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.StagedGlobalNetworkPolicy", metav1.ListMeta{}.OpenAPIModelName()},
+			v3.StagedGlobalNetworkPolicy{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -14209,7 +14210,7 @@ func schema_pkg_apis_projectcalico_v3_StagedGlobalNetworkPolicySpec(ref common.R
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.Rule"),
+										Ref:     ref(v3.Rule{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -14228,7 +14229,7 @@ func schema_pkg_apis_projectcalico_v3_StagedGlobalNetworkPolicySpec(ref common.R
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.Rule"),
+										Ref:     ref(v3.Rule{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -14320,7 +14321,7 @@ func schema_pkg_apis_projectcalico_v3_StagedGlobalNetworkPolicySpec(ref common.R
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.Rule"},
+			v3.Rule{}.OpenAPIModelName()},
 	}
 }
 
@@ -14354,7 +14355,7 @@ func schema_pkg_apis_projectcalico_v3_StagedKubernetesNetworkPolicy(ref common.R
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.StagedKubernetesNetworkPolicySpec"),
+							Ref:     ref(v3.StagedKubernetesNetworkPolicySpec{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -14362,7 +14363,7 @@ func schema_pkg_apis_projectcalico_v3_StagedKubernetesNetworkPolicy(ref common.R
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.StagedKubernetesNetworkPolicySpec", metav1.ObjectMeta{}.OpenAPIModelName()},
+			v3.StagedKubernetesNetworkPolicySpec{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -14400,7 +14401,7 @@ func schema_pkg_apis_projectcalico_v3_StagedKubernetesNetworkPolicyList(ref comm
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.StagedKubernetesNetworkPolicy"),
+										Ref:     ref(v3.StagedKubernetesNetworkPolicy{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -14411,7 +14412,7 @@ func schema_pkg_apis_projectcalico_v3_StagedKubernetesNetworkPolicyList(ref comm
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.StagedKubernetesNetworkPolicy", metav1.ListMeta{}.OpenAPIModelName()},
+			v3.StagedKubernetesNetworkPolicy{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -14532,7 +14533,7 @@ func schema_pkg_apis_projectcalico_v3_StagedNetworkPolicy(ref common.ReferenceCa
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.StagedNetworkPolicySpec"),
+							Ref:     ref(v3.StagedNetworkPolicySpec{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -14540,7 +14541,7 @@ func schema_pkg_apis_projectcalico_v3_StagedNetworkPolicy(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.StagedNetworkPolicySpec", metav1.ObjectMeta{}.OpenAPIModelName()},
+			v3.StagedNetworkPolicySpec{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -14578,7 +14579,7 @@ func schema_pkg_apis_projectcalico_v3_StagedNetworkPolicyList(ref common.Referen
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.StagedNetworkPolicy"),
+										Ref:     ref(v3.StagedNetworkPolicy{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -14589,7 +14590,7 @@ func schema_pkg_apis_projectcalico_v3_StagedNetworkPolicyList(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.StagedNetworkPolicy", metav1.ListMeta{}.OpenAPIModelName()},
+			v3.StagedNetworkPolicy{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -14633,7 +14634,7 @@ func schema_pkg_apis_projectcalico_v3_StagedNetworkPolicySpec(ref common.Referen
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.Rule"),
+										Ref:     ref(v3.Rule{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -14652,7 +14653,7 @@ func schema_pkg_apis_projectcalico_v3_StagedNetworkPolicySpec(ref common.Referen
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.Rule"),
+										Ref:     ref(v3.Rule{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -14716,7 +14717,7 @@ func schema_pkg_apis_projectcalico_v3_StagedNetworkPolicySpec(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.Rule"},
+			v3.Rule{}.OpenAPIModelName()},
 	}
 }
 
@@ -14797,24 +14798,24 @@ func schema_pkg_apis_projectcalico_v3_ThreatFeedFormat(ref common.ReferenceCallb
 				Properties: map[string]spec.Schema{
 					"newlineDelimited": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ThreatFeedFormatNewlineDelimited"),
+							Ref: ref(v3.ThreatFeedFormatNewlineDelimited{}.OpenAPIModelName()),
 						},
 					},
 					"json": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ThreatFeedFormatJSON"),
+							Ref: ref(v3.ThreatFeedFormatJSON{}.OpenAPIModelName()),
 						},
 					},
 					"csv": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/tigera/api/pkg/apis/projectcalico/v3.ThreatFeedFormatCSV"),
+							Ref: ref(v3.ThreatFeedFormatCSV{}.OpenAPIModelName()),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.ThreatFeedFormatCSV", "github.com/tigera/api/pkg/apis/projectcalico/v3.ThreatFeedFormatJSON", "github.com/tigera/api/pkg/apis/projectcalico/v3.ThreatFeedFormatNewlineDelimited"},
+			v3.ThreatFeedFormatCSV{}.OpenAPIModelName(), v3.ThreatFeedFormatJSON{}.OpenAPIModelName(), v3.ThreatFeedFormatNewlineDelimited{}.OpenAPIModelName()},
 	}
 }
 
@@ -14930,13 +14931,13 @@ func schema_pkg_apis_projectcalico_v3_Tier(ref common.ReferenceCallback) common.
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.TierSpec"),
+							Ref:     ref(v3.TierSpec{}.OpenAPIModelName()),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.TierStatus"),
+							Ref:     ref(v3.TierStatus{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -14944,7 +14945,7 @@ func schema_pkg_apis_projectcalico_v3_Tier(ref common.ReferenceCallback) common.
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.TierSpec", "github.com/tigera/api/pkg/apis/projectcalico/v3.TierStatus", metav1.ObjectMeta{}.OpenAPIModelName()},
+			v3.TierSpec{}.OpenAPIModelName(), v3.TierStatus{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -14982,7 +14983,7 @@ func schema_pkg_apis_projectcalico_v3_TierList(ref common.ReferenceCallback) com
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.Tier"),
+										Ref:     ref(v3.Tier{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -14993,7 +14994,7 @@ func schema_pkg_apis_projectcalico_v3_TierList(ref common.ReferenceCallback) com
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.Tier", metav1.ListMeta{}.OpenAPIModelName()},
+			v3.Tier{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -15081,7 +15082,7 @@ func schema_pkg_apis_projectcalico_v3_UIDashboard(ref common.ReferenceCallback) 
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.DashboardData"),
+										Ref:     ref(v3.DashboardData{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -15091,7 +15092,7 @@ func schema_pkg_apis_projectcalico_v3_UIDashboard(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.DashboardData"},
+			v3.DashboardData{}.OpenAPIModelName()},
 	}
 }
 
@@ -15115,7 +15116,7 @@ func schema_pkg_apis_projectcalico_v3_UIGraphLayer(ref common.ReferenceCallback)
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.UIGraphNode"),
+										Ref:     ref(v3.UIGraphNode{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -15140,7 +15141,7 @@ func schema_pkg_apis_projectcalico_v3_UIGraphLayer(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.UIGraphNode"},
+			v3.UIGraphNode{}.OpenAPIModelName()},
 	}
 }
 
@@ -15323,7 +15324,7 @@ func schema_pkg_apis_projectcalico_v3_UIGraphView(ref common.ReferenceCallback) 
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.NamedSelector"),
+										Ref:     ref(v3.NamedSelector{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -15349,7 +15350,7 @@ func schema_pkg_apis_projectcalico_v3_UIGraphView(ref common.ReferenceCallback) 
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.Position"),
+										Ref:     ref(v3.Position{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -15388,7 +15389,7 @@ func schema_pkg_apis_projectcalico_v3_UIGraphView(ref common.ReferenceCallback) 
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.UIGraphNodeView"),
+										Ref:     ref(v3.UIGraphNodeView{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -15398,7 +15399,7 @@ func schema_pkg_apis_projectcalico_v3_UIGraphView(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.NamedSelector", "github.com/tigera/api/pkg/apis/projectcalico/v3.Position", "github.com/tigera/api/pkg/apis/projectcalico/v3.UIGraphNodeView"},
+			v3.NamedSelector{}.OpenAPIModelName(), v3.Position{}.OpenAPIModelName(), v3.UIGraphNodeView{}.OpenAPIModelName()},
 	}
 }
 
@@ -15432,7 +15433,7 @@ func schema_pkg_apis_projectcalico_v3_UISettings(ref common.ReferenceCallback) c
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.UISettingsSpec"),
+							Ref:     ref(v3.UISettingsSpec{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -15440,7 +15441,7 @@ func schema_pkg_apis_projectcalico_v3_UISettings(ref common.ReferenceCallback) c
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.UISettingsSpec", metav1.ObjectMeta{}.OpenAPIModelName()},
+			v3.UISettingsSpec{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -15474,7 +15475,7 @@ func schema_pkg_apis_projectcalico_v3_UISettingsGroup(ref common.ReferenceCallba
 					"spec": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.UISettingsGroupSpec"),
+							Ref:     ref(v3.UISettingsGroupSpec{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -15482,7 +15483,7 @@ func schema_pkg_apis_projectcalico_v3_UISettingsGroup(ref common.ReferenceCallba
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.UISettingsGroupSpec", metav1.ObjectMeta{}.OpenAPIModelName()},
+			v3.UISettingsGroupSpec{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -15520,7 +15521,7 @@ func schema_pkg_apis_projectcalico_v3_UISettingsGroupList(ref common.ReferenceCa
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.UISettingsGroup"),
+										Ref:     ref(v3.UISettingsGroup{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -15531,7 +15532,7 @@ func schema_pkg_apis_projectcalico_v3_UISettingsGroupList(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.UISettingsGroup", metav1.ListMeta{}.OpenAPIModelName()},
+			v3.UISettingsGroup{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -15598,7 +15599,7 @@ func schema_pkg_apis_projectcalico_v3_UISettingsList(ref common.ReferenceCallbac
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("github.com/tigera/api/pkg/apis/projectcalico/v3.UISettings"),
+										Ref:     ref(v3.UISettings{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -15609,7 +15610,7 @@ func schema_pkg_apis_projectcalico_v3_UISettingsList(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.UISettings", metav1.ListMeta{}.OpenAPIModelName()},
+			v3.UISettings{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -15639,19 +15640,19 @@ func schema_pkg_apis_projectcalico_v3_UISettingsSpec(ref common.ReferenceCallbac
 					"view": {
 						SchemaProps: spec.SchemaProps{
 							Description: "View data. One of View, Layer or Dashboard should be specified.",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.UIGraphView"),
+							Ref:         ref(v3.UIGraphView{}.OpenAPIModelName()),
 						},
 					},
 					"layer": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Layer data. One of View, Layer or Dashboard should be specified.",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.UIGraphLayer"),
+							Ref:         ref(v3.UIGraphLayer{}.OpenAPIModelName()),
 						},
 					},
 					"dashboard": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Dashboard data. One of View, Layer or Dashboard should be specified.",
-							Ref:         ref("github.com/tigera/api/pkg/apis/projectcalico/v3.UIDashboard"),
+							Ref:         ref(v3.UIDashboard{}.OpenAPIModelName()),
 						},
 					},
 					"user": {
@@ -15666,7 +15667,7 @@ func schema_pkg_apis_projectcalico_v3_UISettingsSpec(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"github.com/tigera/api/pkg/apis/projectcalico/v3.UIDashboard", "github.com/tigera/api/pkg/apis/projectcalico/v3.UIGraphLayer", "github.com/tigera/api/pkg/apis/projectcalico/v3.UIGraphView"},
+			v3.UIDashboard{}.OpenAPIModelName(), v3.UIGraphLayer{}.OpenAPIModelName(), v3.UIGraphView{}.OpenAPIModelName()},
 	}
 }
 
