@@ -88,7 +88,7 @@ type DPIErrorCondition struct {
 // DeepPacketInspectionList contains list of DeepPacketInspection resource.
 type DeepPacketInspectionList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata"`
+	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []DeepPacketInspection `json:"items"`
 }
 

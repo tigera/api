@@ -110,7 +110,7 @@ type KubeConfig struct {
 // RemoteClusterConfigurationList contains a list of RemoteClusterConfiguration resources
 type RemoteClusterConfigurationList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata"`
+	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []RemoteClusterConfiguration `json:"items"`
 }
 
