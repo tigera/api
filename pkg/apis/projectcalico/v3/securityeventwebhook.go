@@ -41,7 +41,7 @@ type SecurityEventWebhook struct {
 
 type SecurityEventWebhookList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata"`
+	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []SecurityEventWebhook `json:"items"`
 }
 

@@ -206,7 +206,7 @@ type DashboardLayout struct {
 // UISettingsList contains a list of UISettings resources.
 type UISettingsList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata"`
+	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []UISettings `json:"items"`
 }
 

@@ -41,7 +41,7 @@ type GlobalAlertTemplate struct {
 // GlobalAlertList contains a list of GlobalAlert resources.
 type GlobalAlertTemplateList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata"`
+	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []GlobalAlertTemplate `json:"items"`
 }
 
