@@ -128,7 +128,7 @@ type DetectorParams struct {
 // GlobalAlertList contains a list of GlobalAlert resources.
 type GlobalAlertList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata"`
+	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []GlobalAlert `json:"items"`
 }
 

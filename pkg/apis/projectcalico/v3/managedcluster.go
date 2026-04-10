@@ -71,7 +71,7 @@ type ManagedClusterStatusCondition struct {
 // ManagedClusterList contains a list of ManagedCluster resources.
 type ManagedClusterList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata"`
+	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []ManagedCluster `json:"items"`
 }
 

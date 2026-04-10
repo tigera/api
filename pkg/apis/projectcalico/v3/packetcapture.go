@@ -143,7 +143,7 @@ type PacketCaptureFile struct {
 // PacketCaptureList contains a list of PacketCapture resources.
 type PacketCaptureList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata"`
+	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []PacketCapture `json:"items"`
 }
 

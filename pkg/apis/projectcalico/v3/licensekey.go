@@ -76,7 +76,7 @@ type LicenseKeyStatus struct {
 // (even though there should only be one).
 type LicenseKeyList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata"`
+	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []LicenseKey `json:"items"`
 }
 
