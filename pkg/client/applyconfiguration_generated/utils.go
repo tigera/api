@@ -302,6 +302,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &projectcalicov3.PolicyControllerConfigApplyConfiguration{}
 	case v3.SchemeGroupVersion.WithKind("PolicyRecommendationScope"):
 		return &projectcalicov3.PolicyRecommendationScopeApplyConfiguration{}
+	case v3.SchemeGroupVersion.WithKind("PolicyRecommendationScopeHostEndpointSpec"):
+		return &projectcalicov3.PolicyRecommendationScopeHostEndpointSpecApplyConfiguration{}
 	case v3.SchemeGroupVersion.WithKind("PolicyRecommendationScopeNamespaceSpec"):
 		return &projectcalicov3.PolicyRecommendationScopeNamespaceSpecApplyConfiguration{}
 	case v3.SchemeGroupVersion.WithKind("PolicyRecommendationScopeSpec"):

@@ -33,6 +33,8 @@ type PolicyRecommendationScopeSpecApplyConfiguration struct {
 	PoliciesLearningCutOff *int `json:"policiesLearningCutOff,omitempty"`
 	// The namespace spec contains the namespace relative recommendation vars.
 	NamespaceSpec *PolicyRecommendationScopeNamespaceSpecApplyConfiguration `json:"namespaceSpec,omitempty"`
+	// The host endpoint spec contains host endpoint relative recommendation vars.
+	HostEndpointSpec *PolicyRecommendationScopeHostEndpointSpecApplyConfiguration `json:"hostEndpointSpec,omitempty"`
 }
 
 // PolicyRecommendationScopeSpecApplyConfiguration constructs a declarative configuration of the PolicyRecommendationScopeSpec type for use with
@@ -86,5 +88,13 @@ func (b *PolicyRecommendationScopeSpecApplyConfiguration) WithPoliciesLearningCu
 // If called multiple times, the NamespaceSpec field is set to the value of the last call.
 func (b *PolicyRecommendationScopeSpecApplyConfiguration) WithNamespaceSpec(value *PolicyRecommendationScopeNamespaceSpecApplyConfiguration) *PolicyRecommendationScopeSpecApplyConfiguration {
 	b.NamespaceSpec = value
+	return b
+}
+
+// WithHostEndpointSpec sets the HostEndpointSpec field in the declarative configuration to the given value
+// and returns the receiver, so that objects can be built by chaining "With" function invocations.
+// If called multiple times, the HostEndpointSpec field is set to the value of the last call.
+func (b *PolicyRecommendationScopeSpecApplyConfiguration) WithHostEndpointSpec(value *PolicyRecommendationScopeHostEndpointSpecApplyConfiguration) *PolicyRecommendationScopeSpecApplyConfiguration {
+	b.HostEndpointSpec = value
 	return b
 }
