@@ -3,12 +3,12 @@
 #################################################################################################
 
 # Calico toolchain versions and the calico/base image to use.
-GO_BUILD_VER=1.26.1-llvm20.1.8-k8s1.35.3
-RUST_BUILD_VER=1.93.1
+GO_BUILD_VER=1.26.2-llvm20.1.8-k8s1.35.3
+RUST_BUILD_VER=1.94.1
 
 # Calico Enterprise shipping images now builds on UBI 10. For Calico OSS to Enterprise merges,
 # please don't downgrade the base image back to UBI 9.
-CALICO_BASE_VER=ubi10-1774386983
+CALICO_BASE_VER=ubi10-1775601218
 
 # Version of Kubernetes to use for tests, rancher/kubectl, and kubectl binary release.
 K8S_VERSION=v1.35.2
