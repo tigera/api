@@ -18,7 +18,7 @@ type PolicyRecommendationScopeNamespaceSpecApplyConfiguration struct {
 	// [Default: false]
 	IntraNamespacePassThroughTraffic *bool `json:"intraNamespacePassThroughTraffic,omitempty"`
 	// Recommendation status. One of Enabled, Disabled.
-	RecStatus *projectcalicov3.PolicyRecommendationNamespaceStatus `json:"recStatus,omitempty"`
+	RecStatus *projectcalicov3.PolicyRecommendationStatus `json:"recStatus,omitempty"`
 	// The namespace selector is an expression used to pick out the namespaces that the policy
 	// recommendation engine should create policies for. The syntax is the same as the
 	// NetworkPolicy.projectcalico.org resource selectors.
@@ -45,7 +45,7 @@ func (b *PolicyRecommendationScopeNamespaceSpecApplyConfiguration) WithIntraName
 // WithRecStatus sets the RecStatus field in the declarative configuration to the given value
 // and returns the receiver, so that objects can be built by chaining "With" function invocations.
 // If called multiple times, the RecStatus field is set to the value of the last call.
-func (b *PolicyRecommendationScopeNamespaceSpecApplyConfiguration) WithRecStatus(value projectcalicov3.PolicyRecommendationNamespaceStatus) *PolicyRecommendationScopeNamespaceSpecApplyConfiguration {
+func (b *PolicyRecommendationScopeNamespaceSpecApplyConfiguration) WithRecStatus(value projectcalicov3.PolicyRecommendationStatus) *PolicyRecommendationScopeNamespaceSpecApplyConfiguration {
 	b.RecStatus = &value
 	return b
 }
