@@ -77,12 +77,7 @@ gen-files .generate_files: lint-cache-dir clean-generated
 		--bounding-dirs $(PACKAGE_NAME) \
 		--output-file zz_generated.deepcopy.go \
 		"$(PACKAGE_NAME)/pkg/apis/usage.tigera.io/v1"'
-
-	# generate all pkg/client contents
-	$(DOCKER_RUN) $(CALICO_BUILD) \
-	   sh -c '$(GIT_CONFIG_SSH) $(BUILD_DIR)/update-client-gen.sh'
-
-	# generate openapi
+	# generate openapi (must run before client-gen, which uses it for --openapi-schema)
 	$(DOCKER_RUN) $(CALICO_BUILD) \
 	   sh -c '$(GIT_CONFIG_SSH) openapi-gen \
 		--v 1 --logtostderr \
@@ -97,6 +92,10 @@ gen-files .generate_files: lint-cache-dir clean-generated
 		"k8s.io/apimachinery/pkg/util/intstr" \
 		"k8s.io/apimachinery/pkg/version" \
 		"$(PACKAGE_NAME)/pkg/lib/numorstring"'
+
+	# generate all pkg/client contents
+	$(DOCKER_RUN) $(CALICO_BUILD) \
+	   sh -c '$(GIT_CONFIG_SSH) $(BUILD_DIR)/update-client-gen.sh'
 
 	touch .generate_files
 	$(MAKE) fix
