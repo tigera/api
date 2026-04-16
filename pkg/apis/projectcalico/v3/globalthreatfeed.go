@@ -1,4 +1,4 @@
-// Copyright (c) 2019,2021 Tigera, Inc. All rights reserved.
+// Copyright (c) 2019-2026 Tigera, Inc. All rights reserved.
 
 package v3
 
@@ -37,6 +37,7 @@ type GlobalThreatFeed struct {
 }
 
 // GlobalThreatFeedSpec contains the specification of a GlobalThreatFeed resource.
+// +kubebuilder:validation:XValidation:rule="self.content != 'DomainNameSet' || !has(self.globalNetworkSet)",message="DomainNameSet does not support syncing with a GlobalNetworkSet",reason=FieldValueInvalid
 type GlobalThreatFeedSpec struct {
 	// Content describes the kind of data the data feed provides.
 	// +kubebuilder:default=IPSet
@@ -108,6 +109,7 @@ type HTTPPull struct {
 	Headers []HTTPHeader `json:"headers,omitempty" validate:"dive"`
 }
 
+// +kubebuilder:validation:XValidation:rule="[has(self.newlineDelimited), has(self.json), has(self.csv)].filter(x, x).size() <= 1",message="only one format type may be specified",reason=FieldValueInvalid
 type ThreatFeedFormat struct {
 	NewlineDelimited *ThreatFeedFormatNewlineDelimited `json:"newlineDelimited,omitempty"`
 	JSON             *ThreatFeedFormatJSON             `json:"json,omitempty" validate:"omitempty"`
@@ -120,6 +122,7 @@ type ThreatFeedFormatJSON struct {
 	Path string `json:"path,omitempty" validate:"required"`
 }
 
+// +kubebuilder:validation:XValidation:rule="!has(self.fieldNum) || !has(self.fieldName) || size(self.fieldName) == 0",message="fieldNum and fieldName are mutually exclusive",reason=FieldValueInvalid
 type ThreatFeedFormatCSV struct {
 	FieldNum                    *uint  `json:"fieldNum,omitempty" validate:"required_without=FieldName"`
 	FieldName                   string `json:"fieldName,omitempty" validate:"required_without=FieldNum"`
@@ -132,6 +135,7 @@ type ThreatFeedFormatCSV struct {
 
 const DefaultCSVDelimiter = ','
 
+// +kubebuilder:validation:XValidation:rule="!has(self.value) || !has(self.valueFrom)",message="value and valueFrom are mutually exclusive",reason=FieldValueInvalid
 type HTTPHeader struct {
 	Name      string            `json:"name" validate:"printascii"`
 	Value     string            `json:"value,omitempty"`

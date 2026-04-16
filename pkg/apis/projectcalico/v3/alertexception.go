@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Tigera, Inc. All rights reserved.
+// Copyright (c) 2022-2026 Tigera, Inc. All rights reserved.
 
 package v3
 
@@ -27,6 +27,7 @@ type AlertException struct {
 }
 
 // AlertExceptionSpec contains the specification for an alert exception resource.
+// +kubebuilder:validation:XValidation:rule="!has(self.endTime) || self.endTime > self.startTime",message="endTime must be after startTime",reason=FieldValueInvalid
 type AlertExceptionSpec struct {
 	// The description is displayed by the UI.
 	Description string `json:"description" validate:"required"`
@@ -37,13 +38,14 @@ type AlertExceptionSpec struct {
 	// StartTime defines the start time from which this alert exception will take effect.
 	// If the value is in the past, matched alerts will be filtered immediately.
 	// If the value is changed to a future time, alert exceptions will restart at that time.
+	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Format="date-time"
-	StartTime metav1.Time `json:"startTime" validate:"required"`
+	StartTime *metav1.Time `json:"startTime" validate:"required"`
 
 	// EndTime defines the end time at which this alert exception will expire.
 	// If omitted the alert exception filtering will continue indefinitely.
 	// +optional
-	//+kubebuilder:validation:Format="date-time"
+	// +kubebuilder:validation:Format="date-time"
 	EndTime *metav1.Time `json:"endTime,omitempty" validate:"omitempty"`
 }
 
