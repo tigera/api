@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Tigera, Inc. All rights reserved.
+// Copyright (c) 2021-2026 Tigera, Inc. All rights reserved.
 
 package v3
 
@@ -22,6 +22,7 @@ type UISettings struct {
 }
 
 // UISettingsSpec contains the specification for a UISettings resource.
+// +kubebuilder:validation:XValidation:rule="[has(self.view), has(self.layer), has(self.dashboard)].filter(x, x).size() == 1",message="exactly one of view, layer, or dashboard must be specified",reason=FieldValueInvalid
 type UISettingsSpec struct {
 	// The settings group. Once configured this cannot be modified. The group must exist.
 	Group string `json:"group" validate:"name"`
@@ -101,7 +102,7 @@ type NamedSelector struct {
 type UIGraphLayer struct {
 	// The nodes that are aggregated into a single layer.
 	// +listType=atomic
-	Nodes []UIGraphNode `json:"nodes" validate:"omitempty,dive"`
+	Nodes []UIGraphNode `json:"nodes,omitempty" validate:"omitempty,dive"`
 
 	// A user-configurable icon. If not specified, the default layer icon is used for this layer node.
 	Icon string `json:"icon,omitempty" validate:"omitempty,icon"`

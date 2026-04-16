@@ -1,4 +1,4 @@
-// Copyright (c) 2019,2021 Tigera, Inc. All rights reserved.
+// Copyright (c) 2019-2026 Tigera, Inc. All rights reserved.
 
 package v3
 
@@ -44,10 +44,15 @@ type GlobalAlert struct {
 	Status GlobalAlertStatus `json:"status"`
 }
 
+// +kubebuilder:validation:XValidation:rule="!has(self.field) || size(self.field) == 0 || (has(self.metric) && size(self.metric) > 0)",message="field without metric is invalid",reason=FieldValueInvalid
+// +kubebuilder:validation:XValidation:rule="!has(self.metric) || self.metric != 'count' || !has(self.field) || size(self.field) == 0",message="count metric cannot be applied to a field",reason=FieldValueInvalid
+// +kubebuilder:validation:XValidation:rule="!has(self.metric) || self.metric == 'count' || size(self.metric) == 0 || (has(self.field) && size(self.field) > 0)",message="non-count metrics require a field",reason=FieldValueInvalid
+// +kubebuilder:validation:XValidation:rule="!has(self.metric) || size(self.metric) == 0 || (has(self.condition) && size(self.condition) > 0)",message="metrics require a condition",reason=FieldValueInvalid
+// +kubebuilder:validation:XValidation:rule="(has(self.type) && self.type != 'RuleBased') || (has(self.dataSet) && size(self.dataSet) > 0)",message="dataSet is required for RuleBased alerts",reason=FieldValueInvalid
 type GlobalAlertSpec struct {
 	// Type will dictate how the fields of the GlobalAlert will be utilized.
 	// Each Type will have different usages and defaults for the fields. [Default: RuleBased]
-	Type GlobalAlertType `json:"type,omitempty" validate:"omitempty,globalAlertType"`
+	Type GlobalAlertType `json:"type,omitempty"`
 	// Template for the description field in generated events, description is used if this is omitted.
 	Summary string `json:"summary,omitempty" validate:"omitempty"`
 	// Human-readable description of the template.
@@ -60,6 +65,8 @@ type GlobalAlertSpec struct {
 	// How much data to gather at once.
 	// If Type is RuleBased, it must exceed audit log flush interval, dnsLogsFlushInterval, or flowLogsFlushInterval as appropriate.
 	Lookback *metav1.Duration `json:"lookback,omitempty" validate:"omitempty"`
+	// +kubebuilder:validation:Enum=flows;dns;audit;l7;waf;vulnerability
+	// +kubebuilder:validation:MaxLength=32
 	// DataSet determines which dataset type the Query will use.
 	// Required and used only if Type is RuleBased.
 	DataSet string `json:"dataSet,omitempty" validate:"omitempty,oneof=flows dns audit l7 waf vulnerability"`
@@ -69,13 +76,18 @@ type GlobalAlertSpec struct {
 	// Only used if Type is RuleBased.
 	// +listType=atomic
 	AggregateBy []string `json:"aggregateBy,omitempty" validate:"omitempty"`
+	// +kubebuilder:validation:MaxLength=256
 	// Which field to aggregate results by if using a metric other than count.
 	// Only used if Type is RuleBased.
 	Field string `json:"field,omitempty" validate:"omitempty"`
+	// +kubebuilder:validation:Enum=avg;max;min;sum;count
+	// +kubebuilder:validation:MaxLength=16
 	// A metric to apply to aggregated results. count is the number of log entries matching the aggregation pattern.
 	// Others are applied only to numeric fields in the logs.
 	// Only used if Type is RuleBased.
 	Metric string `json:"metric,omitempty" validate:"omitempty,oneof=avg max min sum count"`
+	// +kubebuilder:validation:Enum=eq;not_eq;gt;gte;lt;lte
+	// +kubebuilder:validation:MaxLength=16
 	// Compare the value of the metric to the threshold using this condition.
 	// Only used if Type is RuleBased.
 	Condition string `json:"condition,omitempty" validate:"omitempty,oneof=eq not_eq gt gte lt lte"`
@@ -91,6 +103,7 @@ type GlobalAlertSpec struct {
 	Detector *DetectorParams `json:"detector,omitempty" validate:"omitempty"`
 }
 
+// +kubebuilder:validation:Enum=RuleBased
 type GlobalAlertType string
 
 const (
