@@ -1168,7 +1168,7 @@ define retry_docker_cmd
 	done
 endef
 
-# Configuration options for retrying docker commands 
+# Configuration options for retrying docker commands
 MANIFEST_RETRIES ?= 5
 MANIFEST_RETRY_DELAY ?= 5
 
@@ -1899,7 +1899,6 @@ kind-deploy:
 	ARCH=$(ARCH) \
 	GIT_VERSION=$(GIT_VERSION) \
 	CALICO_API_GROUP=$(KIND_CALICO_API_GROUP) \
-	CLUSTER_ROUTING=$(CLUSTER_ROUTING) \
 	TSEE_TEST_LICENSE=$(TSEE_TEST_LICENSE) \
 	GCR_IO_PULL_SECRET=$(GCR_IO_PULL_SECRET) \
 	KIND_IMAGES="$(KIND_IMAGES)" \
