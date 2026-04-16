@@ -15143,7 +15143,6 @@ func schema_pkg_apis_projectcalico_v3_UIGraphLayer(ref common.ReferenceCallback)
 						},
 					},
 				},
-				Required: []string{"nodes"},
 			},
 		},
 		Dependencies: []string{

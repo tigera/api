@@ -91,7 +91,7 @@ type PolicyRecommendationScopeNamespaceSpec struct {
 	// +optional
 	IntraNamespacePassThroughTraffic bool `json:"intraNamespacePassThroughTraffic,omitempty"`
 	// Recommendation status. One of Enabled, Disabled.
-	RecStatus PolicyRecommendationStatus `json:"recStatus,omitempty" validate:"omitempty,policyrecstatus"`
+	RecStatus PolicyRecommendationStatus `json:"recStatus,omitempty"`
 	// The namespace selector is an expression used to pick out the namespaces that the policy
 	// recommendation engine should create policies for. The syntax is the same as the
 	// NetworkPolicy.projectcalico.org resource selectors.
@@ -117,7 +117,7 @@ const (
 type PolicyRecommendationScopeHostEndpointSpec struct {
 	// Recommendation status. One of Enabled, Disabled.
 	// +optional
-	RecommendationStatus PolicyRecommendationStatus `json:"recommendationStatus,omitempty" validate:"omitempty,policyrecstatus"`
+	RecommendationStatus PolicyRecommendationStatus `json:"recommendationStatus,omitempty"`
 	// The selector is an expression used to pick out the host endpoints that the policy
 	// recommendation engine should create policies for. The syntax is the same as the
 	// NetworkPolicy.projectcalico.org resource selectors.

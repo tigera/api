@@ -87,6 +87,7 @@ type EgressSpec struct {
 
 	// MaxNextHops specifies the maximum number of egress gateway replicas from the selected
 	// deployment that a pod should depend on.
+	// +kubebuilder:validation:Minimum=0
 	MaxNextHops int `json:"maxNextHops,omitempty" validate:"omitempty,gte=0"`
 }
 

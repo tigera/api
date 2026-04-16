@@ -1,4 +1,4 @@
-// Copyright (c) 2020-2021 Tigera, Inc. All rights reserved.
+// Copyright (c) 2020-2026 Tigera, Inc. All rights reserved.
 
 package v3
 
@@ -45,6 +45,7 @@ type PacketCapture struct {
 }
 
 // PacketCaptureSpec contains the values of the packet capture.
+// +kubebuilder:validation:XValidation:rule="!has(self.endTime) || !has(self.startTime) || self.endTime > self.startTime",message="endTime must be after startTime",reason=FieldValueInvalid
 type PacketCaptureSpec struct {
 	// The selector is an expression used to pick out the endpoints that the policy should
 	// be applied to.  The selector will only match endpoints in the same namespace as the

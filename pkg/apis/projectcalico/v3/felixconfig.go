@@ -666,7 +666,7 @@ type FelixConfigurationSpec struct {
 	// DropActionOverride overrides the Drop action in Felix, optionally changing the behavior to Accept, and optionally adding Log.
 	// Possible values are Drop, LogAndDrop, Accept, LogAndAccept. [Default: Drop]
 	// +kubebuilder:validation:Pattern=`^(?i)(Drop|LogAndDrop|Accept|LogAndAccept)?$`
-	DropActionOverride string `json:"dropActionOverride,omitempty" validate:"omitempty,dropActionOverride"`
+	DropActionOverride string `json:"dropActionOverride,omitempty"`
 
 	// DebugMemoryProfilePath is the path to write the memory profile to when triggered by signal.
 	DebugMemoryProfilePath string `json:"debugMemoryProfilePath,omitempty"`
@@ -1010,7 +1010,8 @@ type FelixConfigurationSpec struct {
 
 	// IPSecMode controls which mode IPSec is operating on.
 	// Default value means IPSec is not enabled. [Default: ""]
-	IPSecMode string `json:"ipsecMode,omitempty" validate:"omitempty,ipsecMode"`
+	// +kubebuilder:validation:Enum="";PSK
+	IPSecMode string `json:"ipsecMode,omitempty"`
 	// IPSecAllowUnsecuredTraffic controls whether non-IPsec traffic is allowed in addition to IPsec traffic. Enabling this
 	// negates the anti-spoofing protections of IPsec but it is useful when migrating to/from IPsec. [Default: false]
 	IPSecAllowUnsecuredTraffic *bool `json:"ipsecAllowUnsecuredTraffic,omitempty"`
@@ -1022,7 +1023,7 @@ type FelixConfigurationSpec struct {
 	// A generic log level terminology is used [None, Notice, Info, Debug, Verbose].
 	// [Default: Info]
 	// +kubebuilder:validation:Pattern=`^(?i)(None|Notice|Info|Debug|Verbose)?$`
-	IPSecLogLevel string `json:"ipsecLogLevel,omitempty" validate:"omitempty,ipsecLogLevel"`
+	IPSecLogLevel string `json:"ipsecLogLevel,omitempty"`
 	// IPSecPolicyRefreshInterval is the interval at which Felix will check the kernel’s IPsec policy tables and
 	// repair any inconsistencies. [Default: 600s]
 	// +kubebuilder:validation:Type=string
