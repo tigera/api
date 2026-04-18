@@ -12,9 +12,14 @@ CALICO_BASE_UBI10_VER=ubi10-1770247388
 # Env var to ACK Ginkgo deprecation warnings, may need updating with go-build.
 ACK_GINKGO=ACK_GINKGO_DEPRECATIONS=1.16.5
 
-# Version of Kubernetes to use for tests, rancher/kubectl, and kubectl binary release in
-# compliance benchmarker, confd, and kube-controllers.
-K8S_VERSION=v1.35.2
+# Version of Kubernetes to use for tests and kubectl binary release in
+# confd and kube-controllers. The compliance benchmarker derives its kubectl
+# version from k8s.io/kubernetes in go.mod.
+K8S_VERSION=v1.35.4
+
+# Version of the rancher/kubectl image. Pinned independently because Rancher
+# publishes their kubectl image on a lag behind upstream Kubernetes releases.
+RANCHER_KUBECTL_VERSION=v1.35.2
 
 # Version of various tools used in the build and tests.
 COREDNS_VERSION=1.5.2
