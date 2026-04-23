@@ -41,6 +41,7 @@ const (
 // +kubebuilder:printcolumn:name="Expiry",type="string",JSONPath=".status.expiry"
 // +kubebuilder:printcolumn:name="Grace-Period",type="string",JSONPath=".status.gracePeriod"
 // +kubebuilder:printcolumn:name="Max-Nodes",type="integer",JSONPath=".status.maxnodes"
+// +kubebuilder:printcolumn:name="Max-Cores",type="integer",JSONPath=".status.maxcores"
 // +kubebuilder:printcolumn:name="Valid",type="string",JSONPath=".status.conditions[?(@.type=='Valid')].status"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 
@@ -74,9 +75,13 @@ type LicenseKeyStatus struct {
 	// +optional
 	GracePeriod string `json:"gracePeriod,omitempty" yaml:"gracePeriod" validate:"omitempty"`
 
-	// Maximum Number of Allowed Nodes
+	// Maximum Number of Allowed Nodes.
 	// +optional
 	MaxNodes int `json:"maxnodes,omitempty" yaml:"maxnodes" validate:"omitempty"`
+
+	// Maximum Number of Allowed CPU Cores.
+	// +optional
+	MaxCores int `json:"maxcores,omitempty" yaml:"maxcores" validate:"omitempty"`
 
 	// License package defines type of Calico license that is being enforced
 	// +optional
