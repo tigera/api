@@ -146,11 +146,12 @@ type IPPoolSpec struct {
 }
 
 // IPPoolAllowedUse defines the allowed uses for an IP pool.
-// It can be one of "Workload", "Tunnel", or "LoadBalancer".
+// It can be one of "Workload", "Tunnel", "LoadBalancer" or "HostSecondaryInterface".
 // - "Workload" means the pool is used for workload IP addresses.
 // - "Tunnel" means the pool is used for tunnel IP addresses.
 // - "LoadBalancer" means the pool is used for load balancer IP addresses.
-// +kubebuilder:validation:Enum=Workload;Tunnel;LoadBalancer
+// - "HostSecondaryInterface" means the pool is used for host secondary interface IP addresses.
+// +kubebuilder:validation:Enum=Workload;Tunnel;LoadBalancer;HostSecondaryInterface
 type IPPoolAllowedUse string
 
 const (
