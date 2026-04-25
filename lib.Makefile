@@ -232,7 +232,7 @@ define build_cgo_windows_binary
 		-e GOARCH=amd64 \
 		-e GOOS=windows \
 		$(CALICO_BUILD) \
-		sh -c '$(GIT_CONFIG_SSH) go build -o $(2) $(if $(BUILD_TAGS),-tags $(BUILD_TAGS)) -v -buildvcs=false -ldflags "$(LDFLAGS)" $(1)'
+		sh -c '$(GIT_CONFIG_SSH) go build -o $(2) $(if $(BUILD_TAGS),-tags $(BUILD_TAGS)) -v -buildvcs=false -ldflags "$(LDFLAGS) -s -w" $(1)'
 endef
 
 # For windows builds that do not require cgo.
@@ -242,7 +242,7 @@ define build_windows_binary
 		-e GOARCH=amd64 \
 		-e GOOS=windows \
 		$(CALICO_BUILD) \
-		sh -c '$(GIT_CONFIG_SSH) go build -o $(2) $(if $(BUILD_TAGS),-tags $(BUILD_TAGS)) -v -buildvcs=false -ldflags "$(LDFLAGS)" $(1)'
+		sh -c '$(GIT_CONFIG_SSH) go build -o $(2) $(if $(BUILD_TAGS),-tags $(BUILD_TAGS)) -v -buildvcs=false -ldflags "$(LDFLAGS) -s -w" $(1)'
 endef
 
 # Images used in build / test across multiple directories.
