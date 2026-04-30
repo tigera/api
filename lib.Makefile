@@ -1,8 +1,13 @@
 # Find path to the repo root dir (i.e. this files's dir).  Must be first in the file, before including anything.
-REPO_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+# Use Make builtins instead of `dirname` so this works under PowerShell on Windows agents too.
+REPO_DIR := $(patsubst %/,%,$(dir $(realpath $(lastword $(MAKEFILE_LIST)))))
 
 # Always install the git hooks to prevent publishing closed source code to a non-private repo.
-install_hooks:=$(shell $(REPO_DIR)/hack/install-git-hooks)
+# The install script is bash-only; skip on Windows agents where every $(shell ...) call would
+# spawn a PowerShell that adds startup latency to every sub-make.
+ifneq ($(OS),Windows_NT)
+install_hooks := $(shell $(REPO_DIR)/hack/install-git-hooks)
+endif
 
 # Disable built-in rules
 .SUFFIXES:
@@ -61,14 +66,18 @@ endif
 # The list of sub-projects which build non-cluster host RPMs
 NON_CLUSTER_HOST_SUBDIRS := selinux fluent-bit node
 
-# detect the local outbound ip address
+# detect the local outbound ip address (only used by FV/etcd targets that don't run on Windows)
+ifneq ($(OS),Windows_NT)
 LOCAL_IP_ENV?=$(shell ip route get 8.8.8.8 | head -1 | awk '{print $$7}')
+endif
 
 LATEST_IMAGE_TAG?=latest
 
 # these macros create a list of valid architectures for pushing manifests
 comma := ,
+ifneq ($(OS),Windows_NT)
 double_quote := $(shell echo '"')
+endif
 
 ## Targets used when cross building.
 .PHONY: native register
@@ -250,6 +259,12 @@ endif
 # Get version from git. We allow setting this manually for the hashrelease process.
 # By default, includes commit count and hash (--long). During releases (RELEASE=true),
 # only the tag is used without the commit count suffix.
+#
+# Skip on Windows: these LDFLAGS-related vars use bash `||` fallbacks that PowerShell
+# can't parse, and Windows builds (e.g. fluentd-base) don't link Go binaries that
+# embed buildinfo. Each $(shell git ...) call would otherwise spawn PowerShell on
+# every sub-make recursion, multiplying parse time noticeably.
+ifneq ($(OS),Windows_NT)
 GIT_VERSION ?= $(shell git describe --tags --dirty --always --abbrev=12 --long)
 ifeq ($(RELEASE),true)
 	GIT_VERSION := $(shell git describe --tags --dirty --always --abbrev=12)
@@ -265,6 +280,7 @@ BUILD_ID:=$(shell git rev-parse HEAD || uuidgen | sed 's/-//g')
 # Variables elsewhere that depend on this (such as LDFLAGS) must also be lazy.
 GIT_DESCRIPTION=$(shell git describe --tags --dirty --always --abbrev=12 || echo '<unknown>')
 ENTERPRISE_VERSION?=$(call git-release-tag-from-dev-tag)
+endif
 
 # Calculate a timestamp for any build artifacts.
 ifneq ($(OS),Windows_NT)
@@ -335,6 +351,11 @@ CERTS_PATH := $(REPO_ROOT)/hack/test/certs
 # <main-repo>/.git/worktrees/<name>.  When Docker containers need git access,
 # the main .git directory must also be mounted, and GIT_DIR / GIT_WORK_TREE
 # must be set so that git can find objects and the correct working tree.
+#
+# Skip on Windows: this only configures Linux Docker mounts, and the bash `2>/dev/null`
+# redirection PowerShell tries to interpret as `2 > /dev/null` (writing to a file at
+# C:\dev\null), which fails noisily on every parse.
+ifneq ($(OS),Windows_NT)
 _GIT_DIR := $(shell git rev-parse --absolute-git-dir 2>/dev/null)
 _GIT_COMMON_DIR := $(realpath $(shell git rev-parse --git-common-dir 2>/dev/null))
 ifneq ($(_GIT_DIR),$(_GIT_COMMON_DIR))
@@ -349,6 +370,7 @@ DOCKER_GIT_WORKTREE_ARGS := \
 	-e GIT_WORK_TREE=$(DOCKER_GIT_WORK_TREE)
 else
 DOCKER_GIT_WORKTREE_ARGS :=
+endif
 endif
 
 # Configure the Calico API group to use. Projects importing this Makefile can override this variable
@@ -498,16 +520,25 @@ endef
 # IMAGE_DEPS lists non-Go files that the Docker image depends on (Dockerfiles,
 # config templates, scripts, etc.). Components should override or append to
 # this variable and include $(IMAGE_DEPS) in their .image.created prereqs.
+#
+# Skip on Windows: this is dependency tracking for Linux Go-based image stamps;
+# Windows components (e.g. third_party/fluentd-base) build pure Docker images.
+# Each $(shell find ... grep ... cut ...) call would otherwise spawn PowerShell
+# (no find/grep/cut available) on every sub-make recursion. With ~20 components
+# referenced from .image.created-* prerequisites below, this was the dominant
+# contributor to the Windows publish job hitting Semaphore's 3h timeout.
 ###############################################################################
+IMAGE_DEPS ?= Dockerfile
+
+ifneq ($(OS),Windows_NT)
 ifneq ($(wildcard deps.txt),)
 SRC_FILES := $(shell find $(addprefix $(REPO_ROOT)/,$(shell grep '^local:' deps.txt | cut -d: -f2-)) -name '*.go' 2>/dev/null)
 endif
 
-IMAGE_DEPS ?= Dockerfile
-
 # Expand a component's deps.txt local entries to the list of .go files.
 # Usage: $(call local-deps-go-files,<component-dir>)
 local-deps-go-files = $(shell find $(addprefix $(REPO_ROOT)/,$(shell grep '^local:' $(REPO_ROOT)/$(1)/deps.txt | cut -d: -f2-)) -name '*.go' 2>/dev/null)
+endif
 
 # A target that does nothing but it always stale, used to force a rebuild on certain targets based on some non-file criteria.
 .PHONY: force-rebuild
@@ -1920,6 +1951,10 @@ $(REPO_ROOT)/elasticsearch-metrics/.image.created-$(ARCH): $(call local-deps-go-
 
 # Third-party locally-built images: use find for source deps since these
 # don't have deps.txt. The component Makefiles create the marker files.
+#
+# Skip on Windows: these stamps are KIND/Linux-only, and the bare $(shell find ...)
+# fires at parse time with `find` unavailable in PowerShell.
+ifneq ($(OS),Windows_NT)
 $(REPO_ROOT)/third_party/prometheus-operator/.prometheus-operator.created-$(ARCH): $(shell find $(REPO_ROOT)/third_party/prometheus-operator -name '*.go')
 	$(MAKE) -C $(REPO_ROOT)/third_party/prometheus-operator image
 
@@ -1928,6 +1963,7 @@ $(REPO_ROOT)/third_party/prometheus-operator/.prometheus-config-reloader.created
 
 $(REPO_ROOT)/third_party/eck-operator/.eck-operator.created-$(ARCH): $(shell find $(REPO_ROOT)/third_party/eck-operator -name '*.go')
 	$(MAKE) -C $(REPO_ROOT)/third_party/eck-operator image
+endif
 
 # GCR-pulled images: no local source deps, use stamp files. Tag as
 # latest-$(ARCH) so the common tagging loop handles the final tag.
@@ -1968,7 +2004,10 @@ ENVTEST_DIR := $(REPO_ROOT)/hack/test/envtest
 ENVTEST_CONTAINER_DIR := /go/src/github.com/projectcalico/calico/hack/test/envtest
 # Derive major.minor from K8S_VERSION (e.g. v1.34.3 -> 1.34.x) for setup-envtest.
 # Envtest publishes binaries per minor version, not per patch, so we use a wildcard.
+# Skip on Windows: envtest is Linux-only test infra; bash sed/cut would error otherwise.
+ifneq ($(OS),Windows_NT)
 ENVTEST_K8S_VERSION ?= $(shell echo $(K8S_VERSION) | sed 's/^v//' | cut -d. -f1,2).x
+endif
 ENVTEST_ASSETS_MARKER := $(ENVTEST_DIR)/.envtest-$(ENVTEST_K8S_VERSION)
 
 ## Download envtest binaries (kube-apiserver, etcd) for use by tests that use controller-runtime envtest.
@@ -1985,9 +2024,11 @@ $(ENVTEST_ASSETS_MARKER):
 
 # Minimum supported Kubernetes version for CEL XValidation (GA in 1.29).
 MIN_K8S_VERSION ?= v1.29.0
+ifneq ($(OS),Windows_NT)
 ENVTEST_MIN_K8S_VERSION ?= $(shell echo $(MIN_K8S_VERSION) | sed 's/^v//' | cut -d. -f1,2).x
 # Major.minor prefix for globbing the downloaded envtest directory (e.g. "1.29").
 ENVTEST_MIN_K8S_MINOR := $(shell echo $(MIN_K8S_VERSION) | sed 's/^v//' | cut -d. -f1,2)
+endif
 ENVTEST_MIN_ASSETS_MARKER := $(ENVTEST_DIR)/.envtest-min-$(ENVTEST_MIN_K8S_VERSION)
 
 ## Download envtest binaries for the minimum supported Kubernetes version.
@@ -2055,10 +2096,14 @@ help:
 # Common functions for launching a local Elastic instance.
 ###############################################################################
 ELASTIC_USERNAME := elastic
+# Skip on Windows: bash-only pipeline (cat /dev/urandom, tr, head); the local-elastic
+# targets below run on Linux only and Windows components don't reference these vars.
+ifneq ($(OS),Windows_NT)
 BOOTSTRAP_PASSWORD := $(shell cat /dev/urandom | LC_CTYPE=C tr -dc A-Za-z0-9 | head -c16)
 ELASTIC_PASSWORD := $(BOOTSTRAP_PASSWORD)
 
 ELASTIC_IMAGE   ?= docker.elastic.co/elasticsearch/elasticsearch:$(shell grep -o '^ELASTIC_VERSION=[0-9\.]*' $(REPO_ROOT)/third_party/elasticsearch/Makefile | cut -d "=" -f 2)
+endif
 ELASTIC_EXTRA_DOCKER_ARGS ?=
 ELASTIC_MEMORY ?= 2GB
 
