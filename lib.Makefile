@@ -1,8 +1,13 @@
 # Find path to the repo root dir (i.e. this files's dir).  Must be first in the file, before including anything.
-REPO_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+# Use Make builtins instead of `dirname` so this works under PowerShell on Windows agents too.
+REPO_DIR := $(patsubst %/,%,$(dir $(realpath $(lastword $(MAKEFILE_LIST)))))
 
 # Always install the git hooks to prevent publishing closed source code to a non-private repo.
-install_hooks:=$(shell $(REPO_DIR)/hack/install-git-hooks)
+# The install script is bash-only; skip on Windows agents where every $(shell ...) call would
+# spawn a PowerShell that adds startup latency to every sub-make.
+ifneq ($(OS),Windows_NT)
+install_hooks := $(shell $(REPO_DIR)/hack/install-git-hooks)
+endif
 
 # Disable built-in rules
 .SUFFIXES:
@@ -61,14 +66,18 @@ endif
 # The list of sub-projects which build non-cluster host RPMs
 NON_CLUSTER_HOST_SUBDIRS := selinux fluent-bit node
 
-# detect the local outbound ip address
+# detect the local outbound ip address (only used by FV/etcd targets that don't run on Windows)
+ifneq ($(OS),Windows_NT)
 LOCAL_IP_ENV?=$(shell ip route get 8.8.8.8 | head -1 | awk '{print $$7}')
+endif
 
 LATEST_IMAGE_TAG?=latest
 
 # these macros create a list of valid architectures for pushing manifests
 comma := ,
+ifneq ($(OS),Windows_NT)
 double_quote := $(shell echo '"')
+endif
 
 ## Targets used when cross building.
 .PHONY: native register
@@ -108,7 +117,10 @@ THIRD_PARTY_REGISTRY_CI=gcr.io/unique-caldron-775/third-party-ci
 THIRD_PARTY_REGISTRY_CD=gcr.io/unique-caldron-775/cnx/tigera/third-party
 # THIRD_PARTY_REGISTRY configures the third-party registry that serves intermediate base image
 # for some Calico Enterprise components. They are never released directly to public.
-THIRD_PARTY_RELEASE_BRANCH ?= $(if $(SEMAPHORE_GIT_BRANCH),$(SEMAPHORE_GIT_BRANCH),master)
+# Only master and release-calient-* branches have third-party base images published under
+# their branch name. For any other branch (feature branches, or PRs whose base is a feature
+# branch such as stacked PRs), fall back to the master-tagged images.
+THIRD_PARTY_RELEASE_BRANCH ?= $(if $(filter master release-calient-%,$(SEMAPHORE_GIT_BRANCH)),$(SEMAPHORE_GIT_BRANCH),master)
 ifeq ($(SEMAPHORE_GIT_REF_TYPE), branch)
     # on master and release-calient branches
     THIRD_PARTY_REGISTRY?=$(THIRD_PARTY_REGISTRY_CD)
@@ -164,6 +176,28 @@ CALICO_BUILD    = $(GO_BUILD_IMAGE):$(GO_BUILD_VER)
 RUST_BUILD_IMAGE ?= calico/rust-build
 CALICO_RUST_BUILD = $(RUST_BUILD_IMAGE):$(RUST_BUILD_VER)
 
+# Cross-compilation support using clang.  When building on amd64 for a different
+# target architecture, we use clang as a cross-compiler (it natively supports all
+# targets) with a per-arch sysroot containing the target libraries.  This avoids
+# slow QEMU emulation for CGO builds.
+#
+# Map Go ARCH names to clang target triples.
+# Only arm64 and ppc64le need cross-compilation support (CGO is not enabled for s390x).
+CLANG_CROSS_TRIPLE_arm64   := aarch64-linux-gnu
+CLANG_CROSS_TRIPLE_ppc64le := powerpc64le-linux-gnu
+
+# Set CROSS_CC and CROSS_SYSROOT when cross-compiling from amd64.
+ifeq ($(BUILDARCH),amd64)
+ifneq ($(ARCH),amd64)
+ifneq ($(CLANG_CROSS_TRIPLE_$(ARCH)),)
+CROSS_TRIPLE := $(CLANG_CROSS_TRIPLE_$(ARCH))
+CROSS_SYSROOT := /usr/$(CROSS_TRIPLE)/sys-root
+CROSS_CC := clang --target=$(CROSS_TRIPLE) --sysroot=$(CROSS_SYSROOT)
+CROSS_LDFLAGS := -fuse-ld=lld
+endif
+endif
+endif
+
 # Build a binary with boring crypto support.
 # This function expects you to pass in two arguments:
 #   1st arg: path/to/input/package(s)
@@ -174,6 +208,7 @@ CALICO_RUST_BUILD = $(RUST_BUILD_IMAGE):$(RUST_BUILD_VER)
 define build_cgo_boring_binary
 	$(DOCKER_RUN) \
 		-e CGO_ENABLED=1 \
+		$(if $(CROSS_CC),-e CC="$(CROSS_CC)") \
 		-e CGO_CFLAGS=$(CGO_CFLAGS) \
 		-e CGO_LDFLAGS=$(CGO_LDFLAGS) \
 		$(CALICO_BUILD) \
@@ -185,6 +220,7 @@ endef
 define build_cgo_binary
 	$(DOCKER_RUN) \
 		-e CGO_ENABLED=1 \
+		$(if $(CROSS_CC),-e CC="$(CROSS_CC)") \
 		-e CGO_CFLAGS=$(CGO_CFLAGS) \
 		-e CGO_LDFLAGS=$(CGO_LDFLAGS) \
 		$(CALICO_BUILD) \
@@ -220,7 +256,7 @@ define build_cgo_windows_binary
 		-e GOOS=windows \
 		-e GOEXPERIMENT=nodwarf5 \
 		$(CALICO_BUILD) \
-		sh -c '$(GIT_CONFIG_SSH) go build -o $(2) $(if $(BUILD_TAGS),-tags $(BUILD_TAGS)) -v -buildvcs=false -ldflags "$(LDFLAGS)" $(1)'
+		sh -c '$(GIT_CONFIG_SSH) go build -o $(2) $(if $(BUILD_TAGS),-tags $(BUILD_TAGS)) -v -buildvcs=false -ldflags "$(LDFLAGS) -s -w" $(1)'
 endef
 
 # For windows builds that do not require cgo.
@@ -231,7 +267,7 @@ define build_windows_binary
 		-e GOOS=windows \
 		-e GOEXPERIMENT=nodwarf5 \
 		$(CALICO_BUILD) \
-		sh -c '$(GIT_CONFIG_SSH) go build -o $(2) $(if $(BUILD_TAGS),-tags $(BUILD_TAGS)) -v -buildvcs=false -ldflags "$(LDFLAGS)" $(1)'
+		sh -c '$(GIT_CONFIG_SSH) go build -o $(2) $(if $(BUILD_TAGS),-tags $(BUILD_TAGS)) -v -buildvcs=false -ldflags "$(LDFLAGS) -s -w" $(1)'
 endef
 
 # Images used in build / test across multiple directories.
@@ -250,6 +286,12 @@ endif
 # Get version from git. We allow setting this manually for the hashrelease process.
 # By default, includes commit count and hash (--long). During releases (RELEASE=true),
 # only the tag is used without the commit count suffix.
+#
+# Skip on Windows: these LDFLAGS-related vars use bash `||` fallbacks that PowerShell
+# can't parse, and Windows builds (e.g. fluentd-base) don't link Go binaries that
+# embed buildinfo. Each $(shell git ...) call would otherwise spawn PowerShell on
+# every sub-make recursion, multiplying parse time noticeably.
+ifneq ($(OS),Windows_NT)
 GIT_VERSION ?= $(shell git describe --tags --dirty --always --abbrev=12 --long)
 ifeq ($(RELEASE),true)
 	GIT_VERSION := $(shell git describe --tags --dirty --always --abbrev=12)
@@ -265,6 +307,7 @@ BUILD_ID:=$(shell git rev-parse HEAD || uuidgen | sed 's/-//g')
 # Variables elsewhere that depend on this (such as LDFLAGS) must also be lazy.
 GIT_DESCRIPTION=$(shell git describe --tags --dirty --always --abbrev=12 || echo '<unknown>')
 ENTERPRISE_VERSION?=$(call git-release-tag-from-dev-tag)
+endif
 
 # Calculate a timestamp for any build artifacts.
 ifneq ($(OS),Windows_NT)
@@ -335,6 +378,11 @@ CERTS_PATH := $(REPO_ROOT)/hack/test/certs
 # <main-repo>/.git/worktrees/<name>.  When Docker containers need git access,
 # the main .git directory must also be mounted, and GIT_DIR / GIT_WORK_TREE
 # must be set so that git can find objects and the correct working tree.
+#
+# Skip on Windows: this only configures Linux Docker mounts, and the bash `2>/dev/null`
+# redirection PowerShell tries to interpret as `2 > /dev/null` (writing to a file at
+# C:\dev\null), which fails noisily on every parse.
+ifneq ($(OS),Windows_NT)
 _GIT_DIR := $(shell git rev-parse --absolute-git-dir 2>/dev/null)
 _GIT_COMMON_DIR := $(realpath $(shell git rev-parse --git-common-dir 2>/dev/null))
 ifneq ($(_GIT_DIR),$(_GIT_COMMON_DIR))
@@ -349,6 +397,7 @@ DOCKER_GIT_WORKTREE_ARGS := \
 	-e GIT_WORK_TREE=$(DOCKER_GIT_WORK_TREE)
 else
 DOCKER_GIT_WORKTREE_ARGS :=
+endif
 endif
 
 # Configure the Calico API group to use. Projects importing this Makefile can override this variable
@@ -411,6 +460,7 @@ DOCKER_GO_BUILD := $(DOCKER_RUN) $(CALICO_BUILD)
 DOCKER_RUST_BUILD := mkdir -p bin && \
 	docker run --rm \
 		--init \
+		--platform=linux/$(ARCH) \
 		--user $(LOCAL_USER_ID):$(LOCAL_GROUP_ID) \
 		$(EXTRA_DOCKER_ARGS) \
 		-v $(REPO_ROOT):/rust/src/github.com/projectcalico/calico:rw \
@@ -498,16 +548,25 @@ endef
 # IMAGE_DEPS lists non-Go files that the Docker image depends on (Dockerfiles,
 # config templates, scripts, etc.). Components should override or append to
 # this variable and include $(IMAGE_DEPS) in their .image.created prereqs.
+#
+# Skip on Windows: this is dependency tracking for Linux Go-based image stamps;
+# Windows components (e.g. third_party/fluentd-base) build pure Docker images.
+# Each $(shell find ... grep ... cut ...) call would otherwise spawn PowerShell
+# (no find/grep/cut available) on every sub-make recursion. With ~20 components
+# referenced from .image.created-* prerequisites below, this was the dominant
+# contributor to the Windows publish job hitting Semaphore's 3h timeout.
 ###############################################################################
+IMAGE_DEPS ?= Dockerfile
+
+ifneq ($(OS),Windows_NT)
 ifneq ($(wildcard deps.txt),)
 SRC_FILES := $(shell find $(addprefix $(REPO_ROOT)/,$(shell grep '^local:' deps.txt | cut -d: -f2-)) -name '*.go' 2>/dev/null)
 endif
 
-IMAGE_DEPS ?= Dockerfile
-
 # Expand a component's deps.txt local entries to the list of .go files.
 # Usage: $(call local-deps-go-files,<component-dir>)
 local-deps-go-files = $(shell find $(addprefix $(REPO_ROOT)/,$(shell grep '^local:' $(REPO_ROOT)/$(1)/deps.txt | cut -d: -f2-)) -name '*.go' 2>/dev/null)
+endif
 
 # A target that does nothing but it always stale, used to force a rebuild on certain targets based on some non-file criteria.
 .PHONY: force-rebuild
@@ -601,7 +660,6 @@ define update_calico_base_pin
 		fi'
 endef
 
-GIT_REMOTE?=origin
 API_BRANCH?=$(PIN_BRANCH)
 API_REPO?=github.com/projectcalico/calico/api
 BASE_API_REPO?=github.com/projectcalico/calico/api
@@ -1157,6 +1215,14 @@ endif
 
 # retry_docker_cmd retries a docker command up to a specified number of times.
 # Usage: $(call retry_docker_cmd,<description>,<docker command>,<max retries>,<retry delay>)
+#
+# Windows agents (Semaphore) execute recipe lines under PowerShell, which can't parse
+# the bash retry loop used elsewhere; emit a single-line PowerShell loop instead.
+ifeq ($(OS),Windows_NT)
+define retry_docker_cmd
+	for ($$i=1; $$i -le $(3); $$i++) { $(2); if ($$LASTEXITCODE -eq 0) { break }; Write-Host ('WARNING: $(1) failed (attempt {0}/$(3)), retrying in $(4)s...' -f $$i); if ($$i -eq $(3)) { exit 1 }; Start-Sleep -Seconds $(4) }
+endef
+else
 define retry_docker_cmd
 	i=1; \
 	while [ $$i -le $(3) ]; do \
@@ -1167,6 +1233,7 @@ define retry_docker_cmd
 		i=$$((i + 1)); \
 	done
 endef
+endif
 
 # Configuration options for retrying docker commands
 MANIFEST_RETRIES ?= 5
@@ -1193,14 +1260,14 @@ sub-manifest-%:
 	$(call retry_docker_cmd,docker manifest push,$(DOCKER) manifest push --purge $(call unescapefs,$*):$(IMAGETAG),$(MANIFEST_RETRIES),$(MANIFEST_RETRY_DELAY))
 
 push-manifests-with-tag: var-require-one-of-CONFIRM-DRYRUN var-require-all-BRANCH_NAME
-	$(MAKE) push-manifests IMAGETAG=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(BRANCH_NAME) EXCLUDEARCH="$(EXCLUDEARCH)"
-	$(MAKE) push-manifests IMAGETAG=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(GIT_VERSION) EXCLUDEARCH="$(EXCLUDEARCH)"
+	$(MAKE) push-manifests IMAGETAG=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(BRANCH_NAME) VALIDARCHES="$(VALIDARCHES)"
+	$(MAKE) push-manifests IMAGETAG=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(GIT_VERSION) VALIDARCHES="$(VALIDARCHES)"
 
 # cd-common tags and pushes images with the branch name and git version. This target uses PUSH_IMAGES, BUILD_IMAGES,
 # and BRANCH_NAME env variables to figure out what to tag and where to push them to.
 cd-common: var-require-one-of-CONFIRM-DRYRUN var-require-all-BRANCH_NAME
-	$(MAKE) retag-build-images-with-registries push-images-to-registries IMAGETAG=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(BRANCH_NAME) EXCLUDEARCH="$(EXCLUDEARCH)"
-	$(MAKE) retag-build-images-with-registries push-images-to-registries IMAGETAG=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(GIT_VERSION) EXCLUDEARCH="$(EXCLUDEARCH)"
+	$(MAKE) retag-build-images-with-registries push-images-to-registries IMAGETAG=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(BRANCH_NAME) VALIDARCHES="$(VALIDARCHES)"
+	$(MAKE) retag-build-images-with-registries push-images-to-registries IMAGETAG=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(GIT_VERSION) VALIDARCHES="$(VALIDARCHES)"
 
 ###############################################################################
 # Release targets and helpers
@@ -1764,7 +1831,6 @@ KIND_ENTERPRISE_PULLED_IMAGES = \
 	tigera/prometheus:$(KIND_TEST_BUILD_TAG) \
 	tigera/alertmanager:$(KIND_TEST_BUILD_TAG) \
 	tigera/manager:$(KIND_TEST_BUILD_TAG) \
-	tigera/kibana:$(KIND_TEST_BUILD_TAG) \
 	tigera/elasticsearch:$(KIND_TEST_BUILD_TAG)
 
 # All enterprise images = locally built + pulled from registry.
@@ -1834,8 +1900,26 @@ $(REPO_ROOT)/whisker-backend/.image.created-$(ARCH): $(call local-deps-go-files,
 # calico_versions.yml and enterprise_versions.yml files (static files with
 # version strings), not the actual built images, so it can run in parallel
 # with component builds.
-$(REPO_ROOT)/.stamp.operator: $(KIND_INFRA_DIR)/calico_versions.yml $(KIND_INFRA_DIR)/enterprise_versions.yml
-	cd $(KIND_INFRA_DIR) && BRANCH=$(OPERATOR_BRANCH) ./build-operator.sh
+# Track the operator source selection in a generated inputs file so
+# changes to repo/branch invalidate the operator stamp.
+.PHONY: FORCE
+FORCE:
+
+$(REPO_ROOT)/.stamp.operator.inputs: FORCE
+	@printf '%s\n' \
+	  'OPERATOR_ORGANIZATION=$(OPERATOR_ORGANIZATION)' \
+	  'OPERATOR_GIT_REPO=$(OPERATOR_GIT_REPO)' \
+	  'OPERATOR_BRANCH=$(OPERATOR_BRANCH)' > $@.tmp
+	@if test -f $@ && cmp -s $@.tmp $@; then \
+	  rm -f $@.tmp; \
+	else \
+	  mv -f $@.tmp $@; \
+	fi
+
+$(REPO_ROOT)/.stamp.operator: $(KIND_INFRA_DIR)/calico_versions.yml $(KIND_INFRA_DIR)/enterprise_versions.yml $(REPO_ROOT)/.stamp.operator.inputs
+	cd $(KIND_INFRA_DIR) && \
+	  REPO=$(OPERATOR_ORGANIZATION)/$(OPERATOR_GIT_REPO) \
+	  BRANCH=$(OPERATOR_BRANCH) ./build-operator.sh
 	touch $@
 
 # Enterprise-only image markers for locally-built components. These follow
@@ -1866,7 +1950,6 @@ KIND_ENTERPRISE_PULLED_IMAGE_MARKERS = \
 	$(REPO_ROOT)/.stamp.prometheus \
 	$(REPO_ROOT)/.stamp.alertmanager \
 	$(REPO_ROOT)/.stamp.manager \
-	$(REPO_ROOT)/.stamp.kibana \
 	$(REPO_ROOT)/.stamp.elastic
 
 ## Build all component images needed for kind cluster testing, then tag them.
@@ -1913,9 +1996,8 @@ kind-reload:
 	$(MAKE) -C $(REPO_ROOT) chart CALICO_API_GROUP=$(KIND_CALICO_API_GROUP)
 	KIND=$(KIND) KIND_NAME=$(KIND_NAME) $(REPO_ROOT)/hack/test/kind/load_images.sh $(KIND_IMAGES)
 	KUBECONFIG=$(KIND_KUBECONFIG) $(REPO_ROOT)/bin/helm upgrade calico \
-		--reuse-values \
 		$(REPO_ROOT)/bin/tigera-operator-$(GIT_VERSION).tgz \
-		-f $(KIND_INFRA_DIR)/values.yaml \
+		--reuse-values \
 		-n tigera-operator
 	KUBECONFIG=$(KIND_KUBECONFIG) $(KUBECTL) delete pods -n calico-system --all
 	KUBECONFIG=$(KIND_KUBECONFIG) $(KUBECTL) apply -f $(KIND_INFRA_DIR)/calicoctl.yaml
@@ -1960,16 +2042,18 @@ $(REPO_ROOT)/linseed/.image.created-$(ARCH): $(call local-deps-go-files,linseed)
 	$(MAKE) -C $(REPO_ROOT)/linseed image
 	touch $@
 
-$(REPO_ROOT)/intrusion-detection-controller/.image.created-$(ARCH): $(call local-deps-go-files,intrusion-detection-controller)
+# Grouped target (&:) — `make image` in this dir builds both the IDS
+# controller and job-installer images. Without grouping, parallel `make
+# -j` fires two sub-makes that race on the shared
+# bin/intrusion-detection-job-installer binary and the job-installer
+# docker image tag.
+$(REPO_ROOT)/intrusion-detection-controller/.image.created-$(ARCH) $(REPO_ROOT)/intrusion-detection-controller/.dashboards-installer.image.created-$(ARCH) &: $(call local-deps-go-files,intrusion-detection-controller)
 	$(MAKE) -C $(REPO_ROOT)/intrusion-detection-controller image
-	touch $@
+	touch $(REPO_ROOT)/intrusion-detection-controller/.image.created-$(ARCH)
+	touch $(REPO_ROOT)/intrusion-detection-controller/.dashboards-installer.image.created-$(ARCH)
 
 $(REPO_ROOT)/webhooks-processor/.image.created-$(ARCH): $(call local-deps-go-files,webhooks-processor)
 	$(MAKE) -C $(REPO_ROOT)/webhooks-processor image
-	touch $@
-
-$(REPO_ROOT)/intrusion-detection-controller/.dashboards-installer.image.created-$(ARCH): $(call local-deps-go-files,intrusion-detection-controller)
-	$(MAKE) -C $(REPO_ROOT)/intrusion-detection-controller intrusion-detection-job-installer
 	touch $@
 
 $(REPO_ROOT)/elasticsearch-metrics/.image.created-$(ARCH): $(call local-deps-go-files,elasticsearch-metrics)
@@ -1978,14 +2062,20 @@ $(REPO_ROOT)/elasticsearch-metrics/.image.created-$(ARCH): $(call local-deps-go-
 
 # Third-party locally-built images: use find for source deps since these
 # don't have deps.txt. The component Makefiles create the marker files.
-$(REPO_ROOT)/third_party/prometheus-operator/.prometheus-operator.created-$(ARCH): $(shell find $(REPO_ROOT)/third_party/prometheus-operator -name '*.go')
-	$(MAKE) -C $(REPO_ROOT)/third_party/prometheus-operator image
-
-$(REPO_ROOT)/third_party/prometheus-operator/.prometheus-config-reloader.created-$(ARCH): $(shell find $(REPO_ROOT)/third_party/prometheus-operator -name '*.go')
+# Grouped target (&:) — a single sub-make produces both stamps. Without
+# grouping, parallel `make -j` fires two sub-makes that race on the shared
+# prometheus-operator/ source tarball and corrupt the embedded YAML
+# (unexpected length 583168 != 794599) during go build.
+#
+# Skip on Windows: these stamps are KIND/Linux-only, and the bare $(shell find ...)
+# fires at parse time with `find` unavailable in PowerShell.
+ifneq ($(OS),Windows_NT)
+$(REPO_ROOT)/third_party/prometheus-operator/.prometheus-operator.created-$(ARCH) $(REPO_ROOT)/third_party/prometheus-operator/.prometheus-config-reloader.created-$(ARCH) &: $(shell find $(REPO_ROOT)/third_party/prometheus-operator -name '*.go')
 	$(MAKE) -C $(REPO_ROOT)/third_party/prometheus-operator image
 
 $(REPO_ROOT)/third_party/eck-operator/.eck-operator.created-$(ARCH): $(shell find $(REPO_ROOT)/third_party/eck-operator -name '*.go')
 	$(MAKE) -C $(REPO_ROOT)/third_party/eck-operator image
+endif
 
 # GCR-pulled images: no local source deps, use stamp files. Tag as
 # latest-$(ARCH) so the common tagging loop handles the final tag.
@@ -2007,12 +2097,6 @@ $(REPO_ROOT)/.stamp.manager:
 	docker tag gcr.io/unique-caldron-775/cnx/tigera/manager:$(THIRD_PARTY_RELEASE_BRANCH) tigera/manager:latest-$(ARCH)
 	touch $@
 
-$(REPO_ROOT)/.stamp.kibana:
-	# TODO: Can we run without kibana? Requires operator change.
-	docker pull gcr.io/unique-caldron-775/cnx/tigera/kibana:$(THIRD_PARTY_RELEASE_BRANCH)
-	docker tag gcr.io/unique-caldron-775/cnx/tigera/kibana:$(THIRD_PARTY_RELEASE_BRANCH) tigera/kibana:latest-$(ARCH)
-	touch $@
-
 $(REPO_ROOT)/.stamp.elastic:
 	# TODO: Build this.
 	docker pull gcr.io/unique-caldron-775/cnx/tigera/elasticsearch:$(THIRD_PARTY_RELEASE_BRANCH)
@@ -2026,7 +2110,10 @@ ENVTEST_DIR := $(REPO_ROOT)/hack/test/envtest
 ENVTEST_CONTAINER_DIR := /go/src/github.com/projectcalico/calico/hack/test/envtest
 # Derive major.minor from K8S_VERSION (e.g. v1.34.3 -> 1.34.x) for setup-envtest.
 # Envtest publishes binaries per minor version, not per patch, so we use a wildcard.
+# Skip on Windows: envtest is Linux-only test infra; bash sed/cut would error otherwise.
+ifneq ($(OS),Windows_NT)
 ENVTEST_K8S_VERSION ?= $(shell echo $(K8S_VERSION) | sed 's/^v//' | cut -d. -f1,2).x
+endif
 ENVTEST_ASSETS_MARKER := $(ENVTEST_DIR)/.envtest-$(ENVTEST_K8S_VERSION)
 
 ## Download envtest binaries (kube-apiserver, etcd) for use by tests that use controller-runtime envtest.
@@ -2043,9 +2130,11 @@ $(ENVTEST_ASSETS_MARKER):
 
 # Minimum supported Kubernetes version for CEL IP/CIDR library (available in 1.31+).
 MIN_K8S_VERSION ?= v1.31.0
+ifneq ($(OS),Windows_NT)
 ENVTEST_MIN_K8S_VERSION ?= $(shell echo $(MIN_K8S_VERSION) | sed 's/^v//' | cut -d. -f1,2).x
 # Major.minor prefix for globbing the downloaded envtest directory (e.g. "1.29").
 ENVTEST_MIN_K8S_MINOR := $(shell echo $(MIN_K8S_VERSION) | sed 's/^v//' | cut -d. -f1,2)
+endif
 ENVTEST_MIN_ASSETS_MARKER := $(ENVTEST_DIR)/.envtest-min-$(ENVTEST_MIN_K8S_VERSION)
 
 ## Download envtest binaries for the minimum supported Kubernetes version.
@@ -2128,10 +2217,14 @@ help:
 # Common functions for launching a local Elastic instance.
 ###############################################################################
 ELASTIC_USERNAME := elastic
+# Skip on Windows: bash-only pipeline (cat /dev/urandom, tr, head); the local-elastic
+# targets below run on Linux only and Windows components don't reference these vars.
+ifneq ($(OS),Windows_NT)
 BOOTSTRAP_PASSWORD := $(shell cat /dev/urandom | LC_CTYPE=C tr -dc A-Za-z0-9 | head -c16)
 ELASTIC_PASSWORD := $(BOOTSTRAP_PASSWORD)
 
 ELASTIC_IMAGE   ?= docker.elastic.co/elasticsearch/elasticsearch:$(shell grep -o '^ELASTIC_VERSION=[0-9\.]*' $(REPO_ROOT)/third_party/elasticsearch/Makefile | cut -d "=" -f 2)
+endif
 ELASTIC_EXTRA_DOCKER_ARGS ?=
 ELASTIC_MEMORY ?= 2GB
 
