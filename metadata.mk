@@ -71,7 +71,7 @@ BIRD_VERSION=v0.3.3-211-g9111ec3c
 DEV_REGISTRIES ?= tigera
 
 # The suffix added to development tags (and, by association, images)
-DEV_TAG_SUFFIX ?= calient-1.dev
+DEV_TAG_SUFFIX ?= calient-0.dev
 
 # RELEASE_REGISTRIES configures the container images registries which are published to
 # as part of an official release.
