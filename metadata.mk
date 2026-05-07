@@ -3,7 +3,7 @@
 #################################################################################################
 
 # Calico toolchain versions and the calico/base image to use.
-GO_BUILD_VER=1.25.8-llvm18.1.8-k8s1.35.3
+GO_BUILD_VER=1.25.9-llvm18.1.8-k8s1.35.3
 RUST_BUILD_VER=1.93.1
 
 # Calico Enterprise shipping images now builds on UBI 10. For Calico OSS to Enterprise merges,
@@ -44,6 +44,7 @@ endif
 # differently for a forked repo.
 ORGANIZATION  ?= tigera
 GIT_REPO      ?= calico-private
+GIT_REMOTE    ?= origin
 
 RELEASE_BRANCH_PREFIX ?=release-calient
 DEV_TAG_SUFFIX        ?= calient-0.dev
