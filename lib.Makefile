@@ -1,8 +1,13 @@
 # Find path to the repo root dir (i.e. this files's dir).  Must be first in the file, before including anything.
-REPO_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+# Use Make builtins instead of `dirname` so this works under PowerShell on Windows agents too.
+REPO_DIR := $(patsubst %/,%,$(dir $(realpath $(lastword $(MAKEFILE_LIST)))))
 
 # Always install the git hooks to prevent publishing closed source code to a non-private repo.
-install_hooks:=$(shell $(REPO_DIR)/hack/install-git-hooks)
+# The install script is bash-only; skip on Windows agents where every $(shell ...) call would
+# spawn a PowerShell that adds startup latency to every sub-make.
+ifneq ($(OS),Windows_NT)
+install_hooks := $(shell $(REPO_DIR)/hack/install-git-hooks)
+endif
 
 # Disable built-in rules
 .SUFFIXES:
@@ -61,14 +66,18 @@ endif
 # The list of sub-projects which build non-cluster host RPMs
 NON_CLUSTER_HOST_SUBDIRS := selinux fluent-bit node
 
-# detect the local outbound ip address
+# detect the local outbound ip address (only used by FV/etcd targets that don't run on Windows)
+ifneq ($(OS),Windows_NT)
 LOCAL_IP_ENV?=$(shell ip route get 8.8.8.8 | head -1 | awk '{print $$7}')
+endif
 
 LATEST_IMAGE_TAG?=latest
 
 # these macros create a list of valid architectures for pushing manifests
 comma := ,
+ifneq ($(OS),Windows_NT)
 double_quote := $(shell echo '"')
+endif
 
 ## Targets used when cross building.
 .PHONY: native register
@@ -108,7 +117,10 @@ THIRD_PARTY_REGISTRY_CI=gcr.io/unique-caldron-775/third-party-ci
 THIRD_PARTY_REGISTRY_CD=gcr.io/unique-caldron-775/cnx/tigera/third-party
 # THIRD_PARTY_REGISTRY configures the third-party registry that serves intermediate base image
 # for some Calico Enterprise components. They are never released directly to public.
-THIRD_PARTY_RELEASE_BRANCH ?= $(if $(SEMAPHORE_GIT_BRANCH),$(SEMAPHORE_GIT_BRANCH),master)
+# Only master and release-calient-* branches have third-party base images published under
+# their branch name. For any other branch (feature branches, or PRs whose base is a feature
+# branch such as stacked PRs), fall back to the master-tagged images.
+THIRD_PARTY_RELEASE_BRANCH ?= $(if $(filter master release-calient-%,$(SEMAPHORE_GIT_BRANCH)),$(SEMAPHORE_GIT_BRANCH),master)
 ifeq ($(SEMAPHORE_GIT_REF_TYPE), branch)
     # on master and release-calient branches
     THIRD_PARTY_REGISTRY?=$(THIRD_PARTY_REGISTRY_CD)
@@ -164,6 +176,28 @@ CALICO_BUILD    = $(GO_BUILD_IMAGE):$(GO_BUILD_VER)
 RUST_BUILD_IMAGE ?= calico/rust-build
 CALICO_RUST_BUILD = $(RUST_BUILD_IMAGE):$(RUST_BUILD_VER)
 
+# Cross-compilation support using clang.  When building on amd64 for a different
+# target architecture, we use clang as a cross-compiler (it natively supports all
+# targets) with a per-arch sysroot containing the target libraries.  This avoids
+# slow QEMU emulation for CGO builds.
+#
+# Map Go ARCH names to clang target triples.
+# Only arm64 and ppc64le need cross-compilation support (CGO is not enabled for s390x).
+CLANG_CROSS_TRIPLE_arm64   := aarch64-linux-gnu
+CLANG_CROSS_TRIPLE_ppc64le := powerpc64le-linux-gnu
+
+# Set CROSS_CC and CROSS_SYSROOT when cross-compiling from amd64.
+ifeq ($(BUILDARCH),amd64)
+ifneq ($(ARCH),amd64)
+ifneq ($(CLANG_CROSS_TRIPLE_$(ARCH)),)
+CROSS_TRIPLE := $(CLANG_CROSS_TRIPLE_$(ARCH))
+CROSS_SYSROOT := /usr/$(CROSS_TRIPLE)/sys-root
+CROSS_CC := clang --target=$(CROSS_TRIPLE) --sysroot=$(CROSS_SYSROOT)
+CROSS_LDFLAGS := -fuse-ld=lld
+endif
+endif
+endif
+
 # Build a binary with boring crypto support.
 # This function expects you to pass in two arguments:
 #   1st arg: path/to/input/package(s)
@@ -174,6 +208,7 @@ CALICO_RUST_BUILD = $(RUST_BUILD_IMAGE):$(RUST_BUILD_VER)
 define build_cgo_boring_binary
 	$(DOCKER_RUN) \
 		-e CGO_ENABLED=1 \
+		$(if $(CROSS_CC),-e CC="$(CROSS_CC)") \
 		-e CGO_CFLAGS=$(CGO_CFLAGS) \
 		-e CGO_LDFLAGS=$(CGO_LDFLAGS) \
 		$(CALICO_BUILD) \
@@ -185,6 +220,7 @@ endef
 define build_cgo_binary
 	$(DOCKER_RUN) \
 		-e CGO_ENABLED=1 \
+		$(if $(CROSS_CC),-e CC="$(CROSS_CC)") \
 		-e CGO_CFLAGS=$(CGO_CFLAGS) \
 		-e CGO_LDFLAGS=$(CGO_LDFLAGS) \
 		$(CALICO_BUILD) \
@@ -220,7 +256,7 @@ define build_cgo_windows_binary
 		-e GOOS=windows \
 		-e GOEXPERIMENT=nodwarf5 \
 		$(CALICO_BUILD) \
-		sh -c '$(GIT_CONFIG_SSH) go build -o $(2) $(if $(BUILD_TAGS),-tags $(BUILD_TAGS)) -v -buildvcs=false -ldflags "$(LDFLAGS)" $(1)'
+		sh -c '$(GIT_CONFIG_SSH) go build -o $(2) $(if $(BUILD_TAGS),-tags $(BUILD_TAGS)) -v -buildvcs=false -ldflags "$(LDFLAGS) -s -w" $(1)'
 endef
 
 # For windows builds that do not require cgo.
@@ -231,7 +267,7 @@ define build_windows_binary
 		-e GOOS=windows \
 		-e GOEXPERIMENT=nodwarf5 \
 		$(CALICO_BUILD) \
-		sh -c '$(GIT_CONFIG_SSH) go build -o $(2) $(if $(BUILD_TAGS),-tags $(BUILD_TAGS)) -v -buildvcs=false -ldflags "$(LDFLAGS)" $(1)'
+		sh -c '$(GIT_CONFIG_SSH) go build -o $(2) $(if $(BUILD_TAGS),-tags $(BUILD_TAGS)) -v -buildvcs=false -ldflags "$(LDFLAGS) -s -w" $(1)'
 endef
 
 # Images used in build / test across multiple directories.
@@ -250,6 +286,12 @@ endif
 # Get version from git. We allow setting this manually for the hashrelease process.
 # By default, includes commit count and hash (--long). During releases (RELEASE=true),
 # only the tag is used without the commit count suffix.
+#
+# Skip on Windows: these LDFLAGS-related vars use bash `||` fallbacks that PowerShell
+# can't parse, and Windows builds (e.g. fluentd-base) don't link Go binaries that
+# embed buildinfo. Each $(shell git ...) call would otherwise spawn PowerShell on
+# every sub-make recursion, multiplying parse time noticeably.
+ifneq ($(OS),Windows_NT)
 GIT_VERSION ?= $(shell git describe --tags --dirty --always --abbrev=12 --long)
 ifeq ($(RELEASE),true)
 	GIT_VERSION := $(shell git describe --tags --dirty --always --abbrev=12)
@@ -265,6 +307,7 @@ BUILD_ID:=$(shell git rev-parse HEAD || uuidgen | sed 's/-//g')
 # Variables elsewhere that depend on this (such as LDFLAGS) must also be lazy.
 GIT_DESCRIPTION=$(shell git describe --tags --dirty --always --abbrev=12 || echo '<unknown>')
 ENTERPRISE_VERSION?=$(call git-release-tag-from-dev-tag)
+endif
 
 # Calculate a timestamp for any build artifacts.
 ifneq ($(OS),Windows_NT)
@@ -335,6 +378,11 @@ CERTS_PATH := $(REPO_ROOT)/hack/test/certs
 # <main-repo>/.git/worktrees/<name>.  When Docker containers need git access,
 # the main .git directory must also be mounted, and GIT_DIR / GIT_WORK_TREE
 # must be set so that git can find objects and the correct working tree.
+#
+# Skip on Windows: this only configures Linux Docker mounts, and the bash `2>/dev/null`
+# redirection PowerShell tries to interpret as `2 > /dev/null` (writing to a file at
+# C:\dev\null), which fails noisily on every parse.
+ifneq ($(OS),Windows_NT)
 _GIT_DIR := $(shell git rev-parse --absolute-git-dir 2>/dev/null)
 _GIT_COMMON_DIR := $(realpath $(shell git rev-parse --git-common-dir 2>/dev/null))
 ifneq ($(_GIT_DIR),$(_GIT_COMMON_DIR))
@@ -349,6 +397,7 @@ DOCKER_GIT_WORKTREE_ARGS := \
 	-e GIT_WORK_TREE=$(DOCKER_GIT_WORK_TREE)
 else
 DOCKER_GIT_WORKTREE_ARGS :=
+endif
 endif
 
 # Configure the Calico API group to use. Projects importing this Makefile can override this variable
@@ -411,6 +460,7 @@ DOCKER_GO_BUILD := $(DOCKER_RUN) $(CALICO_BUILD)
 DOCKER_RUST_BUILD := mkdir -p bin && \
 	docker run --rm \
 		--init \
+		--platform=linux/$(ARCH) \
 		--user $(LOCAL_USER_ID):$(LOCAL_GROUP_ID) \
 		$(EXTRA_DOCKER_ARGS) \
 		-v $(REPO_ROOT):/rust/src/github.com/projectcalico/calico:rw \
@@ -420,11 +470,32 @@ DOCKER_RUST_BUILD := mkdir -p bin && \
 # Host native build images
 HOST_NATIVE_BUILD_IMAGE ?= calico/host-native-build
 
-.PHONY: host-native-build
-host-native-build: $(wildcard $(REPO_DIR)/third_party/host-native/Dockerfile.*)
-	cd $(REPO_DIR)/third_party/host-native && \
+# Go release for the rhel8 host-native image, derived from GO_BUILD_VER.
+# Sole source of truth — bake file and Dockerfile carry no default.
+RHEL8_GO_VERSION = $(firstword $(subst -, ,$(GO_BUILD_VER)))
+
+# Distros for which we maintain a host-native build image — discovered from
+# Dockerfiles in third_party/host-native/. New distros are picked up
+# automatically by adding a Dockerfile.<distro>.
+HOST_NATIVE_DISTROS := $(patsubst Dockerfile.%,%,$(notdir $(wildcard $(REPO_DIR)/third_party/host-native/Dockerfile.*)))
+
+.PHONY: host-native-build $(addprefix host-native-build-,$(HOST_NATIVE_DISTROS))
+
+# Umbrella — build host-native images for every supported distro.
+host-native-build: $(addprefix host-native-build-,$(HOST_NATIVE_DISTROS))
+
+# Per-distro — build only the named host-native image. Package targets should
+# depend on `host-native-build-<distro>` to avoid triggering bakes of images
+# they don't use. Generated as explicit rules per distro because GNU make
+# does not apply pattern rules to .PHONY targets.
+define host_native_build_rule
+host-native-build-$(1): $$(REPO_DIR)/third_party/host-native/Dockerfile.$(1)
+	cd $$(REPO_DIR)/third_party/host-native && \
+		RHEL8_GO_VERSION=$$(RHEL8_GO_VERSION) \
 		docker buildx bake --load --pull \
-		-f $(REPO_DIR)/third_party/host-native/host-native-build-bake.hcl
+		-f $$(REPO_DIR)/third_party/host-native/host-native-build-bake.hcl $(1)
+endef
+$(foreach d,$(HOST_NATIVE_DISTROS),$(eval $(call host_native_build_rule,$(d))))
 
 DOCKER_HOST_NATIVE_RUN := docker run --rm \
 	--net=host \
@@ -435,6 +506,9 @@ DOCKER_HOST_NATIVE_RUN := docker run --rm \
 	-w /go/src/$(PACKAGE_NAME)
 
 # This function replaces the version string in the spec template and builds the rpm package.
+# Args: $(1) distro, $(2) package name, $(3) component version (passed to
+# generate-package-version.sh), $(4) optional sourcedir override (relative to
+# component directory; defaults to component dir itself).
 define host_native_rpm_build
 	$(eval version := $(shell $(REPO_ROOT)/hack/generate-package-version.sh $(REPO_ROOT) rpm "" $(3)))
 
@@ -444,7 +518,7 @@ define host_native_rpm_build
 		$(HOST_NATIVE_BUILD_IMAGE):$(1) \
 			sh -c 'rpmbuild \
 				--define "_topdir $$PWD/package/$(1)" \
-				--define "_sourcedir $$PWD" \
+				--define "_sourcedir $$PWD$(if $(4),/$(4),)" \
 				-ba rhel/$(2).spec'
 endef
 
@@ -498,16 +572,25 @@ endef
 # IMAGE_DEPS lists non-Go files that the Docker image depends on (Dockerfiles,
 # config templates, scripts, etc.). Components should override or append to
 # this variable and include $(IMAGE_DEPS) in their .image.created prereqs.
+#
+# Skip on Windows: this is dependency tracking for Linux Go-based image stamps;
+# Windows components (e.g. third_party/fluentd-base) build pure Docker images.
+# Each $(shell find ... grep ... cut ...) call would otherwise spawn PowerShell
+# (no find/grep/cut available) on every sub-make recursion. With ~20 components
+# referenced from .image.created-* prerequisites below, this was the dominant
+# contributor to the Windows publish job hitting Semaphore's 3h timeout.
 ###############################################################################
+IMAGE_DEPS ?= Dockerfile
+
+ifneq ($(OS),Windows_NT)
 ifneq ($(wildcard deps.txt),)
 SRC_FILES := $(shell find $(addprefix $(REPO_ROOT)/,$(shell grep '^local:' deps.txt | cut -d: -f2-)) -name '*.go' 2>/dev/null)
 endif
 
-IMAGE_DEPS ?= Dockerfile
-
 # Expand a component's deps.txt local entries to the list of .go files.
 # Usage: $(call local-deps-go-files,<component-dir>)
 local-deps-go-files = $(shell find $(addprefix $(REPO_ROOT)/,$(shell grep '^local:' $(REPO_ROOT)/$(1)/deps.txt | cut -d: -f2-)) -name '*.go' 2>/dev/null)
+endif
 
 # A target that does nothing but it always stale, used to force a rebuild on certain targets based on some non-file criteria.
 .PHONY: force-rebuild
@@ -601,7 +684,6 @@ define update_calico_base_pin
 		fi'
 endef
 
-GIT_REMOTE?=origin
 API_BRANCH?=$(PIN_BRANCH)
 API_REPO?=github.com/projectcalico/calico/api
 BASE_API_REPO?=github.com/projectcalico/calico/api
@@ -869,7 +951,7 @@ fix-changed go-fmt-changed goimports-changed:
 fix-all go-fmt-all goimports-all:
 	$(DOCKER_RUN) $(CALICO_BUILD) $(REPO_REL_DIR)/hack/format-all-files.sh
 
-GOMODDER=./hack/cmd/gomodder/main.go
+GOMODDER=$(REPO_REL_DIR)/hack/cmd/gomodder/main.go
 
 .PHONY: verify-go-mods
 verify-go-mods:
@@ -1127,9 +1209,28 @@ retag-build-image-arch-with-registry-%: var-require-all-REGISTRY-BUILD_IMAGE-IMA
 		$(NOECHO) $(NOOP)\
 	)
 
+# validate-dev-registries fails if any entry in DEV_REGISTRIES is not prefixed
+# by an entry in ALLOWED_DEV_REGISTRIES. Intended to prevent accidental pushes
+# to registries outside Tigera control - notably the OSS quay.io/calico and
+# docker.io/calico paths owned by projectcalico/calico, which previously got
+# clobbered by an Enterprise CI job.
+validate-dev-registries:
+	@if [ -z "$(strip $(ALLOWED_DEV_REGISTRIES))" ]; then exit 0; fi; \
+	for r in $(DEV_REGISTRIES); do \
+		ok=0; \
+		for a in $(ALLOWED_DEV_REGISTRIES); do \
+			case "$$r" in $$a*) ok=1; break;; esac; \
+		done; \
+		if [ "$$ok" = "0" ]; then \
+			echo "ERROR: DEV_REGISTRIES contains '$$r', which is not prefixed by any value in ALLOWED_DEV_REGISTRIES (\"$(ALLOWED_DEV_REGISTRIES)\")."; \
+			echo "       Update ALLOWED_DEV_REGISTRIES in metadata.mk if this push target is now legitimate."; \
+			exit 1; \
+		fi; \
+	done
+
 # push-images-to-registries pushes the build / arch images specified by BUILD_IMAGES and VALIDARCHES to the registries
 # specified by DEV_REGISTRY.
-push-images-to-registries: $(addprefix push-images-to-registry-,$(call escapefs,$(DEV_REGISTRIES)))
+push-images-to-registries: validate-dev-registries $(addprefix push-images-to-registry-,$(call escapefs,$(DEV_REGISTRIES)))
 
 # push-images-to-registry-% pushes the build / arch images specified by BUILD_IMAGES and VALIDARCHES to the registry
 # specified by %*.
@@ -1157,6 +1258,14 @@ endif
 
 # retry_docker_cmd retries a docker command up to a specified number of times.
 # Usage: $(call retry_docker_cmd,<description>,<docker command>,<max retries>,<retry delay>)
+#
+# Windows agents (Semaphore) execute recipe lines under PowerShell, which can't parse
+# the bash retry loop used elsewhere; emit a single-line PowerShell loop instead.
+ifeq ($(OS),Windows_NT)
+define retry_docker_cmd
+	for ($$i=1; $$i -le $(3); $$i++) { $(2); if ($$LASTEXITCODE -eq 0) { break }; Write-Host ('WARNING: $(1) failed (attempt {0}/$(3)), retrying in $(4)s...' -f $$i); if ($$i -eq $(3)) { exit 1 }; Start-Sleep -Seconds $(4) }
+endef
+else
 define retry_docker_cmd
 	i=1; \
 	while [ $$i -le $(3) ]; do \
@@ -1167,40 +1276,56 @@ define retry_docker_cmd
 		i=$$((i + 1)); \
 	done
 endef
+endif
 
 # Configuration options for retrying docker commands
 MANIFEST_RETRIES ?= 5
 MANIFEST_RETRY_DELAY ?= 5
 
+# log_step prints a grep-able timing record. Bracket a long-running shell
+# step with start/end calls so per-step durations can be computed from the
+# CI log without per-line instrumentation.
+# Usage: $(call log_step,start,<label>)  ...  $(call log_step,end,<label>)
+define log_step
+	echo "==> step=$(1) label=\"$(2)\" epoch=$$(date +%s) at=$$(date -u +%FT%TZ)"
+endef
+
 # push-image-arch-to-registry-% pushes the build / arch image specified by $* and BUILD_IMAGE to the registry
 # specified by REGISTRY.
 push-image-arch-to-registry-%:
 # If the registry we want to push to doesn't not support manifests don't push the ARCH image.
+	@$(call log_step,start,push $(call filter-registry,$(REGISTRY))$(BUILD_IMAGE):$(IMAGETAG)-$*)
 	$(call retry_docker_cmd,docker push with quiet flag,$(DOCKER) push --quiet $(call filter-registry,$(REGISTRY))$(BUILD_IMAGE):$(IMAGETAG)-$*,$(MANIFEST_RETRIES),$(MANIFEST_RETRY_DELAY))
+	@$(call log_step,end,push $(call filter-registry,$(REGISTRY))$(BUILD_IMAGE):$(IMAGETAG)-$*)
 	$(if $(filter $*,amd64),\
-		$(call retry_docker_cmd,docker push,$(DOCKER) push $(REGISTRY)/$(BUILD_IMAGE):$(IMAGETAG),$(MANIFEST_RETRIES),$(MANIFEST_RETRY_DELAY))\
-		$(NOECHO) $(NOOP)\
+		$(call log_step,start,push $(REGISTRY)/$(BUILD_IMAGE):$(IMAGETAG)); \
+		$(call retry_docker_cmd,docker push,$(DOCKER) push $(REGISTRY)/$(BUILD_IMAGE):$(IMAGETAG),$(MANIFEST_RETRIES),$(MANIFEST_RETRY_DELAY)); \
+		$(call log_step,end,push $(REGISTRY)/$(BUILD_IMAGE):$(IMAGETAG)) \
 	)
 
 # push multi-arch manifest where supported.
-push-manifests: var-require-all-IMAGETAG  $(addprefix sub-manifest-,$(call escapefs,$(PUSH_MANIFEST_IMAGES)))
+push-manifests: var-require-all-IMAGETAG validate-dev-registries $(addprefix sub-manifest-,$(call escapefs,$(PUSH_MANIFEST_IMAGES)))
 sub-manifest-%:
 	@if [ -z "$(MANIFEST_RETRIES)" ] || ! printf '%s\n' "$(MANIFEST_RETRIES)" | grep -Eq '^[0-9]+$$' || [ "$(MANIFEST_RETRIES)" -lt 1 ]; then \
 		echo "ERROR: MANIFEST_RETRIES must be a positive integer, got '$(MANIFEST_RETRIES)'"; \
 		exit 1; \
 	fi
+	@$(call log_step,start,manifest-create $(call unescapefs,$*):$(IMAGETAG))
 	$(call retry_docker_cmd,docker manifest create,$(DOCKER) manifest create $(call unescapefs,$*):$(IMAGETAG) $(addprefix --amend ,$(addprefix $(call unescapefs,$*):$(IMAGETAG)-,$(VALIDARCHES))),$(MANIFEST_RETRIES),$(MANIFEST_RETRY_DELAY))
+	@$(call log_step,end,manifest-create $(call unescapefs,$*):$(IMAGETAG))
+	@$(call log_step,start,manifest-push $(call unescapefs,$*):$(IMAGETAG))
 	$(call retry_docker_cmd,docker manifest push,$(DOCKER) manifest push --purge $(call unescapefs,$*):$(IMAGETAG),$(MANIFEST_RETRIES),$(MANIFEST_RETRY_DELAY))
+	@$(call log_step,end,manifest-push $(call unescapefs,$*):$(IMAGETAG))
 
 push-manifests-with-tag: var-require-one-of-CONFIRM-DRYRUN var-require-all-BRANCH_NAME
-	$(MAKE) push-manifests IMAGETAG=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(BRANCH_NAME) EXCLUDEARCH="$(EXCLUDEARCH)"
-	$(MAKE) push-manifests IMAGETAG=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(GIT_VERSION) EXCLUDEARCH="$(EXCLUDEARCH)"
+	$(MAKE) push-manifests IMAGETAG=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(BRANCH_NAME) VALIDARCHES="$(VALIDARCHES)"
+	$(MAKE) push-manifests IMAGETAG=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(GIT_VERSION) VALIDARCHES="$(VALIDARCHES)"
 
 # cd-common tags and pushes images with the branch name and git version. This target uses PUSH_IMAGES, BUILD_IMAGES,
 # and BRANCH_NAME env variables to figure out what to tag and where to push them to.
 cd-common: var-require-one-of-CONFIRM-DRYRUN var-require-all-BRANCH_NAME
-	$(MAKE) retag-build-images-with-registries push-images-to-registries IMAGETAG=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(BRANCH_NAME) EXCLUDEARCH="$(EXCLUDEARCH)"
-	$(MAKE) retag-build-images-with-registries push-images-to-registries IMAGETAG=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(GIT_VERSION) EXCLUDEARCH="$(EXCLUDEARCH)"
+	$(MAKE) retag-build-images-with-registries push-images-to-registries IMAGETAG=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(BRANCH_NAME) VALIDARCHES="$(VALIDARCHES)"
+	$(MAKE) retag-build-images-with-registries push-images-to-registries IMAGETAG=$(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(GIT_VERSION) VALIDARCHES="$(VALIDARCHES)"
 
 ###############################################################################
 # Release targets and helpers
@@ -1600,8 +1725,21 @@ KIND_CONFIG ?= $(KIND_DIR)/kind.config
 KIND_NAME = $(basename $(notdir $(KIND_CONFIG)))
 KIND_KUBECONFIG?=$(KIND_DIR)/$(KIND_NAME)-kubeconfig.yaml
 
+.PHONY: kind-registry-up kind-registry-destroy
+## Start the local kind image registry (idempotent). Persists across cluster recreates.
+kind-registry-up:
+	$(REPO_ROOT)/hack/test/kind/registry.sh up
+
+## Remove the local kind image registry. Forces a full re-push on next kind-up.
+# `make push` skips work based on `.dev-stamps/*pushed-id` (keyed on local
+# image IDs), so dropping the registry alone would leave it empty after the
+# next kind-build-images. Clear the push stamps so the next build re-pushes.
+kind-registry-destroy:
+	$(REPO_ROOT)/hack/test/kind/registry.sh down
+	rm -f $(REPO_ROOT)/.dev-stamps/*pushed-id 2>/dev/null || true
+
 kind-cluster-create: $(REPO_ROOT)/.$(KIND_NAME).created
-$(REPO_ROOT)/.$(KIND_NAME).created: $(KUBECTL) $(KIND)
+$(REPO_ROOT)/.$(KIND_NAME).created: $(KUBECTL) $(KIND) kind-registry-up
 	# First make sure any previous cluster is deleted
 	$(MAKE) kind-cluster-destroy
 
@@ -1611,6 +1749,11 @@ $(REPO_ROOT)/.$(KIND_NAME).created: $(KUBECTL) $(KIND)
 		--kubeconfig $(KIND_KUBECONFIG) \
 		--name $(KIND_NAME) \
 		--image kindest/node:$(KINDEST_NODE_VERSION)
+
+	# Connect the registry to the kind network now that the network exists,
+	# and write per-node containerd config so localhost:5000 redirects to it.
+	$(REPO_ROOT)/hack/test/kind/registry.sh up
+	KIND_NAME=$(KIND_NAME) $(REPO_ROOT)/hack/test/kind/registry.sh configure-nodes
 
 	# Wait for controller manager to be running and healthy, then create Calico CRDs.
 	while ! KUBECONFIG=$(KIND_KUBECONFIG) $(KUBECTL) get serviceaccount default; do echo "Waiting for default serviceaccount to be created..."; sleep 2; done
@@ -1712,48 +1855,27 @@ bin/yq:
 KIND_INFRA_DIR := $(REPO_ROOT)/hack/test/kind/infra
 KIND_TEST_BUILD_TAG = test-build
 
-# Calico images built locally with latest-$(ARCH) tags. kind-build-images
-# re-tags each as :test-build for the kind cluster.
+# Locally-built Calico images. dev-build.sh re-tags each as
+# localhost:5000/tigera/<name>:test-build for the kind cluster.
+# Most components are provided by the combined tigera/calico image, which
+# uses "calico <subcommand>" as the container command. Only node remains
+# as a separate image (it ships its own runit/bird/iptables filesystem).
 KIND_CALICO_IMAGES = \
 	tigera/node:$(KIND_TEST_BUILD_TAG) \
-	tigera/typha:$(KIND_TEST_BUILD_TAG) \
-	tigera/apiserver:$(KIND_TEST_BUILD_TAG) \
-	tigera/calicoctl:$(KIND_TEST_BUILD_TAG) \
-	tigera/cni:$(KIND_TEST_BUILD_TAG) \
-	tigera/csi:$(KIND_TEST_BUILD_TAG) \
-	tigera/node-driver-registrar:$(KIND_TEST_BUILD_TAG) \
-	tigera/pod2daemon-flexvol:$(KIND_TEST_BUILD_TAG) \
-	tigera/kube-controllers:$(KIND_TEST_BUILD_TAG) \
-	tigera/webhooks:$(KIND_TEST_BUILD_TAG)
-
-# Operator is built separately (build-operator.sh tags it directly as
-# :test-build), so it's not in KIND_CALICO_IMAGES.
-KIND_OPERATOR_IMAGE = docker.io/tigera/operator:$(KIND_TEST_BUILD_TAG)
-
-# All images loaded onto the kind cluster.
-KIND_IMAGES = $(KIND_OPERATOR_IMAGE) $(KIND_CALICO_IMAGES)
+	tigera/calico:$(KIND_TEST_BUILD_TAG)
 
 # Enterprise-only: paths to license and pull secret for kind cluster setup.
 GCR_IO_PULL_SECRET ?= $(HOME)/secrets/docker_cfg.json
 TSEE_TEST_LICENSE ?= $(HOME)/secrets/license.yaml
 
-# Enterprise-only images (all images loaded onto the kind cluster).
 # Enterprise images built locally with latest-$(ARCH) tags. kind-build-images
-# re-tags each as :test-build for the kind cluster.
+# pushes each as localhost:5000/tigera/<name>:test-build for the kind cluster.
 KIND_ENTERPRISE_LOCAL_IMAGES = \
 	tigera/egress-gateway:$(KIND_TEST_BUILD_TAG) \
-	tigera/queryserver:$(KIND_TEST_BUILD_TAG) \
-	tigera/prometheus-service:$(KIND_TEST_BUILD_TAG) \
 	tigera/fluentd:$(KIND_TEST_BUILD_TAG) \
-	tigera/policy-recommendation:$(KIND_TEST_BUILD_TAG) \
-	tigera/voltron:$(KIND_TEST_BUILD_TAG) \
-	tigera/ui-apis:$(KIND_TEST_BUILD_TAG) \
-	tigera/es-gateway:$(KIND_TEST_BUILD_TAG) \
-	tigera/linseed:$(KIND_TEST_BUILD_TAG) \
+	tigera/deep-packet-inspection:$(KIND_TEST_BUILD_TAG) \
 	tigera/intrusion-detection-controller:$(KIND_TEST_BUILD_TAG) \
-	tigera/webhooks-processor:$(KIND_TEST_BUILD_TAG) \
 	tigera/intrusion-detection-job-installer:$(KIND_TEST_BUILD_TAG) \
-	tigera/elasticsearch-metrics:$(KIND_TEST_BUILD_TAG) \
 	tigera/prometheus-operator:$(KIND_TEST_BUILD_TAG) \
 	tigera/prometheus-config-reloader:$(KIND_TEST_BUILD_TAG) \
 	tigera/eck-operator:$(KIND_TEST_BUILD_TAG)
@@ -1764,13 +1886,11 @@ KIND_ENTERPRISE_PULLED_IMAGES = \
 	tigera/prometheus:$(KIND_TEST_BUILD_TAG) \
 	tigera/alertmanager:$(KIND_TEST_BUILD_TAG) \
 	tigera/manager:$(KIND_TEST_BUILD_TAG) \
-	tigera/kibana:$(KIND_TEST_BUILD_TAG) \
 	tigera/elasticsearch:$(KIND_TEST_BUILD_TAG)
 
 # All enterprise images = locally built + pulled from registry.
 KIND_CALICO_ENTERPRISE_IMAGES = $(KIND_ENTERPRISE_LOCAL_IMAGES) $(KIND_ENTERPRISE_PULLED_IMAGES)
 
-KIND_IMAGES += $(KIND_CALICO_ENTERPRISE_IMAGES)
 
 # .image.created markers: the per-component image build stamp files.
 # Each depends on its source files via deps.txt so Make knows when
@@ -1778,65 +1898,56 @@ KIND_IMAGES += $(KIND_CALICO_ENTERPRISE_IMAGES)
 # runs when sources are newer.
 KIND_IMAGE_MARKERS = \
 	$(REPO_ROOT)/node/.image.created-$(ARCH) \
-	$(REPO_ROOT)/typha/.image.created-$(ARCH) \
-	$(REPO_ROOT)/apiserver/.image.created-$(ARCH) \
-	$(REPO_ROOT)/cni-plugin/.image.created-$(ARCH) \
-	$(REPO_ROOT)/pod2daemon/.image.created-$(ARCH) \
-	$(REPO_ROOT)/calicoctl/.image.created-$(ARCH) \
-	$(REPO_ROOT)/kube-controllers/.image.created-$(ARCH) \
-	$(REPO_ROOT)/webhooks/.image.created-$(ARCH)
+	$(REPO_ROOT)/cmd/calico/.image.created-$(ARCH)
 
-$(REPO_ROOT)/node/.image.created-$(ARCH): $(call local-deps-go-files,node)
+# Shared libbpf marker. Both node and cmd/calico (and felix-internal
+# build steps invoked from them) need libbpf, and `kind-build-images` runs
+# the per-image markers under `make -j`. Without a shared prereq, the
+# parallel sub-makes race in felix/bpf-gpl on both the clone (each runs
+# `rm -rf libbpf && git clone`, one fails with "destination path 'libbpf'
+# already exists") and the compile (both write to the same .o paths).
+# Point both image markers at the compiled libbpf.a so Make builds it
+# exactly once, serially, before the parallel image builds start.
+LIBBPF_MARKER = $(REPO_ROOT)/felix/bpf-gpl/libbpf/src/$(ARCH)/libbpf.a
+
+$(LIBBPF_MARKER):
+	$(MAKE) -C $(REPO_ROOT)/felix libbpf
+
+# MISSING-IMAGE forces a rebuild when the previously-built image has been
+# pruned from the local Docker daemon. Each stamp records the image ref
+# that was built; hack/image-exists prints MISSING-IMAGE (a phony,
+# always-out-of-date target) when that ref is gone, dragging the rule
+# back in. The stamp is removed before the sub-make so the sub-make's
+# own up-to-date check doesn't short-circuit the rebuild.
+.PHONY: MISSING-IMAGE
+MISSING-IMAGE:
+
+$(REPO_ROOT)/node/.image.created-$(ARCH): \
+    $(shell $(REPO_ROOT)/hack/image-exists $(REPO_ROOT)/node/.image.created-$(ARCH)) \
+    $(LIBBPF_MARKER) $(call local-deps-go-files,node)
+	rm -f $@
 	$(MAKE) -C $(REPO_ROOT)/node image
-	touch $@
+	echo "node:latest-$(ARCH)" > $@
 
-$(REPO_ROOT)/typha/.image.created-$(ARCH): $(call local-deps-go-files,typha)
-	$(MAKE) -C $(REPO_ROOT)/typha image
-	touch $@
-
-$(REPO_ROOT)/apiserver/.image.created-$(ARCH): $(call local-deps-go-files,apiserver)
-	$(MAKE) -C $(REPO_ROOT)/apiserver image
-	touch $@
-
-$(REPO_ROOT)/cni-plugin/.image.created-$(ARCH): $(call local-deps-go-files,cni-plugin)
-	$(MAKE) -C $(REPO_ROOT)/cni-plugin image
-	touch $@
-
-$(REPO_ROOT)/pod2daemon/.image.created-$(ARCH): $(call local-deps-go-files,pod2daemon)
-	$(MAKE) -C $(REPO_ROOT)/pod2daemon image
-	touch $@
-
-$(REPO_ROOT)/calicoctl/.image.created-$(ARCH): $(call local-deps-go-files,calicoctl)
-	$(MAKE) -C $(REPO_ROOT)/calicoctl image
-	touch $@
-
-$(REPO_ROOT)/kube-controllers/.image.created-$(ARCH): $(call local-deps-go-files,kube-controllers)
-	$(MAKE) -C $(REPO_ROOT)/kube-controllers image
-	touch $@
-
-$(REPO_ROOT)/goldmane/.image.created-$(ARCH): $(call local-deps-go-files,goldmane)
-	$(MAKE) -C $(REPO_ROOT)/goldmane image
-	touch $@
-
-$(REPO_ROOT)/webhooks/.image.created-$(ARCH): $(call local-deps-go-files,webhooks)
-	$(MAKE) -C $(REPO_ROOT)/webhooks image
-	touch $@
-
-$(REPO_ROOT)/whisker/.image.created-$(ARCH):
+$(REPO_ROOT)/whisker/.image.created-$(ARCH): \
+    $(shell $(REPO_ROOT)/hack/image-exists $(REPO_ROOT)/whisker/.image.created-$(ARCH))
+	rm -f $@
 	$(MAKE) -C $(REPO_ROOT)/whisker image
-	touch $@
+	echo "whisker:latest-$(ARCH)" > $@
 
-$(REPO_ROOT)/whisker-backend/.image.created-$(ARCH): $(call local-deps-go-files,whisker-backend)
-	$(MAKE) -C $(REPO_ROOT)/whisker-backend image
-	touch $@
+$(REPO_ROOT)/cmd/calico/.image.created-$(ARCH): \
+    $(shell $(REPO_ROOT)/hack/image-exists $(REPO_ROOT)/cmd/calico/.image.created-$(ARCH)) \
+    $(LIBBPF_MARKER) $(call local-deps-go-files,cmd)
+	rm -f $@
+	$(MAKE) -C $(REPO_ROOT)/cmd/calico image
+	echo "calico:latest-$(ARCH)" > $@
 
-# Operator is built from a separate repo/branch. It only needs the
-# calico_versions.yml and enterprise_versions.yml files (static files with
-# version strings), not the actual built images, so it can run in parallel
-# with component builds.
-$(REPO_ROOT)/.stamp.operator: $(KIND_INFRA_DIR)/calico_versions.yml $(KIND_INFRA_DIR)/enterprise_versions.yml
-	cd $(KIND_INFRA_DIR) && BRANCH=$(OPERATOR_BRANCH) ./build-operator.sh
-	touch $@
+$(REPO_ROOT)/key-cert-provisioner/.image.created-$(ARCH): \
+    $(shell $(REPO_ROOT)/hack/image-exists $(REPO_ROOT)/key-cert-provisioner/.image.created-$(ARCH)) \
+    $(call local-deps-go-files,key-cert-provisioner)
+	rm -f $@
+	$(MAKE) -C $(REPO_ROOT)/key-cert-provisioner image
+	echo "test-signer:latest-$(ARCH)" > $@
 
 # Enterprise-only image markers for locally-built components. These follow
 # the same pattern as KIND_IMAGE_MARKERS: source deps so Make knows when
@@ -1844,18 +1955,9 @@ $(REPO_ROOT)/.stamp.operator: $(KIND_INFRA_DIR)/calico_versions.yml $(KIND_INFRA
 # components without deps.txt approximate with find.
 KIND_ENTERPRISE_IMAGE_MARKERS = \
 	$(REPO_ROOT)/egress-gateway/.image.created-$(ARCH) \
-	$(REPO_ROOT)/queryserver/.image.created-$(ARCH) \
-	$(REPO_ROOT)/prometheus-service/.image.created-$(ARCH) \
 	$(REPO_ROOT)/fluentd/.image.created-$(ARCH) \
-	$(REPO_ROOT)/policy-recommendation/.image.created-$(ARCH) \
-	$(REPO_ROOT)/voltron/.image.created-$(ARCH) \
-	$(REPO_ROOT)/ui-apis/.image.created-$(ARCH) \
-	$(REPO_ROOT)/es-gateway/.image.created-$(ARCH) \
-	$(REPO_ROOT)/linseed/.image.created-$(ARCH) \
 	$(REPO_ROOT)/intrusion-detection-controller/.image.created-$(ARCH) \
-	$(REPO_ROOT)/webhooks-processor/.image.created-$(ARCH) \
-	$(REPO_ROOT)/intrusion-detection-controller/.dashboards-installer.image.created-$(ARCH) \
-	$(REPO_ROOT)/elasticsearch-metrics/.image.created-$(ARCH) \
+	$(REPO_ROOT)/deep-packet-inspection/.image.created-$(ARCH) \
 	$(REPO_ROOT)/third_party/prometheus-operator/.prometheus-operator.created-$(ARCH) \
 	$(REPO_ROOT)/third_party/prometheus-operator/.prometheus-config-reloader.created-$(ARCH) \
 	$(REPO_ROOT)/third_party/eck-operator/.eck-operator.created-$(ARCH)
@@ -1866,20 +1968,21 @@ KIND_ENTERPRISE_PULLED_IMAGE_MARKERS = \
 	$(REPO_ROOT)/.stamp.prometheus \
 	$(REPO_ROOT)/.stamp.alertmanager \
 	$(REPO_ROOT)/.stamp.manager \
-	$(REPO_ROOT)/.stamp.kibana \
 	$(REPO_ROOT)/.stamp.elastic
 
-## Build all component images needed for kind cluster testing, then tag them.
+## Build all component images and push them to the local kind registry.
+# This invokes the same `make push` pipeline used by the release flow, with
+# kind-flavored DEV_IMAGE_REGISTRY/PATH/TAG so images land at
+# localhost:5000/tigera/<name>:test-build. dev-build.sh handles tag,
+# operator-build (via build-operator.sh dev-mode), and push. The host pushes
+# via the 127.0.0.1:5000 port mapping on the registry container; containerd
+# inside the kind nodes mirrors localhost:5000 to http://kind-registry:5000.
 .PHONY: kind-build-images
-kind-build-images: $(KIND_IMAGE_MARKERS) $(REPO_ROOT)/.stamp.operator $(KIND_ENTERPRISE_IMAGE_MARKERS) $(KIND_ENTERPRISE_PULLED_IMAGE_MARKERS)
-	@for img in $(KIND_CALICO_IMAGES); do \
-	  base=$${img%%:*}; \
-	  docker tag $$base:latest-$(ARCH) $$img; \
-	done
-	@for img in $(KIND_CALICO_ENTERPRISE_IMAGES); do \
-	  base=$${img%%:*}; \
-	  docker tag $$base:latest-$(ARCH) $$img; \
-	done
+kind-build-images: kind-registry-up
+	$(MAKE) -C $(REPO_ROOT) push \
+	    DEV_IMAGE_REGISTRY=localhost:5000 \
+	    DEV_IMAGE_PATH=tigera \
+	    DEV_IMAGE_TAG=$(KIND_TEST_BUILD_TAG)
 
 # Create a kind cluster and deploy Calico on it via Helm. Assumes images are
 # already built and tagged as test-build in the local Docker daemon. If a
@@ -1887,8 +1990,9 @@ kind-build-images: $(KIND_IMAGE_MARKERS) $(REPO_ROOT)/.stamp.operator $(KIND_ENT
 # Default to v3 CRDs for kind clusters. Override with KIND_CALICO_API_GROUP=crd.projectcalico.org/v1 if needed.
 KIND_CALICO_API_GROUP ?= projectcalico.org/v3
 
-# Load images, install Calico via Helm, and wait for readiness on an existing
-# kind cluster. Use kind-up for end-to-end bringup (images + cluster + deploy).
+# Install Calico via Helm and wait for readiness on an existing kind cluster.
+# Images are pulled from the local kind-registry on demand, so no image
+# loading happens here. Use kind-up for end-to-end bringup.
 .PHONY: kind-deploy
 kind-deploy:
 	$(MAKE) -C $(REPO_ROOT) chart CALICO_API_GROUP=$(KIND_CALICO_API_GROUP)
@@ -1901,21 +2005,18 @@ kind-deploy:
 	CALICO_API_GROUP=$(KIND_CALICO_API_GROUP) \
 	TSEE_TEST_LICENSE=$(TSEE_TEST_LICENSE) \
 	GCR_IO_PULL_SECRET=$(GCR_IO_PULL_SECRET) \
-	KIND_IMAGES="$(KIND_IMAGES)" \
 	$(REPO_ROOT)/hack/test/kind/deploy_resources.sh
 
-# Rebuild any images whose source files have changed, load onto the kind
-# cluster, upgrade the Helm release, and restart pods. The chart rebuild
-# and helm upgrade are both fast no-ops when nothing has changed.
+# Rebuild any images whose source files have changed, push changed layers to
+# the local registry, upgrade the Helm release, and restart pods so kubelet
+# re-pulls the new digests under the test-build tag (PullAlways).
 .PHONY: kind-reload
 kind-reload:
 	$(MAKE) -j$$(nproc) kind-build-images
 	$(MAKE) -C $(REPO_ROOT) chart CALICO_API_GROUP=$(KIND_CALICO_API_GROUP)
-	KIND=$(KIND) KIND_NAME=$(KIND_NAME) $(REPO_ROOT)/hack/test/kind/load_images.sh $(KIND_IMAGES)
 	KUBECONFIG=$(KIND_KUBECONFIG) $(REPO_ROOT)/bin/helm upgrade calico \
-		--reuse-values \
 		$(REPO_ROOT)/bin/tigera-operator-$(GIT_VERSION).tgz \
-		-f $(KIND_INFRA_DIR)/values.yaml \
+		--reuse-values \
 		-n tigera-operator
 	KUBECONFIG=$(KIND_KUBECONFIG) $(KUBECTL) delete pods -n calico-system --all
 	KUBECONFIG=$(KIND_KUBECONFIG) $(KUBECTL) apply -f $(KIND_INFRA_DIR)/calicoctl.yaml
@@ -1924,100 +2025,106 @@ kind-reload:
 
 # Locally-built enterprise components with deps.txt: these use the same
 # .image.created pattern as OSS components so Make tracks source changes.
-$(REPO_ROOT)/egress-gateway/.image.created-$(ARCH): $(call local-deps-go-files,egress-gateway)
+$(REPO_ROOT)/egress-gateway/.image.created-$(ARCH): \
+    $(shell $(REPO_ROOT)/hack/image-exists $(REPO_ROOT)/egress-gateway/.image.created-$(ARCH)) \
+    $(call local-deps-go-files,egress-gateway)
+	rm -f $@
 	$(MAKE) -C $(REPO_ROOT)/egress-gateway image
-	touch $@
+	echo "egress-gateway:latest-$(ARCH)" > $@
 
-$(REPO_ROOT)/queryserver/.image.created-$(ARCH): $(call local-deps-go-files,queryserver)
-	$(MAKE) -C $(REPO_ROOT)/queryserver image
-	touch $@
-
-$(REPO_ROOT)/prometheus-service/.image.created-$(ARCH): $(call local-deps-go-files,prometheus-service)
-	$(MAKE) -C $(REPO_ROOT)/prometheus-service image
-	touch $@
-
-$(REPO_ROOT)/fluentd/.image.created-$(ARCH): $(call local-deps-go-files,fluentd)
+$(REPO_ROOT)/fluentd/.image.created-$(ARCH): \
+    $(shell $(REPO_ROOT)/hack/image-exists $(REPO_ROOT)/fluentd/.image.created-$(ARCH)) \
+    $(call local-deps-go-files,fluentd)
+	rm -f $@
 	$(MAKE) -C $(REPO_ROOT)/fluentd image THIRD_PARTY_REGISTRY=$(THIRD_PARTY_REGISTRY_CD)
-	touch $@
+	echo "fluentd:latest-$(ARCH)" > $@
 
-$(REPO_ROOT)/policy-recommendation/.image.created-$(ARCH): $(call local-deps-go-files,policy-recommendation)
-	$(MAKE) -C $(REPO_ROOT)/policy-recommendation image
-	touch $@
-
-$(REPO_ROOT)/voltron/.image.created-$(ARCH): $(call local-deps-go-files,voltron)
-	$(MAKE) -C $(REPO_ROOT)/voltron image
-	touch $@
-
-$(REPO_ROOT)/ui-apis/.image.created-$(ARCH): $(call local-deps-go-files,ui-apis)
-	$(MAKE) -C $(REPO_ROOT)/ui-apis image
-	touch $@
-
-$(REPO_ROOT)/es-gateway/.image.created-$(ARCH): $(call local-deps-go-files,es-gateway)
-	$(MAKE) -C $(REPO_ROOT)/es-gateway image
-	touch $@
-
-$(REPO_ROOT)/linseed/.image.created-$(ARCH): $(call local-deps-go-files,linseed)
-	$(MAKE) -C $(REPO_ROOT)/linseed image
-	touch $@
-
-$(REPO_ROOT)/intrusion-detection-controller/.image.created-$(ARCH): $(call local-deps-go-files,intrusion-detection-controller)
+# IDC's controller image is a thin wrapper over cmd/calico (adds GeoIP),
+# so it must be sequenced after cmd/calico's image stamp. Without this,
+# parallel `make -j` fires two concurrent cmd/calico builds (one from
+# kind-build-images, one recursed from IDC's Makefile) that race on the
+# shared docker buildx state.
+#
+# Grouped target (&:) — `make image` in this dir builds both the IDS
+# controller and job-installer images. Without grouping, parallel `make
+# -j` fires two sub-makes that race on the shared
+# bin/intrusion-detection-job-installer binary and the job-installer
+# docker image tag.
+$(REPO_ROOT)/intrusion-detection-controller/.image.created-$(ARCH) $(REPO_ROOT)/intrusion-detection-controller/.dashboards-installer.image.created-$(ARCH) &: \
+    $(shell $(REPO_ROOT)/hack/image-exists $(REPO_ROOT)/intrusion-detection-controller/.image.created-$(ARCH)) \
+    $(shell $(REPO_ROOT)/hack/image-exists $(REPO_ROOT)/intrusion-detection-controller/.dashboards-installer.image.created-$(ARCH)) \
+    $(REPO_ROOT)/cmd/calico/.image.created-$(ARCH) \
+    $(call local-deps-go-files,intrusion-detection-controller)
+	rm -f $(REPO_ROOT)/intrusion-detection-controller/.image.created-$(ARCH)
+	rm -f $(REPO_ROOT)/intrusion-detection-controller/.dashboards-installer.image.created-$(ARCH)
 	$(MAKE) -C $(REPO_ROOT)/intrusion-detection-controller image
-	touch $@
+	echo "intrusion-detection-controller:latest-$(ARCH)" > $(REPO_ROOT)/intrusion-detection-controller/.image.created-$(ARCH)
+	echo "intrusion-detection-job-installer:latest-$(ARCH)" > $(REPO_ROOT)/intrusion-detection-controller/.dashboards-installer.image.created-$(ARCH)
 
-$(REPO_ROOT)/webhooks-processor/.image.created-$(ARCH): $(call local-deps-go-files,webhooks-processor)
-	$(MAKE) -C $(REPO_ROOT)/webhooks-processor image
-	touch $@
-
-$(REPO_ROOT)/intrusion-detection-controller/.dashboards-installer.image.created-$(ARCH): $(call local-deps-go-files,intrusion-detection-controller)
-	$(MAKE) -C $(REPO_ROOT)/intrusion-detection-controller intrusion-detection-job-installer
-	touch $@
-
-$(REPO_ROOT)/elasticsearch-metrics/.image.created-$(ARCH): $(call local-deps-go-files,elasticsearch-metrics)
-	$(MAKE) -C $(REPO_ROOT)/elasticsearch-metrics image
-	touch $@
+$(REPO_ROOT)/deep-packet-inspection/.image.created-$(ARCH): \
+    $(shell $(REPO_ROOT)/hack/image-exists $(REPO_ROOT)/deep-packet-inspection/.image.created-$(ARCH)) \
+    $(call local-deps-go-files,deep-packet-inspection)
+	rm -f $@
+	$(MAKE) -C $(REPO_ROOT)/deep-packet-inspection image
+	echo "deep-packet-inspection:latest-$(ARCH)" > $@
 
 # Third-party locally-built images: use find for source deps since these
 # don't have deps.txt. The component Makefiles create the marker files.
-$(REPO_ROOT)/third_party/prometheus-operator/.prometheus-operator.created-$(ARCH): $(shell find $(REPO_ROOT)/third_party/prometheus-operator -name '*.go')
+# Grouped target (&:) — a single sub-make produces both stamps. Without
+# grouping, parallel `make -j` fires two sub-makes that race on the shared
+# prometheus-operator/ source tarball and corrupt the embedded YAML
+# (unexpected length 583168 != 794599) during go build.
+#
+# Skip on Windows: these stamps are KIND/Linux-only, and the bare $(shell find ...)
+# fires at parse time with `find` unavailable in PowerShell.
+ifneq ($(OS),Windows_NT)
+$(REPO_ROOT)/third_party/prometheus-operator/.prometheus-operator.created-$(ARCH) $(REPO_ROOT)/third_party/prometheus-operator/.prometheus-config-reloader.created-$(ARCH) &: \
+    $(shell $(REPO_ROOT)/hack/image-exists $(REPO_ROOT)/third_party/prometheus-operator/.prometheus-operator.created-$(ARCH)) \
+    $(shell $(REPO_ROOT)/hack/image-exists $(REPO_ROOT)/third_party/prometheus-operator/.prometheus-config-reloader.created-$(ARCH)) \
+    $(shell find $(REPO_ROOT)/third_party/prometheus-operator -name '*.go')
+	rm -f $(REPO_ROOT)/third_party/prometheus-operator/.prometheus-operator.created-$(ARCH)
+	rm -f $(REPO_ROOT)/third_party/prometheus-operator/.prometheus-config-reloader.created-$(ARCH)
 	$(MAKE) -C $(REPO_ROOT)/third_party/prometheus-operator image
+	echo "prometheus-operator:latest-$(ARCH)" > $(REPO_ROOT)/third_party/prometheus-operator/.prometheus-operator.created-$(ARCH)
+	echo "prometheus-config-reloader:latest-$(ARCH)" > $(REPO_ROOT)/third_party/prometheus-operator/.prometheus-config-reloader.created-$(ARCH)
 
-$(REPO_ROOT)/third_party/prometheus-operator/.prometheus-config-reloader.created-$(ARCH): $(shell find $(REPO_ROOT)/third_party/prometheus-operator -name '*.go')
-	$(MAKE) -C $(REPO_ROOT)/third_party/prometheus-operator image
-
-$(REPO_ROOT)/third_party/eck-operator/.eck-operator.created-$(ARCH): $(shell find $(REPO_ROOT)/third_party/eck-operator -name '*.go')
+$(REPO_ROOT)/third_party/eck-operator/.eck-operator.created-$(ARCH): \
+    $(shell $(REPO_ROOT)/hack/image-exists $(REPO_ROOT)/third_party/eck-operator/.eck-operator.created-$(ARCH)) \
+    $(shell find $(REPO_ROOT)/third_party/eck-operator -name '*.go')
+	rm -f $@
 	$(MAKE) -C $(REPO_ROOT)/third_party/eck-operator image
+	echo "eck-operator:latest-$(ARCH)" > $@
+endif
 
 # GCR-pulled images: no local source deps, use stamp files. Tag as
 # latest-$(ARCH) so the common tagging loop handles the final tag.
-$(REPO_ROOT)/.stamp.prometheus:
+$(REPO_ROOT)/.stamp.prometheus: $(shell $(REPO_ROOT)/hack/image-exists $(REPO_ROOT)/.stamp.prometheus)
 	# TODO: Build this. We cannot at the moment because it relies on the host OS npm / go toolchain.
+	rm -f $@
 	docker pull gcr.io/unique-caldron-775/cnx/tigera/prometheus:$(THIRD_PARTY_RELEASE_BRANCH)
 	docker tag gcr.io/unique-caldron-775/cnx/tigera/prometheus:$(THIRD_PARTY_RELEASE_BRANCH) tigera/prometheus:latest-$(ARCH)
-	touch $@
+	echo "tigera/prometheus:latest-$(ARCH)" > $@
 
-$(REPO_ROOT)/.stamp.alertmanager:
+$(REPO_ROOT)/.stamp.alertmanager: $(shell $(REPO_ROOT)/hack/image-exists $(REPO_ROOT)/.stamp.alertmanager)
 	# TODO: Build this.
+	rm -f $@
 	docker pull gcr.io/unique-caldron-775/cnx/tigera/alertmanager:$(THIRD_PARTY_RELEASE_BRANCH)
 	docker tag gcr.io/unique-caldron-775/cnx/tigera/alertmanager:$(THIRD_PARTY_RELEASE_BRANCH) tigera/alertmanager:latest-$(ARCH)
-	touch $@
+	echo "tigera/alertmanager:latest-$(ARCH)" > $@
 
-$(REPO_ROOT)/.stamp.manager:
+$(REPO_ROOT)/.stamp.manager: $(shell $(REPO_ROOT)/hack/image-exists $(REPO_ROOT)/.stamp.manager)
 	# TODO
+	rm -f $@
 	docker pull gcr.io/unique-caldron-775/cnx/tigera/manager:$(THIRD_PARTY_RELEASE_BRANCH)
 	docker tag gcr.io/unique-caldron-775/cnx/tigera/manager:$(THIRD_PARTY_RELEASE_BRANCH) tigera/manager:latest-$(ARCH)
-	touch $@
+	echo "tigera/manager:latest-$(ARCH)" > $@
 
-$(REPO_ROOT)/.stamp.kibana:
-	# TODO: Can we run without kibana? Requires operator change.
-	docker pull gcr.io/unique-caldron-775/cnx/tigera/kibana:$(THIRD_PARTY_RELEASE_BRANCH)
-	docker tag gcr.io/unique-caldron-775/cnx/tigera/kibana:$(THIRD_PARTY_RELEASE_BRANCH) tigera/kibana:latest-$(ARCH)
-	touch $@
-
-$(REPO_ROOT)/.stamp.elastic:
+$(REPO_ROOT)/.stamp.elastic: $(shell $(REPO_ROOT)/hack/image-exists $(REPO_ROOT)/.stamp.elastic)
 	# TODO: Build this.
+	rm -f $@
 	docker pull gcr.io/unique-caldron-775/cnx/tigera/elasticsearch:$(THIRD_PARTY_RELEASE_BRANCH)
 	docker tag gcr.io/unique-caldron-775/cnx/tigera/elasticsearch:$(THIRD_PARTY_RELEASE_BRANCH) tigera/elasticsearch:latest-$(ARCH)
-	touch $@
+	echo "tigera/elasticsearch:latest-$(ARCH)" > $@
 
 ###############################################################################
 # Common functions for setting up a local envtest environment.
@@ -2026,7 +2133,10 @@ ENVTEST_DIR := $(REPO_ROOT)/hack/test/envtest
 ENVTEST_CONTAINER_DIR := /go/src/github.com/projectcalico/calico/hack/test/envtest
 # Derive major.minor from K8S_VERSION (e.g. v1.34.3 -> 1.34.x) for setup-envtest.
 # Envtest publishes binaries per minor version, not per patch, so we use a wildcard.
+# Skip on Windows: envtest is Linux-only test infra; bash sed/cut would error otherwise.
+ifneq ($(OS),Windows_NT)
 ENVTEST_K8S_VERSION ?= $(shell echo $(K8S_VERSION) | sed 's/^v//' | cut -d. -f1,2).x
+endif
 ENVTEST_ASSETS_MARKER := $(ENVTEST_DIR)/.envtest-$(ENVTEST_K8S_VERSION)
 
 ## Download envtest binaries (kube-apiserver, etcd) for use by tests that use controller-runtime envtest.
@@ -2043,9 +2153,11 @@ $(ENVTEST_ASSETS_MARKER):
 
 # Minimum supported Kubernetes version for CEL IP/CIDR library (available in 1.31+).
 MIN_K8S_VERSION ?= v1.31.0
+ifneq ($(OS),Windows_NT)
 ENVTEST_MIN_K8S_VERSION ?= $(shell echo $(MIN_K8S_VERSION) | sed 's/^v//' | cut -d. -f1,2).x
 # Major.minor prefix for globbing the downloaded envtest directory (e.g. "1.29").
 ENVTEST_MIN_K8S_MINOR := $(shell echo $(MIN_K8S_VERSION) | sed 's/^v//' | cut -d. -f1,2)
+endif
 ENVTEST_MIN_ASSETS_MARKER := $(ENVTEST_DIR)/.envtest-min-$(ENVTEST_MIN_K8S_VERSION)
 
 ## Download envtest binaries for the minimum supported Kubernetes version.
@@ -2128,10 +2240,14 @@ help:
 # Common functions for launching a local Elastic instance.
 ###############################################################################
 ELASTIC_USERNAME := elastic
+# Skip on Windows: bash-only pipeline (cat /dev/urandom, tr, head); the local-elastic
+# targets below run on Linux only and Windows components don't reference these vars.
+ifneq ($(OS),Windows_NT)
 BOOTSTRAP_PASSWORD := $(shell cat /dev/urandom | LC_CTYPE=C tr -dc A-Za-z0-9 | head -c16)
 ELASTIC_PASSWORD := $(BOOTSTRAP_PASSWORD)
 
 ELASTIC_IMAGE   ?= docker.elastic.co/elasticsearch/elasticsearch:$(shell grep -o '^ELASTIC_VERSION=[0-9\.]*' $(REPO_ROOT)/third_party/elasticsearch/Makefile | cut -d "=" -f 2)
+endif
 ELASTIC_EXTRA_DOCKER_ARGS ?=
 ELASTIC_MEMORY ?= 2GB
 
