@@ -224,6 +224,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &projectcalicov3.HTTPPullApplyConfiguration{}
 	case v3.SchemeGroupVersion.WithKind("ICMPFields"):
 		return &projectcalicov3.ICMPFieldsApplyConfiguration{}
+	case v3.SchemeGroupVersion.WithKind("InterfaceMatch"):
+		return &projectcalicov3.InterfaceMatchApplyConfiguration{}
 	case v3.SchemeGroupVersion.WithKind("IPAMBlock"):
 		return &projectcalicov3.IPAMBlockApplyConfiguration{}
 	case v3.SchemeGroupVersion.WithKind("IPAMBlockSpec"):
@@ -278,6 +280,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &projectcalicov3.NamesAndLabelsMatchApplyConfiguration{}
 	case v3.SchemeGroupVersion.WithKind("NamespaceControllerConfig"):
 		return &projectcalicov3.NamespaceControllerConfigApplyConfiguration{}
+	case v3.SchemeGroupVersion.WithKind("Network"):
+		return &projectcalicov3.NetworkApplyConfiguration{}
 	case v3.SchemeGroupVersion.WithKind("NetworkPolicy"):
 		return &projectcalicov3.NetworkPolicyApplyConfiguration{}
 	case v3.SchemeGroupVersion.WithKind("NetworkPolicySpec"):
@@ -286,6 +290,10 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &projectcalicov3.NetworkSetApplyConfiguration{}
 	case v3.SchemeGroupVersion.WithKind("NetworkSetSpec"):
 		return &projectcalicov3.NetworkSetSpecApplyConfiguration{}
+	case v3.SchemeGroupVersion.WithKind("NetworkSpec"):
+		return &projectcalicov3.NetworkSpecApplyConfiguration{}
+	case v3.SchemeGroupVersion.WithKind("NetworkStatus"):
+		return &projectcalicov3.NetworkStatusApplyConfiguration{}
 	case v3.SchemeGroupVersion.WithKind("NodeControllerConfig"):
 		return &projectcalicov3.NodeControllerConfigApplyConfiguration{}
 	case v3.SchemeGroupVersion.WithKind("PacketCapture"):
@@ -380,6 +388,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &projectcalicov3.StagedNetworkPolicyApplyConfiguration{}
 	case v3.SchemeGroupVersion.WithKind("StagedNetworkPolicySpec"):
 		return &projectcalicov3.StagedNetworkPolicySpecApplyConfiguration{}
+	case v3.SchemeGroupVersion.WithKind("StaticRouteAction"):
+		return &projectcalicov3.StaticRouteActionApplyConfiguration{}
 	case v3.SchemeGroupVersion.WithKind("Template"):
 		return &projectcalicov3.TemplateApplyConfiguration{}
 	case v3.SchemeGroupVersion.WithKind("ThreatFeedFormat"):
@@ -412,6 +422,14 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &projectcalicov3.UISettingsGroupSpecApplyConfiguration{}
 	case v3.SchemeGroupVersion.WithKind("UISettingsSpec"):
 		return &projectcalicov3.UISettingsSpecApplyConfiguration{}
+	case v3.SchemeGroupVersion.WithKind("VRFHostConfig"):
+		return &projectcalicov3.VRFHostConfigApplyConfiguration{}
+	case v3.SchemeGroupVersion.WithKind("VRFNetworkSpec"):
+		return &projectcalicov3.VRFNetworkSpecApplyConfiguration{}
+	case v3.SchemeGroupVersion.WithKind("VRFRouting"):
+		return &projectcalicov3.VRFRoutingApplyConfiguration{}
+	case v3.SchemeGroupVersion.WithKind("VRFStaticRoute"):
+		return &projectcalicov3.VRFStaticRouteApplyConfiguration{}
 	case v3.SchemeGroupVersion.WithKind("WorkloadEndpointControllerConfig"):
 		return &projectcalicov3.WorkloadEndpointControllerConfigApplyConfiguration{}
 
