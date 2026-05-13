@@ -3,24 +3,24 @@
 #################################################################################################
 
 # Calico toolchain versions and the calico/base image to use.
-GO_BUILD_VER=1.26.2-llvm20.1.8-k8s1.35.3
+GO_BUILD_VER=1.26.3-llvm20.1.8-k8s1.35.4
 RUST_BUILD_VER=1.94.1
 
 # Calico Enterprise shipping images now builds on UBI 10. For Calico OSS to Enterprise merges,
 # please don't downgrade the base image back to UBI 9.
-CALICO_BASE_VER=ubi10-1775601218
+CALICO_BASE_VER=ubi10-1777576815
 
 # Version of Kubernetes to use for tests, rancher/kubectl, and kubectl binary release.
-K8S_VERSION=v1.35.2
+K8S_VERSION=v1.35.4
 
 # Version of various tools used in the build and tests.
 COREDNS_VERSION=1.5.2
-CRANE_VERSION=v0.21.3
-ETCD_VERSION=v3.5.24
-GHR_VERSION=v0.17.0
-GITHUB_CLI_VERSION=2.76.2
+CRANE_VERSION=v0.21.5
+ETCD_VERSION=v3.5.29
+GHR_VERSION=v0.18.3
+GITHUB_CLI_VERSION=2.90.0
 GOTESTSUM_VERSION=v1.13.0
-HELM_VERSION=v3.16.4
+HELM_VERSION=v3.20.2
 KINDEST_NODE_VERSION=v1.35.1
 KINDEST_NODE_VERSION_DUAL_TOR=v1.24.7
 KIND_VERSION=v0.31.0
@@ -44,6 +44,7 @@ endif
 # differently for a forked repo.
 ORGANIZATION  ?= tigera
 GIT_REPO      ?= calico-private
+GIT_REMOTE    ?= origin
 
 RELEASE_BRANCH_PREFIX ?=release-calient
 DEV_TAG_SUFFIX        ?= calient-0.dev
@@ -64,6 +65,15 @@ BIRD_VERSION=v0.3.3-211-g9111ec3c
 # DEV_REGISTRIES configures the container image registries which are built from this
 # repository.
 DEV_REGISTRIES ?= tigera
+
+# ALLOWED_DEV_REGISTRIES is the prefix allowlist enforced on every DEV_REGISTRIES
+# entry at push time (see validate-dev-registries in lib.Makefile). Entries in
+# DEV_REGISTRIES must start with one of these prefixes or the push fails. The
+# intent is to keep every dev and CD push inside Tigera-controlled registries
+# even when DEV_REGISTRIES is overridden ad-hoc, so that a misconfigured CI job
+# or a slipped command line cannot publish Enterprise images to a public OSS
+# registry path.
+ALLOWED_DEV_REGISTRIES ?= gcr.io/unique-caldron-775 quay.io/tigeradev
 
 # RELEASE_REGISTRIES configures the container images registries which are published to
 # as part of an official release.
@@ -91,6 +101,14 @@ LIBBPF_VERSION=v1.6.2
 
 # The bpftool image to use; this is the output of the https://github.com/projectcalico/bpftool repo.
 BPFTOOL_IMAGE=calico/bpftool:v7.5.0
+
+# Patched nftables + libnftnl shipped in calico/node and the istio CNI install
+# image. Built by hack/rpms/nftables/ and consumed via calico/nftables-rpms:<sha>-<arch>.
+# Do not bump NFTABLES_VER past 1.1.1 - see projectcalico/calico#11750.
+NFTABLES_VER=1.1.1
+NFTABLES_SHA256=6358830f3a64f31e39b0ad421d7dadcd240b72343ded48d8ef13b8faf204865a
+LIBNFTNL_VER=1.2.8
+LIBNFTNL_SHA256=37fea5d6b5c9b08de7920d298de3cdc942e7ae64b1a3e8b880b2d390ae67ad95
 
 # The operator branch corresponding to this branch.
 OPERATOR_BRANCH ?= master
