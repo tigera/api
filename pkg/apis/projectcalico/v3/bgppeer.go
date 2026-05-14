@@ -60,6 +60,7 @@ type BGPPeer struct {
 // +kubebuilder:validation:XValidation:rule="(!has(self.localWorkloadSelector) || size(self.localWorkloadSelector) == 0) || (!has(self.peerIP) || size(self.peerIP) == 0)",message="peerIP must be empty when localWorkloadSelector is set",reason=FieldValueForbidden
 // +kubebuilder:validation:XValidation:rule="(!has(self.localWorkloadSelector) || size(self.localWorkloadSelector) == 0) || (!has(self.peerSelector) || size(self.peerSelector) == 0)",message="peerSelector must be empty when localWorkloadSelector is set",reason=FieldValueForbidden
 // +kubebuilder:validation:XValidation:rule="(!has(self.localWorkloadSelector) || size(self.localWorkloadSelector) == 0) || (has(self.asNumber) && self.asNumber != 0)",message="asNumber is required when localWorkloadSelector is set",reason=FieldValueInvalid
+// +kubebuilder:validation:XValidation:rule="(!has(self.network) || size(self.network) == 0) || (!has(self.externalNetwork) || size(self.externalNetwork) == 0)",message="network and externalNetwork cannot both be set",reason=FieldValueForbidden
 type BGPPeerSpec struct {
 	// The node name identifying the Calico node instance that is targeted by this peer.
 	// If this is not set, and no nodeSelector is specified, then this BGP peer selects all
@@ -173,9 +174,13 @@ type BGPPeerSpec struct {
 	// +optional
 	Filters []string `json:"filters,omitempty" validate:"omitempty,dive,name"`
 
-	// Name of the external network to which this peer belongs.
+	// Name of the external network to which this peer belongs.  Cannot be set if network is set.
 	// +optional
 	ExternalNetwork string `json:"externalNetwork,omitempty" validate:"omitempty,name"`
+
+	// Name of the network to which this peer belongs.  Cannot be set if externalNetwork is set.
+	// +optional
+	Network string `json:"network,omitempty" validate:"omitempty,name"`
 
 	// Add an exact, i.e. /32, static route toward peer IP in order to prevent route flapping.
 	// ReachableBy contains the address of the gateway which peer can be reached by.

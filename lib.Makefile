@@ -1614,14 +1614,23 @@ KIND_CONFIG ?= $(KIND_DIR)/kind.config
 KIND_NAME = $(basename $(notdir $(KIND_CONFIG)))
 KIND_KUBECONFIG?=$(KIND_DIR)/$(KIND_NAME)-kubeconfig.yaml
 
+# Dataplane - kind supports iptables and nftables.
+KIND_DATAPLANE ?= iptables
+ifeq ($(filter $(KIND_DATAPLANE),iptables nftables),)
+  $(error KIND_DATAPLANE must be iptables or nftables, got "$(KIND_DATAPLANE)")
+endif
+
 kind-cluster-create: $(REPO_ROOT)/.$(KIND_NAME).created
 $(REPO_ROOT)/.$(KIND_NAME).created: $(KUBECTL) $(KIND)
 	# First make sure any previous cluster is deleted
 	$(MAKE) kind-cluster-destroy
 
+	# Render the kind config with the requested kube-proxy mode.
+	sed 's/^\(  mode: \)iptables$$/\1$(KIND_DATAPLANE)/' $(KIND_CONFIG) > $(KIND_DIR)/.$(KIND_NAME).rendered.config
+
 	# Create a kind cluster.
 	$(KIND) create cluster \
-		--config $(KIND_CONFIG) \
+		--config $(KIND_DIR)/.$(KIND_NAME).rendered.config \
 		--kubeconfig $(KIND_KUBECONFIG) \
 		--name $(KIND_NAME) \
 		--image kindest/node:$(KINDEST_NODE_VERSION)
@@ -1648,6 +1657,7 @@ kind-cluster-destroy kind-down: $(KIND) $(KUBECTL)
 	# This requires we execute CNI del on pods with pod networking.
 	-$(KIND) delete cluster --name $(KIND_NAME)
 	rm -f $(KIND_KUBECONFIG)
+	rm -f $(KIND_DIR)/.$(KIND_NAME).rendered.config
 	rm -f $(REPO_ROOT)/.$(KIND_NAME).created
 
 $(KIND)-$(KIND_VERSION):
@@ -1892,6 +1902,7 @@ kind-deploy:
 	GIT_VERSION=$(GIT_VERSION) \
 	CALICO_API_GROUP=$(KIND_CALICO_API_GROUP) \
 	CLUSTER_ROUTING=$(CLUSTER_ROUTING) \
+	KIND_DATAPLANE=$(KIND_DATAPLANE) \
 	TSEE_TEST_LICENSE=$(TSEE_TEST_LICENSE) \
 	GCR_IO_PULL_SECRET=$(GCR_IO_PULL_SECRET) \
 	KIND_IMAGES="$(KIND_IMAGES)" \
