@@ -8,7 +8,7 @@ RUST_BUILD_VER=1.93.1
 
 # Calico Enterprise shipping images now builds on UBI 10. For Calico OSS to Enterprise merges,
 # please don't downgrade the base image back to UBI 9.
-CALICO_BASE_VER=ubi10-1771532994
+CALICO_BASE_VER=ubi10-1778780765
 
 # Version of Kubernetes to use for tests, rancher/kubectl, and kubectl binary release.
 K8S_VERSION=v1.35.2
