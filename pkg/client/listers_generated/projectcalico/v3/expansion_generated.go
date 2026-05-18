@@ -128,6 +128,10 @@ type LicenseKeyListerExpansion interface{}
 // ManagedClusterLister.
 type ManagedClusterListerExpansion interface{}
 
+// NetworkListerExpansion allows custom methods to be added to
+// NetworkLister.
+type NetworkListerExpansion interface{}
+
 // NetworkPolicyListerExpansion allows custom methods to be added to
 // NetworkPolicyLister.
 type NetworkPolicyListerExpansion interface{}
