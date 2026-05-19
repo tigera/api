@@ -10881,7 +10881,7 @@ func schema_pkg_apis_projectcalico_v3_ManagedCluster(ref common.ReferenceCallbac
 						},
 					},
 				},
-				Required: []string{"metadata", "spec", "status"},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{

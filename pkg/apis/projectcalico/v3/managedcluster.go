@@ -38,8 +38,9 @@ const (
 type ManagedCluster struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata"`
-	Spec              ManagedClusterSpec   `json:"spec"`
-	Status            ManagedClusterStatus `json:"status"`
+	Spec              ManagedClusterSpec `json:"spec"`
+	// +optional
+	Status ManagedClusterStatus `json:"status,omitempty"`
 }
 
 // ManagedClusterSpec contains the specification of a ManagedCluster resource.
