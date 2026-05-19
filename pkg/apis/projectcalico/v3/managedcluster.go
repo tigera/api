@@ -1,4 +1,4 @@
-// Copyright (c) 2020-2021 Tigera, Inc. All rights reserved.
+// Copyright (c) 2020-2021,2026 Tigera, Inc. All rights reserved.
 
 package v3
 
@@ -34,11 +34,13 @@ const (
 // ManagedCluster represents a cluster that is being managed by the multi-cluster
 // management plane. This object configures how Tigera multi-cluster management
 // components communicate with the corresponding cluster.
+// +kubebuilder:subresource:status
 type ManagedCluster struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata"`
-	Spec              ManagedClusterSpec   `json:"spec"`
-	Status            ManagedClusterStatus `json:"status"`
+	Spec              ManagedClusterSpec `json:"spec"`
+	// +optional
+	Status ManagedClusterStatus `json:"status,omitempty"`
 }
 
 // ManagedClusterSpec contains the specification of a ManagedCluster resource.
