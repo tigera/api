@@ -68,6 +68,8 @@ type Interface interface {
 	LicenseKeys() LicenseKeyInformer
 	// ManagedClusters returns a ManagedClusterInformer.
 	ManagedClusters() ManagedClusterInformer
+	// Networks returns a NetworkInformer.
+	Networks() NetworkInformer
 	// NetworkPolicies returns a NetworkPolicyInformer.
 	NetworkPolicies() NetworkPolicyInformer
 	// NetworkSets returns a NetworkSetInformer.
@@ -250,6 +252,11 @@ func (v *version) LicenseKeys() LicenseKeyInformer {
 // ManagedClusters returns a ManagedClusterInformer.
 func (v *version) ManagedClusters() ManagedClusterInformer {
 	return &managedClusterInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// Networks returns a NetworkInformer.
+func (v *version) Networks() NetworkInformer {
+	return &networkInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // NetworkPolicies returns a NetworkPolicyInformer.
