@@ -1330,6 +1330,14 @@ type FelixConfigurationSpec struct {
 	// to have failed.
 	EgressGatewayPollFailureCount *int `json:"egressGatewayPollFailureCount,omitempty" validate:"omitempty,gt=0"`
 
+	// EgressIPHostIfacePattern is a comma-separated list of interface names which might send and receive egress traffic
+	// across the cluster boundary, after it has left an Egress Gateway pod. Felix will ensure `src_valid_mark` sysctl flags
+	// are set correctly for matching interfaces.
+	// To target multiple interfaces with a single string, the list supports regular expressions.
+	// For regular expressions, wrap the value with `/`.
+	// Example: `/^bond/,eth0` will match all interfaces that begin with `bond` and also the interface `eth0`. [Default: ""]
+	EgressIPHostIfacePattern string `json:"egressIPHostIfacePattern,omitempty"`
+
 	// RouteSyncDisabled will disable all operations performed on the route table. Set to true to
 	// run in network-policy mode only.
 	RouteSyncDisabled *bool `json:"routeSyncDisabled,omitempty"`
