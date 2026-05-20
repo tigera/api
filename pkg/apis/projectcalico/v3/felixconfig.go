@@ -696,7 +696,10 @@ type FelixConfigurationSpec struct {
 	// BPFConntrackCleanupMode controls how BPF conntrack entries are cleaned up.  `Auto` will use a BPF program if supported,
 	// falling back to userspace if not.  `Userspace` will always use the userspace cleanup code.  `BPFProgram` will
 	// always use the BPF program (failing if not supported).
-	// [Default: Auto]
+	//
+	///To be deprecated in future versions as conntrack map type changed to
+	// lru_hash and userspace cleanup is the only mode that is supported.
+	// [Default: Userspace]
 	BPFConntrackCleanupMode *BPFConntrackMode `json:"bpfConntrackMode,omitempty" validate:"omitempty,oneof=Auto Userspace BPFProgram"`
 
 	// BPFConntrackTimers overrides the default values for the specified conntrack timer if
@@ -884,6 +887,9 @@ type FelixConfigurationSpec struct {
 	// BPFExportBufferSizeMB in BPF mode, controls the buffer size used for sending BPF events to felix.
 	// [Default: 1]
 	BPFExportBufferSizeMB *int `json:"bpfExportBufferSizeMB,omitempty" validate:"omitempty,cidrs"`
+
+	// CgroupV2Path overrides the default location where to find the cgroup hierarchy.
+	CgroupV2Path string `json:"cgroupV2Path,omitempty"`
 
 	// SyslogReporterEnabled turns on the feature to write logs to Syslog. Please note that this can incur significant
 	// disk space usage when running felix on non-cluster hosts.
@@ -1327,6 +1333,14 @@ type FelixConfigurationSpec struct {
 	// to have failed.
 	EgressGatewayPollFailureCount *int `json:"egressGatewayPollFailureCount,omitempty" validate:"omitempty,gt=0"`
 
+	// EgressIPHostIfacePattern is a comma-separated list of interface names which might send and receive egress traffic
+	// across the cluster boundary, after it has left an Egress Gateway pod. Felix will ensure `src_valid_mark` sysctl flags
+	// are set correctly for matching interfaces.
+	// To target multiple interfaces with a single string, the list supports regular expressions.
+	// For regular expressions, wrap the value with `/`.
+	// Example: `/^bond/,eth0` will match all interfaces that begin with `bond` and also the interface `eth0`. [Default: ""]
+	EgressIPHostIfacePattern string `json:"egressIPHostIfacePattern,omitempty"`
+
 	// RouteSyncDisabled will disable all operations performed on the route table. Set to true to
 	// run in network-policy mode only.
 	RouteSyncDisabled *bool `json:"routeSyncDisabled,omitempty"`
@@ -1511,7 +1525,7 @@ type RouteTableIDRange struct {
 type RouteTableRanges []RouteTableIDRange
 
 func (r RouteTableRanges) NumDesignatedTables() int {
-	var len int = 0
+	var len = 0
 	for _, rng := range r {
 		len += (rng.Max - rng.Min) + 1 // add one, since range is inclusive
 	}

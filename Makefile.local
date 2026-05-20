@@ -100,7 +100,7 @@ pull-upstream-changes:
 	$(info Cloning git@github.com:$(CALICO_REPOSITORY_NAME).git into $(CALICO_TEMP_DIR))
 	rm -rf $(CALICO_TEMP_DIR)
 	mkdir -p $(CALICO_TEMP_DIR)
-	git clone --quiet $(CALICO_REFERENCE_PARAMS) --depth 1 git@github.com:$(CALICO_REPOSITORY_NAME).git -b $(CALICO_GIT_REF) $(CALICO_TEMP_DIR)
+	git clone --filter=blob:none --quiet $(CALICO_REFERENCE_PARAMS) --depth 1 git@github.com:$(CALICO_REPOSITORY_NAME).git -b $(CALICO_GIT_REF) $(CALICO_TEMP_DIR)
 
 	# Remove local files - we'll add them back from the Calico repo's contents.
 	rm -r pkg/ build/ examples/ hack/
