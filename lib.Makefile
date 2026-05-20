@@ -102,7 +102,7 @@ endif
 # This is only needed when running non-native binaries.
 register:
 ifneq ($(BUILDARCH),$(ARCH))
-	docker run --privileged --rm tonistiigi/binfmt --install all || true
+	docker run --privileged --rm calico/binfmt:qemu-v10.1.3 --install all || true
 endif
 
 # If this is a release, also tag and push additional images.
@@ -212,7 +212,7 @@ define build_cgo_windows_binary
 		-e GOARCH=amd64 \
 		-e GOOS=windows \
 		$(CALICO_BUILD) \
-		sh -c '$(GIT_CONFIG_SSH) go build -o $(2) $(if $(BUILD_TAGS),-tags $(BUILD_TAGS)) -v -buildvcs=false -ldflags "$(LDFLAGS)" $(1)'
+		sh -c '$(GIT_CONFIG_SSH) go build -o $(2) $(if $(BUILD_TAGS),-tags $(BUILD_TAGS)) -v -buildvcs=false -ldflags "$(LDFLAGS) -s -w" $(1)'
 endef
 
 # For windows builds that do not require cgo.
@@ -222,7 +222,7 @@ define build_windows_binary
 		-e GOARCH=amd64 \
 		-e GOOS=windows \
 		$(CALICO_BUILD) \
-		sh -c '$(GIT_CONFIG_SSH) go build -o $(2) $(if $(BUILD_TAGS),-tags $(BUILD_TAGS)) -v -buildvcs=false -ldflags "$(LDFLAGS)" $(1)'
+		sh -c '$(GIT_CONFIG_SSH) go build -o $(2) $(if $(BUILD_TAGS),-tags $(BUILD_TAGS)) -v -buildvcs=false -ldflags "$(LDFLAGS) -s -w" $(1)'
 endef
 
 # Images used in build / test across multiple directories.
@@ -239,7 +239,12 @@ ifeq ($(GIT_USE_SSH),true)
 endif
 
 # Get version from git. We allow setting this manually for the hashrelease process.
-GIT_VERSION ?= $(shell git describe --tags --dirty --always --abbrev=12)
+# By default, includes commit count and hash (--long). During releases (RELEASE=true),
+# only the tag is used without the commit count suffix.
+GIT_VERSION ?= $(shell git describe --tags --dirty --always --abbrev=12 --long)
+ifeq ($(RELEASE),true)
+	GIT_VERSION := $(shell git describe --tags --dirty --always --abbrev=12)
+endif
 
 # Figure out version information.  To support builds from release tarballs, we default to
 # <unknown> if this isn't a git checkout.
@@ -250,6 +255,7 @@ BUILD_ID:=$(shell git rev-parse HEAD || uuidgen | sed 's/-//g')
 # git tag at the time we build the binary.
 # Variables elsewhere that depend on this (such as LDFLAGS) must also be lazy.
 GIT_DESCRIPTION=$(shell git describe --tags --dirty --always --abbrev=12 || echo '<unknown>')
+ENTERPRISE_VERSION?=$(call git-release-tag-from-dev-tag)
 
 # Calculate a timestamp for any build artifacts.
 ifneq ($(OS),Windows_NT)
@@ -1168,6 +1174,17 @@ ifndef IMAGE_ONLY
 		NEXT_RELEASE_VERSION=$(NEXT_RELEASE_VERSION) BRANCH=$(RELEASE_BRANCH) DEV_TAG=$(DEV_TAG)
 endif
 
+cut-release-image: var-require-one-of-CONFIRM-DRYRUN
+	$(eval DEV_TAG = $(if $(DEV_TAG),$(DEV_TAG),$(call git-dev-tag)))
+	$(eval RELEASE_TAG = $(if $(RELEASE_TAG),$(RELEASE_TAG),$(call git-release-tag-from-dev-tag)))
+	$(eval RELEASE_BRANCH = $(call release-branch-for-tag,$(DEV_TAG)))
+	$(eval IMAGE_DEV_TAG = $(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(DEV_TAG))
+	$(eval IMAGE_RELEASE_TAG = $(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(RELEASE_TAG))
+ifdef BUILD_IMAGES
+	$(MAKE) release-dev-images\
+		RELEASE_TAG=$(IMAGE_RELEASE_TAG) BRANCH=$(RELEASE_BRANCH) DEV_TAG=$(IMAGE_DEV_TAG)
+endif
+
 # maybe-tag-release calls the tag-release target only if the current commit is not tagged with the tag in RELEASE_TAG.
 # If the current commit is already tagged with the value in RELEASE_TAG then this is a NOOP.
 maybe-tag-release: var-require-all-RELEASE_TAG
@@ -1303,7 +1320,15 @@ run-k8s-apiserver: stop-k8s-apiserver run-etcd
 		--tls-private-key-file=/home/user/certs/kubernetes-key.pem \
 		--enable-priority-and-fairness=false \
 		--max-mutating-requests-inflight=0 \
-		--max-requests-inflight=0
+		--max-requests-inflight=0 \
+		--enable-aggregator-routing \
+		--requestheader-client-ca-file=/home/user/certs/ca.pem \
+		--requestheader-username-headers=X-Remote-User \
+		--requestheader-group-headers=X-Remote-Group \
+		--requestheader-extra-headers-prefix=X-Remote-Extra- \
+		--proxy-client-cert-file=/home/user/certs/kubernetes.pem \
+		--proxy-client-key-file=/home/user/certs/kubernetes-key.pem
+
 
 	# Wait until the apiserver is accepting requests.
 	while ! docker exec $(APISERVER_NAME) kubectl get namespace default; do echo "Waiting for apiserver to come up..."; sleep 2; done
@@ -1510,6 +1535,8 @@ BOOTSTRAP_PASSWORD := $(shell cat /dev/urandom | LC_CTYPE=C tr -dc A-Za-z0-9 | h
 ELASTIC_PASSWORD := $(BOOTSTRAP_PASSWORD)
 
 ELASTIC_IMAGE   ?= docker.elastic.co/elasticsearch/elasticsearch:$(shell grep -o '^ELASTIC_VERSION=[0-9\.]*' $(REPO_ROOT)/third_party/elasticsearch/Makefile | cut -d "=" -f 2)
+ELASTIC_EXTRA_DOCKER_ARGS ?=
+ELASTIC_MEMORY ?= 2GB
 
 ## Run elasticsearch as a container (tigera-elastic)
 .PHONY: run-elastic
@@ -1517,11 +1544,12 @@ run-elastic: $(REPO_ROOT)/.elasticsearch.created
 $(REPO_ROOT)/.elasticsearch.created:
 	# Run ES on Docker.
 	docker run --detach \
-	-m 2GB \
+	-m $(ELASTIC_MEMORY) \
 	--net=host \
 	--name=tigera-elastic \
 	-e "discovery.type=single-node" \
 	-e "xpack.security.enabled=false" \
+	$(ELASTIC_EXTRA_DOCKER_ARGS) \
 	$(ELASTIC_IMAGE)
 
 	# Wait until ES is accepting requests.
