@@ -888,6 +888,9 @@ type FelixConfigurationSpec struct {
 	// [Default: 1]
 	BPFExportBufferSizeMB *int `json:"bpfExportBufferSizeMB,omitempty" validate:"omitempty,cidrs"`
 
+	// CgroupV2Path overrides the default location where to find the cgroup hierarchy.
+	CgroupV2Path string `json:"cgroupV2Path,omitempty"`
+
 	// SyslogReporterEnabled turns on the feature to write logs to Syslog. Please note that this can incur significant
 	// disk space usage when running felix on non-cluster hosts.
 	SyslogReporterEnabled *bool `json:"syslogReporterEnabled,omitempty" validate:"omitempty"`
