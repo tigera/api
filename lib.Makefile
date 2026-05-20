@@ -250,6 +250,7 @@ BUILD_ID:=$(shell git rev-parse HEAD || uuidgen | sed 's/-//g')
 # git tag at the time we build the binary.
 # Variables elsewhere that depend on this (such as LDFLAGS) must also be lazy.
 GIT_DESCRIPTION=$(shell git describe --tags --dirty --always --abbrev=12 || echo '<unknown>')
+ENTERPRISE_VERSION?=$(call git-release-tag-from-dev-tag)
 
 # Calculate a timestamp for any build artifacts.
 ifneq ($(OS),Windows_NT)
@@ -1168,6 +1169,17 @@ ifndef IMAGE_ONLY
 		NEXT_RELEASE_VERSION=$(NEXT_RELEASE_VERSION) BRANCH=$(RELEASE_BRANCH) DEV_TAG=$(DEV_TAG)
 endif
 
+cut-release-image: var-require-one-of-CONFIRM-DRYRUN
+	$(eval DEV_TAG = $(if $(DEV_TAG),$(DEV_TAG),$(call git-dev-tag)))
+	$(eval RELEASE_TAG = $(if $(RELEASE_TAG),$(RELEASE_TAG),$(call git-release-tag-from-dev-tag)))
+	$(eval RELEASE_BRANCH = $(call release-branch-for-tag,$(DEV_TAG)))
+	$(eval IMAGE_DEV_TAG = $(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(DEV_TAG))
+	$(eval IMAGE_RELEASE_TAG = $(if $(IMAGETAG_PREFIX),$(IMAGETAG_PREFIX)-)$(RELEASE_TAG))
+ifdef BUILD_IMAGES
+	$(MAKE) release-dev-images\
+		RELEASE_TAG=$(IMAGE_RELEASE_TAG) BRANCH=$(RELEASE_BRANCH) DEV_TAG=$(IMAGE_DEV_TAG)
+endif
+
 # maybe-tag-release calls the tag-release target only if the current commit is not tagged with the tag in RELEASE_TAG.
 # If the current commit is already tagged with the value in RELEASE_TAG then this is a NOOP.
 maybe-tag-release: var-require-all-RELEASE_TAG
@@ -1303,7 +1315,15 @@ run-k8s-apiserver: stop-k8s-apiserver run-etcd
 		--tls-private-key-file=/home/user/certs/kubernetes-key.pem \
 		--enable-priority-and-fairness=false \
 		--max-mutating-requests-inflight=0 \
-		--max-requests-inflight=0
+		--max-requests-inflight=0 \
+		--enable-aggregator-routing \
+		--requestheader-client-ca-file=/home/user/certs/ca.pem \
+		--requestheader-username-headers=X-Remote-User \
+		--requestheader-group-headers=X-Remote-Group \
+		--requestheader-extra-headers-prefix=X-Remote-Extra- \
+		--proxy-client-cert-file=/home/user/certs/kubernetes.pem \
+		--proxy-client-key-file=/home/user/certs/kubernetes-key.pem
+
 
 	# Wait until the apiserver is accepting requests.
 	while ! docker exec $(APISERVER_NAME) kubectl get namespace default; do echo "Waiting for apiserver to come up..."; sleep 2; done

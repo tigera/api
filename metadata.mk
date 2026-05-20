@@ -3,7 +3,7 @@
 #################################################################################################
 
 # The version of calico/go-build and calico/base to use.
-GO_BUILD_VER=1.24.6-llvm18.1.8-k8s1.32.7
+GO_BUILD_VER=1.24.9-llvm18.1.8-k8s1.32.9
 CALICO_BASE_VER=ubi8-1754512227
 # TODO Remove once CALICO_BASE is updated to UBI9
 CALICO_BASE_UBI9_VER=ubi9-1744398299
@@ -13,7 +13,7 @@ ACK_GINKGO=ACK_GINKGO_DEPRECATIONS=1.16.5
 
 # Version of Kubernetes to use for tests, rancher/kubectl, and kubectl binary release in
 # compliance benchmarker, confd, and kube-controllers.
-K8S_VERSION=v1.32.7
+K8S_VERSION=v1.32.9
 
 # Version of various tools used in the build and tests.
 COREDNS_VERSION=1.5.2
@@ -24,6 +24,13 @@ HELM_VERSION=v3.16.4
 KINDEST_NODE_VERSION=v1.31.4
 KINDEST_NODE_VERSION_DUAL_TOR=v1.24.7
 KIND_VERSION=v0.25.0
+GITHUB_CLI_VERSION=2.26.0
+GOTESTSUM_VERSION=v1.12.2
+
+# This gets embedded into node as the Calico version, the Enterprise release
+# is based off of. This should be updated everytime a new opensource Calico
+# release is merged into node-private.
+CALICO_VERSION=v3.30.0
 
 # The Semaphore calico-private ID, used when making calls to the Semaphore API.
 SEMAPHORE_PROJECT_ID=8a309869-f767-49dc-924f-fa927edbf657
@@ -62,7 +69,10 @@ DEV_TAG_SUFFIX ?= calient-0.dev
 
 # RELEASE_REGISTRIES configures the container images registries which are published to
 # as part of an official release.
-RELEASE_REGISTRIES = quay.io/tigera
+RELEASE_REGISTRIES ?= quay.io/tigera
+
+# Archive bucket
+ARTIFACTS_BUCKET ?= tigera-public/ee
 
 # The directory for windows image tarballs
 WINDOWS_DIST = dist/windows
@@ -87,6 +97,8 @@ DEFAULT_BRANCH_OVERRIDE ?= release-calient-v3.21
 RELEASE_BRANCH_PREFIX ?= release-calient
 # The operator branch corresponding to this branch.
 OPERATOR_BRANCH=release-v1.38
+# The manager branch corresponding to this branch.
+MANAGER_BRANCH ?= release-calient-v3.21
 
 # The libbpf version to use
 LIBBPF_VERSION=v1.4.6

@@ -6114,7 +6114,7 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 					},
 					"bpfConntrackMode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "BPFConntrackCleanupMode controls how BPF conntrack entries are cleaned up.  `Auto` will use a BPF program if supported, falling back to userspace if not.  `Userspace` will always use the userspace cleanup code.  `BPFProgram` will always use the BPF program (failing if not supported). [Default: Auto]",
+							Description: "BPFConntrackCleanupMode controls how BPF conntrack entries are cleaned up.  `Auto` will use a BPF program if supported, falling back to userspace if not.  `Userspace` will always use the userspace cleanup code.  `BPFProgram` will always use the BPF program (failing if not supported).\n\n/To be deprecated in future versions as conntrack map type changed to lru_hash and userspace cleanup is the only mode that is supported. [Default: Userspace]",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -9814,8 +9814,9 @@ func schema_pkg_apis_projectcalico_v3_LoadBalancerControllerConfig(ref common.Re
 				Properties: map[string]spec.Schema{
 					"assignIPs": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "AssignIPs controls which LoadBalancer Service gets IP assigned from Calico IPAM.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},
