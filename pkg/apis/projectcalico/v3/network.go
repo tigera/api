@@ -54,6 +54,7 @@ type NetworkSpec struct {
 type VRFNetworkSpec struct {
 	// Routing controls cluster-wide routing behaviour for this VRF network.
 	// +optional
+	// +kubebuilder:default={inClusterMode: "Local"}
 	Routing VRFRouting `json:"routing,omitempty"`
 
 	// HostConfig defines per-node configuration for this VRF network.  At least one entry
