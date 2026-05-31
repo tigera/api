@@ -119,6 +119,10 @@ type ControllersConfig struct {
 
 	// Migration enables and configures migration controllers.
 	Migration *MigrationControllerConfig `json:"migration,omitempty"`
+
+	// RBACSync enables and configures the RBAC sync controller, which reconciles
+	// Calico RBAC ClusterRoles and bindings. Disabled by default, set to non-nil to enable.
+	RBACSync *RBACSyncControllerConfig `json:"rbacSync,omitempty"`
 }
 
 type MigrationControllerConfig struct {
@@ -224,6 +228,13 @@ type NamespaceControllerConfig struct {
 // services from remote clusters.
 type FederatedServicesControllerConfig struct {
 	// ReconcilerPeriod is the period to perform reconciliation. [Default: 5m]
+	ReconcilerPeriod *metav1.Duration `json:"reconcilerPeriod,omitempty" validate:"omitempty"`
+}
+
+// RBACSyncControllerConfig configures the RBAC sync controller, which reconciles
+// Calico RBAC ClusterRoles and bindings across management and managed clusters.
+type RBACSyncControllerConfig struct {
+	// ReconcilerPeriod is the period to perform reconciliation with the Calico datastore. [Default: 30s]
 	ReconcilerPeriod *metav1.Duration `json:"reconcilerPeriod,omitempty" validate:"omitempty"`
 }
 
