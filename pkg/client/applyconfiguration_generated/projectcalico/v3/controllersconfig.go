@@ -25,6 +25,9 @@ type ControllersConfigApplyConfiguration struct {
 	LoadBalancer *LoadBalancerControllerConfigApplyConfiguration `json:"loadBalancer,omitempty"`
 	// Migration enables and configures migration controllers.
 	Migration *MigrationControllerConfigApplyConfiguration `json:"migration,omitempty"`
+	// RBACSync enables and configures the RBAC sync controller, which reconciles
+	// Calico RBAC ClusterRoles and bindings. Disabled by default, set to non-nil to enable.
+	RBACSync *RBACSyncControllerConfigApplyConfiguration `json:"rbacSync,omitempty"`
 }
 
 // ControllersConfigApplyConfiguration constructs a declarative configuration of the ControllersConfig type for use with
@@ -94,5 +97,13 @@ func (b *ControllersConfigApplyConfiguration) WithLoadBalancer(value *LoadBalanc
 // If called multiple times, the Migration field is set to the value of the last call.
 func (b *ControllersConfigApplyConfiguration) WithMigration(value *MigrationControllerConfigApplyConfiguration) *ControllersConfigApplyConfiguration {
 	b.Migration = value
+	return b
+}
+
+// WithRBACSync sets the RBACSync field in the declarative configuration to the given value
+// and returns the receiver, so that objects can be built by chaining "With" function invocations.
+// If called multiple times, the RBACSync field is set to the value of the last call.
+func (b *ControllersConfigApplyConfiguration) WithRBACSync(value *RBACSyncControllerConfigApplyConfiguration) *ControllersConfigApplyConfiguration {
+	b.RBACSync = value
 	return b
 }
