@@ -315,6 +315,16 @@ var schemaYAML = typed.YAMLObject(`types:
     elementType:
       namedType: __untyped_deduced_
     elementRelationship: separable
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.Network
+  scalar: untyped
+  list:
+    elementType:
+      namedType: __untyped_atomic_
+    elementRelationship: atomic
+  map:
+    elementType:
+      namedType: __untyped_deduced_
+    elementRelationship: separable
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.NetworkPolicy
   scalar: untyped
   list:
