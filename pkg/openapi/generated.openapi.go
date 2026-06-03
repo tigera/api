@@ -27,6 +27,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		v3.AlertExceptionSpec{}.OpenAPIModelName():                        schema_pkg_apis_projectcalico_v3_AlertExceptionSpec(ref),
 		v3.AlertExceptionStatus{}.OpenAPIModelName():                      schema_pkg_apis_projectcalico_v3_AlertExceptionStatus(ref),
 		v3.AllocationAttribute{}.OpenAPIModelName():                       schema_pkg_apis_projectcalico_v3_AllocationAttribute(ref),
+		v3.ApplicationLayerControllerConfig{}.OpenAPIModelName():          schema_pkg_apis_projectcalico_v3_ApplicationLayerControllerConfig(ref),
 		v3.AuditEventsSelection{}.OpenAPIModelName():                      schema_pkg_apis_projectcalico_v3_AuditEventsSelection(ref),
 		v3.AuditResource{}.OpenAPIModelName():                             schema_pkg_apis_projectcalico_v3_AuditResource(ref),
 		v3.AuditSummary{}.OpenAPIModelName():                              schema_pkg_apis_projectcalico_v3_AuditSummary(ref),
@@ -177,6 +178,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		v3.IPReservation{}.OpenAPIModelName():                             schema_pkg_apis_projectcalico_v3_IPReservation(ref),
 		v3.IPReservationList{}.OpenAPIModelName():                         schema_pkg_apis_projectcalico_v3_IPReservationList(ref),
 		v3.IPReservationSpec{}.OpenAPIModelName():                         schema_pkg_apis_projectcalico_v3_IPReservationSpec(ref),
+		v3.InterfaceMatch{}.OpenAPIModelName():                            schema_pkg_apis_projectcalico_v3_InterfaceMatch(ref),
 		v3.KubeConfig{}.OpenAPIModelName():                                schema_pkg_apis_projectcalico_v3_KubeConfig(ref),
 		v3.KubeControllersConfiguration{}.OpenAPIModelName():              schema_pkg_apis_projectcalico_v3_KubeControllersConfiguration(ref),
 		v3.KubeControllersConfigurationList{}.OpenAPIModelName():          schema_pkg_apis_projectcalico_v3_KubeControllersConfigurationList(ref),
@@ -196,12 +198,16 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		v3.NamedSelector{}.OpenAPIModelName():                             schema_pkg_apis_projectcalico_v3_NamedSelector(ref),
 		v3.NamesAndLabelsMatch{}.OpenAPIModelName():                       schema_pkg_apis_projectcalico_v3_NamesAndLabelsMatch(ref),
 		v3.NamespaceControllerConfig{}.OpenAPIModelName():                 schema_pkg_apis_projectcalico_v3_NamespaceControllerConfig(ref),
+		v3.Network{}.OpenAPIModelName():                                   schema_pkg_apis_projectcalico_v3_Network(ref),
+		v3.NetworkList{}.OpenAPIModelName():                               schema_pkg_apis_projectcalico_v3_NetworkList(ref),
 		v3.NetworkPolicy{}.OpenAPIModelName():                             schema_pkg_apis_projectcalico_v3_NetworkPolicy(ref),
 		v3.NetworkPolicyList{}.OpenAPIModelName():                         schema_pkg_apis_projectcalico_v3_NetworkPolicyList(ref),
 		v3.NetworkPolicySpec{}.OpenAPIModelName():                         schema_pkg_apis_projectcalico_v3_NetworkPolicySpec(ref),
 		v3.NetworkSet{}.OpenAPIModelName():                                schema_pkg_apis_projectcalico_v3_NetworkSet(ref),
 		v3.NetworkSetList{}.OpenAPIModelName():                            schema_pkg_apis_projectcalico_v3_NetworkSetList(ref),
 		v3.NetworkSetSpec{}.OpenAPIModelName():                            schema_pkg_apis_projectcalico_v3_NetworkSetSpec(ref),
+		v3.NetworkSpec{}.OpenAPIModelName():                               schema_pkg_apis_projectcalico_v3_NetworkSpec(ref),
+		v3.NetworkStatus{}.OpenAPIModelName():                             schema_pkg_apis_projectcalico_v3_NetworkStatus(ref),
 		v3.NodeControllerConfig{}.OpenAPIModelName():                      schema_pkg_apis_projectcalico_v3_NodeControllerConfig(ref),
 		v3.PacketCapture{}.OpenAPIModelName():                             schema_pkg_apis_projectcalico_v3_PacketCapture(ref),
 		v3.PacketCaptureFile{}.OpenAPIModelName():                         schema_pkg_apis_projectcalico_v3_PacketCaptureFile(ref),
@@ -224,6 +230,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		v3.ProfileSpec{}.OpenAPIModelName():                               schema_pkg_apis_projectcalico_v3_ProfileSpec(ref),
 		v3.ProtoPort{}.OpenAPIModelName():                                 schema_pkg_apis_projectcalico_v3_ProtoPort(ref),
 		v3.Pull{}.OpenAPIModelName():                                      schema_pkg_apis_projectcalico_v3_Pull(ref),
+		v3.RBACSyncControllerConfig{}.OpenAPIModelName():                  schema_pkg_apis_projectcalico_v3_RBACSyncControllerConfig(ref),
 		v3.RemoteClusterConfiguration{}.OpenAPIModelName():                schema_pkg_apis_projectcalico_v3_RemoteClusterConfiguration(ref),
 		v3.RemoteClusterConfigurationList{}.OpenAPIModelName():            schema_pkg_apis_projectcalico_v3_RemoteClusterConfigurationList(ref),
 		v3.RemoteClusterConfigurationSpec{}.OpenAPIModelName():            schema_pkg_apis_projectcalico_v3_RemoteClusterConfigurationSpec(ref),
@@ -259,6 +266,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		v3.StagedNetworkPolicy{}.OpenAPIModelName():                       schema_pkg_apis_projectcalico_v3_StagedNetworkPolicy(ref),
 		v3.StagedNetworkPolicyList{}.OpenAPIModelName():                   schema_pkg_apis_projectcalico_v3_StagedNetworkPolicyList(ref),
 		v3.StagedNetworkPolicySpec{}.OpenAPIModelName():                   schema_pkg_apis_projectcalico_v3_StagedNetworkPolicySpec(ref),
+		v3.StaticRouteAction{}.OpenAPIModelName():                         schema_pkg_apis_projectcalico_v3_StaticRouteAction(ref),
 		v3.Template{}.OpenAPIModelName():                                  schema_pkg_apis_projectcalico_v3_Template(ref),
 		v3.ThreatFeedFormat{}.OpenAPIModelName():                          schema_pkg_apis_projectcalico_v3_ThreatFeedFormat(ref),
 		v3.ThreatFeedFormatCSV{}.OpenAPIModelName():                       schema_pkg_apis_projectcalico_v3_ThreatFeedFormatCSV(ref),
@@ -279,6 +287,10 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		v3.UISettingsGroupSpec{}.OpenAPIModelName():                       schema_pkg_apis_projectcalico_v3_UISettingsGroupSpec(ref),
 		v3.UISettingsList{}.OpenAPIModelName():                            schema_pkg_apis_projectcalico_v3_UISettingsList(ref),
 		v3.UISettingsSpec{}.OpenAPIModelName():                            schema_pkg_apis_projectcalico_v3_UISettingsSpec(ref),
+		v3.VRFHostConfig{}.OpenAPIModelName():                             schema_pkg_apis_projectcalico_v3_VRFHostConfig(ref),
+		v3.VRFNetworkSpec{}.OpenAPIModelName():                            schema_pkg_apis_projectcalico_v3_VRFNetworkSpec(ref),
+		v3.VRFRouting{}.OpenAPIModelName():                                schema_pkg_apis_projectcalico_v3_VRFRouting(ref),
+		v3.VRFStaticRoute{}.OpenAPIModelName():                            schema_pkg_apis_projectcalico_v3_VRFStaticRoute(ref),
 		v3.WorkloadEndpointControllerConfig{}.OpenAPIModelName():          schema_pkg_apis_projectcalico_v3_WorkloadEndpointControllerConfig(ref),
 		numorstring.DSCP{}.OpenAPIModelName():                             schema_api_pkg_lib_numorstring_DSCP(ref),
 		numorstring.Port{}.OpenAPIModelName():                             schema_api_pkg_lib_numorstring_Port(ref),
@@ -814,6 +826,27 @@ func schema_pkg_apis_projectcalico_v3_AllocationAttribute(ref common.ReferenceCa
 				},
 			},
 		},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_ApplicationLayerControllerConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ApplicationLayerControllerConfig configures the application-layer controller-group.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"reconcilerPeriod": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ReconcilerPeriod is the period to perform reconciliation. [Default: 30s]",
+							Ref:         ref(metav1.Duration{}.OpenAPIModelName()),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			metav1.Duration{}.OpenAPIModelName()},
 	}
 }
 
@@ -1710,7 +1743,7 @@ func schema_pkg_apis_projectcalico_v3_BGPConfigurationSpec(ref common.ReferenceC
 					"serviceLoadBalancerIPs": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-list-type": "set",
+								"x-kubernetes-list-type": "atomic",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -1729,7 +1762,7 @@ func schema_pkg_apis_projectcalico_v3_BGPConfigurationSpec(ref common.ReferenceC
 					"serviceExternalIPs": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-list-type": "set",
+								"x-kubernetes-list-type": "atomic",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -1748,7 +1781,7 @@ func schema_pkg_apis_projectcalico_v3_BGPConfigurationSpec(ref common.ReferenceC
 					"serviceClusterIPs": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-list-type": "set",
+								"x-kubernetes-list-type": "atomic",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -1774,7 +1807,7 @@ func schema_pkg_apis_projectcalico_v3_BGPConfigurationSpec(ref common.ReferenceC
 					"communities": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-list-type": "set",
+								"x-kubernetes-list-type": "atomic",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -1793,7 +1826,7 @@ func schema_pkg_apis_projectcalico_v3_BGPConfigurationSpec(ref common.ReferenceC
 					"prefixAdvertisements": {
 						VendorExtensible: spec.VendorExtensible{
 							Extensions: spec.Extensions{
-								"x-kubernetes-list-type": "set",
+								"x-kubernetes-list-type": "atomic",
 							},
 						},
 						SchemaProps: spec.SchemaProps{
@@ -2867,7 +2900,14 @@ func schema_pkg_apis_projectcalico_v3_BGPPeerSpec(ref common.ReferenceCallback) 
 					},
 					"externalNetwork": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Name of the external network to which this peer belongs.",
+							Description: "Name of the external network to which this peer belongs.  Cannot be set if network is set.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"network": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name of the network to which this peer belongs.  Cannot be set if externalNetwork is set.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -4316,11 +4356,23 @@ func schema_pkg_apis_projectcalico_v3_ControllersConfig(ref common.ReferenceCall
 							Ref:         ref(v3.MigrationControllerConfig{}.OpenAPIModelName()),
 						},
 					},
+					"applicationLayer": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ApplicationLayer enables and configures the application-layer subsystem (WAF, GlobalWAF, WAFPlugin, validation). Operator-managed; users should not edit this field directly. Non-nil enables the subsystem; activation is gated on a valid Calico Enterprise license.",
+							Ref:         ref(v3.ApplicationLayerControllerConfig{}.OpenAPIModelName()),
+						},
+					},
+					"rbacSync": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RBACSync enables and configures the RBAC sync controller, which reconciles Calico RBAC ClusterRoles and bindings. Disabled by default, set to non-nil to enable.",
+							Ref:         ref(v3.RBACSyncControllerConfig{}.OpenAPIModelName()),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			v3.FederatedServicesControllerConfig{}.OpenAPIModelName(), v3.LoadBalancerControllerConfig{}.OpenAPIModelName(), v3.MigrationControllerConfig{}.OpenAPIModelName(), v3.NamespaceControllerConfig{}.OpenAPIModelName(), v3.NodeControllerConfig{}.OpenAPIModelName(), v3.PolicyControllerConfig{}.OpenAPIModelName(), v3.ServiceAccountControllerConfig{}.OpenAPIModelName(), v3.WorkloadEndpointControllerConfig{}.OpenAPIModelName()},
+			v3.ApplicationLayerControllerConfig{}.OpenAPIModelName(), v3.FederatedServicesControllerConfig{}.OpenAPIModelName(), v3.LoadBalancerControllerConfig{}.OpenAPIModelName(), v3.MigrationControllerConfig{}.OpenAPIModelName(), v3.NamespaceControllerConfig{}.OpenAPIModelName(), v3.NodeControllerConfig{}.OpenAPIModelName(), v3.PolicyControllerConfig{}.OpenAPIModelName(), v3.RBACSyncControllerConfig{}.OpenAPIModelName(), v3.ServiceAccountControllerConfig{}.OpenAPIModelName(), v3.WorkloadEndpointControllerConfig{}.OpenAPIModelName()},
 	}
 }
 
@@ -5862,6 +5914,13 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 				Description: "FelixConfigurationSpec contains the values of the Felix configuration.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
+					"nodeSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "NodeSelector is an optional label selector that restricts this FelixConfiguration to apply only to nodes that match the given selector. This field is only valid on FelixConfiguration resources whose name is not \"default\" and does not start with \"node.\". For resources named \"default\", the configuration applies globally to all nodes. For resources named \"node.<nodename>\", the configuration applies to the named node only.\n\nAt most one selector-scoped FelixConfiguration should match any given node. If multiple selector-scoped resources match, the oldest (by creation timestamp) is used and a warning is logged. This prevents an accidentally created conflicting resource from disrupting an existing, working configuration.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"useInternalDataplaneDriver": {
 						SchemaProps: spec.SchemaProps{
 							Description: "UseInternalDataplaneDriver, if true, Felix will use its internal dataplane programming logic.  If false, it will launch an external dataplane driver and communicate with it over protobuf.",
@@ -6891,6 +6950,13 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 							Format:      "",
 						},
 					},
+					"bpfIPFragmentReassemblyEnabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "BPFIPFragmentReassemblyEnabled controls whether Felix loads the BPF program that reassembles out-of-order IP fragments from external networks. This program requires a kernel newer than 5.10. When enabled (the default) and the program fails to load, Felix reports not-ready until the user sets this to false. When false, fragmented packets from external sources are dropped. [Default: true]",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 					"bpfEnforceRPF": {
 						SchemaProps: spec.SchemaProps{
 							Description: "BPFEnforceRPF enforce strict RPF on all host interfaces with BPF programs regardless of what is the per-interfaces or global setting. Possible values are Disabled, Strict or Loose. [Default: Loose]",
@@ -6947,6 +7013,13 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 							Description: "BPFExportBufferSizeMB in BPF mode, controls the buffer size used for sending BPF events to felix. [Default: 1]",
 							Type:        []string{"integer"},
 							Format:      "int32",
+						},
+					},
+					"l7ObservabilityEnabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "L7ObservabilityEnabled enables eBPF-based L7 HTTP and TLS observability. It is dataplane-agnostic - works with eBPF, iptables, or nftables. Requires kernel 5.17+. [Default: false]",
+							Type:        []string{"boolean"},
+							Format:      "",
 						},
 					},
 					"istioAmbientMode": {
@@ -7541,6 +7614,13 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 							Description: "Limit on the length of the URL collected in L7 logs. When a URL length reaches this limit it is sliced off, and the sliced URL is sent to log storage. [Default: 250]",
 							Type:        []string{"integer"},
 							Format:      "int32",
+						},
+					},
+					"l7LogsFileAggregationTLSSNI": {
+						SchemaProps: spec.SchemaProps{
+							Description: "L7LogsFileAggregationTLSSNI controls whether the TLS Server Name Indication (SNI) participates in the aggregation key for L7 logs. [Default: IncludeL7TLSSNI - SNI is part of the aggregation key] Accepted values: IncludeL7TLSSNI - Include the SNI in the aggregation key. ExcludeL7TLSSNI - Aggregate over all other fields ignoring the SNI entirely.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"l7LogsFilePerNodeLimit": {
@@ -10647,6 +10727,26 @@ func schema_pkg_apis_projectcalico_v3_IPReservationSpec(ref common.ReferenceCall
 	}
 }
 
+func schema_pkg_apis_projectcalico_v3_InterfaceMatch(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "InterfaceMatch identifies a network interface.  Exactly one match criterion must be set.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name matches a network interface by its exact device name (e.g. \"bond0\", \"eth1\", \"ens192\").",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_pkg_apis_projectcalico_v3_KubeConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -11052,7 +11152,14 @@ func schema_pkg_apis_projectcalico_v3_LicenseKeyStatus(ref common.ReferenceCallb
 					},
 					"maxnodes": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Maximum Number of Allowed Nodes",
+							Description: "Maximum Number of Allowed Nodes.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"maxcores": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Maximum Number of Allowed CPU Cores.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -11173,7 +11280,7 @@ func schema_pkg_apis_projectcalico_v3_ManagedCluster(ref common.ReferenceCallbac
 						},
 					},
 				},
-				Required: []string{"metadata", "spec", "status"},
+				Required: []string{"metadata", "spec"},
 			},
 		},
 		Dependencies: []string{
@@ -11441,6 +11548,103 @@ func schema_pkg_apis_projectcalico_v3_NamespaceControllerConfig(ref common.Refer
 		},
 		Dependencies: []string{
 			metav1.Duration{}.OpenAPIModelName()},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_Network(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Network defines a logical network within a Calico cluster.  Each Network has a type (VRF, ...) that determines how pods on that network are isolated and how their traffic is routed.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref(metav1.ObjectMeta{}.OpenAPIModelName()),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref(v3.NetworkSpec{}.OpenAPIModelName()),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref(v3.NetworkStatus{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"spec"},
+			},
+		},
+		Dependencies: []string{
+			v3.NetworkSpec{}.OpenAPIModelName(), v3.NetworkStatus{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_NetworkList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NetworkList is a list of Network resources.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref(metav1.ListMeta{}.OpenAPIModelName()),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref(v3.Network{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			v3.Network{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
 	}
 }
 
@@ -11794,6 +11998,61 @@ func schema_pkg_apis_projectcalico_v3_NetworkSetSpec(ref common.ReferenceCallbac
 				},
 			},
 		},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_NetworkSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NetworkSpec contains the specification for a Network resource.  Exactly one of the network-type fields (vrf, ...) must be set.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"vrf": {
+						SchemaProps: spec.SchemaProps{
+							Description: "VRF network configuration. Pods interfaces on a VRF network are isolated in a Linux VRF and can only access their own VRF.",
+							Ref:         ref(v3.VRFNetworkSpec{}.OpenAPIModelName()),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			v3.VRFNetworkSpec{}.OpenAPIModelName()},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_NetworkStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NetworkStatus reports the observed state of the Network resource.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "Conditions is a list of conditions that apply to this network.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref(metav1.Condition{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			metav1.Condition{}.OpenAPIModelName()},
 	}
 }
 
@@ -12748,6 +13007,27 @@ func schema_pkg_apis_projectcalico_v3_Pull(ref common.ReferenceCallback) common.
 		},
 		Dependencies: []string{
 			v3.HTTPPull{}.OpenAPIModelName()},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_RBACSyncControllerConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "RBACSyncControllerConfig configures the RBAC sync controller, which reconciles Calico RBAC ClusterRoles and bindings across management and managed clusters.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"reconcilerPeriod": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ReconcilerPeriod is the period to perform reconciliation with the Calico datastore. [Default: 30s]",
+							Ref:         ref(metav1.Duration{}.OpenAPIModelName()),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			metav1.Duration{}.OpenAPIModelName()},
 	}
 }
 
@@ -14727,6 +15007,26 @@ func schema_pkg_apis_projectcalico_v3_StagedNetworkPolicySpec(ref common.Referen
 	}
 }
 
+func schema_pkg_apis_projectcalico_v3_StaticRouteAction(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "StaticRouteAction defines the forwarding behaviour for a static route.  Exactly one field must be set.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"nextHop": {
+						SchemaProps: spec.SchemaProps{
+							Description: "NextHop forwards matching traffic to the specified gateway IP.  The address must be reachable on the subnet of one of the VRF interfaces on the node.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_pkg_apis_projectcalico_v3_Template(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -15673,6 +15973,171 @@ func schema_pkg_apis_projectcalico_v3_UISettingsSpec(ref common.ReferenceCallbac
 		},
 		Dependencies: []string{
 			v3.UIDashboard{}.OpenAPIModelName(), v3.UIGraphLayer{}.OpenAPIModelName(), v3.UIGraphView{}.OpenAPIModelName()},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_VRFHostConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VRFHostConfig provides node-specific VRF settings which may vary across different hosts in the cluster.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"nodeSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "NodeSelector is a Calico selector expression that determines which nodes this configuration applies to.  If omitted, the entry applies to all nodes. When multiple HostConfig entries are present, the first entry whose selector matches a given node wins.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"routeTableIndex": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RouteTableIndex is the Linux kernel routing table number to use for this VRF. Must be unique on these nodes, must not overlap with the RouteTableRanges in FelixConfiguration, and must not collide with tables used by other software on the node.  Tables 253 (default), 254 (main), and 255 (local) are reserved by the kernel.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"hostInterfaces": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "Interfaces on the node to attach to the VRF.  The IP address, and local routes for that IP address will move into the VRF routing table.  At least one interface should be specified to allow pods in the VRF to communicate outside the node.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref(v3.InterfaceMatch{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+					"staticRoutes": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "StaticRoutes are additional routes programmed into the VRF routing table, beyond the pod routes that Felix manages automatically and routes derived from VRF interface addresses.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref(v3.VRFStaticRoute{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"routeTableIndex"},
+			},
+		},
+		Dependencies: []string{
+			v3.InterfaceMatch{}.OpenAPIModelName(), v3.VRFStaticRoute{}.OpenAPIModelName()},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_VRFNetworkSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VRFNetworkSpec configures a VRF-based network that isolates pods in a Linux VRF.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"routing": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Routing controls cluster-wide routing behaviour for this VRF network.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(v3.VRFRouting{}.OpenAPIModelName()),
+						},
+					},
+					"hostConfig": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"nodeSelector",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "HostConfig defines per-node configuration for this VRF network.  At least one entry must be specified.  When multiple entries are present (e.g. one per rack), they must have disjoint nodeSelectors although this is not enforced.  For a given node, the first matching entry is applied and all others are ignored.\n\nThe list is stored and served as a JSON array; Kubernetes preserves the order in which entries were submitted (including across Server-Side Apply merges keyed on nodeSelector), so the result of `kubectl get -oyaml` is authoritative for \"first match wins\".  Single-actor edits keep the order users see in the YAML they edit.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref(v3.VRFHostConfig{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"hostConfig"},
+			},
+		},
+		Dependencies: []string{
+			v3.VRFHostConfig{}.OpenAPIModelName(), v3.VRFRouting{}.OpenAPIModelName()},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_VRFRouting(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VRFRouting holds cluster-wide routing settings for a VRF network.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"inClusterMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "InClusterMode controls how Felix programs routes to pods on remote nodes inside the VRF routing table.\n\n- Local: Felix programs routes to VRF pods local to this node;\n  routing to pods on other nodes must be handled by BGP.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_VRFStaticRoute(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VRFStaticRoute defines a static route to program in a VRF routing table.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"destination": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Destination is the CIDR prefix for this route.  Use \"0.0.0.0/0\" or \"::/0\" for a default route.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"action": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Action determines how traffic matching this route is handled.  Exactly one action field must be set.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(v3.StaticRouteAction{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"destination", "action"},
+			},
+		},
+		Dependencies: []string{
+			v3.StaticRouteAction{}.OpenAPIModelName()},
 	}
 }
 
