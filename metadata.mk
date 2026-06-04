@@ -3,7 +3,7 @@
 #################################################################################################
 
 # Calico toolchain versions and the calico/base image to use.
-GO_BUILD_VER=1.25.10-llvm18.1.8-k8s1.35.4
+GO_BUILD_VER=1.25.11-llvm18.1.8-k8s1.35.5
 RUST_BUILD_VER=1.93.1
 
 CALICO_BASE_VER=ubi9-1770247388
@@ -15,7 +15,7 @@ ACK_GINKGO=ACK_GINKGO_DEPRECATIONS=1.16.5
 # Version of Kubernetes to use for tests and kubectl binary release in
 # confd and kube-controllers. The compliance benchmarker derives its kubectl
 # version from k8s.io/kubernetes in go.mod.
-K8S_VERSION=v1.35.4
+K8S_VERSION=v1.35.5
 
 # Version of the rancher/kubectl image. Pinned independently because Rancher
 # publishes their kubectl image on a lag behind upstream Kubernetes releases.
