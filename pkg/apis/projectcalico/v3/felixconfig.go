@@ -36,6 +36,7 @@ type FelixConfigurationList struct {
 // +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +kubebuilder:resource:scope=Cluster
+// +kubebuilder:validation:XValidation:rule="self.metadata.name == 'default' || self.metadata.name.startsWith('node.') ? !has(self.spec.nodeSelector) : true",message="nodeSelector must not be set on the 'default' or per-node ('node.*') FelixConfiguration",reason=FieldValueForbidden
 
 type FelixConfiguration struct {
 	metav1.TypeMeta   `json:",inline"`
@@ -207,6 +208,22 @@ const (
 // +kubebuilder:validation:XValidation:rule="!has(self.deviceRouteSourceAddress) || size(self.deviceRouteSourceAddress) == 0 || (isIP(self.deviceRouteSourceAddress) && ip(self.deviceRouteSourceAddress).family() == 4)",message="deviceRouteSourceAddress must be a valid IPv4 address",reason=FieldValueInvalid
 // +kubebuilder:validation:XValidation:rule="!has(self.deviceRouteSourceAddressIPv6) || size(self.deviceRouteSourceAddressIPv6) == 0 || (isIP(self.deviceRouteSourceAddressIPv6) && ip(self.deviceRouteSourceAddressIPv6).family() == 6)",message="deviceRouteSourceAddressIPv6 must be a valid IPv6 address",reason=FieldValueInvalid
 type FelixConfigurationSpec struct {
+	// NodeSelector is an optional label selector that restricts this FelixConfiguration
+	// to apply only to nodes that match the given selector. This field is only valid
+	// on FelixConfiguration resources whose name is not "default" and does not start
+	// with "node.". For resources named "default", the configuration applies globally
+	// to all nodes. For resources named "node.<nodename>", the configuration applies to
+	// the named node only.
+	//
+	// At most one selector-scoped FelixConfiguration should match any given node.
+	// If multiple selector-scoped resources match, the oldest (by creation
+	// timestamp) is used and a warning is logged. This prevents an accidentally
+	// created conflicting resource from disrupting an existing, working
+	// configuration.
+	// +optional
+	// +kubebuilder:validation:MaxLength=1024
+	NodeSelector *string `json:"nodeSelector,omitempty" confignamev1:"-"`
+
 	// UseInternalDataplaneDriver, if true, Felix will use its internal dataplane programming logic.  If false, it
 	// will launch an external dataplane driver and communicate with it over protobuf.
 	UseInternalDataplaneDriver *bool `json:"useInternalDataplaneDriver,omitempty"`
@@ -953,6 +970,13 @@ type FelixConfigurationSpec struct {
 	// workloads and services. [Default: true - bypass Linux conntrack]
 	BPFHostConntrackBypass *bool `json:"bpfHostConntrackBypass,omitempty"`
 
+	// BPFIPFragmentReassemblyEnabled controls whether Felix loads the BPF program that
+	// reassembles out-of-order IP fragments from external networks. This program requires
+	// a kernel newer than 5.10. When enabled (the default) and the program fails to load,
+	// Felix reports not-ready until the user sets this to false. When false, fragmented
+	// packets from external sources are dropped. [Default: true]
+	BPFIPFragmentReassemblyEnabled *bool `json:"bpfIPFragmentReassemblyEnabled,omitempty" validate:"omitempty"`
+
 	// BPFEnforceRPF enforce strict RPF on all host interfaces with BPF programs regardless of
 	// what is the per-interfaces or global setting. Possible values are Disabled, Strict
 	// or Loose. [Default: Loose]
@@ -981,6 +1005,11 @@ type FelixConfigurationSpec struct {
 	// BPFExportBufferSizeMB in BPF mode, controls the buffer size used for sending BPF events to felix.
 	// [Default: 1]
 	BPFExportBufferSizeMB *int `json:"bpfExportBufferSizeMB,omitempty" validate:"omitempty"`
+
+	// L7ObservabilityEnabled enables eBPF-based L7 HTTP and TLS observability.
+	// It is dataplane-agnostic - works with eBPF, iptables, or nftables.
+	// Requires kernel 5.17+. [Default: false]
+	L7ObservabilityEnabled *bool `json:"l7ObservabilityEnabled,omitempty" validate:"omitempty"`
 
 	// IstioAmbientMode configures Felix to work together with Tigera's Istio distribution.
 	// [Default: Disabled]
@@ -1366,6 +1395,14 @@ type FelixConfigurationSpec struct {
 	// Limit on the length of the URL collected in L7 logs. When a URL length reaches this limit
 	// it is sliced off, and the sliced URL is sent to log storage. [Default: 250]
 	L7LogsFileAggregationURLCharLimit *int `json:"l7LogsFileAggregationURLCharLimit,omitempty"`
+	// L7LogsFileAggregationTLSSNI controls whether the TLS Server Name Indication (SNI)
+	// participates in the aggregation key for L7 logs.
+	// [Default: IncludeL7TLSSNI - SNI is part of the aggregation key]
+	// Accepted values:
+	// IncludeL7TLSSNI - Include the SNI in the aggregation key.
+	// ExcludeL7TLSSNI - Aggregate over all other fields ignoring the SNI entirely.
+	// +kubebuilder:validation:Pattern=`^(?i)(IncludeL7TLSSNI|ExcludeL7TLSSNI)?$`
+	L7LogsFileAggregationTLSSNI *string `json:"l7LogsFileAggregationTLSSNI,omitempty" validate:"omitempty,l7TLSSNIAggregation"`
 	// Limit on the number of L7 logs that can be emitted within each flush interval.  When
 	// this limit has been reached, Felix counts the number of unloggable L7 responses within
 	// the flush interval, and emits a WARNING log with that count at the same time as it
