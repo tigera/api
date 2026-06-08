@@ -33,6 +33,11 @@ func (in AllocationAttribute) OpenAPIModelName() string {
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
+func (in ApplicationLayerControllerConfig) OpenAPIModelName() string {
+	return "com.github.tigera.api.pkg.apis.projectcalico.v3.ApplicationLayerControllerConfig"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
 func (in AuditEventsSelection) OpenAPIModelName() string {
 	return "com.github.tigera.api.pkg.apis.projectcalico.v3.AuditEventsSelection"
 }
@@ -783,6 +788,11 @@ func (in IPReservationSpec) OpenAPIModelName() string {
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
+func (in InterfaceMatch) OpenAPIModelName() string {
+	return "com.github.tigera.api.pkg.apis.projectcalico.v3.InterfaceMatch"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
 func (in KubeConfig) OpenAPIModelName() string {
 	return "com.github.tigera.api.pkg.apis.projectcalico.v3.KubeConfig"
 }
@@ -878,6 +888,16 @@ func (in NamespaceControllerConfig) OpenAPIModelName() string {
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
+func (in Network) OpenAPIModelName() string {
+	return "com.github.tigera.api.pkg.apis.projectcalico.v3.Network"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in NetworkList) OpenAPIModelName() string {
+	return "com.github.tigera.api.pkg.apis.projectcalico.v3.NetworkList"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
 func (in NetworkPolicy) OpenAPIModelName() string {
 	return "com.github.tigera.api.pkg.apis.projectcalico.v3.NetworkPolicy"
 }
@@ -905,6 +925,16 @@ func (in NetworkSetList) OpenAPIModelName() string {
 // OpenAPIModelName returns the OpenAPI model name for this type.
 func (in NetworkSetSpec) OpenAPIModelName() string {
 	return "com.github.tigera.api.pkg.apis.projectcalico.v3.NetworkSetSpec"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in NetworkSpec) OpenAPIModelName() string {
+	return "com.github.tigera.api.pkg.apis.projectcalico.v3.NetworkSpec"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in NetworkStatus) OpenAPIModelName() string {
+	return "com.github.tigera.api.pkg.apis.projectcalico.v3.NetworkStatus"
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
@@ -1015,6 +1045,11 @@ func (in ProtoPort) OpenAPIModelName() string {
 // OpenAPIModelName returns the OpenAPI model name for this type.
 func (in Pull) OpenAPIModelName() string {
 	return "com.github.tigera.api.pkg.apis.projectcalico.v3.Pull"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in RBACSyncControllerConfig) OpenAPIModelName() string {
+	return "com.github.tigera.api.pkg.apis.projectcalico.v3.RBACSyncControllerConfig"
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
@@ -1193,6 +1228,11 @@ func (in StagedNetworkPolicySpec) OpenAPIModelName() string {
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
+func (in StaticRouteAction) OpenAPIModelName() string {
+	return "com.github.tigera.api.pkg.apis.projectcalico.v3.StaticRouteAction"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
 func (in Template) OpenAPIModelName() string {
 	return "com.github.tigera.api.pkg.apis.projectcalico.v3.Template"
 }
@@ -1290,6 +1330,26 @@ func (in UISettingsList) OpenAPIModelName() string {
 // OpenAPIModelName returns the OpenAPI model name for this type.
 func (in UISettingsSpec) OpenAPIModelName() string {
 	return "com.github.tigera.api.pkg.apis.projectcalico.v3.UISettingsSpec"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in VRFHostConfig) OpenAPIModelName() string {
+	return "com.github.tigera.api.pkg.apis.projectcalico.v3.VRFHostConfig"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in VRFNetworkSpec) OpenAPIModelName() string {
+	return "com.github.tigera.api.pkg.apis.projectcalico.v3.VRFNetworkSpec"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in VRFRouting) OpenAPIModelName() string {
+	return "com.github.tigera.api.pkg.apis.projectcalico.v3.VRFRouting"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in VRFStaticRoute) OpenAPIModelName() string {
+	return "com.github.tigera.api.pkg.apis.projectcalico.v3.VRFStaticRoute"
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
