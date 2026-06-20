@@ -24,9 +24,9 @@ GHR_VERSION=v0.17.0
 GITHUB_CLI_VERSION=2.76.2
 GOTESTSUM_VERSION=v1.12.3
 HELM_VERSION=v3.16.4
-KINDEST_NODE_VERSION=v1.35.1
+KINDEST_NODE_VERSION=v1.35.5
 KINDEST_NODE_VERSION_DUAL_TOR=v1.24.7
-KIND_VERSION=v0.31.0
+KIND_VERSION=v0.32.0
 
 # This gets embedded into node as the Calico version, the Enterprise release
 # is based off of. This should be updated everytime a new opensource Calico
