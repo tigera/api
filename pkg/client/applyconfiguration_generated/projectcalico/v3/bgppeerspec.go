@@ -93,8 +93,10 @@ type BGPPeerSpecApplyConfiguration struct {
 	TTLSecurity *byte `json:"ttlSecurity,omitempty"`
 	// The ordered set of BGPFilters applied on this BGP peer.
 	Filters []string `json:"filters,omitempty"`
-	// Name of the external network to which this peer belongs.
+	// Name of the external network to which this peer belongs.  Cannot be set if network is set.
 	ExternalNetwork *string `json:"externalNetwork,omitempty"`
+	// Name of the network to which this peer belongs.  Cannot be set if externalNetwork is set.
+	Network *string `json:"network,omitempty"`
 	// Add an exact, i.e. /32, static route toward peer IP in order to prevent route flapping.
 	// ReachableBy contains the address of the gateway which peer can be reached by.
 	ReachableBy *string `json:"reachableBy,omitempty"`
@@ -279,6 +281,14 @@ func (b *BGPPeerSpecApplyConfiguration) WithFilters(values ...string) *BGPPeerSp
 // If called multiple times, the ExternalNetwork field is set to the value of the last call.
 func (b *BGPPeerSpecApplyConfiguration) WithExternalNetwork(value string) *BGPPeerSpecApplyConfiguration {
 	b.ExternalNetwork = &value
+	return b
+}
+
+// WithNetwork sets the Network field in the declarative configuration to the given value
+// and returns the receiver, so that objects can be built by chaining "With" function invocations.
+// If called multiple times, the Network field is set to the value of the last call.
+func (b *BGPPeerSpecApplyConfiguration) WithNetwork(value string) *BGPPeerSpecApplyConfiguration {
+	b.Network = &value
 	return b
 }
 

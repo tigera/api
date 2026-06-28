@@ -26,416 +26,4949 @@ var parserOnce sync.Once
 var parser *typed.Parser
 var schemaYAML = typed.YAMLObject(`types:
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.AlertException
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
+  map:
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.AlertExceptionSpec
+      default: {}
+    - name: status
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.AlertExceptionStatus
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.AlertExceptionSpec
+  map:
+    fields:
+    - name: description
+      type:
+        scalar: string
+      default: ""
+    - name: endTime
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+    - name: selector
+      type:
+        scalar: string
+      default: ""
+    - name: startTime
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.AlertExceptionStatus
   map:
     elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+      scalar: untyped
+      list:
+        elementType:
+          namedType: __untyped_atomic_
+        elementRelationship: atomic
+      map:
+        elementType:
+          namedType: __untyped_deduced_
+        elementRelationship: separable
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.AllocationAttribute
+  map:
+    fields:
+    - name: alternateOwnerAttrs
+      type:
+        map:
+          elementType:
+            scalar: string
+    - name: handle_id
+      type:
+        scalar: string
+    - name: releasedAt
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+    - name: secondary
+      type:
+        map:
+          elementType:
+            scalar: string
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.ApplicationLayerControllerConfig
+  map:
+    fields:
+    - name: reconcilerPeriod
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.AuditEventsSelection
+  map:
+    fields:
+    - name: resources
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.AuditResource
+          elementRelationship: atomic
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.AuditResource
+  map:
+    fields:
+    - name: apiGroup
+      type:
+        scalar: string
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: name
+      type:
+        scalar: string
+    - name: namespace
+      type:
+        scalar: string
+    - name: resource
+      type:
+        scalar: string
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.AuthorizationReview
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.AuthorizationReviewSpec
+      default: {}
+    - name: status
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.AuthorizationReviewStatus
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.AuthorizationReviewResourceAttributes
+  map:
+    fields:
+    - name: apiGroup
+      type:
+        scalar: string
+    - name: resources
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: verbs
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.AuthorizationReviewSpec
+  map:
+    fields:
+    - name: extra
+      type:
+        map:
+          elementType:
+            list:
+              elementType:
+                scalar: string
+              elementRelationship: atomic
+    - name: groups
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: resourceAttributes
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.AuthorizationReviewResourceAttributes
+          elementRelationship: atomic
+    - name: uid
+      type:
+        scalar: string
+    - name: user
+      type:
+        scalar: string
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.AuthorizationReviewStatus
+  map:
+    fields:
+    - name: authorizedResourceVerbs
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.AuthorizedResourceVerbs
+          elementRelationship: atomic
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.AuthorizedResourceGroup
+  map:
+    fields:
+    - name: managedCluster
+      type:
+        scalar: string
+      default: ""
+    - name: namespace
+      type:
+        scalar: string
+      default: ""
+    - name: tier
+      type:
+        scalar: string
+    - name: uiSettingsGroup
+      type:
+        scalar: string
+      default: ""
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.AuthorizedResourceVerb
+  map:
+    fields:
+    - name: resourceGroups
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.AuthorizedResourceGroup
+          elementRelationship: atomic
+    - name: verb
+      type:
+        scalar: string
+      default: ""
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.AuthorizedResourceVerbs
+  map:
+    fields:
+    - name: apiGroup
+      type:
+        scalar: string
+    - name: resource
+      type:
+        scalar: string
+    - name: verbs
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.AuthorizedResourceVerb
+          elementRelationship: atomic
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.AutoHostEndpointConfig
+  map:
+    fields:
+    - name: autoCreate
+      type:
+        scalar: string
+    - name: createDefaultHostEndpoint
+      type:
+        scalar: string
+    - name: templates
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.Template
+          elementRelationship: atomic
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.BFDConfiguration
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.BFDConfigurationSpec
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.BFDConfigurationSpec
+  map:
+    fields:
+    - name: interfaces
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.BFDInterface
+          elementRelationship: atomic
+    - name: nodeSelector
+      type:
+        scalar: string
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.BFDInterface
+  map:
+    fields:
+    - name: idleSendInterval
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: matchPattern
+      type:
+        scalar: string
+    - name: minimumRecvInterval
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: minimumSendInterval
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: multiplier
+      type:
+        scalar: numeric
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.BGPConfiguration
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.BGPConfigurationSpec
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.BGPConfigurationSpec
+  map:
+    fields:
+    - name: asNumber
+      type:
+        scalar: numeric
+    - name: bindMode
+      type:
+        scalar: string
+    - name: communities
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.Community
+          elementRelationship: atomic
+    - name: extensions
+      type:
+        map:
+          elementType:
+            scalar: string
+    - name: ignoredInterfaces
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
+    - name: ipv4NormalRoutePriority
+      type:
+        scalar: numeric
+    - name: ipv6NormalRoutePriority
+      type:
+        scalar: numeric
+    - name: listenPort
+      type:
+        scalar: numeric
+    - name: localWorkloadPeeringIPV4
+      type:
+        scalar: string
+    - name: localWorkloadPeeringIPV6
+      type:
+        scalar: string
+    - name: logSeverityScreen
+      type:
+        scalar: string
+    - name: nodeMeshMaxRestartTime
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: nodeMeshPassword
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.BGPPassword
+    - name: nodeToNodeMeshEnabled
+      type:
+        scalar: boolean
+    - name: prefixAdvertisements
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.PrefixAdvertisement
+          elementRelationship: atomic
+    - name: programClusterRoutes
+      type:
+        scalar: string
+    - name: serviceClusterIPs
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.ServiceClusterIPBlock
+          elementRelationship: atomic
+    - name: serviceExternalIPs
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.ServiceExternalIPBlock
+          elementRelationship: atomic
+    - name: serviceLoadBalancerAggregation
+      type:
+        scalar: string
+    - name: serviceLoadBalancerIPs
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.ServiceLoadBalancerIPBlock
+          elementRelationship: atomic
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.BGPDaemonStatus
+  map:
+    fields:
+    - name: lastBootTime
+      type:
+        scalar: string
+    - name: lastReconfigurationTime
+      type:
+        scalar: string
+    - name: routerID
+      type:
+        scalar: string
+    - name: state
+      type:
+        scalar: string
+    - name: version
+      type:
+        scalar: string
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.BGPFilter
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.BGPFilterSpec
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.BGPFilterAddCommunity
+  map:
+    fields:
+    - name: value
+      type:
+        scalar: string
+    elementRelationship: atomic
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.BGPFilterCommunityMatch
+  map:
+    fields:
+    - name: values
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    elementRelationship: atomic
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.BGPFilterOperation
+  map:
+    fields:
+    - name: addCommunity
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.BGPFilterAddCommunity
+    - name: prependASPath
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.BGPFilterPrependASPath
+    - name: setPriority
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.BGPFilterSetPriority
+    elementRelationship: atomic
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.BGPFilterPrefixLengthV4
+  map:
+    fields:
+    - name: max
+      type:
+        scalar: numeric
+    - name: min
+      type:
+        scalar: numeric
+    elementRelationship: atomic
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.BGPFilterPrefixLengthV6
+  map:
+    fields:
+    - name: max
+      type:
+        scalar: numeric
+    - name: min
+      type:
+        scalar: numeric
+    elementRelationship: atomic
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.BGPFilterPrependASPath
+  map:
+    fields:
+    - name: prefix
+      type:
+        list:
+          elementType:
+            scalar: numeric
+          elementRelationship: atomic
+    elementRelationship: atomic
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.BGPFilterRuleV4
+  map:
+    fields:
+    - name: action
+      type:
+        scalar: string
+      default: ""
+    - name: asPathPrefix
+      type:
+        list:
+          elementType:
+            scalar: numeric
+          elementRelationship: atomic
+    - name: cidr
+      type:
+        scalar: string
+    - name: communities
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.BGPFilterCommunityMatch
+    - name: interface
+      type:
+        scalar: string
+    - name: matchOperator
+      type:
+        scalar: string
+    - name: operations
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.BGPFilterOperation
+          elementRelationship: atomic
+    - name: peerType
+      type:
+        scalar: string
+    - name: prefixLength
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.BGPFilterPrefixLengthV4
+    - name: priority
+      type:
+        scalar: numeric
+    - name: source
+      type:
+        scalar: string
+    elementRelationship: atomic
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.BGPFilterRuleV6
+  map:
+    fields:
+    - name: action
+      type:
+        scalar: string
+      default: ""
+    - name: asPathPrefix
+      type:
+        list:
+          elementType:
+            scalar: numeric
+          elementRelationship: atomic
+    - name: cidr
+      type:
+        scalar: string
+    - name: communities
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.BGPFilterCommunityMatch
+    - name: interface
+      type:
+        scalar: string
+    - name: matchOperator
+      type:
+        scalar: string
+    - name: operations
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.BGPFilterOperation
+          elementRelationship: atomic
+    - name: peerType
+      type:
+        scalar: string
+    - name: prefixLength
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.BGPFilterPrefixLengthV6
+    - name: priority
+      type:
+        scalar: numeric
+    - name: source
+      type:
+        scalar: string
+    elementRelationship: atomic
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.BGPFilterSetPriority
+  map:
+    fields:
+    - name: value
+      type:
+        scalar: numeric
+    elementRelationship: atomic
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.BGPFilterSpec
+  map:
+    fields:
+    - name: exportV4
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.BGPFilterRuleV4
+          elementRelationship: atomic
+    - name: exportV6
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.BGPFilterRuleV6
+          elementRelationship: atomic
+    - name: importV4
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.BGPFilterRuleV4
+          elementRelationship: atomic
+    - name: importV6
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.BGPFilterRuleV6
+          elementRelationship: atomic
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.BGPPassword
+  map:
+    fields:
+    - name: secretKeyRef
+      type:
+        namedType: io.k8s.api.core.v1.SecretKeySelector
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.BGPPeer
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.BGPPeerSpec
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.BGPPeerSpec
+  map:
+    fields:
+    - name: asNumber
+      type:
+        scalar: numeric
+    - name: birdGatewayMode
+      type:
+        scalar: string
+    - name: extensions
+      type:
+        map:
+          elementType:
+            scalar: string
+    - name: externalNetwork
+      type:
+        scalar: string
+    - name: failureDetectionMode
+      type:
+        scalar: string
+    - name: filters
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: keepOriginalNextHop
+      type:
+        scalar: boolean
+    - name: keepaliveTime
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: localASNumber
+      type:
+        scalar: numeric
+    - name: localWorkloadSelector
+      type:
+        scalar: string
+    - name: maxRestartTime
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: network
+      type:
+        scalar: string
+    - name: nextHopMode
+      type:
+        scalar: string
+    - name: node
+      type:
+        scalar: string
+    - name: nodeSelector
+      type:
+        scalar: string
+    - name: numAllowedLocalASNumbers
+      type:
+        scalar: numeric
+    - name: password
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.BGPPassword
+    - name: peerIP
+      type:
+        scalar: string
+    - name: peerSelector
+      type:
+        scalar: string
+    - name: reachableBy
+      type:
+        scalar: string
+    - name: restartMode
+      type:
+        scalar: string
+    - name: reversePeering
+      type:
+        scalar: string
+    - name: sourceAddress
+      type:
+        scalar: string
+    - name: ttlSecurity
+      type:
+        scalar: numeric
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.BPFConntrackTimeouts
+  map:
+    fields:
+    - name: creationGracePeriod
+      type:
+        scalar: string
+    - name: genericTimeout
+      type:
+        scalar: string
+    - name: icmpTimeout
+      type:
+        scalar: string
+    - name: tcpEstablished
+      type:
+        scalar: string
+    - name: tcpFinsSeen
+      type:
+        scalar: string
+    - name: tcpResetSeen
+      type:
+        scalar: string
+    - name: tcpSynSent
+      type:
+        scalar: string
+    - name: udpTimeout
+      type:
+        scalar: string
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.BlockAffinity
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.BlockAffinitySpec
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.BlockAffinitySpec
+  map:
+    fields:
+    - name: cidr
+      type:
+        scalar: string
+      default: ""
+    - name: deleted
+      type:
+        scalar: boolean
+      default: false
+    - name: node
+      type:
+        scalar: string
+      default: ""
+    - name: state
+      type:
+        scalar: string
+      default: ""
+    - name: type
+      type:
+        scalar: string
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.CISBenchmarkFilter
+  map:
+    fields:
+    - name: benchmarkSelection
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.CISBenchmarkSelection
+    - name: exclude
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: include
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.CISBenchmarkParams
+  map:
+    fields:
+    - name: highThreshold
+      type:
+        scalar: numeric
+    - name: includeUnscoredTests
+      type:
+        scalar: boolean
+    - name: medThreshold
+      type:
+        scalar: numeric
+    - name: numFailedTests
+      type:
+        scalar: numeric
+    - name: resultsFilters
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.CISBenchmarkFilter
+          elementRelationship: atomic
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.CISBenchmarkSelection
+  map:
+    fields:
+    - name: kubernetesVersion
+      type:
+        scalar: string
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.CalicoNodeAgentStatus
+  map:
+    fields:
+    - name: birdV4
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.BGPDaemonStatus
+      default: {}
+    - name: birdV6
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.BGPDaemonStatus
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.CalicoNodeBGPRouteStatus
+  map:
+    fields:
+    - name: routesV4
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.CalicoNodeRoute
+          elementRelationship: atomic
+    - name: routesV6
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.CalicoNodeRoute
+          elementRelationship: atomic
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.CalicoNodeBGPStatus
+  map:
+    fields:
+    - name: numberEstablishedV4
+      type:
+        scalar: numeric
+      default: 0
+    - name: numberEstablishedV6
+      type:
+        scalar: numeric
+      default: 0
+    - name: numberNotEstablishedV4
+      type:
+        scalar: numeric
+      default: 0
+    - name: numberNotEstablishedV6
+      type:
+        scalar: numeric
+      default: 0
+    - name: peersV4
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.CalicoNodePeer
+          elementRelationship: atomic
+    - name: peersV6
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.CalicoNodePeer
+          elementRelationship: atomic
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.CalicoNodePeer
+  map:
+    fields:
+    - name: peerIP
+      type:
+        scalar: string
+    - name: since
+      type:
+        scalar: string
+    - name: state
+      type:
+        scalar: string
+    - name: type
+      type:
+        scalar: string
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.CalicoNodeRoute
+  map:
+    fields:
+    - name: destination
+      type:
+        scalar: string
+    - name: gateway
+      type:
+        scalar: string
+    - name: interface
+      type:
+        scalar: string
+    - name: learnedFrom
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.CalicoNodeRouteLearnedFrom
+      default: {}
+    - name: type
+      type:
+        scalar: string
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.CalicoNodeRouteLearnedFrom
+  map:
+    fields:
+    - name: peerIP
+      type:
+        scalar: string
+    - name: sourceType
+      type:
+        scalar: string
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.CalicoNodeStatus
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.CalicoNodeStatusSpec
+      default: {}
+    - name: status
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.CalicoNodeStatusStatus
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.CalicoNodeStatusSpec
+  map:
+    fields:
+    - name: classes
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
+    - name: node
+      type:
+        scalar: string
+    - name: updatePeriodSeconds
+      type:
+        scalar: numeric
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.CalicoNodeStatusStatus
+  map:
+    fields:
+    - name: agent
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.CalicoNodeAgentStatus
+      default: {}
+    - name: bgp
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.CalicoNodeBGPStatus
+      default: {}
+    - name: lastUpdated
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+    - name: routes
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.CalicoNodeBGPRouteStatus
+      default: {}
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.ClusterInformation
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.ClusterInformationSpec
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.ClusterInformationSpec
+  map:
+    fields:
+    - name: calicoEnterpriseVersion
+      type:
+        scalar: string
+    - name: calicoVersion
+      type:
+        scalar: string
+    - name: clusterGUID
+      type:
+        scalar: string
+    - name: clusterType
+      type:
+        scalar: string
+    - name: cnxVersion
+      type:
+        scalar: string
+    - name: datastoreReady
+      type:
+        scalar: boolean
+    - name: variant
+      type:
+        scalar: string
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.Community
+  map:
+    fields:
+    - name: name
+      type:
+        scalar: string
+    - name: value
+      type:
+        scalar: string
+    elementRelationship: atomic
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.CompletedReportJob
+  map:
+    fields:
+    - name: end
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+    - name: job
+      type:
+        namedType: io.k8s.api.core.v1.ObjectReference
+    - name: jobCompletionTime
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+    - name: start
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.ControllersConfig
+  map:
+    fields:
+    - name: applicationLayer
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.ApplicationLayerControllerConfig
+    - name: federatedServices
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.FederatedServicesControllerConfig
+    - name: loadBalancer
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.LoadBalancerControllerConfig
+    - name: migration
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.MigrationControllerConfig
+    - name: namespace
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.NamespaceControllerConfig
+    - name: node
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.NodeControllerConfig
+    - name: policy
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.PolicyControllerConfig
+    - name: rbacSync
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.RBACSyncControllerConfig
+    - name: serviceAccount
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.ServiceAccountControllerConfig
+    - name: workloadEndpoint
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.WorkloadEndpointControllerConfig
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.DPIActive
+  map:
+    fields:
+    - name: lastUpdated
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+    - name: success
+      type:
+        scalar: boolean
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.DPIErrorCondition
+  map:
+    fields:
+    - name: lastUpdated
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+    - name: message
+      type:
+        scalar: string
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.DPINode
+  map:
+    fields:
+    - name: active
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.DPIActive
+      default: {}
+    - name: errorConditions
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.DPIErrorCondition
+          elementRelationship: atomic
+    - name: node
+      type:
+        scalar: string
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.DashboardData
+  map:
+    fields:
+    - name: layout
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.DashboardLayout
+      default: {}
+    - name: selectedNamespace
+      type:
+        scalar: string
+    - name: type
+      type:
+        scalar: string
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.DashboardLayout
+  map:
+    fields:
+    - name: height
+      type:
+        scalar: numeric
+      default: 0
+    - name: index
+      type:
+        scalar: string
+    - name: isInNamespaceView
+      type:
+        scalar: boolean
+    - name: isResizable
+      type:
+        scalar: boolean
+    - name: isVisible
+      type:
+        scalar: boolean
+    - name: maxHeight
+      type:
+        scalar: numeric
+    - name: maxWidth
+      type:
+        scalar: numeric
+    - name: minHeight
+      type:
+        scalar: numeric
+    - name: minWidth
+      type:
+        scalar: numeric
+    - name: width
+      type:
+        scalar: numeric
+      default: 0
+    - name: xPos
+      type:
+        scalar: numeric
+      default: 0
+    - name: yPos
+      type:
+        scalar: numeric
+      default: 0
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.DeepPacketInspection
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.DeepPacketInspectionSpec
+      default: {}
+    - name: status
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.DeepPacketInspectionStatus
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.DeepPacketInspectionSpec
+  map:
+    fields:
+    - name: selector
+      type:
+        scalar: string
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.DeepPacketInspectionStatus
+  map:
+    fields:
+    - name: nodes
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.DPINode
+          elementRelationship: atomic
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.DetectorParams
+  map:
+    fields:
+    - name: name
+      type:
+        scalar: string
+      default: ""
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.EgressGatewayPolicy
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.EgressGatewayPolicySpec
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.EgressGatewayPolicyDestinationSpec
+  map:
+    fields:
+    - name: cidr
+      type:
+        scalar: string
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.EgressGatewayPolicySpec
+  map:
+    fields:
+    - name: rules
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.EgressGatewayRule
+          elementRelationship: atomic
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.EgressGatewayRule
+  map:
+    fields:
+    - name: description
+      type:
+        scalar: string
+    - name: destination
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.EgressGatewayPolicyDestinationSpec
+    - name: gateway
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.EgressSpec
+    - name: gatewayPreference
+      type:
+        scalar: string
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.EgressGatewaySpec
+  map:
+    fields:
+    - name: gateway
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.EgressSpec
+    - name: policy
+      type:
+        scalar: string
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.EgressSpec
+  map:
+    fields:
+    - name: maxNextHops
+      type:
+        scalar: numeric
+    - name: namespaceSelector
+      type:
+        scalar: string
+    - name: selector
+      type:
+        scalar: string
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.EndpointPort
+  map:
+    fields:
+    - name: name
+      type:
+        scalar: string
+      default: ""
+    - name: port
+      type:
+        scalar: numeric
+      default: 0
+    - name: protocol
+      type:
+        namedType: com.github.tigera.api.pkg.lib.numorstring.Protocol
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.EndpointsSelection
+  map:
+    fields:
+    - name: namespaces
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.NamesAndLabelsMatch
+    - name: selector
+      type:
+        scalar: string
+    - name: serviceAccounts
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.NamesAndLabelsMatch
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.EntityRule
+  map:
+    fields:
+    - name: domains
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: namespaceSelector
+      type:
+        scalar: string
+    - name: nets
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
+    - name: notNets
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
+    - name: notPorts
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.lib.numorstring.Port
+          elementRelationship: atomic
+    - name: notSelector
+      type:
+        scalar: string
+    - name: ports
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.lib.numorstring.Port
+          elementRelationship: atomic
+    - name: selector
+      type:
+        scalar: string
+    - name: serviceAccounts
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.ServiceAccountMatch
+    - name: services
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.ServiceMatch
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.ErrorCondition
+  map:
+    fields:
+    - name: message
+      type:
+        scalar: string
+      default: ""
+    - name: type
+      type:
+        scalar: string
+      default: ""
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.ExternalNetwork
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.ExternalNetworkSpec
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.ExternalNetworkSpec
+  map:
+    fields:
+    - name: routeTableIndex
+      type:
+        scalar: numeric
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.FederatedServicesControllerConfig
+  map:
+    fields:
+    - name: reconcilerPeriod
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.FelixConfiguration
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.FelixConfigurationSpec
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.FelixConfigurationSpec
+  map:
+    fields:
+    - name: allowIPIPPacketsFromWorkloads
+      type:
+        scalar: boolean
+    - name: allowVXLANPacketsFromWorkloads
+      type:
+        scalar: boolean
+    - name: awsRequestTimeout
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: awsSecondaryIPRoutingRulePriority
+      type:
+        scalar: numeric
+    - name: awsSecondaryIPSupport
+      type:
+        scalar: string
+    - name: awsSrcDstCheck
+      type:
+        scalar: string
+    - name: bpfAttachType
+      type:
+        scalar: string
+    - name: bpfCTLBLogFilter
+      type:
+        scalar: string
+    - name: bpfConnectTimeLoadBalancing
+      type:
+        scalar: string
+    - name: bpfConnectTimeLoadBalancingEnabled
+      type:
+        scalar: boolean
+    - name: bpfConntrackLogLevel
+      type:
+        scalar: string
+    - name: bpfConntrackMode
+      type:
+        scalar: string
+    - name: bpfConntrackTimeouts
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.BPFConntrackTimeouts
+    - name: bpfDNSPolicyMode
+      type:
+        scalar: string
+    - name: bpfDSROptoutCIDRs
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: bpfDataIfacePattern
+      type:
+        scalar: string
+    - name: bpfDisableGROForIfaces
+      type:
+        scalar: string
+    - name: bpfDisableUnprivileged
+      type:
+        scalar: boolean
+    - name: bpfEnabled
+      type:
+        scalar: boolean
+    - name: bpfEnforceRPF
+      type:
+        scalar: string
+    - name: bpfExcludeCIDRsFromNAT
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: bpfExportBufferSizeMB
+      type:
+        scalar: numeric
+    - name: bpfExtToServiceConnmark
+      type:
+        scalar: numeric
+    - name: bpfExternalServiceMode
+      type:
+        scalar: string
+    - name: bpfForceTrackPacketsFromIfaces
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: bpfHostConntrackBypass
+      type:
+        scalar: boolean
+    - name: bpfHostNetworkedNATWithoutCTLB
+      type:
+        scalar: string
+    - name: bpfIPFragTimeout
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: bpfIPFragmentReassemblyEnabled
+      type:
+        scalar: boolean
+    - name: bpfJITHardening
+      type:
+        scalar: string
+    - name: bpfKubeProxyHealthzPort
+      type:
+        scalar: numeric
+    - name: bpfKubeProxyIptablesCleanupEnabled
+      type:
+        scalar: boolean
+    - name: bpfKubeProxyMinSyncPeriod
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: bpfL3IfacePattern
+      type:
+        scalar: string
+    - name: bpfLogFilters
+      type:
+        map:
+          elementType:
+            scalar: string
+    - name: bpfLogLevel
+      type:
+        scalar: string
+    - name: bpfMaglevMaxEndpointsPerService
+      type:
+        scalar: numeric
+    - name: bpfMaglevMaxServices
+      type:
+        scalar: numeric
+    - name: bpfMapSizeConntrack
+      type:
+        scalar: numeric
+    - name: bpfMapSizeConntrackCleanupQueue
+      type:
+        scalar: numeric
+    - name: bpfMapSizeConntrackScaling
+      type:
+        scalar: string
+    - name: bpfMapSizeIPSets
+      type:
+        scalar: numeric
+    - name: bpfMapSizeIfState
+      type:
+        scalar: numeric
+    - name: bpfMapSizeNATAffinity
+      type:
+        scalar: numeric
+    - name: bpfMapSizeNATBackend
+      type:
+        scalar: numeric
+    - name: bpfMapSizeNATFrontend
+      type:
+        scalar: numeric
+    - name: bpfMapSizePerCpuConntrack
+      type:
+        scalar: numeric
+    - name: bpfMapSizeRoute
+      type:
+        scalar: numeric
+    - name: bpfPSNATPorts
+      type:
+        namedType: com.github.tigera.api.pkg.lib.numorstring.Port
+    - name: bpfPolicyDebugEnabled
+      type:
+        scalar: boolean
+    - name: bpfProfiling
+      type:
+        scalar: string
+    - name: bpfRedirectToPeer
+      type:
+        scalar: string
+    - name: captureDir
+      type:
+        scalar: string
+    - name: captureMaxFiles
+      type:
+        scalar: numeric
+    - name: captureMaxSizeBytes
+      type:
+        scalar: numeric
+    - name: captureRotationSeconds
+      type:
+        scalar: numeric
+    - name: cgroupV2Path
+      type:
+        scalar: string
+    - name: chainInsertMode
+      type:
+        scalar: string
+    - name: dataplaneDriver
+      type:
+        scalar: string
+    - name: dataplaneWatchdogTimeout
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: debugDisableLogDropping
+      type:
+        scalar: boolean
+    - name: debugHost
+      type:
+        scalar: string
+    - name: debugMemoryProfilePath
+      type:
+        scalar: string
+    - name: debugPort
+      type:
+        scalar: numeric
+    - name: debugSimulateCalcGraphHangAfter
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: debugSimulateDataplaneApplyDelay
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: debugSimulateDataplaneHangAfter
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: defaultEndpointToHostAction
+      type:
+        scalar: string
+    - name: deletedMetricsRetentionSecs
+      type:
+        scalar: numeric
+    - name: deviceRouteProtocol
+      type:
+        scalar: numeric
+    - name: deviceRouteSourceAddress
+      type:
+        scalar: string
+    - name: deviceRouteSourceAddressIPv6
+      type:
+        scalar: string
+    - name: disableConntrackInvalidCheck
+      type:
+        scalar: boolean
+    - name: dnsCacheEpoch
+      type:
+        scalar: numeric
+    - name: dnsCacheFile
+      type:
+        scalar: string
+    - name: dnsCacheSaveInterval
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: dnsExtraTTL
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: dnsLogsFileAggregationKind
+      type:
+        scalar: numeric
+    - name: dnsLogsFileDirectory
+      type:
+        scalar: string
+    - name: dnsLogsFileEnabled
+      type:
+        scalar: boolean
+    - name: dnsLogsFileIncludeLabels
+      type:
+        scalar: boolean
+    - name: dnsLogsFileMaxFileSizeMB
+      type:
+        scalar: numeric
+    - name: dnsLogsFileMaxFiles
+      type:
+        scalar: numeric
+    - name: dnsLogsFilePerNodeLimit
+      type:
+        scalar: numeric
+    - name: dnsLogsFlushInterval
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: dnsLogsLatency
+      type:
+        scalar: boolean
+    - name: dnsPacketsNfqueueID
+      type:
+        scalar: numeric
+    - name: dnsPacketsNfqueueMaxHoldDuration
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: dnsPacketsNfqueueSize
+      type:
+        scalar: numeric
+    - name: dnsPolicyMode
+      type:
+        scalar: string
+    - name: dnsPolicyNfqueueID
+      type:
+        scalar: numeric
+    - name: dnsPolicyNfqueueSize
+      type:
+        scalar: numeric
+    - name: dnsTrustedServers
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: dropActionOverride
+      type:
+        scalar: string
+    - name: egressGatewayPollFailureCount
+      type:
+        scalar: numeric
+    - name: egressGatewayPollInterval
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: egressIPHostIfacePattern
+      type:
+        scalar: string
+    - name: egressIPRoutingRulePriority
+      type:
+        scalar: numeric
+    - name: egressIPSupport
+      type:
+        scalar: string
+    - name: egressIPVXLANPort
+      type:
+        scalar: numeric
+    - name: egressIPVXLANVNI
+      type:
+        scalar: numeric
+    - name: endpointReportingDelay
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: endpointReportingEnabled
+      type:
+        scalar: boolean
+    - name: endpointStatusPathPrefix
+      type:
+        scalar: string
+    - name: externalNetworkRoutingRulePriority
+      type:
+        scalar: numeric
+    - name: externalNetworkSupport
+      type:
+        scalar: string
+    - name: externalNodesList
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: failsafeInboundHostPorts
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.ProtoPort
+          elementRelationship: atomic
+    - name: failsafeOutboundHostPorts
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.ProtoPort
+          elementRelationship: atomic
+    - name: featureDetectOverride
+      type:
+        scalar: string
+    - name: featureGates
+      type:
+        scalar: string
+    - name: floatingIPs
+      type:
+        scalar: string
+    - name: flowLogsAggregationThresholdBytes
+      type:
+        scalar: numeric
+    - name: flowLogsCollectProcessInfo
+      type:
+        scalar: boolean
+    - name: flowLogsCollectProcessPath
+      type:
+        scalar: boolean
+    - name: flowLogsCollectTcpStats
+      type:
+        scalar: boolean
+    - name: flowLogsCollectorDebugTrace
+      type:
+        scalar: boolean
+    - name: flowLogsDestDomainsByClient
+      type:
+        scalar: boolean
+    - name: flowLogsDynamicAggregationEnabled
+      type:
+        scalar: boolean
+    - name: flowLogsEnableHostEndpoint
+      type:
+        scalar: boolean
+    - name: flowLogsEnableNetworkSets
+      type:
+        scalar: boolean
+    - name: flowLogsFileAggregationKindForAllowed
+      type:
+        scalar: numeric
+    - name: flowLogsFileAggregationKindForDenied
+      type:
+        scalar: numeric
+    - name: flowLogsFileDirectory
+      type:
+        scalar: string
+    - name: flowLogsFileDomainsLimit
+      type:
+        scalar: numeric
+    - name: flowLogsFileEnabled
+      type:
+        scalar: boolean
+    - name: flowLogsFileEnabledForAllowed
+      type:
+        scalar: boolean
+    - name: flowLogsFileEnabledForDenied
+      type:
+        scalar: boolean
+    - name: flowLogsFileIncludeLabels
+      type:
+        scalar: boolean
+    - name: flowLogsFileIncludePolicies
+      type:
+        scalar: boolean
+    - name: flowLogsFileIncludeService
+      type:
+        scalar: boolean
+    - name: flowLogsFileMaxFileSizeMB
+      type:
+        scalar: numeric
+    - name: flowLogsFileMaxFiles
+      type:
+        scalar: numeric
+    - name: flowLogsFileNatOutgoingPortLimit
+      type:
+        scalar: numeric
+    - name: flowLogsFilePerFlowProcessArgsLimit
+      type:
+        scalar: numeric
+    - name: flowLogsFilePerFlowProcessLimit
+      type:
+        scalar: numeric
+    - name: flowLogsFlushInterval
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: flowLogsGoldmaneServer
+      type:
+        scalar: string
+    - name: flowLogsLocalReporter
+      type:
+        scalar: string
+    - name: flowLogsMaxOriginalIPsIncluded
+      type:
+        scalar: numeric
+    - name: flowLogsPolicyEvaluationMode
+      type:
+        scalar: string
+    - name: flowLogsPolicyScope
+      type:
+        scalar: string
+    - name: flowLogsPositionFilePath
+      type:
+        scalar: string
+    - name: genericXDPEnabled
+      type:
+        scalar: boolean
+    - name: goGCThreshold
+      type:
+        scalar: numeric
+    - name: goMaxProcs
+      type:
+        scalar: numeric
+    - name: goMemoryLimitMB
+      type:
+        scalar: numeric
+    - name: healthEnabled
+      type:
+        scalar: boolean
+    - name: healthHost
+      type:
+        scalar: string
+    - name: healthPort
+      type:
+        scalar: numeric
+    - name: healthTimeoutOverrides
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.HealthTimeoutOverride
+          elementRelationship: atomic
+    - name: interfaceExclude
+      type:
+        scalar: string
+    - name: interfacePrefix
+      type:
+        scalar: string
+    - name: interfaceRefreshInterval
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: ipForwarding
+      type:
+        scalar: string
+    - name: ipipEnabled
+      type:
+        scalar: boolean
+    - name: ipipMTU
+      type:
+        scalar: numeric
+    - name: ipsecAllowUnsecuredTraffic
+      type:
+        scalar: boolean
+    - name: ipsecESPAlgorithm
+      type:
+        scalar: string
+    - name: ipsecIKEAlgorithm
+      type:
+        scalar: string
+    - name: ipsecLogLevel
+      type:
+        scalar: string
+    - name: ipsecMode
+      type:
+        scalar: string
+    - name: ipsecPolicyRefreshInterval
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: ipsetsRefreshInterval
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: iptablesBackend
+      type:
+        scalar: string
+    - name: iptablesFilterAllowAction
+      type:
+        scalar: string
+    - name: iptablesFilterDenyAction
+      type:
+        scalar: string
+    - name: iptablesLockProbeInterval
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: iptablesMangleAllowAction
+      type:
+        scalar: string
+    - name: iptablesMarkMask
+      type:
+        scalar: numeric
+    - name: iptablesNATOutgoingInterfaceFilter
+      type:
+        scalar: string
+    - name: iptablesPostWriteCheckInterval
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: iptablesRefreshInterval
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: ipv4ElevatedRoutePriority
+      type:
+        scalar: numeric
+    - name: ipv4NormalRoutePriority
+      type:
+        scalar: numeric
+    - name: ipv6ElevatedRoutePriority
+      type:
+        scalar: numeric
+    - name: ipv6NormalRoutePriority
+      type:
+        scalar: numeric
+    - name: ipv6Support
+      type:
+        scalar: boolean
+    - name: istioAmbientMode
+      type:
+        scalar: string
+    - name: istioDSCPMark
+      type:
+        namedType: com.github.tigera.api.pkg.lib.numorstring.DSCP
+    - name: kubeMasqueradeBit
+      type:
+        scalar: numeric
+    - name: kubeNodePortRanges
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.lib.numorstring.Port
+          elementRelationship: atomic
+    - name: l7LogsFileAggregationDestinationInfo
+      type:
+        scalar: string
+    - name: l7LogsFileAggregationHTTPHeaderInfo
+      type:
+        scalar: string
+    - name: l7LogsFileAggregationHTTPMethod
+      type:
+        scalar: string
+    - name: l7LogsFileAggregationNumURLPath
+      type:
+        scalar: numeric
+    - name: l7LogsFileAggregationResponseCode
+      type:
+        scalar: string
+    - name: l7LogsFileAggregationServiceInfo
+      type:
+        scalar: string
+    - name: l7LogsFileAggregationSourceInfo
+      type:
+        scalar: string
+    - name: l7LogsFileAggregationTLSSNI
+      type:
+        scalar: string
+    - name: l7LogsFileAggregationTrimURL
+      type:
+        scalar: string
+    - name: l7LogsFileAggregationURLCharLimit
+      type:
+        scalar: numeric
+    - name: l7LogsFileDirectory
+      type:
+        scalar: string
+    - name: l7LogsFileEnabled
+      type:
+        scalar: boolean
+    - name: l7LogsFileMaxFileSizeMB
+      type:
+        scalar: numeric
+    - name: l7LogsFileMaxFiles
+      type:
+        scalar: numeric
+    - name: l7LogsFilePerNodeLimit
+      type:
+        scalar: numeric
+    - name: l7LogsFlushInterval
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: l7ObservabilityEnabled
+      type:
+        scalar: boolean
+    - name: liveMigrationRouteConvergenceTime
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: localSubnetL2Reachability
+      type:
+        scalar: string
+    - name: localSubnetL2ReachabilityRefreshInterval
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: logActionRateLimit
+      type:
+        scalar: string
+    - name: logActionRateLimitBurst
+      type:
+        scalar: numeric
+    - name: logDebugFilenameRegex
+      type:
+        scalar: string
+    - name: logDropActionOverride
+      type:
+        scalar: boolean
+    - name: logFilePath
+      type:
+        scalar: string
+    - name: logPrefix
+      type:
+        scalar: string
+    - name: logSeverityFile
+      type:
+        scalar: string
+    - name: logSeverityScreen
+      type:
+        scalar: string
+    - name: logSeveritySys
+      type:
+        scalar: string
+    - name: maxIpsetSize
+      type:
+        scalar: numeric
+    - name: metadataAddr
+      type:
+        scalar: string
+    - name: metadataPort
+      type:
+        scalar: numeric
+    - name: mtuIfacePattern
+      type:
+        scalar: string
+    - name: natOutgoingAddress
+      type:
+        scalar: string
+    - name: natOutgoingExclusions
+      type:
+        scalar: string
+    - name: natPortRange
+      type:
+        namedType: com.github.tigera.api.pkg.lib.numorstring.Port
+    - name: netlinkTimeout
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: nfNetlinkBufSize
+      type:
+        scalar: string
+    - name: nftablesDNSPolicyMode
+      type:
+        scalar: string
+    - name: nftablesFilterAllowAction
+      type:
+        scalar: string
+    - name: nftablesFilterDenyAction
+      type:
+        scalar: string
+    - name: nftablesMangleAllowAction
+      type:
+        scalar: string
+    - name: nftablesMarkMask
+      type:
+        scalar: numeric
+    - name: nftablesMode
+      type:
+        scalar: string
+    - name: nftablesRefreshInterval
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: nodeSelector
+      type:
+        scalar: string
+    - name: openstackRegion
+      type:
+        scalar: string
+    - name: policyActivityLogsFileDirectory
+      type:
+        scalar: string
+    - name: policyActivityLogsFileEnabled
+      type:
+        scalar: boolean
+    - name: policyActivityLogsFileMaxFileSizeMB
+      type:
+        scalar: numeric
+    - name: policyActivityLogsFileMaxFiles
+      type:
+        scalar: numeric
+    - name: policyActivityLogsFlushInterval
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: policySyncPathPrefix
+      type:
+        scalar: string
+    - name: programClusterRoutes
+      type:
+        scalar: string
+    - name: prometheusGoMetricsEnabled
+      type:
+        scalar: boolean
+    - name: prometheusMetricsCAFile
+      type:
+        scalar: string
+    - name: prometheusMetricsCertFile
+      type:
+        scalar: string
+    - name: prometheusMetricsClientAuth
+      type:
+        scalar: string
+    - name: prometheusMetricsEnabled
+      type:
+        scalar: boolean
+    - name: prometheusMetricsHost
+      type:
+        scalar: string
+    - name: prometheusMetricsKeyFile
+      type:
+        scalar: string
+    - name: prometheusMetricsPort
+      type:
+        scalar: numeric
+    - name: prometheusProcessMetricsEnabled
+      type:
+        scalar: boolean
+    - name: prometheusReporterCAFile
+      type:
+        scalar: string
+    - name: prometheusReporterCertFile
+      type:
+        scalar: string
+    - name: prometheusReporterEnabled
+      type:
+        scalar: boolean
+    - name: prometheusReporterKeyFile
+      type:
+        scalar: string
+    - name: prometheusReporterPort
+      type:
+        scalar: numeric
+    - name: prometheusWireGuardMetricsEnabled
+      type:
+        scalar: boolean
+    - name: removeExternalRoutes
+      type:
+        scalar: boolean
+    - name: reportingInterval
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: reportingTTL
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: requireMTUFile
+      type:
+        scalar: boolean
+    - name: routeRefreshInterval
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: routeSource
+      type:
+        scalar: string
+    - name: routeSyncDisabled
+      type:
+        scalar: boolean
+    - name: routeTableRange
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.RouteTableRange
+    - name: routeTableRanges
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.RouteTableIDRange
+          elementRelationship: atomic
+    - name: serviceLoopPrevention
+      type:
+        scalar: string
+    - name: sidecarAccelerationEnabled
+      type:
+        scalar: boolean
+    - name: statsDumpFilePath
+      type:
+        scalar: string
+    - name: syslogReporterAddress
+      type:
+        scalar: string
+    - name: syslogReporterEnabled
+      type:
+        scalar: boolean
+    - name: syslogReporterNetwork
+      type:
+        scalar: string
+    - name: tproxyMode
+      type:
+        scalar: string
+    - name: tproxyPort
+      type:
+        scalar: numeric
+    - name: tproxyUpstreamConnMark
+      type:
+        scalar: numeric
+    - name: usageReportingEnabled
+      type:
+        scalar: boolean
+    - name: usageReportingInitialDelay
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: usageReportingInterval
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: useInternalDataplaneDriver
+      type:
+        scalar: boolean
+    - name: vxlanEnabled
+      type:
+        scalar: boolean
+    - name: vxlanMTU
+      type:
+        scalar: numeric
+    - name: vxlanMTUV6
+      type:
+        scalar: numeric
+    - name: vxlanPort
+      type:
+        scalar: numeric
+    - name: vxlanVNI
+      type:
+        scalar: numeric
+    - name: wafEventLogsFileDirectory
+      type:
+        scalar: string
+    - name: wafEventLogsFileEnabled
+      type:
+        scalar: boolean
+    - name: wafEventLogsFileMaxFileSizeMB
+      type:
+        scalar: numeric
+    - name: wafEventLogsFileMaxFiles
+      type:
+        scalar: numeric
+    - name: wafEventLogsFlushInterval
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: windowsDnsCacheFile
+      type:
+        scalar: string
+    - name: windowsDnsExtraTTL
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: windowsFlowLogsFileDirectory
+      type:
+        scalar: string
+    - name: windowsFlowLogsPositionFilePath
+      type:
+        scalar: string
+    - name: windowsManageFirewallRules
+      type:
+        scalar: string
+    - name: windowsNetworkName
+      type:
+        scalar: string
+    - name: windowsStatsDumpFilePath
+      type:
+        scalar: string
+    - name: wireguardEnabled
+      type:
+        scalar: boolean
+    - name: wireguardEnabledV6
+      type:
+        scalar: boolean
+    - name: wireguardHostEncryptionEnabled
+      type:
+        scalar: boolean
+    - name: wireguardInterfaceName
+      type:
+        scalar: string
+    - name: wireguardInterfaceNameV6
+      type:
+        scalar: string
+    - name: wireguardKeepAlive
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: wireguardListeningPort
+      type:
+        scalar: numeric
+    - name: wireguardListeningPortV6
+      type:
+        scalar: numeric
+    - name: wireguardMTU
+      type:
+        scalar: numeric
+    - name: wireguardMTUV6
+      type:
+        scalar: numeric
+    - name: wireguardRoutingRulePriority
+      type:
+        scalar: numeric
+    - name: wireguardThreadingEnabled
+      type:
+        scalar: boolean
+    - name: workloadSourceSpoofing
+      type:
+        scalar: string
+    - name: xdpEnabled
+      type:
+        scalar: boolean
+    - name: xdpRefreshInterval
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.GlobalAlert
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.GlobalAlertSpec
+      default: {}
+    - name: status
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.GlobalAlertStatus
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.GlobalAlertSpec
+  map:
+    fields:
+    - name: aggregateBy
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: condition
+      type:
+        scalar: string
+    - name: dataSet
+      type:
+        scalar: string
+    - name: description
+      type:
+        scalar: string
+      default: ""
+    - name: detector
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.DetectorParams
+    - name: field
+      type:
+        scalar: string
+    - name: lookback
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: metric
+      type:
+        scalar: string
+    - name: period
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: query
+      type:
+        scalar: string
+    - name: severity
+      type:
+        scalar: numeric
+      default: 0
+    - name: substitutions
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.GlobalAlertSubstitution
+          elementRelationship: atomic
+    - name: summary
+      type:
+        scalar: string
+    - name: threshold
+      type:
+        scalar: numeric
+    - name: type
+      type:
+        scalar: string
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.GlobalAlertStatus
+  map:
+    fields:
+    - name: active
+      type:
+        scalar: boolean
+      default: false
+    - name: errorConditions
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.ErrorCondition
+          elementRelationship: atomic
+    - name: healthy
+      type:
+        scalar: boolean
+      default: false
+    - name: lastEvent
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+    - name: lastExecuted
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+    - name: lastUpdate
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.GlobalAlertSubstitution
+  map:
+    fields:
+    - name: name
+      type:
+        scalar: string
+      default: ""
+    - name: values
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.GlobalAlertTemplate
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.GlobalAlertSpec
+      default: {}
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.GlobalNetworkPolicy
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.GlobalNetworkPolicySpec
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.GlobalNetworkPolicySpec
+  map:
+    fields:
+    - name: applyOnForward
+      type:
+        scalar: boolean
+    - name: doNotTrack
+      type:
+        scalar: boolean
+    - name: egress
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.Rule
+          elementRelationship: atomic
+    - name: ingress
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.Rule
+          elementRelationship: atomic
+    - name: namespaceSelector
+      type:
+        scalar: string
+    - name: order
+      type:
+        scalar: numeric
+    - name: performanceHints
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
+    - name: preDNAT
+      type:
+        scalar: boolean
+    - name: selector
+      type:
+        scalar: string
+    - name: serviceAccountSelector
+      type:
+        scalar: string
+    - name: tier
+      type:
+        scalar: string
+    - name: types
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.GlobalNetworkSet
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.GlobalNetworkSetSpec
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.GlobalNetworkSetSpec
+  map:
+    fields:
+    - name: allowedEgressDomains
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: nets
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.GlobalNetworkSetSync
+  map:
+    fields:
+    - name: labels
+      type:
+        map:
+          elementType:
+            scalar: string
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.GlobalReport
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.ReportSpec
+      default: {}
+    - name: status
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.ReportStatus
+      default: {}
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.GlobalReportType
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.ReportTypeSpec
+      default: {}
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.GlobalThreatFeed
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.GlobalThreatFeedSpec
+      default: {}
+    - name: status
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.GlobalThreatFeedStatus
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.GlobalThreatFeedSpec
+  map:
+    fields:
+    - name: content
+      type:
+        scalar: string
+    - name: description
+      type:
+        scalar: string
+    - name: feedType
+      type:
+        scalar: string
+    - name: globalNetworkSet
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.GlobalNetworkSetSync
+    - name: mode
+      type:
+        scalar: string
+    - name: pull
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.Pull
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.GlobalThreatFeedStatus
+  map:
+    fields:
+    - name: errorConditions
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.ErrorCondition
+          elementRelationship: atomic
+    - name: lastSuccessfulSearch
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+    - name: lastSuccessfulSync
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.HTTPHeader
+  map:
+    fields:
+    - name: name
+      type:
+        scalar: string
+      default: ""
+    - name: value
+      type:
+        scalar: string
+    - name: valueFrom
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.HTTPHeaderSource
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.HTTPHeaderCriteria
+  map:
+    fields:
+    - name: header
+      type:
+        scalar: string
+      default: ""
+    - name: operator
+      type:
+        scalar: string
+      default: ""
+    - name: values
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.HTTPHeaderSource
+  map:
+    fields:
+    - name: configMapKeyRef
+      type:
+        namedType: io.k8s.api.core.v1.ConfigMapKeySelector
+    - name: secretKeyRef
+      type:
+        namedType: io.k8s.api.core.v1.SecretKeySelector
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.HTTPMatch
+  map:
+    fields:
+    - name: headers
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.HTTPHeaderCriteria
+          elementRelationship: atomic
+    - name: methods
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: paths
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.HTTPPath
+          elementRelationship: atomic
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.HTTPPath
+  map:
+    fields:
+    - name: exact
+      type:
+        scalar: string
+    - name: prefix
+      type:
+        scalar: string
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.HTTPPull
+  map:
+    fields:
+    - name: format
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.ThreatFeedFormat
+      default: {}
+    - name: headers
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.HTTPHeader
+          elementRelationship: atomic
+    - name: url
+      type:
+        scalar: string
+      default: ""
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.HealthTimeoutOverride
+  map:
+    fields:
+    - name: name
+      type:
+        scalar: string
+      default: ""
+    - name: timeout
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.HostEndpoint
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.HostEndpointSpec
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.HostEndpointSpec
+  map:
+    fields:
+    - name: expectedIPs
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
+    - name: interfaceName
+      type:
+        scalar: string
+    - name: node
+      type:
+        scalar: string
+    - name: ports
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.EndpointPort
+          elementRelationship: atomic
+    - name: profiles
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.ICMPFields
+  map:
+    fields:
+    - name: code
+      type:
+        scalar: numeric
+    - name: type
+      type:
+        scalar: numeric
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.IPAMBlock
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.IPAMBlockSpec
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.IPAMBlockSpec
+  map:
+    fields:
+    - name: affinity
+      type:
+        scalar: string
+    - name: affinityClaimTime
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+    - name: allocations
+      type:
+        list:
+          elementType:
+            scalar: numeric
+          elementRelationship: atomic
+    - name: attributes
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.AllocationAttribute
+          elementRelationship: atomic
+    - name: cidr
+      type:
+        scalar: string
+      default: ""
+    - name: deleted
+      type:
+        scalar: boolean
+      default: false
+    - name: sequenceNumber
+      type:
+        scalar: numeric
+      default: 0
+    - name: sequenceNumberForAllocation
+      type:
+        map:
+          elementType:
+            scalar: numeric
+    - name: strictAffinity
+      type:
+        scalar: boolean
+      default: false
+    - name: unallocated
+      type:
+        list:
+          elementType:
+            scalar: numeric
+          elementRelationship: atomic
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.IPAMConfiguration
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.IPAMConfigurationSpec
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.IPAMConfigurationSpec
+  map:
+    fields:
+    - name: autoAllocateBlocks
+      type:
+        scalar: boolean
+      default: false
+    - name: ipCooldownSeconds
+      type:
+        scalar: numeric
+    - name: kubeVirtVMAddressPersistence
+      type:
+        scalar: string
+    - name: maxBlocksPerHost
+      type:
+        scalar: numeric
+    - name: strictAffinity
+      type:
+        scalar: boolean
+      default: false
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.IPAMHandle
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.IPAMHandleSpec
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.IPAMHandleSpec
+  map:
+    fields:
+    - name: block
+      type:
+        map:
+          elementType:
+            scalar: numeric
+    - name: deleted
+      type:
+        scalar: boolean
+      default: false
+    - name: handleID
+      type:
+        scalar: string
+      default: ""
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.IPPool
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.IPPoolSpec
+      default: {}
+    - name: status
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.IPPoolStatus
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.IPPoolSpec
+  map:
+    fields:
+    - name: allowedUses
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
+    - name: assignmentMode
+      type:
+        scalar: string
+    - name: awsSubnetID
+      type:
+        scalar: string
+    - name: blockSize
+      type:
+        scalar: numeric
+    - name: cidr
+      type:
+        scalar: string
+      default: ""
+    - name: disableBGPExport
+      type:
+        scalar: boolean
+    - name: disabled
+      type:
+        scalar: boolean
+    - name: ipipMode
+      type:
+        scalar: string
+    - name: namespaceSelector
+      type:
+        scalar: string
+    - name: natOutgoing
+      type:
+        scalar: boolean
+    - name: nodeSelector
+      type:
+        scalar: string
+    - name: vxlanMode
+      type:
+        scalar: string
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.IPPoolStatus
+  map:
+    fields:
+    - name: conditions
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Condition
+          elementRelationship: associative
+          keys:
+          - type
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.IPReservation
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.IPReservationSpec
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.IPReservationSpec
+  map:
+    fields:
+    - name: reservedCIDRs
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.InterfaceMatch
+  map:
+    fields:
+    - name: name
+      type:
+        scalar: string
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.KubeControllersConfiguration
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.KubeControllersConfigurationSpec
+      default: {}
+    - name: status
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.KubeControllersConfigurationStatus
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.KubeControllersConfigurationSpec
+  map:
+    fields:
+    - name: controllers
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.ControllersConfig
+      default: {}
+    - name: debugProfilePort
+      type:
+        scalar: numeric
+    - name: etcdV3CompactionPeriod
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: healthChecks
+      type:
+        scalar: string
+    - name: logSeverityScreen
+      type:
+        scalar: string
+    - name: prometheusMetricsPort
+      type:
+        scalar: numeric
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.KubeControllersConfigurationStatus
+  map:
+    fields:
+    - name: environmentVars
+      type:
+        map:
+          elementType:
+            scalar: string
+    - name: runningConfig
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.KubeControllersConfigurationSpec
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.LicenseKey
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.LicenseKeySpec
+      default: {}
+    - name: status
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.LicenseKeyStatus
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.LicenseKeySpec
+  map:
+    fields:
+    - name: certificate
+      type:
+        scalar: string
+    - name: token
+      type:
+        scalar: string
+      default: ""
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.LicenseKeyStatus
+  map:
+    fields:
+    - name: conditions
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Condition
+          elementRelationship: associative
+          keys:
+          - type
+    - name: expiry
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+    - name: features
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: gracePeriod
+      type:
+        scalar: string
+    - name: maxcores
+      type:
+        scalar: numeric
+    - name: maxnodes
+      type:
+        scalar: numeric
+    - name: package
+      type:
+        scalar: string
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.LoadBalancerControllerConfig
+  map:
+    fields:
+    - name: assignIPs
+      type:
+        scalar: string
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.ManagedCluster
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.ManagedClusterSpec
+      default: {}
+    - name: status
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.ManagedClusterStatus
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.ManagedClusterSpec
+  map:
+    fields:
+    - name: certificate
+      type:
+        scalar: string
+    - name: installationManifest
+      type:
+        scalar: string
+    - name: operatorNamespace
+      type:
+        scalar: string
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.ManagedClusterStatus
+  map:
+    fields:
+    - name: conditions
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.ManagedClusterStatusCondition
+          elementRelationship: atomic
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.ManagedClusterStatusCondition
+  map:
+    fields:
+    - name: message
+      type:
+        scalar: string
+    - name: reason
+      type:
+        scalar: string
+    - name: status
+      type:
+        scalar: string
+      default: ""
+    - name: type
+      type:
+        scalar: string
+      default: ""
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.MigrationControllerConfig
+  map:
+    fields:
+    - name: policyNameMigrator
+      type:
+        scalar: string
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.NamedSelector
+  map:
+    fields:
+    - name: name
+      type:
+        scalar: string
+      default: ""
+    - name: selector
+      type:
+        scalar: string
+      default: ""
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.NamesAndLabelsMatch
+  map:
+    fields:
+    - name: names
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: selector
+      type:
+        scalar: string
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.NamespaceControllerConfig
+  map:
+    fields:
+    - name: reconcilerPeriod
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.Network
+  map:
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.NetworkSpec
+      default: {}
+    - name: status
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.NetworkStatus
+      default: {}
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.NetworkPolicy
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.NetworkPolicySpec
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.NetworkPolicySpec
+  map:
+    fields:
+    - name: egress
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.Rule
+          elementRelationship: atomic
+    - name: ingress
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.Rule
+          elementRelationship: atomic
+    - name: order
+      type:
+        scalar: numeric
+    - name: performanceHints
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
+    - name: selector
+      type:
+        scalar: string
+    - name: serviceAccountSelector
+      type:
+        scalar: string
+    - name: tier
+      type:
+        scalar: string
+    - name: types
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.NetworkSet
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.NetworkSetSpec
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.NetworkSetSpec
+  map:
+    fields:
+    - name: allowedEgressDomains
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: nets
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.NetworkSpec
+  map:
+    fields:
+    - name: vrf
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.VRFNetworkSpec
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.NetworkStatus
+  map:
+    fields:
+    - name: conditions
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Condition
+          elementRelationship: atomic
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.NodeControllerConfig
+  map:
+    fields:
+    - name: hostEndpoint
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.AutoHostEndpointConfig
+    - name: leakGracePeriod
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: reconcilerPeriod
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: syncLabels
+      type:
+        scalar: string
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.PacketCapture
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.PacketCaptureSpec
+      default: {}
+    - name: status
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.PacketCaptureStatus
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.PacketCaptureFile
+  map:
+    fields:
+    - name: directory
+      type:
+        scalar: string
+    - name: fileNames
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: node
+      type:
+        scalar: string
+    - name: state
+      type:
+        scalar: string
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.PacketCaptureRule
+  map:
+    fields:
+    - name: ports
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.lib.numorstring.Port
+          elementRelationship: atomic
+    - name: protocol
+      type:
+        namedType: com.github.tigera.api.pkg.lib.numorstring.Protocol
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.PacketCaptureSpec
+  map:
+    fields:
+    - name: endTime
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+    - name: filters
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.PacketCaptureRule
+          elementRelationship: atomic
+    - name: selector
+      type:
+        scalar: string
+    - name: startTime
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.PacketCaptureStatus
+  map:
+    fields:
+    - name: files
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.PacketCaptureFile
+          elementRelationship: atomic
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.PolicyControllerConfig
+  map:
+    fields:
+    - name: reconcilerPeriod
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.PolicyRecommendationScope
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.PolicyRecommendationScopeSpec
+      default: {}
+    - name: status
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.PolicyRecommendationScopeStatus
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.PolicyRecommendationScopeHostEndpointSpec
+  map:
+    fields:
+    - name: recommendationStatus
+      type:
+        scalar: string
+    - name: selector
+      type:
+        scalar: string
+      default: ""
+    - name: tierName
+      type:
+        scalar: string
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.PolicyRecommendationScopeNamespaceSpec
+  map:
+    fields:
+    - name: intraNamespacePassThroughTraffic
+      type:
+        scalar: boolean
+    - name: recStatus
+      type:
+        scalar: string
+    - name: selector
+      type:
+        scalar: string
+      default: ""
+    - name: tierName
+      type:
+        scalar: string
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.PolicyRecommendationScopeSpec
+  map:
+    fields:
+    - name: hostEndpointSpec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.PolicyRecommendationScopeHostEndpointSpec
+    - name: initialLookback
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: interval
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+    - name: maxRules
+      type:
+        scalar: numeric
+    - name: namespaceSpec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.PolicyRecommendationScopeNamespaceSpec
+    - name: policiesLearningCutOff
+      type:
+        scalar: numeric
+    - name: stabilizationPeriod
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.PolicyRecommendationScopeStatus
+  map:
+    fields:
+    - name: conditions
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.PolicyRecommendationScopeStatusCondition
+          elementRelationship: atomic
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.PolicyRecommendationScopeStatusCondition
+  map:
+    fields:
+    - name: message
+      type:
+        scalar: string
+    - name: reason
+      type:
+        scalar: string
+    - name: status
+      type:
+        scalar: string
+      default: ""
+    - name: type
+      type:
+        scalar: string
+      default: ""
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.Position
+  map:
+    fields:
+    - name: id
+      type:
+        scalar: string
+      default: ""
+    - name: xPos
+      type:
+        scalar: numeric
+      default: 0
+    - name: yPos
+      type:
+        scalar: numeric
+      default: 0
+    - name: zPos
+      type:
+        scalar: numeric
+      default: 0
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.PrefixAdvertisement
+  map:
+    fields:
+    - name: cidr
+      type:
+        scalar: string
+    - name: communities
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    elementRelationship: atomic
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.Profile
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.ProfileSpec
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.ProfileSpec
+  map:
+    fields:
+    - name: egress
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.Rule
+          elementRelationship: atomic
+    - name: egressGateway
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.EgressGatewaySpec
+    - name: ingress
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.Rule
+          elementRelationship: atomic
+    - name: labelsToApply
+      type:
+        map:
+          elementType:
+            scalar: string
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.ProtoPort
+  map:
+    fields:
+    - name: net
+      type:
+        scalar: string
+    - name: port
+      type:
+        scalar: numeric
+      default: 0
+    - name: protocol
+      type:
+        scalar: string
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.Pull
+  map:
+    fields:
+    - name: http
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.HTTPPull
+    - name: period
+      type:
+        scalar: string
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.RBACSyncControllerConfig
+  map:
+    fields:
+    - name: reconcilerPeriod
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.RemoteClusterConfiguration
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.RemoteClusterConfigurationSpec
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.RemoteClusterConfigurationSpec
+  map:
+    fields:
+    - name: clusterAccessSecret
+      type:
+        namedType: io.k8s.api.core.v1.ObjectReference
+    - name: datastoreType
+      type:
+        scalar: string
+    - name: etcdCACert
+      type:
+        scalar: string
+    - name: etcdCACertFile
+      type:
+        scalar: string
+    - name: etcdCert
+      type:
+        scalar: string
+    - name: etcdCertFile
+      type:
+        scalar: string
+    - name: etcdEndpoints
+      type:
+        scalar: string
+    - name: etcdKey
+      type:
+        scalar: string
+    - name: etcdKeyFile
+      type:
+        scalar: string
+    - name: etcdPassword
+      type:
+        scalar: string
+    - name: etcdUsername
+      type:
+        scalar: string
+    - name: k8sAPIEndpoint
+      type:
+        scalar: string
+    - name: k8sAPIToken
+      type:
+        scalar: string
+    - name: k8sCAFile
+      type:
+        scalar: string
+    - name: k8sCertFile
+      type:
+        scalar: string
+    - name: k8sInsecureSkipTLSVerify
+      type:
+        scalar: boolean
+    - name: k8sKeyFile
+      type:
+        scalar: string
+    - name: kubeconfig
+      type:
+        scalar: string
+    - name: kubeconfigInline
+      type:
+        scalar: string
+    - name: syncOptions
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.RemoteClusterSyncOptions
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.RemoteClusterSyncOptions
+  map:
+    fields:
+    - name: overlayRoutingMode
+      type:
+        scalar: string
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.ReportJob
+  map:
+    fields:
+    - name: end
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+    - name: job
+      type:
+        namedType: io.k8s.api.core.v1.ObjectReference
+    - name: start
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.ReportSpec
+  map:
+    fields:
+    - name: cis
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.CISBenchmarkParams
+    - name: endpoints
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.EndpointsSelection
+    - name: jobNodeSelector
+      type:
+        map:
+          elementType:
+            scalar: string
+    - name: reportType
+      type:
+        scalar: string
+      default: ""
+    - name: schedule
+      type:
+        scalar: string
+    - name: suspend
+      type:
+        scalar: boolean
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.ReportStatus
+  map:
+    fields:
+    - name: activeReportJobs
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.ReportJob
+          elementRelationship: atomic
+    - name: lastFailedReportJobs
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.CompletedReportJob
+          elementRelationship: atomic
+    - name: lastScheduledReportJob
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.ReportJob
+    - name: lastSuccessfulReportJobs
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.CompletedReportJob
+          elementRelationship: atomic
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.ReportTemplate
+  map:
+    fields:
+    - name: description
+      type:
+        scalar: string
+    - name: name
+      type:
+        scalar: string
+    - name: template
+      type:
+        scalar: string
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.ReportTypeSpec
+  map:
+    fields:
+    - name: auditEventsSelection
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.AuditEventsSelection
+    - name: downloadTemplates
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.ReportTemplate
+          elementRelationship: atomic
+    - name: includeCISBenchmarkData
+      type:
+        scalar: boolean
+    - name: includeEndpointData
+      type:
+        scalar: boolean
+    - name: includeEndpointFlowLogData
+      type:
+        scalar: boolean
+    - name: uiSummaryTemplate
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.ReportTemplate
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.RouteTableIDRange
+  map:
+    fields:
+    - name: max
+      type:
+        scalar: numeric
+      default: 0
+    - name: min
+      type:
+        scalar: numeric
+      default: 0
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.RouteTableRange
+  map:
+    fields:
+    - name: max
+      type:
+        scalar: numeric
+      default: 0
+    - name: min
+      type:
+        scalar: numeric
+      default: 0
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.Rule
+  map:
+    fields:
+    - name: action
+      type:
+        scalar: string
+      default: ""
+    - name: destination
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.EntityRule
+      default: {}
+    - name: http
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.HTTPMatch
+    - name: icmp
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.ICMPFields
+    - name: ipVersion
+      type:
+        scalar: numeric
+    - name: metadata
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.RuleMetadata
+    - name: notICMP
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.ICMPFields
+    - name: notProtocol
+      type:
+        namedType: com.github.tigera.api.pkg.lib.numorstring.Protocol
+    - name: protocol
+      type:
+        namedType: com.github.tigera.api.pkg.lib.numorstring.Protocol
+    - name: source
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.EntityRule
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.RuleMetadata
+  map:
+    fields:
+    - name: annotations
+      type:
+        map:
+          elementType:
+            scalar: string
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.SecurityEventWebhook
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.SecurityEventWebhookSpec
+      default: {}
+    - name: status
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Condition
+          elementRelationship: atomic
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.SecurityEventWebhookConfigVar
+  map:
+    fields:
+    - name: name
+      type:
+        scalar: string
+      default: ""
+    - name: value
+      type:
+        scalar: string
+    - name: valueFrom
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.SecurityEventWebhookConfigVarSource
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.SecurityEventWebhookConfigVarSource
+  map:
+    fields:
+    - name: configMapKeyRef
+      type:
+        namedType: io.k8s.api.core.v1.ConfigMapKeySelector
+    - name: secretKeyRef
+      type:
+        namedType: io.k8s.api.core.v1.SecretKeySelector
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.SecurityEventWebhookSpec
+  map:
+    fields:
+    - name: config
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.SecurityEventWebhookConfigVar
+          elementRelationship: atomic
+    - name: consumer
+      type:
+        scalar: string
+      default: ""
+    - name: query
+      type:
+        scalar: string
+      default: ""
+    - name: state
+      type:
+        scalar: string
+      default: ""
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.ServiceAccountControllerConfig
+  map:
+    fields:
+    - name: reconcilerPeriod
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.ServiceAccountMatch
+  map:
+    fields:
+    - name: names
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
+    - name: selector
+      type:
+        scalar: string
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.ServiceClusterIPBlock
+  map:
+    fields:
+    - name: cidr
+      type:
+        scalar: string
+    elementRelationship: atomic
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.ServiceExternalIPBlock
+  map:
+    fields:
+    - name: cidr
+      type:
+        scalar: string
+    elementRelationship: atomic
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.ServiceLoadBalancerIPBlock
+  map:
+    fields:
+    - name: cidr
+      type:
+        scalar: string
+    elementRelationship: atomic
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.ServiceMatch
+  map:
+    fields:
+    - name: name
+      type:
+        scalar: string
+    - name: namespace
+      type:
+        scalar: string
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.StagedGlobalNetworkPolicy
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.StagedGlobalNetworkPolicySpec
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.StagedGlobalNetworkPolicySpec
+  map:
+    fields:
+    - name: applyOnForward
+      type:
+        scalar: boolean
+    - name: doNotTrack
+      type:
+        scalar: boolean
+    - name: egress
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.Rule
+          elementRelationship: atomic
+    - name: ingress
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.Rule
+          elementRelationship: atomic
+    - name: namespaceSelector
+      type:
+        scalar: string
+    - name: order
+      type:
+        scalar: numeric
+    - name: performanceHints
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
+    - name: preDNAT
+      type:
+        scalar: boolean
+    - name: selector
+      type:
+        scalar: string
+    - name: serviceAccountSelector
+      type:
+        scalar: string
+    - name: stagedAction
+      type:
+        scalar: string
+    - name: tier
+      type:
+        scalar: string
+    - name: types
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.StagedKubernetesNetworkPolicy
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.StagedKubernetesNetworkPolicySpec
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.StagedKubernetesNetworkPolicySpec
+  map:
+    fields:
+    - name: egress
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.api.networking.v1.NetworkPolicyEgressRule
+          elementRelationship: atomic
+    - name: ingress
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.api.networking.v1.NetworkPolicyIngressRule
+          elementRelationship: atomic
+    - name: podSelector
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector
+      default: {}
+    - name: policyTypes
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
+    - name: stagedAction
+      type:
+        scalar: string
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.StagedNetworkPolicy
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
+  map:
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.StagedNetworkPolicySpec
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.StagedNetworkPolicySpec
+  map:
+    fields:
+    - name: egress
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.Rule
+          elementRelationship: atomic
+    - name: ingress
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.Rule
+          elementRelationship: atomic
+    - name: order
+      type:
+        scalar: numeric
+    - name: performanceHints
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
+    - name: selector
+      type:
+        scalar: string
+    - name: serviceAccountSelector
+      type:
+        scalar: string
+    - name: stagedAction
+      type:
+        scalar: string
+    - name: tier
+      type:
+        scalar: string
+    - name: types
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.StaticRouteAction
+  map:
+    fields:
+    - name: nextHop
+      type:
+        scalar: string
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.Template
+  map:
+    fields:
+    - name: generateName
+      type:
+        scalar: string
+    - name: interfaceCIDRs
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
+    - name: interfacePattern
+      type:
+        scalar: string
+    - name: labels
+      type:
+        map:
+          elementType:
+            scalar: string
+    - name: nodeSelector
+      type:
+        scalar: string
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.ThreatFeedFormat
+  map:
+    fields:
+    - name: csv
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.ThreatFeedFormatCSV
+    - name: json
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.ThreatFeedFormatJSON
+    - name: newlineDelimited
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.ThreatFeedFormatNewlineDelimited
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.ThreatFeedFormatCSV
+  map:
+    fields:
+    - name: columnDelimiter
+      type:
+        scalar: string
+    - name: commentDelimiter
+      type:
+        scalar: string
+    - name: disableRecordSizeValidation
+      type:
+        scalar: boolean
+    - name: fieldName
+      type:
+        scalar: string
+    - name: fieldNum
+      type:
+        scalar: numeric
+    - name: header
+      type:
+        scalar: boolean
+    - name: recordSize
+      type:
+        scalar: numeric
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.ThreatFeedFormatJSON
+  map:
+    fields:
+    - name: path
+      type:
+        scalar: string
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.ThreatFeedFormatNewlineDelimited
   map:
     elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+      scalar: untyped
+      list:
+        elementType:
+          namedType: __untyped_atomic_
+        elementRelationship: atomic
+      map:
+        elementType:
+          namedType: __untyped_deduced_
+        elementRelationship: separable
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.Tier
-  scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
-    elementRelationship: atomic
   map:
-    elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.TierSpec
+      default: {}
+    - name: status
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.TierStatus
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.TierSpec
+  map:
+    fields:
+    - name: defaultAction
+      type:
+        scalar: string
+    - name: order
+      type:
+        scalar: numeric
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.TierStatus
+  map:
+    fields:
+    - name: conditions
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Condition
+          elementRelationship: associative
+          keys:
+          - type
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.UIDashboard
+  map:
+    fields:
+    - name: dashboardData
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.DashboardData
+          elementRelationship: atomic
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.UIGraphLayer
+  map:
+    fields:
+    - name: color
+      type:
+        scalar: string
+    - name: icon
+      type:
+        scalar: string
+    - name: nodes
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.UIGraphNode
+          elementRelationship: atomic
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.UIGraphNode
+  map:
+    fields:
+    - name: id
+      type:
+        scalar: string
+      default: ""
+    - name: name
+      type:
+        scalar: string
+      default: ""
+    - name: namespace
+      type:
+        scalar: string
+    - name: type
+      type:
+        scalar: string
+      default: ""
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.UIGraphNodeView
+  map:
+    fields:
+    - name: deemphasize
+      type:
+        scalar: boolean
+    - name: expanded
+      type:
+        scalar: boolean
+    - name: followEgress
+      type:
+        scalar: boolean
+    - name: followIngress
+      type:
+        scalar: boolean
+    - name: hide
+      type:
+        scalar: boolean
+    - name: hideUnrelated
+      type:
+        scalar: boolean
+    - name: id
+      type:
+        scalar: string
+      default: ""
+    - name: inFocus
+      type:
+        scalar: boolean
+    - name: name
+      type:
+        scalar: string
+      default: ""
+    - name: namespace
+      type:
+        scalar: string
+    - name: type
+      type:
+        scalar: string
+      default: ""
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.UIGraphView
+  map:
+    fields:
+    - name: expandPorts
+      type:
+        scalar: boolean
+    - name: followConnectionDirection
+      type:
+        scalar: boolean
+    - name: hostAggregationSelectors
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.NamedSelector
+          elementRelationship: atomic
+    - name: layers
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: layoutType
+      type:
+        scalar: string
+    - name: nodes
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.UIGraphNodeView
+          elementRelationship: atomic
+    - name: positions
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.Position
+          elementRelationship: atomic
+    - name: splitIngressEgress
+      type:
+        scalar: boolean
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.UISettings
+  map:
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.UISettingsSpec
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.UISettingsGroup
+  map:
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.UISettingsGroupSpec
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.UISettingsGroupSpec
+  map:
+    fields:
+    - name: description
+      type:
+        scalar: string
+      default: ""
+    - name: filterType
+      type:
+        scalar: string
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.UISettingsSpec
+  map:
+    fields:
+    - name: dashboard
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.UIDashboard
+    - name: description
+      type:
+        scalar: string
+      default: ""
+    - name: group
+      type:
+        scalar: string
+      default: ""
+    - name: layer
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.UIGraphLayer
+    - name: user
+      type:
+        scalar: string
+    - name: view
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.UIGraphView
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.VRFHostConfig
+  map:
+    fields:
+    - name: hostInterfaces
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.InterfaceMatch
+          elementRelationship: atomic
+    - name: nodeSelector
+      type:
+        scalar: string
+    - name: routeTableIndex
+      type:
+        scalar: numeric
+      default: 0
+    - name: staticRoutes
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.VRFStaticRoute
+          elementRelationship: atomic
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.VRFNetworkSpec
+  map:
+    fields:
+    - name: hostConfig
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.VRFHostConfig
+          elementRelationship: associative
+          keys:
+          - nodeSelector
+    - name: routing
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.VRFRouting
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.VRFRouting
+  map:
+    fields:
+    - name: inClusterMode
+      type:
+        scalar: string
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.VRFStaticRoute
+  map:
+    fields:
+    - name: action
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.StaticRouteAction
+      default: {}
+    - name: destination
+      type:
+        scalar: string
+      default: ""
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.WorkloadEndpointControllerConfig
+  map:
+    fields:
+    - name: reconcilerPeriod
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+- name: com.github.tigera.api.pkg.lib.numorstring.DSCP
   scalar: untyped
-  list:
-    elementType:
-      namedType: __untyped_atomic_
+- name: com.github.tigera.api.pkg.lib.numorstring.Port
+  scalar: untyped
+- name: com.github.tigera.api.pkg.lib.numorstring.Protocol
+  scalar: untyped
+- name: io.k8s.api.core.v1.ConfigMapKeySelector
+  map:
+    fields:
+    - name: key
+      type:
+        scalar: string
+      default: ""
+    - name: name
+      type:
+        scalar: string
+      default: ""
+    - name: optional
+      type:
+        scalar: boolean
     elementRelationship: atomic
+- name: io.k8s.api.core.v1.ObjectReference
+  map:
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: fieldPath
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: name
+      type:
+        scalar: string
+    - name: namespace
+      type:
+        scalar: string
+    - name: resourceVersion
+      type:
+        scalar: string
+    - name: uid
+      type:
+        scalar: string
+    elementRelationship: atomic
+- name: io.k8s.api.core.v1.SecretKeySelector
+  map:
+    fields:
+    - name: key
+      type:
+        scalar: string
+      default: ""
+    - name: name
+      type:
+        scalar: string
+      default: ""
+    - name: optional
+      type:
+        scalar: boolean
+    elementRelationship: atomic
+- name: io.k8s.api.networking.v1.IPBlock
+  map:
+    fields:
+    - name: cidr
+      type:
+        scalar: string
+      default: ""
+    - name: except
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+- name: io.k8s.api.networking.v1.NetworkPolicyEgressRule
+  map:
+    fields:
+    - name: ports
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.api.networking.v1.NetworkPolicyPort
+          elementRelationship: atomic
+    - name: to
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.api.networking.v1.NetworkPolicyPeer
+          elementRelationship: atomic
+- name: io.k8s.api.networking.v1.NetworkPolicyIngressRule
+  map:
+    fields:
+    - name: from
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.api.networking.v1.NetworkPolicyPeer
+          elementRelationship: atomic
+    - name: ports
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.api.networking.v1.NetworkPolicyPort
+          elementRelationship: atomic
+- name: io.k8s.api.networking.v1.NetworkPolicyPeer
+  map:
+    fields:
+    - name: ipBlock
+      type:
+        namedType: io.k8s.api.networking.v1.IPBlock
+    - name: namespaceSelector
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector
+    - name: podSelector
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector
+- name: io.k8s.api.networking.v1.NetworkPolicyPort
+  map:
+    fields:
+    - name: endPort
+      type:
+        scalar: numeric
+    - name: port
+      type:
+        namedType: io.k8s.apimachinery.pkg.util.intstr.IntOrString
+    - name: protocol
+      type:
+        scalar: string
+- name: io.k8s.apimachinery.pkg.apis.meta.v1.Condition
+  map:
+    fields:
+    - name: lastTransitionTime
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+    - name: message
+      type:
+        scalar: string
+      default: ""
+    - name: observedGeneration
+      type:
+        scalar: numeric
+    - name: reason
+      type:
+        scalar: string
+      default: ""
+    - name: status
+      type:
+        scalar: string
+      default: ""
+    - name: type
+      type:
+        scalar: string
+      default: ""
+- name: io.k8s.apimachinery.pkg.apis.meta.v1.Duration
+  scalar: string
+- name: io.k8s.apimachinery.pkg.apis.meta.v1.FieldsV1
   map:
     elementType:
-      namedType: __untyped_deduced_
-    elementRelationship: separable
-- name: com.github.tigera.api.pkg.apis.projectcalico.v3.UISettingsGroup
+      scalar: untyped
+      list:
+        elementType:
+          namedType: __untyped_atomic_
+        elementRelationship: atomic
+      map:
+        elementType:
+          namedType: __untyped_deduced_
+        elementRelationship: separable
+- name: io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector
+  map:
+    fields:
+    - name: matchExpressions
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelectorRequirement
+          elementRelationship: atomic
+    - name: matchLabels
+      type:
+        map:
+          elementType:
+            scalar: string
+    elementRelationship: atomic
+- name: io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelectorRequirement
+  map:
+    fields:
+    - name: key
+      type:
+        scalar: string
+      default: ""
+    - name: operator
+      type:
+        scalar: string
+      default: ""
+    - name: values
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+- name: io.k8s.apimachinery.pkg.apis.meta.v1.ManagedFieldsEntry
+  map:
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: fieldsType
+      type:
+        scalar: string
+    - name: fieldsV1
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.FieldsV1
+    - name: manager
+      type:
+        scalar: string
+    - name: operation
+      type:
+        scalar: string
+    - name: subresource
+      type:
+        scalar: string
+    - name: time
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+- name: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+  map:
+    fields:
+    - name: annotations
+      type:
+        map:
+          elementType:
+            scalar: string
+    - name: creationTimestamp
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+    - name: deletionGracePeriodSeconds
+      type:
+        scalar: numeric
+    - name: deletionTimestamp
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+    - name: finalizers
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
+    - name: generateName
+      type:
+        scalar: string
+    - name: generation
+      type:
+        scalar: numeric
+    - name: labels
+      type:
+        map:
+          elementType:
+            scalar: string
+    - name: managedFields
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ManagedFieldsEntry
+          elementRelationship: atomic
+    - name: name
+      type:
+        scalar: string
+    - name: namespace
+      type:
+        scalar: string
+    - name: ownerReferences
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.apimachinery.pkg.apis.meta.v1.OwnerReference
+          elementRelationship: associative
+          keys:
+          - uid
+    - name: resourceVersion
+      type:
+        scalar: string
+    - name: selfLink
+      type:
+        scalar: string
+    - name: uid
+      type:
+        scalar: string
+- name: io.k8s.apimachinery.pkg.apis.meta.v1.OwnerReference
+  map:
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+      default: ""
+    - name: blockOwnerDeletion
+      type:
+        scalar: boolean
+    - name: controller
+      type:
+        scalar: boolean
+    - name: kind
+      type:
+        scalar: string
+      default: ""
+    - name: name
+      type:
+        scalar: string
+      default: ""
+    - name: uid
+      type:
+        scalar: string
+      default: ""
+    elementRelationship: atomic
+- name: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+  scalar: untyped
+- name: io.k8s.apimachinery.pkg.util.intstr.IntOrString
   scalar: untyped
   list:
     elementType:

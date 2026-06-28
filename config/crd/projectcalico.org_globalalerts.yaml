@@ -11,7 +11,6 @@ spec:
     listKind: GlobalAlertList
     plural: globalalerts
     singular: globalalert
-  preserveUnknownFields: false
   scope: Cluster
   versions:
     - name: v3
@@ -228,3 +227,5 @@ spec:
           type: object
       served: true
       storage: true
+      subresources:
+        status: {}
