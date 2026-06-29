@@ -54,59 +54,27 @@ build: gen-files examples
 # Regenerate all files if the gen exes changed or any "types.go" files changed
 .PHONY: gen-files
 gen-files .generate_files: lint-cache-dir clean-generated
-	# Generate defaults
-	$(DOCKER_RUN) $(CALICO_BUILD) \
-	   sh -c '$(GIT_CONFIG_SSH) defaulter-gen \
-		--v 1 --logtostderr \
-		--go-header-file "/go/src/$(PACKAGE_NAME)/hack/boilerplate/boilerplate.go.txt" \
-		--extra-peer-dirs "$(PACKAGE_NAME)/pkg/apis/projectcalico/v3" \
-		--output-file zz_generated.defaults.go \
-		"$(PACKAGE_NAME)/pkg/apis/projectcalico/v3"'
-	# Generate deep copies
-	$(DOCKER_RUN) $(CALICO_BUILD) \
-	   sh -c '$(GIT_CONFIG_SSH) deepcopy-gen \
-		--v 1 --logtostderr \
-		--go-header-file "/go/src/$(PACKAGE_NAME)/hack/boilerplate/boilerplate.go.txt" \
-		--bounding-dirs $(PACKAGE_NAME) \
-		--output-file zz_generated.deepcopy.go \
-		"$(PACKAGE_NAME)/pkg/apis/projectcalico/v3"'
+	# Generate the Go artifacts for the OSS API group (defaults, deep copies,
+	# OpenAPI definitions, and the clientset/listers/informers). The logic lives
+	# in build/codegen.sh so it can be shared with the calico monorepo, which
+	# mirrors build/ into this repo but keeps its own Makefile.
+	$(DOCKER_RUN) -e PACKAGE_NAME=$(PACKAGE_NAME) $(CALICO_BUILD) sh -c '$(GIT_CONFIG_SSH) $(BUILD_DIR)/codegen.sh'
+
+	# Generate deep copies for the enterprise-only API groups. These stay in the
+	# Makefile rather than codegen.sh because those groups don't exist in the
+	# shared OSS script.
 	$(DOCKER_RUN) $(CALICO_BUILD) \
 	   sh -c '$(GIT_CONFIG_SSH) deepcopy-gen \
 		--v 1 --logtostderr \
 		--go-header-file "/go/src/$(PACKAGE_NAME)/hack/boilerplate/boilerplate.go.txt" \
-		--bounding-dirs $(PACKAGE_NAME) \
 		--output-file zz_generated.deepcopy.go \
 		"$(PACKAGE_NAME)/pkg/apis/usage.tigera.io/v1"'
-	# generate OpenAPI model name accessors for Calico types.
 	$(DOCKER_RUN) $(CALICO_BUILD) \
-	   sh -c '$(GIT_CONFIG_SSH) openapi-gen \
+	   sh -c '$(GIT_CONFIG_SSH) deepcopy-gen \
 		--v 1 --logtostderr \
 		--go-header-file "/go/src/$(PACKAGE_NAME)/hack/boilerplate/boilerplate.go.txt" \
-		--output-dir /tmp/openapi-gen-model-names \
-		--output-pkg "$(PACKAGE_NAME)/pkg/openapi" \
-		--output-model-name-file zz_generated.model_name.go \
-		"$(PACKAGE_NAME)/pkg/apis/projectcalico/v3" \
-		"$(PACKAGE_NAME)/pkg/lib/numorstring"'
-
-	# generate all pkg/client contents
-	$(DOCKER_RUN) $(CALICO_BUILD) \
-	   sh -c '$(GIT_CONFIG_SSH) $(BUILD_DIR)/update-client-gen.sh'
-
-	# generate openapi
-	$(DOCKER_RUN) $(CALICO_BUILD) \
-	   sh -c '$(GIT_CONFIG_SSH) openapi-gen \
-		--v 1 --logtostderr \
-		--go-header-file "/go/src/$(PACKAGE_NAME)/hack/boilerplate/boilerplate.go.txt" \
-		--output-dir "/go/src/$(PACKAGE_NAME)/pkg/openapi" \
-		--output-pkg "$(PACKAGE_NAME)/pkg/openapi" \
-		"$(PACKAGE_NAME)/pkg/apis/projectcalico/v3" \
-		"k8s.io/api/core/v1" \
-		"k8s.io/api/networking/v1" \
-		"k8s.io/apimachinery/pkg/apis/meta/v1" \
-		"k8s.io/apimachinery/pkg/runtime" \
-		"k8s.io/apimachinery/pkg/util/intstr" \
-		"k8s.io/apimachinery/pkg/version" \
-		"$(PACKAGE_NAME)/pkg/lib/numorstring"'
+		--output-file zz_generated.deepcopy.go \
+		"$(PACKAGE_NAME)/pkg/apis/applicationlayer.projectcalico.org/v3"'
 
 	touch .generate_files
 	$(MAKE) fix
