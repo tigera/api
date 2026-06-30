@@ -128,7 +128,10 @@ else ifeq ($(SEMAPHORE_GIT_REF_TYPE), pull-request)
     # on pull requests
     THIRD_PARTY_REGISTRY?=$(THIRD_PARTY_REGISTRY_CI)
 else
-    THIRD_PARTY_REGISTRY?=gcr.io/tigera-dev/third-party-ci
+    # Local builds. The Semaphore git-context vars aren't set, so default to the
+    # CD registry, which serves the master-tagged base images that local enterprise
+    # builds (fluentd, elasticsearch, deep-packet-inspection, kibana) pull from.
+    THIRD_PARTY_REGISTRY?=$(THIRD_PARTY_REGISTRY_CD)
 endif
 
 THIRD_PARTY_BASE_IMAGES_TO_RETAG = elasticsearch fluentd-base kibana snort3
@@ -2139,6 +2142,7 @@ kind-deploy:
 	KIND_DATAPLANE=$(KIND_DATAPLANE) \
 	TSEE_TEST_LICENSE=$(TSEE_TEST_LICENSE) \
 	GCR_IO_PULL_SECRET=$(GCR_IO_PULL_SECRET) \
+	KIND_SKIP_TIGERASTATUS_WAIT=$(KIND_SKIP_TIGERASTATUS_WAIT) \
 	$(REPO_ROOT)/hack/test/kind/deploy_resources.sh
 
 # Rebuild any images whose source files have changed, push changed layers to
