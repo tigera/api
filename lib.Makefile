@@ -1314,19 +1314,18 @@ retag-build-image-arch-with-registry-%: var-require-all-REGISTRY-BUILD_IMAGE-IMA
 # to registries outside Tigera control - notably the OSS quay.io/calico and
 # docker.io/calico paths owned by projectcalico/calico, which previously got
 # clobbered by an Enterprise CI job.
+#
+# Implemented purely with make string functions (no shell loop) so it behaves
+# identically under sh and powershell.exe. The third-party base image builds
+# (e.g. third_party/fluentd-base) set SHELL := powershell.exe for their Windows
+# publish, which cannot parse a Bourne-shell if/for/case recipe. A registry r
+# is allowed when it starts with some prefix in ALLOWED_DEV_REGISTRIES, i.e.
+# $(filter <prefix>%,r) is non-empty. On a violation $(error) aborts make
+# directly - the shell is never invoked; otherwise the recipe expands to
+# nothing and is skipped.
+DISALLOWED_DEV_REGISTRIES = $(foreach r,$(DEV_REGISTRIES),$(if $(strip $(foreach a,$(ALLOWED_DEV_REGISTRIES),$(filter $(a)%,$(r)))),,$(r)))
 validate-dev-registries:
-	@if [ -z "$(strip $(ALLOWED_DEV_REGISTRIES))" ]; then exit 0; fi; \
-	for r in $(DEV_REGISTRIES); do \
-		ok=0; \
-		for a in $(ALLOWED_DEV_REGISTRIES); do \
-			case "$$r" in $$a*) ok=1; break;; esac; \
-		done; \
-		if [ "$$ok" = "0" ]; then \
-			echo "ERROR: DEV_REGISTRIES contains '$$r', which is not prefixed by any value in ALLOWED_DEV_REGISTRIES (\"$(ALLOWED_DEV_REGISTRIES)\")."; \
-			echo "       Update ALLOWED_DEV_REGISTRIES in metadata.mk if this push target is now legitimate."; \
-			exit 1; \
-		fi; \
-	done
+	$(if $(strip $(ALLOWED_DEV_REGISTRIES)),$(if $(strip $(DISALLOWED_DEV_REGISTRIES)),$(error DEV_REGISTRIES entry "$(strip $(DISALLOWED_DEV_REGISTRIES))" is not prefixed by any value in ALLOWED_DEV_REGISTRIES ("$(ALLOWED_DEV_REGISTRIES)") -- update ALLOWED_DEV_REGISTRIES in metadata.mk if this push target is now legitimate)))
 
 # push-images-to-registries pushes the build / arch images specified by BUILD_IMAGES and VALIDARCHES to the registries
 # specified by DEV_REGISTRY.
