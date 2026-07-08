@@ -123,8 +123,10 @@ BPFTOOL_IMAGE=calico/bpftool:v7.5.0
 NFT_RPMS_TAG=6eb1d57c0512
 
 # The operator branch corresponding to this branch.
-OPERATOR_BRANCH ?= master
-OPERATOR_ORGANIZATION ?= tigera
+# PMREQ-810 L2: CI must build the operator branch carrying the L2 CRD updates
+# (fasaxc/operator l2-prod), not stock tigera/operator master.
+OPERATOR_BRANCH ?= l2-prod
+OPERATOR_ORGANIZATION ?= fasaxc
 OPERATOR_GIT_REPO     ?= operator
 # The manager branch corresponding to this branch.
 MANAGER_BRANCH ?= master
