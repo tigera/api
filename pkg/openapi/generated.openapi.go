@@ -184,6 +184,19 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		v3.KubeControllersConfigurationList{}.OpenAPIModelName():          schema_pkg_apis_projectcalico_v3_KubeControllersConfigurationList(ref),
 		v3.KubeControllersConfigurationSpec{}.OpenAPIModelName():          schema_pkg_apis_projectcalico_v3_KubeControllersConfigurationSpec(ref),
 		v3.KubeControllersConfigurationStatus{}.OpenAPIModelName():        schema_pkg_apis_projectcalico_v3_KubeControllersConfigurationStatus(ref),
+		v3.L2BridgeDevice{}.OpenAPIModelName():                            schema_pkg_apis_projectcalico_v3_L2BridgeDevice(ref),
+		v3.L2BridgeSpec{}.OpenAPIModelName():                              schema_pkg_apis_projectcalico_v3_L2BridgeSpec(ref),
+		v3.L2ExistingBridge{}.OpenAPIModelName():                          schema_pkg_apis_projectcalico_v3_L2ExistingBridge(ref),
+		v3.L2HostConfig{}.OpenAPIModelName():                              schema_pkg_apis_projectcalico_v3_L2HostConfig(ref),
+		v3.L2HostConnection{}.OpenAPIModelName():                          schema_pkg_apis_projectcalico_v3_L2HostConnection(ref),
+		v3.L2HostTrunkPort{}.OpenAPIModelName():                           schema_pkg_apis_projectcalico_v3_L2HostTrunkPort(ref),
+		v3.L2ManagedBridge{}.OpenAPIModelName():                           schema_pkg_apis_projectcalico_v3_L2ManagedBridge(ref),
+		v3.L2Route{}.OpenAPIModelName():                                   schema_pkg_apis_projectcalico_v3_L2Route(ref),
+		v3.L2RouteAction{}.OpenAPIModelName():                             schema_pkg_apis_projectcalico_v3_L2RouteAction(ref),
+		v3.L2Subnet{}.OpenAPIModelName():                                  schema_pkg_apis_projectcalico_v3_L2Subnet(ref),
+		v3.L2VLANMatch{}.OpenAPIModelName():                               schema_pkg_apis_projectcalico_v3_L2VLANMatch(ref),
+		v3.L2VLANRange{}.OpenAPIModelName():                               schema_pkg_apis_projectcalico_v3_L2VLANRange(ref),
+		v3.L2VLANSpec{}.OpenAPIModelName():                                schema_pkg_apis_projectcalico_v3_L2VLANSpec(ref),
 		v3.LicenseKey{}.OpenAPIModelName():                                schema_pkg_apis_projectcalico_v3_LicenseKey(ref),
 		v3.LicenseKeyList{}.OpenAPIModelName():                            schema_pkg_apis_projectcalico_v3_LicenseKeyList(ref),
 		v3.LicenseKeySpec{}.OpenAPIModelName():                            schema_pkg_apis_projectcalico_v3_LicenseKeySpec(ref),
@@ -11036,6 +11049,429 @@ func schema_pkg_apis_projectcalico_v3_KubeControllersConfigurationStatus(ref com
 	}
 }
 
+func schema_pkg_apis_projectcalico_v3_L2BridgeDevice(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "L2BridgeDevice selects between a Calico-managed bridge and a pre-existing user-managed bridge.  Exactly one field must be set.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"managedBridge": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ManagedBridge instructs Calico to create and fully manage the bridge device.  The bridge name is derived automatically from the Network name so it does not clash with other Networks or with Calico workload veth names.",
+							Ref:         ref(v3.L2ManagedBridge{}.OpenAPIModelName()),
+						},
+					},
+					"existingBridge": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ExistingBridge instructs Calico to attach to a pre-existing bridge created and managed externally (e.g. via netplan).  Calico does not create, reconfigure, or delete the bridge; it does not add or remove IP addresses on it; and it does not remove interfaces it did not create.  Calico still attaches workload veths, configures their VLAN membership, and connects trunk interfaces (if hostConnections is specified) unless the trunk is already connected.",
+							Ref:         ref(v3.L2ExistingBridge{}.OpenAPIModelName()),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			v3.L2ExistingBridge{}.OpenAPIModelName(), v3.L2ManagedBridge{}.OpenAPIModelName()},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_L2BridgeSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "L2BridgeSpec configures a Layer 2 bridged network.  Workload interfaces are attached to a Linux bridge on each node as 802.1Q access ports; the bridge connects to the physical network via a single trunk port defined in HostConfig.  (HostConnections is currently capped at one entry per HostConfig; multiple trunk ports per host is a future extension.)\n\nCalico-managed bridges run in tagged-only mode: the bridge has vlan_filtering=1 and vlan_default_pvid=0, so untagged frames are dropped on the wire by default.  Operators that need untagged-on-wire delivery for a trunk opt in by setting L2HostTrunkPort.NativeVLAN to the VLAN ID that should be carried untagged on that trunk.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"vlans": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "VLANs is the authoritative list of 802.1Q VLAN segments carried by this network.  Each entry defines a single VLAN ID or a contiguous range of VLAN IDs, plus the subnets associated with that segment.\n\nThe set of VLAN IDs the network may carry is the union of all IDs and ranges in this list.  Entries are not required to be disjoint: if the same VLAN ID appears in more than one entry the network still simply carries that VLAN, so overlap is permitted and not validated here.\n\nWorkload attachments select a single entry via the CNI config \"vlan\" field; if spec.vlans has exactly one entry that resolves to a single VLAN ID, the CNI config \"vlan\" field may be omitted.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref(v3.L2VLANSpec{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+					"hostConfig": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"nodeSelector",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "HostConfig defines per-node-group configuration for this network. When multiple entries are present, the first entry whose nodeSelector matches a given node is used; all other entries are ignored for that node.  Entries with no nodeSelector match all nodes.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref(v3.L2HostConfig{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"vlans", "hostConfig"},
+			},
+		},
+		Dependencies: []string{
+			v3.L2HostConfig{}.OpenAPIModelName(), v3.L2VLANSpec{}.OpenAPIModelName()},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_L2ExistingBridge(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "L2ExistingBridge configures attachment to a pre-existing bridge device.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name is the Linux bridge device name (e.g. \"br0\").",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_L2HostConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "L2HostConfig provides node-specific L2 bridge settings.  Different nodes may have different bridge types or trunk interface names; each entry applies to the nodes matched by its NodeSelector (first-match wins).",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"nodeSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "NodeSelector is a Calico selector expression that determines which nodes this configuration applies to.  If omitted, the entry applies to all nodes.  When multiple HostConfig entries are present, the first entry whose selector matches a given node wins; subsequent entries are ignored for that node.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"bridge": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Bridge selects the bridge device for these nodes: either a Calico-managed bridge or a pre-existing (BYO) bridge.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(v3.L2BridgeDevice{}.OpenAPIModelName()),
+						},
+					},
+					"hostConnections": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "HostConnections defines how the bridge connects to the physical network on these nodes.  Each entry is a typed connection (currently only trunkPort).  If omitted, no trunk is attached by Calico — the user is responsible for providing external connectivity (e.g. on a BYO bridge with a pre-configured trunk).",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref(v3.L2HostConnection{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"bridge"},
+			},
+		},
+		Dependencies: []string{
+			v3.L2BridgeDevice{}.OpenAPIModelName(), v3.L2HostConnection{}.OpenAPIModelName()},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_L2HostConnection(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "L2HostConnection defines a single host-side connection to the bridge. Exactly one connection type must be set.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"trunkPort": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TrunkPort enslaves a host interface to the bridge as an 802.1Q trunk.",
+							Ref:         ref(v3.L2HostTrunkPort{}.OpenAPIModelName()),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			v3.L2HostTrunkPort{}.OpenAPIModelName()},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_L2HostTrunkPort(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "L2HostTrunkPort configures a trunk port on the bridge.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"interface": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Interface identifies the trunk interface on this node group. Heterogeneous clusters use separate HostConfig entries with different NodeSelectors rather than per-rule selectors.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(v3.InterfaceMatch{}.OpenAPIModelName()),
+						},
+					},
+					"nativeVLAN": {
+						SchemaProps: spec.SchemaProps{
+							Description: "NativeVLAN, when set, designates one VLAN ID as the trunk's native VLAN: frames in that VLAN are sent untagged on the wire and untagged frames received on the trunk are tagged with this VLAN. This should be one of the VLAN IDs the trunk carries (i.e. present in spec.vlans); if it names a VLAN the trunk does not carry it is ignored and the trunk stays strictly tagged for every VLAN.  When unset (default) the trunk is strictly tagged: only 802.1Q-tagged frames are accepted and transmitted.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+				Required: []string{"interface"},
+			},
+		},
+		Dependencies: []string{
+			v3.InterfaceMatch{}.OpenAPIModelName()},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_L2ManagedBridge(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "L2ManagedBridge configures a bridge device that Calico creates and manages.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"stp": {
+						SchemaProps: spec.SchemaProps{
+							Description: "STP controls whether Spanning Tree Protocol is active on the bridge.  \"Disabled\" (default) is appropriate for datacenter topologies where loop prevention is handled by the upstream switch; \"Enabled\" causes the bridge to exchange BPDU frames on trunk ports.  Workload veth ports always operate in edge/portfast mode regardless of this setting — they never participate in STP.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_L2Route(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "L2Route defines a route programmed in a pod's per-interface routing table for an L2 bridge subnet.  Parallel to VRFStaticRoute, but with its own action type so L2 and VRF route semantics can evolve independently.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"destination": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Destination is the CIDR prefix for this route.  Use \"0.0.0.0/0\" or \"::/0\" for a default route.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"action": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Action determines how traffic matching this route is handled. Exactly one action field must be set.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(v3.L2RouteAction{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"destination", "action"},
+			},
+		},
+		Dependencies: []string{
+			v3.L2RouteAction{}.OpenAPIModelName()},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_L2RouteAction(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "L2RouteAction defines the forwarding behaviour for an L2 route.  Exactly one field must be set.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"nextHop": {
+						SchemaProps: spec.SchemaProps{
+							Description: "NextHop forwards matching traffic to the specified gateway IP.  The address must be an L2 neighbor on this subnet, reachable via the bridge; the route is installed onlink.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_L2Subnet(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "L2Subnet defines an IP subnet associated with a VLAN segment.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"cidr": {
+						SchemaProps: spec.SchemaProps{
+							Description: "CIDR is the subnet in CIDR notation (e.g. \"10.100.0.0/24\", \"fd00::/64\").",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"routes": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"destination",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "Routes are programmed inside the pod's per-interface routing table for workloads attached to this subnet, in addition to the connected route for CIDR itself.  Each next hop must be an L2 neighbor on this subnet, reachable via the bridge; routes are installed onlink.  The common \"default gateway\" case is a single entry with destination \"0.0.0.0/0\" (or \"::/0\") whose nextHop is the upstream router.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref(v3.L2Route{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"cidr"},
+			},
+		},
+		Dependencies: []string{
+			v3.L2Route{}.OpenAPIModelName()},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_L2VLANMatch(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "L2VLANMatch identifies a VLAN segment.  Exactly one field must be set.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"id": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ID selects a single 802.1Q VLAN (1-4094).",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"range": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Range selects a contiguous range of VLAN IDs (inclusive).",
+							Ref:         ref(v3.L2VLANRange{}.OpenAPIModelName()),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			v3.L2VLANRange{}.OpenAPIModelName()},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_L2VLANRange(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "L2VLANRange represents a contiguous, inclusive range of 802.1Q VLAN IDs. Start must be ≤ End.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"start": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Start is the first VLAN ID in the range (1-4094).",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"end": {
+						SchemaProps: spec.SchemaProps{
+							Description: "End is the last VLAN ID in the range (1-4094, must be ≥ Start).",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+				Required: []string{"start", "end"},
+			},
+		},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_L2VLANSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "L2VLANSpec defines a VLAN segment and its optional IP configuration.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"vlan": {
+						SchemaProps: spec.SchemaProps{
+							Description: "VLAN identifies this segment: a single VLAN ID or a contiguous range of VLAN IDs.",
+							Default:     map[string]interface{}{},
+							Ref:         ref(v3.L2VLANMatch{}.OpenAPIModelName()),
+						},
+					},
+					"subnets": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "Subnets are the IP subnets for this VLAN segment.  They filter which IPPools the IPAM plugin considers for this VLAN (only pools that fall within one of these subnets are eligible) and supply the prefix length programmed on the pod interface.  Multiple entries support dual-stack or multi-subnet VLANs.\n\nIPAM allocates the address from the eligible pools without preferring any particular subnet; the allocated address then falls within exactly one of these subnets, and that subnet's CIDR prefix length is the one programmed on the pod interface.  For a dual-stack VLAN this resolves independently per family (one IPv4 and one IPv6 subnet).",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref(v3.L2Subnet{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"vlan"},
+			},
+		},
+		Dependencies: []string{
+			v3.L2Subnet{}.OpenAPIModelName(), v3.L2VLANMatch{}.OpenAPIModelName()},
+	}
+}
+
 func schema_pkg_apis_projectcalico_v3_LicenseKey(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -12037,7 +12473,7 @@ func schema_pkg_apis_projectcalico_v3_NetworkSpec(ref common.ReferenceCallback) 
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "NetworkSpec contains the specification for a Network resource.  Exactly one of the network-type fields (vrf, ...) must be set.",
+				Description: "NetworkSpec contains the specification for a Network resource.  Exactly one of the network-type fields (vrf, l2Bridge, ...) must be set.  The network type is immutable after creation: a Network cannot be switched between types (e.g. vrf to l2Bridge).",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"vrf": {
@@ -12046,11 +12482,17 @@ func schema_pkg_apis_projectcalico_v3_NetworkSpec(ref common.ReferenceCallback) 
 							Ref:         ref(v3.VRFNetworkSpec{}.OpenAPIModelName()),
 						},
 					},
+					"l2Bridge": {
+						SchemaProps: spec.SchemaProps{
+							Description: "L2Bridge configures a Layer 2 bridged network.  A Linux bridge on each participating node connects workload interfaces to VLAN segments carried by physical trunk interfaces.  See L2BridgeSpec.",
+							Ref:         ref(v3.L2BridgeSpec{}.OpenAPIModelName()),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			v3.VRFNetworkSpec{}.OpenAPIModelName()},
+			v3.L2BridgeSpec{}.OpenAPIModelName(), v3.VRFNetworkSpec{}.OpenAPIModelName()},
 	}
 }
 

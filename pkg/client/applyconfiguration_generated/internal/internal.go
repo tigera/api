@@ -3158,6 +3158,142 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: runningConfig
       type:
         namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.KubeControllersConfigurationSpec
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.L2BridgeDevice
+  map:
+    fields:
+    - name: existingBridge
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.L2ExistingBridge
+    - name: managedBridge
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.L2ManagedBridge
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.L2BridgeSpec
+  map:
+    fields:
+    - name: hostConfig
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.L2HostConfig
+          elementRelationship: associative
+          keys:
+          - nodeSelector
+    - name: vlans
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.L2VLANSpec
+          elementRelationship: atomic
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.L2ExistingBridge
+  map:
+    fields:
+    - name: name
+      type:
+        scalar: string
+      default: ""
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.L2HostConfig
+  map:
+    fields:
+    - name: bridge
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.L2BridgeDevice
+      default: {}
+    - name: hostConnections
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.L2HostConnection
+          elementRelationship: atomic
+    - name: nodeSelector
+      type:
+        scalar: string
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.L2HostConnection
+  map:
+    fields:
+    - name: trunkPort
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.L2HostTrunkPort
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.L2HostTrunkPort
+  map:
+    fields:
+    - name: interface
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.InterfaceMatch
+      default: {}
+    - name: nativeVLAN
+      type:
+        scalar: numeric
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.L2ManagedBridge
+  map:
+    fields:
+    - name: stp
+      type:
+        scalar: string
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.L2Route
+  map:
+    fields:
+    - name: action
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.L2RouteAction
+      default: {}
+    - name: destination
+      type:
+        scalar: string
+      default: ""
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.L2RouteAction
+  map:
+    fields:
+    - name: nextHop
+      type:
+        scalar: string
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.L2Subnet
+  map:
+    fields:
+    - name: cidr
+      type:
+        scalar: string
+      default: ""
+    - name: routes
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.L2Route
+          elementRelationship: associative
+          keys:
+          - destination
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.L2VLANMatch
+  map:
+    fields:
+    - name: id
+      type:
+        scalar: numeric
+    - name: range
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.L2VLANRange
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.L2VLANRange
+  map:
+    fields:
+    - name: end
+      type:
+        scalar: numeric
+      default: 0
+    - name: start
+      type:
+        scalar: numeric
+      default: 0
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.L2VLANSpec
+  map:
+    fields:
+    - name: subnets
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.L2Subnet
+          elementRelationship: atomic
+    - name: vlan
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.L2VLANMatch
+      default: {}
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.LicenseKey
   map:
     fields:
@@ -3433,6 +3569,9 @@ var schemaYAML = typed.YAMLObject(`types:
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.NetworkSpec
   map:
     fields:
+    - name: l2Bridge
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.L2BridgeSpec
     - name: vrf
       type:
         namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.VRFNetworkSpec
