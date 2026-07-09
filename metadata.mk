@@ -2,7 +2,7 @@
 # This file contains Makefile configuration parameters and metadata for this branch.
 #################################################################################################
 # The project Go version
-GO_VERSION=1.26.4
+GO_VERSION=1.26.5
 # Version of Kubernetes to use for dependencies, tests, registry.k8s.io/kubectl, and kubectl binary release.
 K8S_VERSION=v1.36.2
 # The version of LLVM to use for go-build and calico/base images.
@@ -14,7 +14,7 @@ RUST_BUILD_VER=1.96.0
 
 # Calico Enterprise shipping images now builds on UBI 10. For Calico OSS to Enterprise merges,
 # please don't downgrade the base image back to UBI 9.
-CALICO_BASE_VER=ubi10-1781722225
+CALICO_BASE_VER=ubi10-1783525764
 
 # Version of various tools used in the build and tests.
 COREDNS_VERSION=1.5.2
