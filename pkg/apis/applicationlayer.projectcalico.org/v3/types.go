@@ -313,9 +313,20 @@ type WAFPolicySpec struct {
 	// If not specified, inherits from GlobalWAFPolicy
 	CoreRuleSet *CoreRuleSetConfig `json:"coreRuleSet,omitempty"`
 
-	// Plugins references WAFPlugins in this namespace
+	// Plugins references WAFPlugins in this namespace. A cross-scope reference
+	// (kind: GlobalWAFPlugin) is rejected at admission by the CEL rule below and
+	// the validating webhook, because the reconciler resolves plugin scope from
+	// the parent policy and does not yet honor Kind. See EV-6753.
+	//
+	// Only this namespaced direction is guarded. The mirror case, a
+	// GlobalWAFPolicy referencing a namespaced WAFPlugin, is intentionally not
+	// guarded: PluginRef.Kind defaults to WAFPlugin (see above), so a symmetric
+	// rule would reject that default on nearly every GlobalWAFPolicy. The
+	// cross-scope-resolution follow-up owns the reverse guard, the Kind default,
+	// and an upgrade migration; see the WAF controllers README.
 	// +kubebuilder:validation:MaxItems=64
-	Plugins []PluginRef `json:"plugins,omitempty"`
+	// +kubebuilder:validation:XValidation:rule="self.all(p, !has(p.kind) || p.kind != 'GlobalWAFPlugin')",message="cross-scope plugin references are not yet supported: a namespaced WAFPolicy cannot reference a GlobalWAFPlugin"
+	Plugins []PluginRef `json:"plugins,omitempty"` // rule's !has(p.kind) is defensive: Kind is defaulted to WAFPlugin upstream, so an empty Kind never reaches CEL today.
 }
 
 // RenderedConfigMapRef identifies the ConfigMap into which the controller
