@@ -4431,6 +4431,11 @@ var schemaYAML = typed.YAMLObject(`types:
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.Template
   map:
     fields:
+    - name: annotations
+      type:
+        map:
+          elementType:
+            scalar: string
     - name: generateName
       type:
         scalar: string
