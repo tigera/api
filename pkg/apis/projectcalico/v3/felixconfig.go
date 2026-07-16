@@ -1174,9 +1174,11 @@ type FelixConfigurationSpec struct {
 	// FlowLogsFileEnabledForDenied is used to enable/disable flow logs entries created for denied flows. Default is true.
 	// This parameter only takes effect when FlowLogsFileReporterEnabled is set to true.
 	FlowLogsFileEnabledForDenied *bool `json:"flowLogsFileEnabledForDenied,omitempty"`
-	// FlowLogsDynamicAggregationEnabled is used to enable/disable dynamically changing aggregation levels. Default is true.
+	// FlowLogsDynamicAggregationEnabled is used to enable/disable dynamically changing aggregation levels. Default is false.
 	FlowLogsDynamicAggregationEnabled *bool `json:"flowLogsDynamicAggregationEnabled,omitempty"`
-	// FlowLogsPositionFilePath is used specify the position of the external pipeline that reads flow logs. Default is /var/log/calico/flows.log.pos.
+	// FlowLogsPositionFilePath is the path of the log collector's tail-offset database for flow logs (fluent-bit's
+	// in_tail SQLite DB), used to determine how far behind the flow logs the collector is.
+	// Default is /var/log/calico/calico-fluent-bit/in_tail_flows.db.
 	// This parameter only takes effect when FlowLogsDynamicAggregationEnabled is set to true.
 	FlowLogsPositionFilePath *string `json:"flowLogsPositionFilePath,omitempty"`
 	// FlowLogsAggregationThresholdBytes is used specify how far behind the external pipeline that reads flow logs can be. Default is 8192 bytes.
@@ -1198,8 +1200,9 @@ type FelixConfigurationSpec struct {
 
 	// WindowsFlowLogsFileDirectory sets the directory where flow logs files are stored on Windows nodes. [Default: "c:\\TigeraCalico\\flowlogs"].
 	WindowsFlowLogsFileDirectory string `json:"windowsFlowLogsFileDirectory,omitempty"`
-	// WindowsFlowLogsPositionFilePath is used to specify the position of the external pipeline that reads flow logs on Windows nodes.
-	// [Default: "c:\\TigeraCalico\\flowlogs\\flows.log.pos"].
+	// WindowsFlowLogsPositionFilePath is the path of the log collector's tail-offset database for flow logs
+	// (fluent-bit's in_tail SQLite DB) on Windows nodes.
+	// [Default: "c:\\TigeraCalico\\calico-fluent-bit\\in_tail_flows.db"].
 	// This parameter only takes effect when FlowLogsDynamicAggregationEnabled is set to true.
 	WindowsFlowLogsPositionFilePath string `json:"windowsFlowLogsPositionFilePath,omitempty"`
 	// WindowsStatsDumpFilePath is used to specify the path of the stats dump file on Windows nodes. [Default: "c:\\TigeraCalico\\stats\\dump"]
