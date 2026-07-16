@@ -7305,14 +7305,14 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 					},
 					"flowLogsDynamicAggregationEnabled": {
 						SchemaProps: spec.SchemaProps{
-							Description: "FlowLogsDynamicAggregationEnabled is used to enable/disable dynamically changing aggregation levels. Default is true.",
+							Description: "FlowLogsDynamicAggregationEnabled is used to enable/disable dynamically changing aggregation levels. Default is false.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
 					},
 					"flowLogsPositionFilePath": {
 						SchemaProps: spec.SchemaProps{
-							Description: "FlowLogsPositionFilePath is used specify the position of the external pipeline that reads flow logs. Default is /var/log/calico/flows.log.pos. This parameter only takes effect when FlowLogsDynamicAggregationEnabled is set to true.",
+							Description: "FlowLogsPositionFilePath is the path of the log collector's tail-offset database for flow logs (fluent-bit's in_tail SQLite DB), used to determine how far behind the flow logs the collector is. Default is /var/log/calico/calico-fluent-bit/in_tail_flows.db. This parameter only takes effect when FlowLogsDynamicAggregationEnabled is set to true.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -7361,7 +7361,7 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 					},
 					"windowsFlowLogsPositionFilePath": {
 						SchemaProps: spec.SchemaProps{
-							Description: "WindowsFlowLogsPositionFilePath is used to specify the position of the external pipeline that reads flow logs on Windows nodes. [Default: \"c:\\\\TigeraCalico\\\\flowlogs\\\\flows.log.pos\"]. This parameter only takes effect when FlowLogsDynamicAggregationEnabled is set to true.",
+							Description: "WindowsFlowLogsPositionFilePath is the path of the log collector's tail-offset database for flow logs (fluent-bit's in_tail SQLite DB) on Windows nodes. [Default: \"c:\\\\TigeraCalico\\\\calico-fluent-bit\\\\in_tail_flows.db\"]. This parameter only takes effect when FlowLogsDynamicAggregationEnabled is set to true.",
 							Type:        []string{"string"},
 							Format:      "",
 						},

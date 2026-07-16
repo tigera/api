@@ -134,7 +134,7 @@ else
     THIRD_PARTY_REGISTRY?=$(THIRD_PARTY_REGISTRY_CD)
 endif
 
-THIRD_PARTY_BASE_IMAGES_TO_RETAG = elasticsearch fluentd-base kibana snort3
+THIRD_PARTY_BASE_IMAGES_TO_RETAG = elasticsearch kibana snort3
 release-retag-third-party-base-images: var-require-one-of-CONFIRM-DRYRUN var-require-all-RELEASE_BRANCH
 	$(MAKE) $(addprefix release-retag-third-party-base-images-,$(THIRD_PARTY_BASE_IMAGES_TO_RETAG))
 
@@ -253,15 +253,19 @@ endef
 # "not a valid application for this OS platform" error.
 # https://github.com/golang/go/issues/75077
 
+# Docker env for cgo Windows (amd64) cross-compilation via the MinGW toolchain.
+# Shared by build_cgo_windows_binary (go build) and by cgo test-binary targets
+# that need the same toolchain but run `go test -c` (e.g. felix's fv/win-fv.exe).
+CGO_WINDOWS_DOCKER_ENV = \
+	-e CC=x86_64-w64-mingw32-gcc \
+	-e CGO_ENABLED=1 \
+	-e GOARCH=amd64 \
+	-e GOOS=windows \
+	-e GOEXPERIMENT=nodwarf5
+
 # For windows builds that require cgo.
 define build_cgo_windows_binary
-	$(DOCKER_RUN) \
-		-e CC=x86_64-w64-mingw32-gcc \
-		-e CGO_ENABLED=1 \
-		-e GOARCH=amd64 \
-		-e GOOS=windows \
-		-e GOEXPERIMENT=nodwarf5 \
-		$(CALICO_BUILD) \
+	$(DOCKER_RUN) $(CGO_WINDOWS_DOCKER_ENV) $(CALICO_BUILD) \
 		sh -c '$(GIT_CONFIG_SSH) go build -o $(2) $(if $(BUILD_TAGS),-tags $(BUILD_TAGS)) -v -buildvcs=false -ldflags "$(LDFLAGS) -s -w" $(1)'
 endef
 
@@ -294,7 +298,7 @@ endif
 # only the tag is used without the commit count suffix.
 #
 # Skip on Windows: these LDFLAGS-related vars use bash `||` fallbacks that PowerShell
-# can't parse, and Windows builds (e.g. fluentd-base) don't link Go binaries that
+# can't parse, and pure-Docker Windows image builds don't link Go binaries that
 # embed buildinfo. Each $(shell git ...) call would otherwise spawn PowerShell on
 # every sub-make recursion, multiplying parse time noticeably.
 ifneq ($(OS),Windows_NT)
@@ -670,7 +674,7 @@ endef
 # this variable and include $(IMAGE_DEPS) in their .image.created prereqs.
 #
 # Skip on Windows: this is dependency tracking for Linux Go-based image stamps;
-# Windows components (e.g. third_party/fluentd-base) build pure Docker images.
+# Windows components that build pure Docker images (no Go binary) don't need it.
 # Each $(shell find ... grep ... cut ...) call would otherwise spawn PowerShell
 # (no find/grep/cut available) on every sub-make recursion. With ~20 components
 # referenced from .image.created-* prerequisites below, this was the dominant
@@ -1143,7 +1147,6 @@ SEMAPHORE_ES_GATEWAY_PROJECT_ID=3c01c819-532b-4ccc-8305-5dd45c10bf93
 SEMAPHORE_FELIX_PRIVATE_PROJECT_ID=e439cca4-156c-4d23-b611-002601440ad0
 SEMAPHORE_FELIX_PROJECT_ID=48267e65-4acc-4f27-a88f-c3df0e8e2c3b
 SEMAPHORE_FIREWALL_INTEGRATION_PROJECT_ID=d4307a31-1e46-4622-82e2-886165b77008
-SEMAPHORE_FLUENTD_DOCKER_PROJECT_ID=50383fb9-d234-461a-ae00-23e18b7cd5b8
 SEMAPHORE_INGRESS_COLLECTOR_PROJECT_ID=cf7947e4-a886-404d-ac6a-c3f3ac1a7b93
 SEMAPHORE_INTRUSION_DETECTION_PROJECT_ID=2beffe81-b05a-41e0-90ce-e0d847dee2ee
 SEMAPHORE_KEY_CERT_PROVISIONER_PROJECT_ID=9efb25f3-8c5d-4f22-aab5-4a1f5519bc7c
@@ -1851,6 +1854,15 @@ $(REPO_ROOT)/.$(KIND_NAME).created: $(KUBECTL) $(KIND) kind-registry-up
 	# Render the kind config with the requested kube-proxy mode.
 	sed 's/^\(  mode: \)iptables$$/\1$(KIND_DATAPLANE)/' $(KIND_CONFIG) > $(KIND_DIR)/.$(KIND_NAME).rendered.config
 
+	# calico-fluent-bit's in_tail (several tail inputs) plus per-node kube-proxy
+	# exhaust the default inotify instance limit (128) across the kind nodes,
+	# crash-looping the calico-fluent-bit pods with "too many open files" and
+	# failing kind-deploy. Raise the limits before creating the cluster (same
+	# values as hack/test/kind/vrf/vrf.sh). Non-interactive (sudo -n) so it never
+	# blocks a headless run; best-effort warn (don't fail) if we can't set them,
+	# e.g. no passwordless sudo on a dev box.
+	sudo -n sysctl -w fs.inotify.max_user_instances=512 fs.inotify.max_user_watches=524288 || echo "WARNING: could not raise inotify limits; calico-fluent-bit may crash-loop with 'too many open files'"
+
 	# Create a kind cluster.
 	$(KIND) create cluster \
 		--config $(KIND_DIR)/.$(KIND_NAME).rendered.config \
@@ -1985,7 +1997,7 @@ TSEE_TEST_LICENSE ?= $(HOME)/secrets/license.yaml
 # pushes each as localhost:5000/tigera/<name>:test-build for the kind cluster.
 KIND_ENTERPRISE_LOCAL_IMAGES = \
 	tigera/egress-gateway:$(KIND_TEST_BUILD_TAG) \
-	tigera/fluentd:$(KIND_TEST_BUILD_TAG) \
+	tigera/fluent-bit:$(KIND_TEST_BUILD_TAG) \
 	tigera/deep-packet-inspection:$(KIND_TEST_BUILD_TAG) \
 	tigera/intrusion-detection-controller:$(KIND_TEST_BUILD_TAG) \
 	tigera/intrusion-detection-job-installer:$(KIND_TEST_BUILD_TAG) \
@@ -2072,7 +2084,7 @@ $(REPO_ROOT)/key-cert-provisioner/.image.created-$(ARCH): \
 # components without deps.txt approximate with find.
 KIND_ENTERPRISE_IMAGE_MARKERS = \
 	$(REPO_ROOT)/egress-gateway/.image.created-$(ARCH) \
-	$(REPO_ROOT)/fluentd/.image.created-$(ARCH) \
+	$(REPO_ROOT)/fluent-bit/.fluent-bit.created-$(ARCH) \
 	$(REPO_ROOT)/intrusion-detection-controller/.image.created-$(ARCH) \
 	$(REPO_ROOT)/deep-packet-inspection/.image.created-$(ARCH) \
 	$(REPO_ROOT)/gateway/.gateway-l7-collector.created-$(ARCH) \
@@ -2169,12 +2181,13 @@ $(REPO_ROOT)/egress-gateway/.image.created-$(ARCH): \
 	$(MAKE) -C $(REPO_ROOT)/egress-gateway image
 	echo "egress-gateway:latest-$(ARCH)" > $@
 
-$(REPO_ROOT)/fluentd/.image.created-$(ARCH): \
-    $(shell $(REPO_ROOT)/hack/image-exists $(REPO_ROOT)/fluentd/.image.created-$(ARCH)) \
-    $(call local-deps-go-files,fluentd)
+# fluent-bit uses its own marker name (.fluent-bit.created-$(ARCH)) rather than
+# .image.created-$(ARCH); its Makefile creates the marker, like gateway.
+$(REPO_ROOT)/fluent-bit/.fluent-bit.created-$(ARCH): \
+    $(shell $(REPO_ROOT)/hack/image-exists $(REPO_ROOT)/fluent-bit/.fluent-bit.created-$(ARCH)) \
+    $(call local-deps-go-files,fluent-bit)
 	rm -f $@
-	$(MAKE) -C $(REPO_ROOT)/fluentd image THIRD_PARTY_REGISTRY=$(THIRD_PARTY_REGISTRY_CD)
-	echo "fluentd:latest-$(ARCH)" > $@
+	$(MAKE) -C $(REPO_ROOT)/fluent-bit image
 
 # gateway uses its own marker name (.gateway-l7-collector.created-$(ARCH))
 # rather than .image.created-$(ARCH); follow the same source-tracking pattern.
