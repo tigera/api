@@ -14,7 +14,7 @@ RUST_BUILD_VER=1.96.0
 
 # Calico Enterprise shipping images now builds on UBI 10. For Calico OSS to Enterprise merges,
 # please don't downgrade the base image back to UBI 9.
-CALICO_BASE_VER=ubi10-1783525764
+CALICO_BASE_VER=ubi10-1784675397
 
 # Version of various tools used in the build and tests.
 COREDNS_VERSION=1.5.2
