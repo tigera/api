@@ -24,6 +24,8 @@ API rule violation: names_match,github.com/tigera/api/pkg/apis/projectcalico/v3,
 API rule violation: names_match,github.com/tigera/api/pkg/apis/projectcalico/v3,FelixConfigurationSpec,IPv6NormalRoutePriority
 API rule violation: names_match,github.com/tigera/api/pkg/apis/projectcalico/v3,FelixConfigurationSpec,IPv6Support
 API rule violation: names_match,github.com/tigera/api/pkg/apis/projectcalico/v3,FelixConfigurationSpec,NFTablesDNSPolicyMode
+API rule violation: names_match,github.com/tigera/api/pkg/apis/projectcalico/v3,FelixConfigurationSpec,NFTablesFlowTableDataIfacePattern
+API rule violation: names_match,github.com/tigera/api/pkg/apis/projectcalico/v3,FelixConfigurationSpec,NFTablesFlowTableOffload
 API rule violation: names_match,github.com/tigera/api/pkg/apis/projectcalico/v3,FelixConfigurationSpec,NFTablesMode
 API rule violation: names_match,github.com/tigera/api/pkg/apis/projectcalico/v3,FelixConfigurationSpec,WindowsDNSCacheFile
 API rule violation: names_match,github.com/tigera/api/pkg/apis/projectcalico/v3,FelixConfigurationSpec,WindowsDNSExtraTTL
