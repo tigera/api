@@ -14,6 +14,7 @@ const (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +kubebuilder:resource:scope=Cluster
 // +kubebuilder:selectablefield:JSONPath=`.spec.group`
+// +kubebuilder:selectablefield:JSONPath=`.spec.user`
 
 // UISettings contains UI settings.
 type UISettings struct {
