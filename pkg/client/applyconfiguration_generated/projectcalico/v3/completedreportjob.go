@@ -14,7 +14,7 @@ import (
 //
 // CompletedReportJob augments the ReportJob with completion details.
 type CompletedReportJobApplyConfiguration struct {
-	ReportJobApplyConfiguration `json:",inline"`
+	ReportJobApplyConfiguration `json:""`
 	// The time the report job completed.
 	JobCompletionTime *v1.Time `json:"jobCompletionTime,omitempty"`
 }

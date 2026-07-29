@@ -16,7 +16,7 @@ import (
 // PolicyRecommendationScopeApplyConfiguration represents a declarative configuration of the PolicyRecommendationScope type for use
 // with apply.
 type PolicyRecommendationScopeApplyConfiguration struct {
-	v1.TypeMetaApplyConfiguration    `json:",inline"`
+	v1.TypeMetaApplyConfiguration    `json:""`
 	*v1.ObjectMetaApplyConfiguration `json:"metadata,omitempty"`
 	Spec                             *PolicyRecommendationScopeSpecApplyConfiguration   `json:"spec,omitempty"`
 	Status                           *PolicyRecommendationScopeStatusApplyConfiguration `json:"status,omitempty"`

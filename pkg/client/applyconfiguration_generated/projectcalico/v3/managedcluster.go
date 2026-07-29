@@ -20,7 +20,7 @@ import (
 // management plane. This object configures how Tigera multi-cluster management
 // components communicate with the corresponding cluster.
 type ManagedClusterApplyConfiguration struct {
-	v1.TypeMetaApplyConfiguration    `json:",inline"`
+	v1.TypeMetaApplyConfiguration    `json:""`
 	*v1.ObjectMetaApplyConfiguration `json:"metadata,omitempty"`
 	Spec                             *ManagedClusterSpecApplyConfiguration   `json:"spec,omitempty"`
 	Status                           *ManagedClusterStatusApplyConfiguration `json:"status,omitempty"`

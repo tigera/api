@@ -16,7 +16,7 @@ import (
 // SecurityEventWebhookApplyConfiguration represents a declarative configuration of the SecurityEventWebhook type for use
 // with apply.
 type SecurityEventWebhookApplyConfiguration struct {
-	v1.TypeMetaApplyConfiguration    `json:",inline"`
+	v1.TypeMetaApplyConfiguration    `json:""`
 	*v1.ObjectMetaApplyConfiguration `json:"metadata,omitempty"`
 	Spec                             *SecurityEventWebhookSpecApplyConfiguration `json:"spec,omitempty"`
 	Status                           []v1.ConditionApplyConfiguration            `json:"status,omitempty"`

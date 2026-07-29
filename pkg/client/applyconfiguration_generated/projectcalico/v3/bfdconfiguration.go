@@ -16,7 +16,7 @@ import (
 // BFDConfigurationApplyConfiguration represents a declarative configuration of the BFDConfiguration type for use
 // with apply.
 type BFDConfigurationApplyConfiguration struct {
-	v1.TypeMetaApplyConfiguration    `json:",inline"`
+	v1.TypeMetaApplyConfiguration    `json:""`
 	*v1.ObjectMetaApplyConfiguration `json:"metadata,omitempty"`
 	Spec                             *BFDConfigurationSpecApplyConfiguration `json:"spec,omitempty"`
 }

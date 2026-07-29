@@ -16,7 +16,7 @@ import (
 // GlobalAlertTemplateApplyConfiguration represents a declarative configuration of the GlobalAlertTemplate type for use
 // with apply.
 type GlobalAlertTemplateApplyConfiguration struct {
-	v1.TypeMetaApplyConfiguration    `json:",inline"`
+	v1.TypeMetaApplyConfiguration    `json:""`
 	*v1.ObjectMetaApplyConfiguration `json:"metadata,omitempty"`
 	Spec                             *GlobalAlertSpecApplyConfiguration `json:"spec,omitempty"`
 }

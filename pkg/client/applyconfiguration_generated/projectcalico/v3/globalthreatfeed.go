@@ -20,7 +20,7 @@ import (
 // object configures how Tigera components communicate with the feed and update
 // detection jobs or policy based on the intel.
 type GlobalThreatFeedApplyConfiguration struct {
-	v1.TypeMetaApplyConfiguration    `json:",inline"`
+	v1.TypeMetaApplyConfiguration    `json:""`
 	*v1.ObjectMetaApplyConfiguration `json:"metadata,omitempty"`
 	Spec                             *GlobalThreatFeedSpecApplyConfiguration   `json:"spec,omitempty"`
 	Status                           *GlobalThreatFeedStatusApplyConfiguration `json:"status,omitempty"`

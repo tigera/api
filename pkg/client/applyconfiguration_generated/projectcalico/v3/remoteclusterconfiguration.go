@@ -18,7 +18,7 @@ import (
 //
 // RemoteClusterConfiguration contains the configuration for remote clusters.
 type RemoteClusterConfigurationApplyConfiguration struct {
-	v1.TypeMetaApplyConfiguration    `json:",inline"`
+	v1.TypeMetaApplyConfiguration    `json:""`
 	*v1.ObjectMetaApplyConfiguration `json:"metadata,omitempty"`
 	Spec                             *RemoteClusterConfigurationSpecApplyConfiguration `json:"spec,omitempty"`
 }
