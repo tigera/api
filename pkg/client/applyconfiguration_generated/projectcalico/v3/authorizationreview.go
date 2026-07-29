@@ -16,7 +16,7 @@ import (
 // AuthorizationReviewApplyConfiguration represents a declarative configuration of the AuthorizationReview type for use
 // with apply.
 type AuthorizationReviewApplyConfiguration struct {
-	v1.TypeMetaApplyConfiguration    `json:",inline"`
+	v1.TypeMetaApplyConfiguration    `json:""`
 	*v1.ObjectMetaApplyConfiguration `json:"metadata,omitempty"`
 	Spec                             *AuthorizationReviewSpecApplyConfiguration   `json:"spec,omitempty"`
 	Status                           *AuthorizationReviewStatusApplyConfiguration `json:"status,omitempty"`

@@ -16,7 +16,7 @@ import (
 // ExternalNetworkApplyConfiguration represents a declarative configuration of the ExternalNetwork type for use
 // with apply.
 type ExternalNetworkApplyConfiguration struct {
-	v1.TypeMetaApplyConfiguration    `json:",inline"`
+	v1.TypeMetaApplyConfiguration    `json:""`
 	*v1.ObjectMetaApplyConfiguration `json:"metadata,omitempty"`
 	Spec                             *ExternalNetworkSpecApplyConfiguration `json:"spec,omitempty"`
 }

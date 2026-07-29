@@ -18,7 +18,7 @@ import (
 //
 // GlobalReport contains the configuration for a non-namespaced Report.
 type GlobalReportApplyConfiguration struct {
-	v1.TypeMetaApplyConfiguration    `json:",inline"`
+	v1.TypeMetaApplyConfiguration    `json:""`
 	*v1.ObjectMetaApplyConfiguration `json:"metadata,omitempty"`
 	Spec                             *ReportSpecApplyConfiguration   `json:"spec,omitempty"`
 	Status                           *ReportStatusApplyConfiguration `json:"status,omitempty"`

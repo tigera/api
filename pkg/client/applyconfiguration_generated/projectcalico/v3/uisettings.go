@@ -18,7 +18,7 @@ import (
 //
 // UISettings contains UI settings.
 type UISettingsApplyConfiguration struct {
-	v1.TypeMetaApplyConfiguration    `json:",inline"`
+	v1.TypeMetaApplyConfiguration    `json:""`
 	*v1.ObjectMetaApplyConfiguration `json:"metadata,omitempty"`
 	Spec                             *UISettingsSpecApplyConfiguration `json:"spec,omitempty"`
 }

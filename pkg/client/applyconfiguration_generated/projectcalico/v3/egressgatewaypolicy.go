@@ -16,7 +16,7 @@ import (
 // EgressGatewayPolicyApplyConfiguration represents a declarative configuration of the EgressGatewayPolicy type for use
 // with apply.
 type EgressGatewayPolicyApplyConfiguration struct {
-	v1.TypeMetaApplyConfiguration    `json:",inline"`
+	v1.TypeMetaApplyConfiguration    `json:""`
 	*v1.ObjectMetaApplyConfiguration `json:"metadata,omitempty"`
 	Spec                             *EgressGatewayPolicySpecApplyConfiguration `json:"spec,omitempty"`
 }

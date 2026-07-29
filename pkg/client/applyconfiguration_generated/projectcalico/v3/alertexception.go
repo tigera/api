@@ -18,7 +18,7 @@ import (
 //
 // AlertException defines exceptions for alert events.
 type AlertExceptionApplyConfiguration struct {
-	v1.TypeMetaApplyConfiguration    `json:",inline"`
+	v1.TypeMetaApplyConfiguration    `json:""`
 	*v1.ObjectMetaApplyConfiguration `json:"metadata,omitempty"`
 	Spec                             *AlertExceptionSpecApplyConfiguration `json:"spec,omitempty"`
 	Status                           *projectcalicov3.AlertExceptionStatus `json:"status,omitempty"`

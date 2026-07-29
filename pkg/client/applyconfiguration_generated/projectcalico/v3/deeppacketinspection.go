@@ -16,7 +16,7 @@ import (
 // DeepPacketInspectionApplyConfiguration represents a declarative configuration of the DeepPacketInspection type for use
 // with apply.
 type DeepPacketInspectionApplyConfiguration struct {
-	v1.TypeMetaApplyConfiguration `json:",inline"`
+	v1.TypeMetaApplyConfiguration `json:""`
 	// Standard object's metadata.
 	*v1.ObjectMetaApplyConfiguration `json:"metadata,omitempty"`
 	// Specification of the DeepPacketInspection.

@@ -9,7 +9,7 @@ package v3
 //
 // UIGraphNodeView contains the view configuration for a specific graph node.
 type UIGraphNodeViewApplyConfiguration struct {
-	UIGraphNodeApplyConfiguration `json:",inline"`
+	UIGraphNodeApplyConfiguration `json:""`
 	// This node is a primary focus of the graph (i.e. the graph contains this node and connected nodes).
 	InFocus *bool `json:"inFocus,omitempty"`
 	// This node is expanded to the next level.  This node can, for example, be a layer that is expanded into its
