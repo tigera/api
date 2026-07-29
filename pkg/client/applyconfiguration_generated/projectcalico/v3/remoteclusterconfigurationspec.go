@@ -21,9 +21,9 @@ type RemoteClusterConfigurationSpecApplyConfiguration struct {
 	// and overwritten with the appropriate fields in the Secret.
 	ClusterAccessSecret *v1.ObjectReference `json:"clusterAccessSecret,omitempty"`
 	// Inline the ectd config fields
-	EtcdConfigApplyConfiguration `json:",inline"`
+	EtcdConfigApplyConfiguration `json:""`
 	// Inline the k8s config fields.
-	KubeConfigApplyConfiguration `json:",inline"`
+	KubeConfigApplyConfiguration `json:""`
 	// Configuration options that do not relate to the underlying datastore connection. These fields relate to the
 	// syncing of resources once the connection is established. These fields can be set independent of the other
 	// connection-oriented fields, e.g. they can be set when ClusterAccessSecret is non-nil.

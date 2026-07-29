@@ -18,7 +18,7 @@ import (
 //
 // PacketCapture contains the configuration for any packet capture.
 type PacketCaptureApplyConfiguration struct {
-	v1.TypeMetaApplyConfiguration `json:",inline"`
+	v1.TypeMetaApplyConfiguration `json:""`
 	// Standard object's metadata.
 	*v1.ObjectMetaApplyConfiguration `json:"metadata,omitempty"`
 	// Specification of the PacketCapture.

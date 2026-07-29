@@ -20,7 +20,7 @@ import (
 // specific cluster/user combination. UI settings may only be persisted if there is a
 // corresponding UISettingsGroup resource.
 type UISettingsGroupApplyConfiguration struct {
-	v1.TypeMetaApplyConfiguration    `json:",inline"`
+	v1.TypeMetaApplyConfiguration    `json:""`
 	*v1.ObjectMetaApplyConfiguration `json:"metadata,omitempty"`
 	Spec                             *UISettingsGroupSpecApplyConfiguration `json:"spec,omitempty"`
 }

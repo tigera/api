@@ -20,7 +20,7 @@ import (
 // labels to allow rules to refer to them via selectors.  The labels of GlobalNetworkSet are not
 // namespaced.
 type GlobalNetworkSetApplyConfiguration struct {
-	v1.TypeMetaApplyConfiguration    `json:",inline"`
+	v1.TypeMetaApplyConfiguration    `json:""`
 	*v1.ObjectMetaApplyConfiguration `json:"metadata,omitempty"`
 	Spec                             *GlobalNetworkSetSpecApplyConfiguration `json:"spec,omitempty"`
 }
