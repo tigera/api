@@ -104,7 +104,10 @@ type Pull struct {
 
 type HTTPPull struct {
 	Format ThreatFeedFormat `json:"format,omitempty" validate:"omitempty"`
-	URL    string           `json:"url" validate:"required,url"`
+	// URL is the location of the threat feed. Only the http and https schemes
+	// are permitted; other schemes (e.g. javascript:, data:, file:) are rejected.
+	// +kubebuilder:validation:Pattern=`^https?://`
+	URL string `json:"url" validate:"required,url"`
 	// +listType=atomic
 	Headers []HTTPHeader `json:"headers,omitempty" validate:"dive"`
 }

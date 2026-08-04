@@ -9539,9 +9539,10 @@ func schema_pkg_apis_projectcalico_v3_HTTPPull(ref common.ReferenceCallback) com
 					},
 					"url": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
+							Description: "URL is the location of the threat feed. Only the http and https schemes are permitted; other schemes (e.g. javascript:, data:, file:) are rejected.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"headers": {
