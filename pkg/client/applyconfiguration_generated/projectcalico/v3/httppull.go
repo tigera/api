@@ -7,9 +7,11 @@ package v3
 // HTTPPullApplyConfiguration represents a declarative configuration of the HTTPPull type for use
 // with apply.
 type HTTPPullApplyConfiguration struct {
-	Format  *ThreatFeedFormatApplyConfiguration `json:"format,omitempty"`
-	URL     *string                             `json:"url,omitempty"`
-	Headers []HTTPHeaderApplyConfiguration      `json:"headers,omitempty"`
+	Format *ThreatFeedFormatApplyConfiguration `json:"format,omitempty"`
+	// URL is the location of the threat feed. Only the http and https schemes
+	// are permitted; other schemes (e.g. javascript:, data:, file:) are rejected.
+	URL     *string                        `json:"url,omitempty"`
+	Headers []HTTPHeaderApplyConfiguration `json:"headers,omitempty"`
 }
 
 // HTTPPullApplyConfiguration constructs a declarative configuration of the HTTPPull type for use with
