@@ -655,6 +655,7 @@ define host_native_deb_build
 	   debian/copyright \
 	   debian/rules \
 	   debian/$(2).postinst \
+	   $(wildcard debian/$(2).prerm) \
 		package/$(1)/$(2)/debian/
 
 	cp \
