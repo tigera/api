@@ -9,7 +9,7 @@ K8S_VERSION=v1.37.0-beta.0
 LLVM_VERSION=21.1.8
 
 # Calico toolchain versions and the calico/base image to use.
-GO_BUILD_VER=$(GO_VERSION)-llvm$(LLVM_VERSION)-k8s$(K8S_VERSION:v%=%)
+GO_BUILD_VER=$(GO_VERSION)-llvm$(LLVM_VERSION)-k8s$(K8S_VERSION:v%=%)-1
 RUST_BUILD_VER=1.96.0
 
 # Calico Enterprise shipping images now builds on UBI 10. For Calico OSS to Enterprise merges,
