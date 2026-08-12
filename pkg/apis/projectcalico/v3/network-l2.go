@@ -211,6 +211,12 @@ type L2ManagedBridge struct {
 }
 
 // L2ExistingBridge configures attachment to a pre-existing bridge device.
+//
+// Calico decides which devices it owns from their names, so a BYO bridge may
+// not borrow one of the reserved "calb-" and "calq-" prefixes: a bridge called
+// "calb-blue" would be taken for a Calico-managed one and deleted as an orphan.
+//
+// +kubebuilder:validation:XValidation:rule="!self.name.startsWith('calb-') && !self.name.startsWith('calq-')",message="name must not start with calb- or calq-: those prefixes are reserved for devices Calico creates and deletes"
 type L2ExistingBridge struct {
 	// Name is the Linux bridge device name (e.g. "br0").
 	// +kubebuilder:validation:MinLength=1
