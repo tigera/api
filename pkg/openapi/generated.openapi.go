@@ -11043,7 +11043,7 @@ func schema_pkg_apis_projectcalico_v3_L2ExistingBridge(ref common.ReferenceCallb
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "L2ExistingBridge configures attachment to a pre-existing bridge device.",
+				Description: "L2ExistingBridge configures attachment to a pre-existing bridge device.\n\nCalico decides which devices it owns from their names, so a BYO bridge may not borrow one of the reserved \"calb-\" and \"calq-\" prefixes: a bridge called \"calb-blue\" would be taken for a Calico-managed one and deleted as an orphan.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"name": {
