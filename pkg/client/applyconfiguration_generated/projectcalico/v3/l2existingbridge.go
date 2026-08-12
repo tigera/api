@@ -8,6 +8,10 @@ package v3
 // with apply.
 //
 // L2ExistingBridge configures attachment to a pre-existing bridge device.
+//
+// Calico decides which devices it owns from their names, so a BYO bridge may
+// not borrow one of the reserved "calb-" and "calq-" prefixes: a bridge called
+// "calb-blue" would be taken for a Calico-managed one and deleted as an orphan.
 type L2ExistingBridgeApplyConfiguration struct {
 	// Name is the Linux bridge device name (e.g. "br0").
 	Name *string `json:"name,omitempty"`
