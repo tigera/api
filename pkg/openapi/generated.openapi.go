@@ -10493,7 +10493,7 @@ func schema_pkg_apis_projectcalico_v3_IPPoolSpec(ref common.ReferenceCallback) c
 							},
 						},
 						SchemaProps: spec.SchemaProps{
-							Description: "AllowedUses controls what the IP pool will be used for. If not specified or empty, defaults to [\"Tunnel\", \"Workload\"] for back-compatibility. Valid values: \"Tunnel\", \"Workload\", \"LoadBalancer\".",
+							Description: "AllowedUses controls what the IP pool will be used for. If not specified or empty, defaults to [\"Tunnel\", \"Workload\"] for back-compatibility. Valid values: \"Tunnel\", \"Workload\", \"LoadBalancer\", \"HostSecondaryInterface\", \"L2Workload\".",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{

@@ -90,6 +90,9 @@ type IPPoolStatus struct {
 // +kubebuilder:validation:XValidation:rule="!has(self.allowedUses) || !self.allowedUses.exists(u, u == 'LoadBalancer') || !has(self.disableBGPExport) || !self.disableBGPExport",message="LoadBalancer IP pools cannot disable BGP export",reason=FieldValueForbidden
 // +kubebuilder:validation:XValidation:rule="!has(self.allowedUses) || !self.allowedUses.exists(u, u == 'LoadBalancer') || self.nodeSelector == 'all()'",message="IP Pool with AllowedUse LoadBalancer must have nodeSelector set to all()",reason=FieldValueInvalid
 // +kubebuilder:validation:XValidation:rule="!has(self.allowedUses) || !self.allowedUses.exists(u, u == 'Tunnel') || !has(self.namespaceSelector) || size(self.namespaceSelector) == 0",message="IP Pool with AllowedUse Tunnel cannot have namespaceSelector",reason=FieldValueForbidden
+// +kubebuilder:validation:XValidation:rule="!has(self.allowedUses) || !self.allowedUses.exists(u, u == 'L2Workload') || !self.allowedUses.exists(u, u == 'Workload' || u == 'Tunnel' || u == 'LoadBalancer' || u == 'HostSecondaryInterface')",message="L2Workload cannot be combined with other allowed uses",reason=FieldValueForbidden
+// +kubebuilder:validation:XValidation:rule="!has(self.allowedUses) || !self.allowedUses.exists(u, u == 'L2Workload') || (!has(self.ipipMode) || size(self.ipipMode) == 0 || self.ipipMode == 'Never') && (!has(self.vxlanMode) || size(self.vxlanMode) == 0 || self.vxlanMode == 'Never')",message="L2Workload IP pool cannot have IPIP or VXLAN enabled",reason=FieldValueForbidden
+// +kubebuilder:validation:XValidation:rule="!has(self.allowedUses) || !self.allowedUses.exists(u, u == 'L2Workload') || (has(self.disableBGPExport) && self.disableBGPExport)",message="L2Workload IP pools must disable BGP export",reason=FieldValueForbidden
 // +kubebuilder:validation:XValidation:rule="!has(self.nodeSelector) || !self.nodeSelector.contains('global(')",message="global() selector is not valid for IPPool nodeSelector",reason=FieldValueInvalid
 // +kubebuilder:validation:XValidation:rule="!has(self.namespaceSelector) || !self.namespaceSelector.contains('global(')",message="global() selector is not valid for IPPool namespaceSelector",reason=FieldValueInvalid
 type IPPoolSpec struct {
@@ -136,7 +139,8 @@ type IPPoolSpec struct {
 	NamespaceSelector string `json:"namespaceSelector,omitempty" validate:"omitempty,selector"`
 
 	// AllowedUses controls what the IP pool will be used for. If not specified or empty, defaults to
-	// ["Tunnel", "Workload"] for back-compatibility. Valid values: "Tunnel", "Workload", "LoadBalancer".
+	// ["Tunnel", "Workload"] for back-compatibility. Valid values: "Tunnel", "Workload", "LoadBalancer",
+	// "HostSecondaryInterface", "L2Workload".
 	// +kubebuilder:validation:MaxItems=10
 	// +listType=set
 	AllowedUses []IPPoolAllowedUse `json:"allowedUses,omitempty" validate:"omitempty"`
@@ -156,12 +160,13 @@ type IPPoolSpec struct {
 }
 
 // IPPoolAllowedUse defines the allowed uses for an IP pool.
-// It can be one of "Workload", "Tunnel", "LoadBalancer" or "HostSecondaryInterface".
+// It can be one of "Workload", "Tunnel", "LoadBalancer", "HostSecondaryInterface" or "L2Workload".
 // - "Workload" means the pool is used for workload IP addresses.
 // - "Tunnel" means the pool is used for tunnel IP addresses.
 // - "LoadBalancer" means the pool is used for load balancer IP addresses.
 // - "HostSecondaryInterface" means the pool is used for host secondary interface IP addresses.
-// +kubebuilder:validation:Enum=Workload;Tunnel;LoadBalancer;HostSecondaryInterface
+// - "L2Workload" means the pool is used for workloads attached to an L2 bridge Network.
+// +kubebuilder:validation:Enum=Workload;Tunnel;LoadBalancer;HostSecondaryInterface;L2Workload
 type IPPoolAllowedUse string
 
 const (
@@ -172,6 +177,14 @@ const (
 	// IPPoolAllowedUseLoadBalancer designates that the pool is used for load balancer IP addresses.
 	// Not compatible with IPIP or VXLAN.
 	IPPoolAllowedUseLoadBalancer IPPoolAllowedUse = "LoadBalancer"
+
+	// IPPoolAllowedUseL2Workload designates that the pool is used for workloads attached to an L2
+	// bridge Network.  An L2 pool's addresses live on the bridged physical L2 segment, not on a
+	// node, so the pool must be encap-free and must not be exported over BGP: it is mutually
+	// exclusive with the other uses and requires ipipMode=Never, vxlanMode=Never and
+	// disableBGPExport=true.  Felix and confd suppress the local blackhole / BGP aggregate for
+	// these pools and disable host RPF on the bridge trunk.
+	IPPoolAllowedUseL2Workload IPPoolAllowedUse = "L2Workload"
 )
 
 // VXLANMode defines the mode of VXLAN tunneling for an IP pool.
