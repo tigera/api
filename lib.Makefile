@@ -664,6 +664,11 @@ define host_native_deb_build
 	   $(2).service \
 		package/$(1)/$(2)/debian/
 
+	# Extra units are staged under debhelper's "<package>.<unit>.service"
+	# name so dh_installsystemd decides where they land: the unit directory
+	# moved from /lib to /usr/lib in trixie, and a package's units must agree.
+	$(foreach u,$(wildcard $(2)-*.service),cp $(u) package/$(1)/$(2)/debian/$(2).$(u);)
+
 	tar --strip-components=$(5) -C package/$(1)/$(2) -xf $(2).tar.gz
 
 	mkdir -p package/$(1) && $(DOCKER_HOST_NATIVE_RUN) \
