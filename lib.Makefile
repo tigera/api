@@ -1700,7 +1700,9 @@ bin/crane: $(REPO_ROOT)/bin/crane
 $(REPO_ROOT)/bin/crane:
 	$(info ::: Downloading crane from $(CRANE_URL))
 	@mkdir -p $(REPO_ROOT)/bin
-	@curl -sSfL --retry 5 $(CRANE_URL) | tar xz -C $(REPO_ROOT)/bin crane
+	@curl -sSfL --retry 5 --retry-all-errors -o /tmp/calico-crane.tar.gz $(CRANE_URL)
+	@tar xz -C $(REPO_ROOT)/bin -f /tmp/calico-crane.tar.gz crane
+	@rm -f /tmp/calico-crane.tar.gz
 endif # Windows_NT
 
 
@@ -1901,7 +1903,9 @@ $(KUBECTL): $(KIND_DIR)/.kubectl-updated-$(K8S_VERSION)
 
 bin/helm-$(HELM_VERSION):
 	mkdir -p bin
-	curl -sSfL --retry 5 https://get.helm.sh/helm-$(HELM_VERSION)-linux-$(ARCH).tar.gz | tar xz --strip-components 1 -C bin linux-$(ARCH)/helm && \
+	curl -sSfL --retry 5 --retry-all-errors -o /tmp/calico-helm.tar.gz https://get.helm.sh/helm-$(HELM_VERSION)-linux-$(ARCH).tar.gz
+	tar xz --strip-components 1 -C bin -f /tmp/calico-helm.tar.gz linux-$(ARCH)/helm
+	rm -f /tmp/calico-helm.tar.gz
 	mv bin/helm bin/helm-$(HELM_VERSION)
 
 bin/.helm-updated-$(HELM_VERSION): bin/helm-$(HELM_VERSION)
@@ -1935,7 +1939,9 @@ publish-charts-oci:
 
 bin/yq:
 	mkdir -p bin
-	curl -sSfL --retry 5 https://github.com/mikefarah/yq/releases/download/v4.53.3/yq_linux_$(BUILDARCH).tar.gz | tar xz -C bin ./yq_linux_$(BUILDARCH) && \
+	curl -sSfL --retry 5 --retry-all-errors -o /tmp/calico-yq.tar.gz https://github.com/mikefarah/yq/releases/download/v4.53.3/yq_linux_$(BUILDARCH).tar.gz
+	tar xz -C bin -f /tmp/calico-yq.tar.gz ./yq_linux_$(BUILDARCH)
+	rm -f /tmp/calico-yq.tar.gz
 	mv bin/yq_linux_$(BUILDARCH) bin/yq
 
 ###############################################################################
