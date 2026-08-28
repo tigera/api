@@ -3,8 +3,13 @@
 #################################################################################################
 # The project Go version
 GO_VERSION=1.25.14
+# Go toolchain for the third_party/ trees whose go.mod needs a Go newer than
+# GO_VERSION; everything else builds on GO_VERSION. "+auto" means at least this,
+# newer only if a tree asks. Keep it on a current patch release -- this is the
+# Go that ends up in those binaries.
+THIRD_PARTY_GOTOOLCHAIN=go1.26.7+auto
 # Version of Kubernetes to use for dependencies, tests, registry.k8s.io/kubectl, and kubectl binary release.
-K8S_VERSION=v1.35.7
+K8S_VERSION=v1.35.8
 # The version of LLVM to use for go-build and calico/base images.
 LLVM_VERSION=18.1.8
 
@@ -14,7 +19,7 @@ RUST_BUILD_VER=1.93.1
 
 # Calico Enterprise shipping images now builds on UBI 10. For Calico OSS to Enterprise merges,
 # please don't downgrade the base image back to UBI 9.
-CALICO_BASE_VER=ubi10-1787251706
+CALICO_BASE_VER=ubi10-1787787904
 
 # Version of various tools used in the build and tests.
 COREDNS_VERSION=1.5.2

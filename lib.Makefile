@@ -409,12 +409,17 @@ DOCKER_BUILD_THIRD_PARTY = $(DOCKER_BUILD) \
 	--build-arg THIRD_PARTY_REGISTRY=$(THIRD_PARTY_REGISTRY) \
 	--build-arg THIRD_PARTY_RELEASE_BRANCH=$(THIRD_PARTY_RELEASE_BRANCH)
 
+# Which Go compiles in the container. `local` holds our own code to GO_VERSION;
+# a third_party/ tree needing newer overrides this before including this file.
+GOTOOLCHAIN ?= local
+
 DOCKER_RUN_PRIV_NET := mkdir -p $(REPO_ROOT)/.go-pkg-cache bin $(GOMOD_CACHE) && \
 	docker run --rm \
 		--init \
 		$(EXTRA_DOCKER_ARGS) \
 		$(DOCKER_GIT_WORKTREE_ARGS) \
 		-e LOCAL_USER_ID=$(LOCAL_USER_ID) \
+		-e GOTOOLCHAIN=$(GOTOOLCHAIN) \
 		-e GOCACHE=/go-cache \
 		$(GOARCH_FLAGS) \
 		-e GOPATH=/go \
