@@ -19,8 +19,10 @@ type LicenseKeyStatusApplyConfiguration struct {
 	Expiry *v1.Time `json:"expiry,omitempty"`
 	// GracePeriod is how long after expiry the license remains functional (e.g. "90d")
 	GracePeriod *string `json:"gracePeriod,omitempty"`
-	// Maximum Number of Allowed Nodes
+	// Maximum Number of Allowed Nodes.
 	MaxNodes *int `json:"maxnodes,omitempty"`
+	// Maximum Number of Allowed CPU Cores.
+	MaxCores *int `json:"maxcores,omitempty"`
 	// License package defines type of Calico license that is being enforced
 	Package *projectcalicov3.LicensePackageType `json:"package,omitempty"`
 	// List of features that are available via the applied license
@@ -56,6 +58,14 @@ func (b *LicenseKeyStatusApplyConfiguration) WithGracePeriod(value string) *Lice
 // If called multiple times, the MaxNodes field is set to the value of the last call.
 func (b *LicenseKeyStatusApplyConfiguration) WithMaxNodes(value int) *LicenseKeyStatusApplyConfiguration {
 	b.MaxNodes = &value
+	return b
+}
+
+// WithMaxCores sets the MaxCores field in the declarative configuration to the given value
+// and returns the receiver, so that objects can be built by chaining "With" function invocations.
+// If called multiple times, the MaxCores field is set to the value of the last call.
+func (b *LicenseKeyStatusApplyConfiguration) WithMaxCores(value int) *LicenseKeyStatusApplyConfiguration {
+	b.MaxCores = &value
 	return b
 }
 

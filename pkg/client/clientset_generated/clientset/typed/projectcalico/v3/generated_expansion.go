@@ -62,6 +62,8 @@ type LicenseKeyExpansion interface{}
 
 type ManagedClusterExpansion interface{}
 
+type NetworkExpansion interface{}
+
 type NetworkPolicyExpansion interface{}
 
 type NetworkSetExpansion interface{}

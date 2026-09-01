@@ -34,6 +34,7 @@ const (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // PacketCapture contains the configuration for any packet capture.
+// +kubebuilder:subresource:status
 type PacketCapture struct {
 	metav1.TypeMeta `json:",inline"`
 	// Standard object's metadata.

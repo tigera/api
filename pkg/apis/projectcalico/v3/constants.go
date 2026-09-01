@@ -48,11 +48,14 @@ const (
 	// orchestrator.
 	LabelOrchestrator = "projectcalico.org/orchestrator"
 
-	// Label used to denote the Network a WorkloadEndpoint belongs too.
+	// Label used to denote the (Calico) Network a WorkloadEndpoint is connected to.
 	LabelNetwork = "projectcalico.org/network"
 
+	// Label used to denote the NetworkAttachmentDefinition a WorkloadEndpoint belongs to.
+	LabelNetworkAttachment = "projectcalico.org/network-attachment"
+
 	// Label used to denote the Namespace the NetworkAttachmentDefinition for a WorkloadEndpoint belongs to.
-	LabelNetworkNamespace = "projectcalico.org/network-namespace"
+	LabelNetworkAttachmentNamespace = "projectcalico.org/network-attachment-namespace"
 
 	// Label used to denote the inside pod interface for a WorkloadEndpoint.
 	LabelNetworkInterface = "projectcalico.org/network-interface"

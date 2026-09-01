@@ -25,6 +25,14 @@ type ControllersConfigApplyConfiguration struct {
 	LoadBalancer *LoadBalancerControllerConfigApplyConfiguration `json:"loadBalancer,omitempty"`
 	// Migration enables and configures migration controllers.
 	Migration *MigrationControllerConfigApplyConfiguration `json:"migration,omitempty"`
+	// ApplicationLayer enables and configures the application-layer subsystem
+	// (WAF, GlobalWAF, WAFPlugin, validation). Operator-managed; users should
+	// not edit this field directly. Non-nil enables the subsystem; activation
+	// is gated on a valid Calico Enterprise license.
+	ApplicationLayer *ApplicationLayerControllerConfigApplyConfiguration `json:"applicationLayer,omitempty"`
+	// RBACSync enables and configures the RBAC sync controller, which reconciles
+	// Calico RBAC ClusterRoles and bindings. Disabled by default, set to non-nil to enable.
+	RBACSync *RBACSyncControllerConfigApplyConfiguration `json:"rbacSync,omitempty"`
 }
 
 // ControllersConfigApplyConfiguration constructs a declarative configuration of the ControllersConfig type for use with
@@ -94,5 +102,21 @@ func (b *ControllersConfigApplyConfiguration) WithLoadBalancer(value *LoadBalanc
 // If called multiple times, the Migration field is set to the value of the last call.
 func (b *ControllersConfigApplyConfiguration) WithMigration(value *MigrationControllerConfigApplyConfiguration) *ControllersConfigApplyConfiguration {
 	b.Migration = value
+	return b
+}
+
+// WithApplicationLayer sets the ApplicationLayer field in the declarative configuration to the given value
+// and returns the receiver, so that objects can be built by chaining "With" function invocations.
+// If called multiple times, the ApplicationLayer field is set to the value of the last call.
+func (b *ControllersConfigApplyConfiguration) WithApplicationLayer(value *ApplicationLayerControllerConfigApplyConfiguration) *ControllersConfigApplyConfiguration {
+	b.ApplicationLayer = value
+	return b
+}
+
+// WithRBACSync sets the RBACSync field in the declarative configuration to the given value
+// and returns the receiver, so that objects can be built by chaining "With" function invocations.
+// If called multiple times, the RBACSync field is set to the value of the last call.
+func (b *ControllersConfigApplyConfiguration) WithRBACSync(value *RBACSyncControllerConfigApplyConfiguration) *ControllersConfigApplyConfiguration {
+	b.RBACSync = value
 	return b
 }

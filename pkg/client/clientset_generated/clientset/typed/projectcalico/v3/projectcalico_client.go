@@ -43,6 +43,7 @@ type ProjectcalicoV3Interface interface {
 	KubeControllersConfigurationsGetter
 	LicenseKeysGetter
 	ManagedClustersGetter
+	NetworksGetter
 	NetworkPoliciesGetter
 	NetworkSetsGetter
 	PacketCapturesGetter
@@ -177,6 +178,10 @@ func (c *ProjectcalicoV3Client) LicenseKeys() LicenseKeyInterface {
 
 func (c *ProjectcalicoV3Client) ManagedClusters() ManagedClusterInterface {
 	return newManagedClusters(c)
+}
+
+func (c *ProjectcalicoV3Client) Networks() NetworkInterface {
+	return newNetworks(c)
 }
 
 func (c *ProjectcalicoV3Client) NetworkPolicies(namespace string) NetworkPolicyInterface {

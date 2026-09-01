@@ -1,4 +1,4 @@
-// Copyright (c) 2019,2021 Tigera, Inc. All rights reserved.
+// Copyright (c) 2019,2021,2026 Tigera, Inc. All rights reserved.
 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ const (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // GlobalReport contains the configuration for a non-namespaced Report.
+// +kubebuilder:subresource:status
 type GlobalReport struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata"`

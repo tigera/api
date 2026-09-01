@@ -17,6 +17,7 @@ const (
 // +kubebuilder:resource:scope=Cluster
 
 // AlertException defines exceptions for alert events.
+// +kubebuilder:subresource:status
 type AlertException struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata"`

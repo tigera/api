@@ -131,6 +131,10 @@ func (c *FakeProjectcalicoV3) ManagedClusters() v3.ManagedClusterInterface {
 	return newFakeManagedClusters(c)
 }
 
+func (c *FakeProjectcalicoV3) Networks() v3.NetworkInterface {
+	return newFakeNetworks(c)
+}
+
 func (c *FakeProjectcalicoV3) NetworkPolicies(namespace string) v3.NetworkPolicyInterface {
 	return newFakeNetworkPolicies(c, namespace)
 }

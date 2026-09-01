@@ -29,5 +29,6 @@ API rule violation: names_match,github.com/tigera/api/pkg/apis/projectcalico/v3,
 API rule violation: names_match,github.com/tigera/api/pkg/apis/projectcalico/v3,FelixConfigurationSpec,WindowsDNSExtraTTL
 API rule violation: names_match,github.com/tigera/api/pkg/apis/projectcalico/v3,FelixConfigurationSpec,WireguardPersistentKeepAlive
 API rule violation: names_match,github.com/tigera/api/pkg/apis/projectcalico/v3,IPAMBlockSpec,DeprecatedStrictAffinity
+API rule violation: names_match,github.com/tigera/api/pkg/apis/projectcalico/v3,LicenseKeyStatus,MaxCores
 API rule violation: names_match,github.com/tigera/api/pkg/apis/projectcalico/v3,LicenseKeyStatus,MaxNodes
 API rule violation: names_match,github.com/tigera/api/pkg/apis/projectcalico/v3,MigrationControllerConfig,PolicyNameMigrator

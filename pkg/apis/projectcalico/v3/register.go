@@ -109,6 +109,8 @@ var (
 		&UISettingsList{},
 		&ExternalNetwork{},
 		&ExternalNetworkList{},
+		&Network{},
+		&NetworkList{},
 		&SecurityEventWebhook{},
 		&SecurityEventWebhookList{},
 		&BFDConfiguration{},
