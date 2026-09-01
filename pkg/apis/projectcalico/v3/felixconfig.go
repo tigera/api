@@ -107,6 +107,7 @@ const (
 	DNSPolicyModeInline            DNSPolicyMode = "Inline"
 )
 
+// +kubebuilder:validation:Enum=Inline;NoDelay
 type BPFDNSPolicyMode string
 
 const (
@@ -222,7 +223,7 @@ const (
 	NATOutgoingExclusionsIPPoolsAndHostIPs NATOutgoingExclusionsType = "IPPoolsAndHostIPs"
 )
 
-// +kubebuilder:validation:enum=RequireAndVerifyClientCert;RequireAnyClientCert;VerifyClientCertIfGiven;NoClientCert
+// +kubebuilder:validation:Enum=RequireAndVerifyClientCert;RequireAnyClientCert;VerifyClientCertIfGiven;NoClientCert
 type PrometheusMetricsClientAuthType string
 
 const (
@@ -855,7 +856,6 @@ type FelixConfigurationSpec struct {
 	// BPFJITHardening controls BPF JIT hardening. When set to "Auto", Felix will set JIT hardening to 1
 	// if it detects the current value is 2 (strict mode that hurts performance). When set to "Strict",
 	// Felix will not modify the JIT hardening setting. [Default: Auto]
-	// +kubebuilder:validation:Enum=Auto;Strict
 	BPFJITHardening *BPFJITHardeningType `json:"bpfJITHardening,omitempty" validate:"omitempty,oneof=Auto Strict"`
 
 	// BPFLogLevel controls the log level of the BPF programs when in BPF dataplane mode.  One of "Off", "Info", or
@@ -1200,6 +1200,7 @@ type FelixConfigurationSpec struct {
 	// EndpointPolicies - Processes only policies for endpoints identified as the source
 	// or destination of the packet (whether workload or host endpoints).
 	// [Default: EndpointPolicies]
+	// +kubebuilder:validation:Enum=AllPolicies;EndpointPolicies
 	FlowLogsPolicyScope *string `json:"flowLogsPolicyScope,omitempty"`
 	// FlowLogsFileEnabled when set to true, enables logging flow logs to a file. If false no flow logging to file will occur.
 	FlowLogsFileEnabled *bool `json:"flowLogsFileEnabled,omitempty"`
