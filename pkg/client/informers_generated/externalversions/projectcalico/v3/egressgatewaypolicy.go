@@ -20,11 +20,39 @@ import (
 )
 
 // EgressGatewayPolicyInformer provides access to a shared informer and lister for
-// EgressGatewayPolicies.
+// EgressGatewayPolicies. Prefer using the type-safe variant (see [TypedEgressGatewayPolicyInformer]).
 type EgressGatewayPolicyInformer interface {
 	Informer() cache.SharedIndexInformer
 	Lister() projectcalicov3.EgressGatewayPolicyLister
 }
+
+// TypedEgressGatewayPolicyInformer provides access to a shared informer and lister for
+// EgressGatewayPolicies, including the type-safe TypedInformer variant.
+// It is a superset of EgressGatewayPolicyInformer.
+type TypedEgressGatewayPolicyInformer interface {
+	Informer() cache.SharedIndexInformer
+	TypedInformer() EgressGatewayPolicyIndexInformer
+	Lister() projectcalicov3.EgressGatewayPolicyLister
+}
+
+// EgressGatewayPolicyIndexInformer is a wrapper around the underlying [cache.SharedIndexInformer]
+// with type-safe variants of several methods.
+type EgressGatewayPolicyIndexInformer cache.TypedSharedIndexInformer[*apisprojectcalicov3.EgressGatewayPolicy]
+
+// EgressGatewayPolicyHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerFuncs] for EgressGatewayPolicy.
+type EgressGatewayPolicyHandlerFuncs = cache.TypedResourceEventHandlerFuncs[*apisprojectcalicov3.EgressGatewayPolicy]
+
+// EgressGatewayPolicyDetailedHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerDetailedFuncs] for EgressGatewayPolicy.
+type EgressGatewayPolicyDetailedHandlerFuncs = cache.TypedResourceEventHandlerDetailedFuncs[*apisprojectcalicov3.EgressGatewayPolicy]
+
+// EgressGatewayPolicyFilteringHandler is a specialization of [cache.TypedFilteringResourceEventHandler] for EgressGatewayPolicy.
+type EgressGatewayPolicyFilteringHandler = cache.TypedFilteringResourceEventHandler[*apisprojectcalicov3.EgressGatewayPolicy]
+
+// EgressGatewayPolicyIndexers is a specialization of [cache.TypedIndexers] for EgressGatewayPolicy.
+type EgressGatewayPolicyIndexers = cache.TypedIndexers[*apisprojectcalicov3.EgressGatewayPolicy]
+
+// DeletedEgressGatewayPolicy is a specialization of [cache.DeletedObject] for EgressGatewayPolicy.
+type DeletedEgressGatewayPolicy = cache.DeletedObject[*apisprojectcalicov3.EgressGatewayPolicy]
 
 type egressGatewayPolicyInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
@@ -34,25 +62,49 @@ type egressGatewayPolicyInformer struct {
 // NewEgressGatewayPolicyInformer constructs a new informer for EgressGatewayPolicy type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedEgressGatewayPolicyInformer]).
 func NewEgressGatewayPolicyInformer(client clientset.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
 	return NewEgressGatewayPolicyInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers})
+}
+
+// NewTypedEgressGatewayPolicyInformer constructs a new informer for EgressGatewayPolicy type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedEgressGatewayPolicyInformer(client clientset.Interface, resyncPeriod time.Duration, indexers EgressGatewayPolicyIndexers) EgressGatewayPolicyIndexInformer {
+	return NewTypedEgressGatewayPolicyInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers)})
 }
 
 // NewFilteredEgressGatewayPolicyInformer constructs a new informer for EgressGatewayPolicy type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedFilteredEgressGatewayPolicyInformer]).
 func NewFilteredEgressGatewayPolicyInformer(client clientset.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewEgressGatewayPolicyInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+	return NewTypedEgressGatewayPolicyInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+}
+
+// NewTypedFilteredEgressGatewayPolicyInformer constructs a new informer for EgressGatewayPolicy type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedFilteredEgressGatewayPolicyInformer(client clientset.Interface, resyncPeriod time.Duration, indexers EgressGatewayPolicyIndexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) EgressGatewayPolicyIndexInformer {
+	return NewTypedEgressGatewayPolicyInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers), TweakListOptions: tweakListOptions})
 }
 
 // NewEgressGatewayPolicyInformerWithOptions constructs a new informer for EgressGatewayPolicy type with additional options.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedEgressGatewayPolicyInformerWithOptions]).
 func NewEgressGatewayPolicyInformerWithOptions(client clientset.Interface, options internalinterfaces.InformerOptions) cache.SharedIndexInformer {
+	return NewTypedEgressGatewayPolicyInformerWithOptions(client, options)
+}
+
+// NewTypedEgressGatewayPolicyInformerWithOptions constructs a new informer for EgressGatewayPolicy type with additional options.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedEgressGatewayPolicyInformerWithOptions(client clientset.Interface, options internalinterfaces.InformerOptions) EgressGatewayPolicyIndexInformer {
 	gvr := schema.GroupVersionResource{Group: "projectcalico.org", Version: "v3", Resource: "egressgatewaypolicies"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
-	return cache.NewSharedIndexInformerWithOptions(
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.EgressGatewayPolicy](cache.NewSharedIndexInformerWithOptions(
 		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(opts v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
@@ -85,17 +137,57 @@ func NewEgressGatewayPolicyInformerWithOptions(client clientset.Interface, optio
 			Indexers:     options.Indexers,
 			Identifier:   identifier,
 		},
-	)
+	))
 }
 
 func (f *egressGatewayPolicyInformer) defaultInformer(client clientset.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewEgressGatewayPolicyInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
+	return NewTypedEgressGatewayPolicyInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
 }
 
 func (f *egressGatewayPolicyInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apisprojectcalicov3.EgressGatewayPolicy{}, f.defaultInformer)
+	return f.TypedInformer()
+}
+
+func (f *egressGatewayPolicyInformer) TypedInformer() EgressGatewayPolicyIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.EgressGatewayPolicy](f.factory.InformerFor(&apisprojectcalicov3.EgressGatewayPolicy{}, f.defaultInformer))
 }
 
 func (f *egressGatewayPolicyInformer) Lister() projectcalicov3.EgressGatewayPolicyLister {
 	return projectcalicov3.NewEgressGatewayPolicyLister(f.Informer().GetIndexer())
+}
+
+// ToTypedEgressGatewayPolicyInformer converts an untyped informer into a TypedEgressGatewayPolicyInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *EgressGatewayPolicy. If that is not the case, calling type-safe methods of the returned
+// TypedEgressGatewayPolicyInformer leads to runtime panics. A safer alternative is to pass
+// around a TypedEgressGatewayPolicyInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToTypedEgressGatewayPolicyInformer(informer EgressGatewayPolicyInformer) TypedEgressGatewayPolicyInformer {
+	if informer, ok := informer.(TypedEgressGatewayPolicyInformer); ok {
+		return informer
+	}
+	return &egressGatewayPolicyTypedInformerAdapter{informer}
+}
+
+type egressGatewayPolicyTypedInformerAdapter struct {
+	EgressGatewayPolicyInformer
+}
+
+func (a *egressGatewayPolicyTypedInformerAdapter) TypedInformer() EgressGatewayPolicyIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.EgressGatewayPolicy](a.Informer())
+}
+
+// ToEgressGatewayPolicyIndexInformer converts an untyped informer into a EgressGatewayPolicyIndexInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *EgressGatewayPolicy. If that is not the case, calling type-safe methods of the returned
+// EgressGatewayPolicyIndexInformer leads to runtime panics. A safer alternative is to pass
+// around a EgressGatewayPolicyIndexInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToEgressGatewayPolicyIndexInformer(informer cache.SharedIndexInformer) EgressGatewayPolicyIndexInformer {
+	if informer, ok := informer.(EgressGatewayPolicyIndexInformer); ok {
+		return informer
+	}
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.EgressGatewayPolicy](informer)
 }

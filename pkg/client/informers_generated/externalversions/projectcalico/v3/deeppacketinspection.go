@@ -20,11 +20,39 @@ import (
 )
 
 // DeepPacketInspectionInformer provides access to a shared informer and lister for
-// DeepPacketInspections.
+// DeepPacketInspections. Prefer using the type-safe variant (see [TypedDeepPacketInspectionInformer]).
 type DeepPacketInspectionInformer interface {
 	Informer() cache.SharedIndexInformer
 	Lister() projectcalicov3.DeepPacketInspectionLister
 }
+
+// TypedDeepPacketInspectionInformer provides access to a shared informer and lister for
+// DeepPacketInspections, including the type-safe TypedInformer variant.
+// It is a superset of DeepPacketInspectionInformer.
+type TypedDeepPacketInspectionInformer interface {
+	Informer() cache.SharedIndexInformer
+	TypedInformer() DeepPacketInspectionIndexInformer
+	Lister() projectcalicov3.DeepPacketInspectionLister
+}
+
+// DeepPacketInspectionIndexInformer is a wrapper around the underlying [cache.SharedIndexInformer]
+// with type-safe variants of several methods.
+type DeepPacketInspectionIndexInformer cache.TypedSharedIndexInformer[*apisprojectcalicov3.DeepPacketInspection]
+
+// DeepPacketInspectionHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerFuncs] for DeepPacketInspection.
+type DeepPacketInspectionHandlerFuncs = cache.TypedResourceEventHandlerFuncs[*apisprojectcalicov3.DeepPacketInspection]
+
+// DeepPacketInspectionDetailedHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerDetailedFuncs] for DeepPacketInspection.
+type DeepPacketInspectionDetailedHandlerFuncs = cache.TypedResourceEventHandlerDetailedFuncs[*apisprojectcalicov3.DeepPacketInspection]
+
+// DeepPacketInspectionFilteringHandler is a specialization of [cache.TypedFilteringResourceEventHandler] for DeepPacketInspection.
+type DeepPacketInspectionFilteringHandler = cache.TypedFilteringResourceEventHandler[*apisprojectcalicov3.DeepPacketInspection]
+
+// DeepPacketInspectionIndexers is a specialization of [cache.TypedIndexers] for DeepPacketInspection.
+type DeepPacketInspectionIndexers = cache.TypedIndexers[*apisprojectcalicov3.DeepPacketInspection]
+
+// DeletedDeepPacketInspection is a specialization of [cache.DeletedObject] for DeepPacketInspection.
+type DeletedDeepPacketInspection = cache.DeletedObject[*apisprojectcalicov3.DeepPacketInspection]
 
 type deepPacketInspectionInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
@@ -35,25 +63,49 @@ type deepPacketInspectionInformer struct {
 // NewDeepPacketInspectionInformer constructs a new informer for DeepPacketInspection type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedDeepPacketInspectionInformer]).
 func NewDeepPacketInspectionInformer(client clientset.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
 	return NewDeepPacketInspectionInformerWithOptions(client, namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers})
+}
+
+// NewTypedDeepPacketInspectionInformer constructs a new informer for DeepPacketInspection type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedDeepPacketInspectionInformer(client clientset.Interface, namespace string, resyncPeriod time.Duration, indexers DeepPacketInspectionIndexers) DeepPacketInspectionIndexInformer {
+	return NewTypedDeepPacketInspectionInformerWithOptions(client, namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers)})
 }
 
 // NewFilteredDeepPacketInspectionInformer constructs a new informer for DeepPacketInspection type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedFilteredDeepPacketInspectionInformer]).
 func NewFilteredDeepPacketInspectionInformer(client clientset.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewDeepPacketInspectionInformerWithOptions(client, namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+	return NewTypedDeepPacketInspectionInformerWithOptions(client, namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+}
+
+// NewTypedFilteredDeepPacketInspectionInformer constructs a new informer for DeepPacketInspection type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedFilteredDeepPacketInspectionInformer(client clientset.Interface, namespace string, resyncPeriod time.Duration, indexers DeepPacketInspectionIndexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) DeepPacketInspectionIndexInformer {
+	return NewTypedDeepPacketInspectionInformerWithOptions(client, namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers), TweakListOptions: tweakListOptions})
 }
 
 // NewDeepPacketInspectionInformerWithOptions constructs a new informer for DeepPacketInspection type with additional options.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedDeepPacketInspectionInformerWithOptions]).
 func NewDeepPacketInspectionInformerWithOptions(client clientset.Interface, namespace string, options internalinterfaces.InformerOptions) cache.SharedIndexInformer {
+	return NewTypedDeepPacketInspectionInformerWithOptions(client, namespace, options)
+}
+
+// NewTypedDeepPacketInspectionInformerWithOptions constructs a new informer for DeepPacketInspection type with additional options.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedDeepPacketInspectionInformerWithOptions(client clientset.Interface, namespace string, options internalinterfaces.InformerOptions) DeepPacketInspectionIndexInformer {
 	gvr := schema.GroupVersionResource{Group: "projectcalico.org", Version: "v3", Resource: "deeppacketinspections"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
-	return cache.NewSharedIndexInformerWithOptions(
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.DeepPacketInspection](cache.NewSharedIndexInformerWithOptions(
 		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(opts v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
@@ -86,17 +138,57 @@ func NewDeepPacketInspectionInformerWithOptions(client clientset.Interface, name
 			Indexers:     options.Indexers,
 			Identifier:   identifier,
 		},
-	)
+	))
 }
 
 func (f *deepPacketInspectionInformer) defaultInformer(client clientset.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewDeepPacketInspectionInformerWithOptions(client, f.namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
+	return NewTypedDeepPacketInspectionInformerWithOptions(client, f.namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
 }
 
 func (f *deepPacketInspectionInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apisprojectcalicov3.DeepPacketInspection{}, f.defaultInformer)
+	return f.TypedInformer()
+}
+
+func (f *deepPacketInspectionInformer) TypedInformer() DeepPacketInspectionIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.DeepPacketInspection](f.factory.InformerFor(&apisprojectcalicov3.DeepPacketInspection{}, f.defaultInformer))
 }
 
 func (f *deepPacketInspectionInformer) Lister() projectcalicov3.DeepPacketInspectionLister {
 	return projectcalicov3.NewDeepPacketInspectionLister(f.Informer().GetIndexer())
+}
+
+// ToTypedDeepPacketInspectionInformer converts an untyped informer into a TypedDeepPacketInspectionInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *DeepPacketInspection. If that is not the case, calling type-safe methods of the returned
+// TypedDeepPacketInspectionInformer leads to runtime panics. A safer alternative is to pass
+// around a TypedDeepPacketInspectionInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToTypedDeepPacketInspectionInformer(informer DeepPacketInspectionInformer) TypedDeepPacketInspectionInformer {
+	if informer, ok := informer.(TypedDeepPacketInspectionInformer); ok {
+		return informer
+	}
+	return &deepPacketInspectionTypedInformerAdapter{informer}
+}
+
+type deepPacketInspectionTypedInformerAdapter struct {
+	DeepPacketInspectionInformer
+}
+
+func (a *deepPacketInspectionTypedInformerAdapter) TypedInformer() DeepPacketInspectionIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.DeepPacketInspection](a.Informer())
+}
+
+// ToDeepPacketInspectionIndexInformer converts an untyped informer into a DeepPacketInspectionIndexInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *DeepPacketInspection. If that is not the case, calling type-safe methods of the returned
+// DeepPacketInspectionIndexInformer leads to runtime panics. A safer alternative is to pass
+// around a DeepPacketInspectionIndexInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToDeepPacketInspectionIndexInformer(informer cache.SharedIndexInformer) DeepPacketInspectionIndexInformer {
+	if informer, ok := informer.(DeepPacketInspectionIndexInformer); ok {
+		return informer
+	}
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.DeepPacketInspection](informer)
 }

@@ -20,11 +20,39 @@ import (
 )
 
 // AlertExceptionInformer provides access to a shared informer and lister for
-// AlertExceptions.
+// AlertExceptions. Prefer using the type-safe variant (see [TypedAlertExceptionInformer]).
 type AlertExceptionInformer interface {
 	Informer() cache.SharedIndexInformer
 	Lister() projectcalicov3.AlertExceptionLister
 }
+
+// TypedAlertExceptionInformer provides access to a shared informer and lister for
+// AlertExceptions, including the type-safe TypedInformer variant.
+// It is a superset of AlertExceptionInformer.
+type TypedAlertExceptionInformer interface {
+	Informer() cache.SharedIndexInformer
+	TypedInformer() AlertExceptionIndexInformer
+	Lister() projectcalicov3.AlertExceptionLister
+}
+
+// AlertExceptionIndexInformer is a wrapper around the underlying [cache.SharedIndexInformer]
+// with type-safe variants of several methods.
+type AlertExceptionIndexInformer cache.TypedSharedIndexInformer[*apisprojectcalicov3.AlertException]
+
+// AlertExceptionHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerFuncs] for AlertException.
+type AlertExceptionHandlerFuncs = cache.TypedResourceEventHandlerFuncs[*apisprojectcalicov3.AlertException]
+
+// AlertExceptionDetailedHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerDetailedFuncs] for AlertException.
+type AlertExceptionDetailedHandlerFuncs = cache.TypedResourceEventHandlerDetailedFuncs[*apisprojectcalicov3.AlertException]
+
+// AlertExceptionFilteringHandler is a specialization of [cache.TypedFilteringResourceEventHandler] for AlertException.
+type AlertExceptionFilteringHandler = cache.TypedFilteringResourceEventHandler[*apisprojectcalicov3.AlertException]
+
+// AlertExceptionIndexers is a specialization of [cache.TypedIndexers] for AlertException.
+type AlertExceptionIndexers = cache.TypedIndexers[*apisprojectcalicov3.AlertException]
+
+// DeletedAlertException is a specialization of [cache.DeletedObject] for AlertException.
+type DeletedAlertException = cache.DeletedObject[*apisprojectcalicov3.AlertException]
 
 type alertExceptionInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
@@ -34,25 +62,49 @@ type alertExceptionInformer struct {
 // NewAlertExceptionInformer constructs a new informer for AlertException type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedAlertExceptionInformer]).
 func NewAlertExceptionInformer(client clientset.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
 	return NewAlertExceptionInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers})
+}
+
+// NewTypedAlertExceptionInformer constructs a new informer for AlertException type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedAlertExceptionInformer(client clientset.Interface, resyncPeriod time.Duration, indexers AlertExceptionIndexers) AlertExceptionIndexInformer {
+	return NewTypedAlertExceptionInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers)})
 }
 
 // NewFilteredAlertExceptionInformer constructs a new informer for AlertException type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedFilteredAlertExceptionInformer]).
 func NewFilteredAlertExceptionInformer(client clientset.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewAlertExceptionInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+	return NewTypedAlertExceptionInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+}
+
+// NewTypedFilteredAlertExceptionInformer constructs a new informer for AlertException type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedFilteredAlertExceptionInformer(client clientset.Interface, resyncPeriod time.Duration, indexers AlertExceptionIndexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) AlertExceptionIndexInformer {
+	return NewTypedAlertExceptionInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers), TweakListOptions: tweakListOptions})
 }
 
 // NewAlertExceptionInformerWithOptions constructs a new informer for AlertException type with additional options.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedAlertExceptionInformerWithOptions]).
 func NewAlertExceptionInformerWithOptions(client clientset.Interface, options internalinterfaces.InformerOptions) cache.SharedIndexInformer {
+	return NewTypedAlertExceptionInformerWithOptions(client, options)
+}
+
+// NewTypedAlertExceptionInformerWithOptions constructs a new informer for AlertException type with additional options.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedAlertExceptionInformerWithOptions(client clientset.Interface, options internalinterfaces.InformerOptions) AlertExceptionIndexInformer {
 	gvr := schema.GroupVersionResource{Group: "projectcalico.org", Version: "v3", Resource: "alertexceptions"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
-	return cache.NewSharedIndexInformerWithOptions(
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.AlertException](cache.NewSharedIndexInformerWithOptions(
 		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(opts v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
@@ -85,17 +137,57 @@ func NewAlertExceptionInformerWithOptions(client clientset.Interface, options in
 			Indexers:     options.Indexers,
 			Identifier:   identifier,
 		},
-	)
+	))
 }
 
 func (f *alertExceptionInformer) defaultInformer(client clientset.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewAlertExceptionInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
+	return NewTypedAlertExceptionInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
 }
 
 func (f *alertExceptionInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apisprojectcalicov3.AlertException{}, f.defaultInformer)
+	return f.TypedInformer()
+}
+
+func (f *alertExceptionInformer) TypedInformer() AlertExceptionIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.AlertException](f.factory.InformerFor(&apisprojectcalicov3.AlertException{}, f.defaultInformer))
 }
 
 func (f *alertExceptionInformer) Lister() projectcalicov3.AlertExceptionLister {
 	return projectcalicov3.NewAlertExceptionLister(f.Informer().GetIndexer())
+}
+
+// ToTypedAlertExceptionInformer converts an untyped informer into a TypedAlertExceptionInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *AlertException. If that is not the case, calling type-safe methods of the returned
+// TypedAlertExceptionInformer leads to runtime panics. A safer alternative is to pass
+// around a TypedAlertExceptionInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToTypedAlertExceptionInformer(informer AlertExceptionInformer) TypedAlertExceptionInformer {
+	if informer, ok := informer.(TypedAlertExceptionInformer); ok {
+		return informer
+	}
+	return &alertExceptionTypedInformerAdapter{informer}
+}
+
+type alertExceptionTypedInformerAdapter struct {
+	AlertExceptionInformer
+}
+
+func (a *alertExceptionTypedInformerAdapter) TypedInformer() AlertExceptionIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.AlertException](a.Informer())
+}
+
+// ToAlertExceptionIndexInformer converts an untyped informer into a AlertExceptionIndexInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *AlertException. If that is not the case, calling type-safe methods of the returned
+// AlertExceptionIndexInformer leads to runtime panics. A safer alternative is to pass
+// around a AlertExceptionIndexInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToAlertExceptionIndexInformer(informer cache.SharedIndexInformer) AlertExceptionIndexInformer {
+	if informer, ok := informer.(AlertExceptionIndexInformer); ok {
+		return informer
+	}
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.AlertException](informer)
 }

@@ -20,11 +20,39 @@ import (
 )
 
 // SecurityEventWebhookInformer provides access to a shared informer and lister for
-// SecurityEventWebhooks.
+// SecurityEventWebhooks. Prefer using the type-safe variant (see [TypedSecurityEventWebhookInformer]).
 type SecurityEventWebhookInformer interface {
 	Informer() cache.SharedIndexInformer
 	Lister() projectcalicov3.SecurityEventWebhookLister
 }
+
+// TypedSecurityEventWebhookInformer provides access to a shared informer and lister for
+// SecurityEventWebhooks, including the type-safe TypedInformer variant.
+// It is a superset of SecurityEventWebhookInformer.
+type TypedSecurityEventWebhookInformer interface {
+	Informer() cache.SharedIndexInformer
+	TypedInformer() SecurityEventWebhookIndexInformer
+	Lister() projectcalicov3.SecurityEventWebhookLister
+}
+
+// SecurityEventWebhookIndexInformer is a wrapper around the underlying [cache.SharedIndexInformer]
+// with type-safe variants of several methods.
+type SecurityEventWebhookIndexInformer cache.TypedSharedIndexInformer[*apisprojectcalicov3.SecurityEventWebhook]
+
+// SecurityEventWebhookHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerFuncs] for SecurityEventWebhook.
+type SecurityEventWebhookHandlerFuncs = cache.TypedResourceEventHandlerFuncs[*apisprojectcalicov3.SecurityEventWebhook]
+
+// SecurityEventWebhookDetailedHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerDetailedFuncs] for SecurityEventWebhook.
+type SecurityEventWebhookDetailedHandlerFuncs = cache.TypedResourceEventHandlerDetailedFuncs[*apisprojectcalicov3.SecurityEventWebhook]
+
+// SecurityEventWebhookFilteringHandler is a specialization of [cache.TypedFilteringResourceEventHandler] for SecurityEventWebhook.
+type SecurityEventWebhookFilteringHandler = cache.TypedFilteringResourceEventHandler[*apisprojectcalicov3.SecurityEventWebhook]
+
+// SecurityEventWebhookIndexers is a specialization of [cache.TypedIndexers] for SecurityEventWebhook.
+type SecurityEventWebhookIndexers = cache.TypedIndexers[*apisprojectcalicov3.SecurityEventWebhook]
+
+// DeletedSecurityEventWebhook is a specialization of [cache.DeletedObject] for SecurityEventWebhook.
+type DeletedSecurityEventWebhook = cache.DeletedObject[*apisprojectcalicov3.SecurityEventWebhook]
 
 type securityEventWebhookInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
@@ -34,25 +62,49 @@ type securityEventWebhookInformer struct {
 // NewSecurityEventWebhookInformer constructs a new informer for SecurityEventWebhook type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedSecurityEventWebhookInformer]).
 func NewSecurityEventWebhookInformer(client clientset.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
 	return NewSecurityEventWebhookInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers})
+}
+
+// NewTypedSecurityEventWebhookInformer constructs a new informer for SecurityEventWebhook type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedSecurityEventWebhookInformer(client clientset.Interface, resyncPeriod time.Duration, indexers SecurityEventWebhookIndexers) SecurityEventWebhookIndexInformer {
+	return NewTypedSecurityEventWebhookInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers)})
 }
 
 // NewFilteredSecurityEventWebhookInformer constructs a new informer for SecurityEventWebhook type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedFilteredSecurityEventWebhookInformer]).
 func NewFilteredSecurityEventWebhookInformer(client clientset.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewSecurityEventWebhookInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+	return NewTypedSecurityEventWebhookInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+}
+
+// NewTypedFilteredSecurityEventWebhookInformer constructs a new informer for SecurityEventWebhook type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedFilteredSecurityEventWebhookInformer(client clientset.Interface, resyncPeriod time.Duration, indexers SecurityEventWebhookIndexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) SecurityEventWebhookIndexInformer {
+	return NewTypedSecurityEventWebhookInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers), TweakListOptions: tweakListOptions})
 }
 
 // NewSecurityEventWebhookInformerWithOptions constructs a new informer for SecurityEventWebhook type with additional options.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedSecurityEventWebhookInformerWithOptions]).
 func NewSecurityEventWebhookInformerWithOptions(client clientset.Interface, options internalinterfaces.InformerOptions) cache.SharedIndexInformer {
+	return NewTypedSecurityEventWebhookInformerWithOptions(client, options)
+}
+
+// NewTypedSecurityEventWebhookInformerWithOptions constructs a new informer for SecurityEventWebhook type with additional options.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedSecurityEventWebhookInformerWithOptions(client clientset.Interface, options internalinterfaces.InformerOptions) SecurityEventWebhookIndexInformer {
 	gvr := schema.GroupVersionResource{Group: "projectcalico.org", Version: "v3", Resource: "securityeventwebhooks"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
-	return cache.NewSharedIndexInformerWithOptions(
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.SecurityEventWebhook](cache.NewSharedIndexInformerWithOptions(
 		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(opts v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
@@ -85,17 +137,57 @@ func NewSecurityEventWebhookInformerWithOptions(client clientset.Interface, opti
 			Indexers:     options.Indexers,
 			Identifier:   identifier,
 		},
-	)
+	))
 }
 
 func (f *securityEventWebhookInformer) defaultInformer(client clientset.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewSecurityEventWebhookInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
+	return NewTypedSecurityEventWebhookInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
 }
 
 func (f *securityEventWebhookInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apisprojectcalicov3.SecurityEventWebhook{}, f.defaultInformer)
+	return f.TypedInformer()
+}
+
+func (f *securityEventWebhookInformer) TypedInformer() SecurityEventWebhookIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.SecurityEventWebhook](f.factory.InformerFor(&apisprojectcalicov3.SecurityEventWebhook{}, f.defaultInformer))
 }
 
 func (f *securityEventWebhookInformer) Lister() projectcalicov3.SecurityEventWebhookLister {
 	return projectcalicov3.NewSecurityEventWebhookLister(f.Informer().GetIndexer())
+}
+
+// ToTypedSecurityEventWebhookInformer converts an untyped informer into a TypedSecurityEventWebhookInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *SecurityEventWebhook. If that is not the case, calling type-safe methods of the returned
+// TypedSecurityEventWebhookInformer leads to runtime panics. A safer alternative is to pass
+// around a TypedSecurityEventWebhookInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToTypedSecurityEventWebhookInformer(informer SecurityEventWebhookInformer) TypedSecurityEventWebhookInformer {
+	if informer, ok := informer.(TypedSecurityEventWebhookInformer); ok {
+		return informer
+	}
+	return &securityEventWebhookTypedInformerAdapter{informer}
+}
+
+type securityEventWebhookTypedInformerAdapter struct {
+	SecurityEventWebhookInformer
+}
+
+func (a *securityEventWebhookTypedInformerAdapter) TypedInformer() SecurityEventWebhookIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.SecurityEventWebhook](a.Informer())
+}
+
+// ToSecurityEventWebhookIndexInformer converts an untyped informer into a SecurityEventWebhookIndexInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *SecurityEventWebhook. If that is not the case, calling type-safe methods of the returned
+// SecurityEventWebhookIndexInformer leads to runtime panics. A safer alternative is to pass
+// around a SecurityEventWebhookIndexInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToSecurityEventWebhookIndexInformer(informer cache.SharedIndexInformer) SecurityEventWebhookIndexInformer {
+	if informer, ok := informer.(SecurityEventWebhookIndexInformer); ok {
+		return informer
+	}
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.SecurityEventWebhook](informer)
 }

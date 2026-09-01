@@ -20,11 +20,39 @@ import (
 )
 
 // GlobalAlertTemplateInformer provides access to a shared informer and lister for
-// GlobalAlertTemplates.
+// GlobalAlertTemplates. Prefer using the type-safe variant (see [TypedGlobalAlertTemplateInformer]).
 type GlobalAlertTemplateInformer interface {
 	Informer() cache.SharedIndexInformer
 	Lister() projectcalicov3.GlobalAlertTemplateLister
 }
+
+// TypedGlobalAlertTemplateInformer provides access to a shared informer and lister for
+// GlobalAlertTemplates, including the type-safe TypedInformer variant.
+// It is a superset of GlobalAlertTemplateInformer.
+type TypedGlobalAlertTemplateInformer interface {
+	Informer() cache.SharedIndexInformer
+	TypedInformer() GlobalAlertTemplateIndexInformer
+	Lister() projectcalicov3.GlobalAlertTemplateLister
+}
+
+// GlobalAlertTemplateIndexInformer is a wrapper around the underlying [cache.SharedIndexInformer]
+// with type-safe variants of several methods.
+type GlobalAlertTemplateIndexInformer cache.TypedSharedIndexInformer[*apisprojectcalicov3.GlobalAlertTemplate]
+
+// GlobalAlertTemplateHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerFuncs] for GlobalAlertTemplate.
+type GlobalAlertTemplateHandlerFuncs = cache.TypedResourceEventHandlerFuncs[*apisprojectcalicov3.GlobalAlertTemplate]
+
+// GlobalAlertTemplateDetailedHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerDetailedFuncs] for GlobalAlertTemplate.
+type GlobalAlertTemplateDetailedHandlerFuncs = cache.TypedResourceEventHandlerDetailedFuncs[*apisprojectcalicov3.GlobalAlertTemplate]
+
+// GlobalAlertTemplateFilteringHandler is a specialization of [cache.TypedFilteringResourceEventHandler] for GlobalAlertTemplate.
+type GlobalAlertTemplateFilteringHandler = cache.TypedFilteringResourceEventHandler[*apisprojectcalicov3.GlobalAlertTemplate]
+
+// GlobalAlertTemplateIndexers is a specialization of [cache.TypedIndexers] for GlobalAlertTemplate.
+type GlobalAlertTemplateIndexers = cache.TypedIndexers[*apisprojectcalicov3.GlobalAlertTemplate]
+
+// DeletedGlobalAlertTemplate is a specialization of [cache.DeletedObject] for GlobalAlertTemplate.
+type DeletedGlobalAlertTemplate = cache.DeletedObject[*apisprojectcalicov3.GlobalAlertTemplate]
 
 type globalAlertTemplateInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
@@ -34,25 +62,49 @@ type globalAlertTemplateInformer struct {
 // NewGlobalAlertTemplateInformer constructs a new informer for GlobalAlertTemplate type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedGlobalAlertTemplateInformer]).
 func NewGlobalAlertTemplateInformer(client clientset.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
 	return NewGlobalAlertTemplateInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers})
+}
+
+// NewTypedGlobalAlertTemplateInformer constructs a new informer for GlobalAlertTemplate type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedGlobalAlertTemplateInformer(client clientset.Interface, resyncPeriod time.Duration, indexers GlobalAlertTemplateIndexers) GlobalAlertTemplateIndexInformer {
+	return NewTypedGlobalAlertTemplateInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers)})
 }
 
 // NewFilteredGlobalAlertTemplateInformer constructs a new informer for GlobalAlertTemplate type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedFilteredGlobalAlertTemplateInformer]).
 func NewFilteredGlobalAlertTemplateInformer(client clientset.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewGlobalAlertTemplateInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+	return NewTypedGlobalAlertTemplateInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+}
+
+// NewTypedFilteredGlobalAlertTemplateInformer constructs a new informer for GlobalAlertTemplate type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedFilteredGlobalAlertTemplateInformer(client clientset.Interface, resyncPeriod time.Duration, indexers GlobalAlertTemplateIndexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) GlobalAlertTemplateIndexInformer {
+	return NewTypedGlobalAlertTemplateInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers), TweakListOptions: tweakListOptions})
 }
 
 // NewGlobalAlertTemplateInformerWithOptions constructs a new informer for GlobalAlertTemplate type with additional options.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedGlobalAlertTemplateInformerWithOptions]).
 func NewGlobalAlertTemplateInformerWithOptions(client clientset.Interface, options internalinterfaces.InformerOptions) cache.SharedIndexInformer {
+	return NewTypedGlobalAlertTemplateInformerWithOptions(client, options)
+}
+
+// NewTypedGlobalAlertTemplateInformerWithOptions constructs a new informer for GlobalAlertTemplate type with additional options.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedGlobalAlertTemplateInformerWithOptions(client clientset.Interface, options internalinterfaces.InformerOptions) GlobalAlertTemplateIndexInformer {
 	gvr := schema.GroupVersionResource{Group: "projectcalico.org", Version: "v3", Resource: "globalalerttemplates"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
-	return cache.NewSharedIndexInformerWithOptions(
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.GlobalAlertTemplate](cache.NewSharedIndexInformerWithOptions(
 		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(opts v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
@@ -85,17 +137,57 @@ func NewGlobalAlertTemplateInformerWithOptions(client clientset.Interface, optio
 			Indexers:     options.Indexers,
 			Identifier:   identifier,
 		},
-	)
+	))
 }
 
 func (f *globalAlertTemplateInformer) defaultInformer(client clientset.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewGlobalAlertTemplateInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
+	return NewTypedGlobalAlertTemplateInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
 }
 
 func (f *globalAlertTemplateInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apisprojectcalicov3.GlobalAlertTemplate{}, f.defaultInformer)
+	return f.TypedInformer()
+}
+
+func (f *globalAlertTemplateInformer) TypedInformer() GlobalAlertTemplateIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.GlobalAlertTemplate](f.factory.InformerFor(&apisprojectcalicov3.GlobalAlertTemplate{}, f.defaultInformer))
 }
 
 func (f *globalAlertTemplateInformer) Lister() projectcalicov3.GlobalAlertTemplateLister {
 	return projectcalicov3.NewGlobalAlertTemplateLister(f.Informer().GetIndexer())
+}
+
+// ToTypedGlobalAlertTemplateInformer converts an untyped informer into a TypedGlobalAlertTemplateInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *GlobalAlertTemplate. If that is not the case, calling type-safe methods of the returned
+// TypedGlobalAlertTemplateInformer leads to runtime panics. A safer alternative is to pass
+// around a TypedGlobalAlertTemplateInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToTypedGlobalAlertTemplateInformer(informer GlobalAlertTemplateInformer) TypedGlobalAlertTemplateInformer {
+	if informer, ok := informer.(TypedGlobalAlertTemplateInformer); ok {
+		return informer
+	}
+	return &globalAlertTemplateTypedInformerAdapter{informer}
+}
+
+type globalAlertTemplateTypedInformerAdapter struct {
+	GlobalAlertTemplateInformer
+}
+
+func (a *globalAlertTemplateTypedInformerAdapter) TypedInformer() GlobalAlertTemplateIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.GlobalAlertTemplate](a.Informer())
+}
+
+// ToGlobalAlertTemplateIndexInformer converts an untyped informer into a GlobalAlertTemplateIndexInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *GlobalAlertTemplate. If that is not the case, calling type-safe methods of the returned
+// GlobalAlertTemplateIndexInformer leads to runtime panics. A safer alternative is to pass
+// around a GlobalAlertTemplateIndexInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToGlobalAlertTemplateIndexInformer(informer cache.SharedIndexInformer) GlobalAlertTemplateIndexInformer {
+	if informer, ok := informer.(GlobalAlertTemplateIndexInformer); ok {
+		return informer
+	}
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.GlobalAlertTemplate](informer)
 }
