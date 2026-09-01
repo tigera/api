@@ -31,4 +31,6 @@ API rule violation: names_match,github.com/tigera/api/pkg/apis/projectcalico/v3,
 API rule violation: names_match,github.com/tigera/api/pkg/apis/projectcalico/v3,IPAMBlockSpec,DeprecatedStrictAffinity
 API rule violation: names_match,github.com/tigera/api/pkg/apis/projectcalico/v3,LicenseKeyStatus,MaxCores
 API rule violation: names_match,github.com/tigera/api/pkg/apis/projectcalico/v3,LicenseKeyStatus,MaxNodes
+API rule violation: names_match,github.com/tigera/api/pkg/apis/projectcalico/v3,L2BridgeSpec,VLANs
+API rule violation: names_match,github.com/tigera/api/pkg/apis/projectcalico/v3,L2HostTrunkPort,VLANs
 API rule violation: names_match,github.com/tigera/api/pkg/apis/projectcalico/v3,MigrationControllerConfig,PolicyNameMigrator

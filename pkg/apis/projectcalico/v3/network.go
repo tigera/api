@@ -40,14 +40,23 @@ type Network struct {
 }
 
 // NetworkSpec contains the specification for a Network resource.  Exactly one of the
-// network-type fields (vrf, ...) must be set.
+// network-type fields (vrf, l2Bridge, ...) must be set.  The network type is immutable
+// after creation: a Network cannot be switched between types (e.g. vrf to l2Bridge).
 // +kubebuilder:validation:MaxProperties=1
 // +kubebuilder:validation:MinProperties=1
+// +kubebuilder:validation:XValidation:rule="has(self.vrf) == has(oldSelf.vrf)",message="Cannot change the network type (vrf is immutable after creation)"
+// +kubebuilder:validation:XValidation:rule="has(self.l2Bridge) == has(oldSelf.l2Bridge)",message="Cannot change the network type (l2Bridge is immutable after creation)"
 type NetworkSpec struct {
 	// VRF network configuration.
 	// Pods interfaces on a VRF network are isolated in a Linux VRF and can only access their own VRF.
 	// +optional
 	VRF *VRFNetworkSpec `json:"vrf,omitempty"`
+
+	// L2Bridge configures a Layer 2 bridged network.  A Linux bridge on each
+	// participating node connects workload interfaces to VLAN segments
+	// carried by physical trunk interfaces.  See L2BridgeSpec.
+	// +optional
+	L2Bridge *L2BridgeSpec `json:"l2Bridge,omitempty"`
 }
 
 // VRFNetworkSpec configures a VRF-based network that isolates pods in a Linux VRF.

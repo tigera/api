@@ -258,6 +258,32 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &projectcalicov3.KubeControllersConfigurationSpecApplyConfiguration{}
 	case v3.SchemeGroupVersion.WithKind("KubeControllersConfigurationStatus"):
 		return &projectcalicov3.KubeControllersConfigurationStatusApplyConfiguration{}
+	case v3.SchemeGroupVersion.WithKind("L2BridgeDevice"):
+		return &projectcalicov3.L2BridgeDeviceApplyConfiguration{}
+	case v3.SchemeGroupVersion.WithKind("L2BridgeSpec"):
+		return &projectcalicov3.L2BridgeSpecApplyConfiguration{}
+	case v3.SchemeGroupVersion.WithKind("L2ExistingBridge"):
+		return &projectcalicov3.L2ExistingBridgeApplyConfiguration{}
+	case v3.SchemeGroupVersion.WithKind("L2HostConfig"):
+		return &projectcalicov3.L2HostConfigApplyConfiguration{}
+	case v3.SchemeGroupVersion.WithKind("L2HostConnection"):
+		return &projectcalicov3.L2HostConnectionApplyConfiguration{}
+	case v3.SchemeGroupVersion.WithKind("L2HostTrunkPort"):
+		return &projectcalicov3.L2HostTrunkPortApplyConfiguration{}
+	case v3.SchemeGroupVersion.WithKind("L2ManagedBridge"):
+		return &projectcalicov3.L2ManagedBridgeApplyConfiguration{}
+	case v3.SchemeGroupVersion.WithKind("L2Route"):
+		return &projectcalicov3.L2RouteApplyConfiguration{}
+	case v3.SchemeGroupVersion.WithKind("L2RouteAction"):
+		return &projectcalicov3.L2RouteActionApplyConfiguration{}
+	case v3.SchemeGroupVersion.WithKind("L2Subnet"):
+		return &projectcalicov3.L2SubnetApplyConfiguration{}
+	case v3.SchemeGroupVersion.WithKind("L2VLANMatch"):
+		return &projectcalicov3.L2VLANMatchApplyConfiguration{}
+	case v3.SchemeGroupVersion.WithKind("L2VLANRange"):
+		return &projectcalicov3.L2VLANRangeApplyConfiguration{}
+	case v3.SchemeGroupVersion.WithKind("L2VLANSpec"):
+		return &projectcalicov3.L2VLANSpecApplyConfiguration{}
 	case v3.SchemeGroupVersion.WithKind("LicenseKey"):
 		return &projectcalicov3.LicenseKeyApplyConfiguration{}
 	case v3.SchemeGroupVersion.WithKind("LicenseKeySpec"):

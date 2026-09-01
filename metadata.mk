@@ -2,9 +2,9 @@
 # This file contains Makefile configuration parameters and metadata for this branch.
 #################################################################################################
 # The project Go version
-GO_VERSION=1.26.5
+GO_VERSION=1.26.6
 # Version of Kubernetes to use for dependencies, tests, registry.k8s.io/kubectl, and kubectl binary release.
-K8S_VERSION=v1.36.2
+K8S_VERSION=v1.36.3
 # The version of LLVM to use for go-build and calico/base images.
 LLVM_VERSION=21.1.8
 
@@ -14,7 +14,7 @@ RUST_BUILD_VER=1.94.1
 
 # Calico Enterprise shipping images now builds on UBI 10. For Calico OSS to Enterprise merges,
 # please don't downgrade the base image back to UBI 9.
-CALICO_BASE_VER=ubi10-1784675397
+CALICO_BASE_VER=ubi10-1786653669
 
 # Version of various tools used in the build and tests.
 COREDNS_VERSION=1.5.2
@@ -50,7 +50,7 @@ GIT_REPO      ?= calico-private
 GIT_REMOTE    ?= origin
 
 RELEASE_BRANCH_PREFIX ?=release-calient
-DEV_TAG_SUFFIX        ?= calient-0.dev
+DEV_TAG_SUFFIX        ?= calient-1.dev
 
 # Part of the git remote that is common to git and HTTP representations.
 # Used to auto-detect the right remote.
@@ -116,11 +116,11 @@ BPFTOOL_IMAGE=calico/bpftool:v7.5.0
 NFT_RPMS_TAG=6eb1d57c0512
 
 # The operator branch corresponding to this branch.
-OPERATOR_BRANCH ?= release-v1.43
+OPERATOR_BRANCH ?= release-v1.43-2
 OPERATOR_ORGANIZATION ?= tigera
 OPERATOR_GIT_REPO     ?= operator
 # The manager branch corresponding to this branch.
-MANAGER_BRANCH ?= release-calient-v3.24-1
+MANAGER_BRANCH ?= release-calient-v3.24-2
 
 # quay.io expiry time for hashrelease/dev images
 QUAY_EXPIRE_DAYS=90

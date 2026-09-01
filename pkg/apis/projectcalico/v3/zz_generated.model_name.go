@@ -818,6 +818,71 @@ func (in KubeControllersConfigurationStatus) OpenAPIModelName() string {
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
+func (in L2BridgeDevice) OpenAPIModelName() string {
+	return "com.github.tigera.api.pkg.apis.projectcalico.v3.L2BridgeDevice"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in L2BridgeSpec) OpenAPIModelName() string {
+	return "com.github.tigera.api.pkg.apis.projectcalico.v3.L2BridgeSpec"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in L2ExistingBridge) OpenAPIModelName() string {
+	return "com.github.tigera.api.pkg.apis.projectcalico.v3.L2ExistingBridge"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in L2HostConfig) OpenAPIModelName() string {
+	return "com.github.tigera.api.pkg.apis.projectcalico.v3.L2HostConfig"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in L2HostConnection) OpenAPIModelName() string {
+	return "com.github.tigera.api.pkg.apis.projectcalico.v3.L2HostConnection"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in L2HostTrunkPort) OpenAPIModelName() string {
+	return "com.github.tigera.api.pkg.apis.projectcalico.v3.L2HostTrunkPort"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in L2ManagedBridge) OpenAPIModelName() string {
+	return "com.github.tigera.api.pkg.apis.projectcalico.v3.L2ManagedBridge"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in L2Route) OpenAPIModelName() string {
+	return "com.github.tigera.api.pkg.apis.projectcalico.v3.L2Route"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in L2RouteAction) OpenAPIModelName() string {
+	return "com.github.tigera.api.pkg.apis.projectcalico.v3.L2RouteAction"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in L2Subnet) OpenAPIModelName() string {
+	return "com.github.tigera.api.pkg.apis.projectcalico.v3.L2Subnet"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in L2VLANMatch) OpenAPIModelName() string {
+	return "com.github.tigera.api.pkg.apis.projectcalico.v3.L2VLANMatch"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in L2VLANRange) OpenAPIModelName() string {
+	return "com.github.tigera.api.pkg.apis.projectcalico.v3.L2VLANRange"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in L2VLANSpec) OpenAPIModelName() string {
+	return "com.github.tigera.api.pkg.apis.projectcalico.v3.L2VLANSpec"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
 func (in LicenseKey) OpenAPIModelName() string {
 	return "com.github.tigera.api.pkg.apis.projectcalico.v3.LicenseKey"
 }

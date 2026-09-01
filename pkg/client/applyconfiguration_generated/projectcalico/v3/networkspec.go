@@ -8,11 +8,16 @@ package v3
 // with apply.
 //
 // NetworkSpec contains the specification for a Network resource.  Exactly one of the
-// network-type fields (vrf, ...) must be set.
+// network-type fields (vrf, l2Bridge, ...) must be set.  The network type is immutable
+// after creation: a Network cannot be switched between types (e.g. vrf to l2Bridge).
 type NetworkSpecApplyConfiguration struct {
 	// VRF network configuration.
 	// Pods interfaces on a VRF network are isolated in a Linux VRF and can only access their own VRF.
 	VRF *VRFNetworkSpecApplyConfiguration `json:"vrf,omitempty"`
+	// L2Bridge configures a Layer 2 bridged network.  A Linux bridge on each
+	// participating node connects workload interfaces to VLAN segments
+	// carried by physical trunk interfaces.  See L2BridgeSpec.
+	L2Bridge *L2BridgeSpecApplyConfiguration `json:"l2Bridge,omitempty"`
 }
 
 // NetworkSpecApplyConfiguration constructs a declarative configuration of the NetworkSpec type for use with
@@ -26,5 +31,13 @@ func NetworkSpec() *NetworkSpecApplyConfiguration {
 // If called multiple times, the VRF field is set to the value of the last call.
 func (b *NetworkSpecApplyConfiguration) WithVRF(value *VRFNetworkSpecApplyConfiguration) *NetworkSpecApplyConfiguration {
 	b.VRF = value
+	return b
+}
+
+// WithL2Bridge sets the L2Bridge field in the declarative configuration to the given value
+// and returns the receiver, so that objects can be built by chaining "With" function invocations.
+// If called multiple times, the L2Bridge field is set to the value of the last call.
+func (b *NetworkSpecApplyConfiguration) WithL2Bridge(value *L2BridgeSpecApplyConfiguration) *NetworkSpecApplyConfiguration {
+	b.L2Bridge = value
 	return b
 }
