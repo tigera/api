@@ -20,11 +20,39 @@ import (
 )
 
 // ExternalNetworkInformer provides access to a shared informer and lister for
-// ExternalNetworks.
+// ExternalNetworks. Prefer using the type-safe variant (see [TypedExternalNetworkInformer]).
 type ExternalNetworkInformer interface {
 	Informer() cache.SharedIndexInformer
 	Lister() projectcalicov3.ExternalNetworkLister
 }
+
+// TypedExternalNetworkInformer provides access to a shared informer and lister for
+// ExternalNetworks, including the type-safe TypedInformer variant.
+// It is a superset of ExternalNetworkInformer.
+type TypedExternalNetworkInformer interface {
+	Informer() cache.SharedIndexInformer
+	TypedInformer() ExternalNetworkIndexInformer
+	Lister() projectcalicov3.ExternalNetworkLister
+}
+
+// ExternalNetworkIndexInformer is a wrapper around the underlying [cache.SharedIndexInformer]
+// with type-safe variants of several methods.
+type ExternalNetworkIndexInformer cache.TypedSharedIndexInformer[*apisprojectcalicov3.ExternalNetwork]
+
+// ExternalNetworkHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerFuncs] for ExternalNetwork.
+type ExternalNetworkHandlerFuncs = cache.TypedResourceEventHandlerFuncs[*apisprojectcalicov3.ExternalNetwork]
+
+// ExternalNetworkDetailedHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerDetailedFuncs] for ExternalNetwork.
+type ExternalNetworkDetailedHandlerFuncs = cache.TypedResourceEventHandlerDetailedFuncs[*apisprojectcalicov3.ExternalNetwork]
+
+// ExternalNetworkFilteringHandler is a specialization of [cache.TypedFilteringResourceEventHandler] for ExternalNetwork.
+type ExternalNetworkFilteringHandler = cache.TypedFilteringResourceEventHandler[*apisprojectcalicov3.ExternalNetwork]
+
+// ExternalNetworkIndexers is a specialization of [cache.TypedIndexers] for ExternalNetwork.
+type ExternalNetworkIndexers = cache.TypedIndexers[*apisprojectcalicov3.ExternalNetwork]
+
+// DeletedExternalNetwork is a specialization of [cache.DeletedObject] for ExternalNetwork.
+type DeletedExternalNetwork = cache.DeletedObject[*apisprojectcalicov3.ExternalNetwork]
 
 type externalNetworkInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
@@ -34,25 +62,49 @@ type externalNetworkInformer struct {
 // NewExternalNetworkInformer constructs a new informer for ExternalNetwork type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedExternalNetworkInformer]).
 func NewExternalNetworkInformer(client clientset.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
 	return NewExternalNetworkInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers})
+}
+
+// NewTypedExternalNetworkInformer constructs a new informer for ExternalNetwork type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedExternalNetworkInformer(client clientset.Interface, resyncPeriod time.Duration, indexers ExternalNetworkIndexers) ExternalNetworkIndexInformer {
+	return NewTypedExternalNetworkInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers)})
 }
 
 // NewFilteredExternalNetworkInformer constructs a new informer for ExternalNetwork type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedFilteredExternalNetworkInformer]).
 func NewFilteredExternalNetworkInformer(client clientset.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewExternalNetworkInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+	return NewTypedExternalNetworkInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+}
+
+// NewTypedFilteredExternalNetworkInformer constructs a new informer for ExternalNetwork type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedFilteredExternalNetworkInformer(client clientset.Interface, resyncPeriod time.Duration, indexers ExternalNetworkIndexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) ExternalNetworkIndexInformer {
+	return NewTypedExternalNetworkInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers), TweakListOptions: tweakListOptions})
 }
 
 // NewExternalNetworkInformerWithOptions constructs a new informer for ExternalNetwork type with additional options.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedExternalNetworkInformerWithOptions]).
 func NewExternalNetworkInformerWithOptions(client clientset.Interface, options internalinterfaces.InformerOptions) cache.SharedIndexInformer {
+	return NewTypedExternalNetworkInformerWithOptions(client, options)
+}
+
+// NewTypedExternalNetworkInformerWithOptions constructs a new informer for ExternalNetwork type with additional options.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedExternalNetworkInformerWithOptions(client clientset.Interface, options internalinterfaces.InformerOptions) ExternalNetworkIndexInformer {
 	gvr := schema.GroupVersionResource{Group: "projectcalico.org", Version: "v3", Resource: "externalnetworks"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
-	return cache.NewSharedIndexInformerWithOptions(
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.ExternalNetwork](cache.NewSharedIndexInformerWithOptions(
 		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(opts v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
@@ -85,17 +137,57 @@ func NewExternalNetworkInformerWithOptions(client clientset.Interface, options i
 			Indexers:     options.Indexers,
 			Identifier:   identifier,
 		},
-	)
+	))
 }
 
 func (f *externalNetworkInformer) defaultInformer(client clientset.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewExternalNetworkInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
+	return NewTypedExternalNetworkInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
 }
 
 func (f *externalNetworkInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apisprojectcalicov3.ExternalNetwork{}, f.defaultInformer)
+	return f.TypedInformer()
+}
+
+func (f *externalNetworkInformer) TypedInformer() ExternalNetworkIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.ExternalNetwork](f.factory.InformerFor(&apisprojectcalicov3.ExternalNetwork{}, f.defaultInformer))
 }
 
 func (f *externalNetworkInformer) Lister() projectcalicov3.ExternalNetworkLister {
 	return projectcalicov3.NewExternalNetworkLister(f.Informer().GetIndexer())
+}
+
+// ToTypedExternalNetworkInformer converts an untyped informer into a TypedExternalNetworkInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *ExternalNetwork. If that is not the case, calling type-safe methods of the returned
+// TypedExternalNetworkInformer leads to runtime panics. A safer alternative is to pass
+// around a TypedExternalNetworkInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToTypedExternalNetworkInformer(informer ExternalNetworkInformer) TypedExternalNetworkInformer {
+	if informer, ok := informer.(TypedExternalNetworkInformer); ok {
+		return informer
+	}
+	return &externalNetworkTypedInformerAdapter{informer}
+}
+
+type externalNetworkTypedInformerAdapter struct {
+	ExternalNetworkInformer
+}
+
+func (a *externalNetworkTypedInformerAdapter) TypedInformer() ExternalNetworkIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.ExternalNetwork](a.Informer())
+}
+
+// ToExternalNetworkIndexInformer converts an untyped informer into a ExternalNetworkIndexInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *ExternalNetwork. If that is not the case, calling type-safe methods of the returned
+// ExternalNetworkIndexInformer leads to runtime panics. A safer alternative is to pass
+// around a ExternalNetworkIndexInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToExternalNetworkIndexInformer(informer cache.SharedIndexInformer) ExternalNetworkIndexInformer {
+	if informer, ok := informer.(ExternalNetworkIndexInformer); ok {
+		return informer
+	}
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.ExternalNetwork](informer)
 }

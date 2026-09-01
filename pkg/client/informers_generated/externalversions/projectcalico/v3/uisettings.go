@@ -20,11 +20,39 @@ import (
 )
 
 // UISettingsInformer provides access to a shared informer and lister for
-// UISettings.
+// UISettings. Prefer using the type-safe variant (see [TypedUISettingsInformer]).
 type UISettingsInformer interface {
 	Informer() cache.SharedIndexInformer
 	Lister() projectcalicov3.UISettingsLister
 }
+
+// TypedUISettingsInformer provides access to a shared informer and lister for
+// UISettings, including the type-safe TypedInformer variant.
+// It is a superset of UISettingsInformer.
+type TypedUISettingsInformer interface {
+	Informer() cache.SharedIndexInformer
+	TypedInformer() UISettingsIndexInformer
+	Lister() projectcalicov3.UISettingsLister
+}
+
+// UISettingsIndexInformer is a wrapper around the underlying [cache.SharedIndexInformer]
+// with type-safe variants of several methods.
+type UISettingsIndexInformer cache.TypedSharedIndexInformer[*apisprojectcalicov3.UISettings]
+
+// UISettingsHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerFuncs] for UISettings.
+type UISettingsHandlerFuncs = cache.TypedResourceEventHandlerFuncs[*apisprojectcalicov3.UISettings]
+
+// UISettingsDetailedHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerDetailedFuncs] for UISettings.
+type UISettingsDetailedHandlerFuncs = cache.TypedResourceEventHandlerDetailedFuncs[*apisprojectcalicov3.UISettings]
+
+// UISettingsFilteringHandler is a specialization of [cache.TypedFilteringResourceEventHandler] for UISettings.
+type UISettingsFilteringHandler = cache.TypedFilteringResourceEventHandler[*apisprojectcalicov3.UISettings]
+
+// UISettingsIndexers is a specialization of [cache.TypedIndexers] for UISettings.
+type UISettingsIndexers = cache.TypedIndexers[*apisprojectcalicov3.UISettings]
+
+// DeletedUISettings is a specialization of [cache.DeletedObject] for UISettings.
+type DeletedUISettings = cache.DeletedObject[*apisprojectcalicov3.UISettings]
 
 type uISettingsInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
@@ -34,25 +62,49 @@ type uISettingsInformer struct {
 // NewUISettingsInformer constructs a new informer for UISettings type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedUISettingsInformer]).
 func NewUISettingsInformer(client clientset.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
 	return NewUISettingsInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers})
+}
+
+// NewTypedUISettingsInformer constructs a new informer for UISettings type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedUISettingsInformer(client clientset.Interface, resyncPeriod time.Duration, indexers UISettingsIndexers) UISettingsIndexInformer {
+	return NewTypedUISettingsInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers)})
 }
 
 // NewFilteredUISettingsInformer constructs a new informer for UISettings type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedFilteredUISettingsInformer]).
 func NewFilteredUISettingsInformer(client clientset.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewUISettingsInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+	return NewTypedUISettingsInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+}
+
+// NewTypedFilteredUISettingsInformer constructs a new informer for UISettings type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedFilteredUISettingsInformer(client clientset.Interface, resyncPeriod time.Duration, indexers UISettingsIndexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) UISettingsIndexInformer {
+	return NewTypedUISettingsInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers), TweakListOptions: tweakListOptions})
 }
 
 // NewUISettingsInformerWithOptions constructs a new informer for UISettings type with additional options.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedUISettingsInformerWithOptions]).
 func NewUISettingsInformerWithOptions(client clientset.Interface, options internalinterfaces.InformerOptions) cache.SharedIndexInformer {
+	return NewTypedUISettingsInformerWithOptions(client, options)
+}
+
+// NewTypedUISettingsInformerWithOptions constructs a new informer for UISettings type with additional options.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedUISettingsInformerWithOptions(client clientset.Interface, options internalinterfaces.InformerOptions) UISettingsIndexInformer {
 	gvr := schema.GroupVersionResource{Group: "projectcalico.org", Version: "v3", Resource: "uisettings"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
-	return cache.NewSharedIndexInformerWithOptions(
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.UISettings](cache.NewSharedIndexInformerWithOptions(
 		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(opts v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
@@ -85,17 +137,57 @@ func NewUISettingsInformerWithOptions(client clientset.Interface, options intern
 			Indexers:     options.Indexers,
 			Identifier:   identifier,
 		},
-	)
+	))
 }
 
 func (f *uISettingsInformer) defaultInformer(client clientset.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewUISettingsInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
+	return NewTypedUISettingsInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
 }
 
 func (f *uISettingsInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apisprojectcalicov3.UISettings{}, f.defaultInformer)
+	return f.TypedInformer()
+}
+
+func (f *uISettingsInformer) TypedInformer() UISettingsIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.UISettings](f.factory.InformerFor(&apisprojectcalicov3.UISettings{}, f.defaultInformer))
 }
 
 func (f *uISettingsInformer) Lister() projectcalicov3.UISettingsLister {
 	return projectcalicov3.NewUISettingsLister(f.Informer().GetIndexer())
+}
+
+// ToTypedUISettingsInformer converts an untyped informer into a TypedUISettingsInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *UISettings. If that is not the case, calling type-safe methods of the returned
+// TypedUISettingsInformer leads to runtime panics. A safer alternative is to pass
+// around a TypedUISettingsInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToTypedUISettingsInformer(informer UISettingsInformer) TypedUISettingsInformer {
+	if informer, ok := informer.(TypedUISettingsInformer); ok {
+		return informer
+	}
+	return &uISettingsTypedInformerAdapter{informer}
+}
+
+type uISettingsTypedInformerAdapter struct {
+	UISettingsInformer
+}
+
+func (a *uISettingsTypedInformerAdapter) TypedInformer() UISettingsIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.UISettings](a.Informer())
+}
+
+// ToUISettingsIndexInformer converts an untyped informer into a UISettingsIndexInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *UISettings. If that is not the case, calling type-safe methods of the returned
+// UISettingsIndexInformer leads to runtime panics. A safer alternative is to pass
+// around a UISettingsIndexInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToUISettingsIndexInformer(informer cache.SharedIndexInformer) UISettingsIndexInformer {
+	if informer, ok := informer.(UISettingsIndexInformer); ok {
+		return informer
+	}
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.UISettings](informer)
 }

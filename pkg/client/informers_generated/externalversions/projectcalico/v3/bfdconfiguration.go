@@ -20,11 +20,39 @@ import (
 )
 
 // BFDConfigurationInformer provides access to a shared informer and lister for
-// BFDConfigurations.
+// BFDConfigurations. Prefer using the type-safe variant (see [TypedBFDConfigurationInformer]).
 type BFDConfigurationInformer interface {
 	Informer() cache.SharedIndexInformer
 	Lister() projectcalicov3.BFDConfigurationLister
 }
+
+// TypedBFDConfigurationInformer provides access to a shared informer and lister for
+// BFDConfigurations, including the type-safe TypedInformer variant.
+// It is a superset of BFDConfigurationInformer.
+type TypedBFDConfigurationInformer interface {
+	Informer() cache.SharedIndexInformer
+	TypedInformer() BFDConfigurationIndexInformer
+	Lister() projectcalicov3.BFDConfigurationLister
+}
+
+// BFDConfigurationIndexInformer is a wrapper around the underlying [cache.SharedIndexInformer]
+// with type-safe variants of several methods.
+type BFDConfigurationIndexInformer cache.TypedSharedIndexInformer[*apisprojectcalicov3.BFDConfiguration]
+
+// BFDConfigurationHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerFuncs] for BFDConfiguration.
+type BFDConfigurationHandlerFuncs = cache.TypedResourceEventHandlerFuncs[*apisprojectcalicov3.BFDConfiguration]
+
+// BFDConfigurationDetailedHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerDetailedFuncs] for BFDConfiguration.
+type BFDConfigurationDetailedHandlerFuncs = cache.TypedResourceEventHandlerDetailedFuncs[*apisprojectcalicov3.BFDConfiguration]
+
+// BFDConfigurationFilteringHandler is a specialization of [cache.TypedFilteringResourceEventHandler] for BFDConfiguration.
+type BFDConfigurationFilteringHandler = cache.TypedFilteringResourceEventHandler[*apisprojectcalicov3.BFDConfiguration]
+
+// BFDConfigurationIndexers is a specialization of [cache.TypedIndexers] for BFDConfiguration.
+type BFDConfigurationIndexers = cache.TypedIndexers[*apisprojectcalicov3.BFDConfiguration]
+
+// DeletedBFDConfiguration is a specialization of [cache.DeletedObject] for BFDConfiguration.
+type DeletedBFDConfiguration = cache.DeletedObject[*apisprojectcalicov3.BFDConfiguration]
 
 type bFDConfigurationInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
@@ -34,25 +62,49 @@ type bFDConfigurationInformer struct {
 // NewBFDConfigurationInformer constructs a new informer for BFDConfiguration type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedBFDConfigurationInformer]).
 func NewBFDConfigurationInformer(client clientset.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
 	return NewBFDConfigurationInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers})
+}
+
+// NewTypedBFDConfigurationInformer constructs a new informer for BFDConfiguration type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedBFDConfigurationInformer(client clientset.Interface, resyncPeriod time.Duration, indexers BFDConfigurationIndexers) BFDConfigurationIndexInformer {
+	return NewTypedBFDConfigurationInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers)})
 }
 
 // NewFilteredBFDConfigurationInformer constructs a new informer for BFDConfiguration type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedFilteredBFDConfigurationInformer]).
 func NewFilteredBFDConfigurationInformer(client clientset.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewBFDConfigurationInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+	return NewTypedBFDConfigurationInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+}
+
+// NewTypedFilteredBFDConfigurationInformer constructs a new informer for BFDConfiguration type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedFilteredBFDConfigurationInformer(client clientset.Interface, resyncPeriod time.Duration, indexers BFDConfigurationIndexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) BFDConfigurationIndexInformer {
+	return NewTypedBFDConfigurationInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers), TweakListOptions: tweakListOptions})
 }
 
 // NewBFDConfigurationInformerWithOptions constructs a new informer for BFDConfiguration type with additional options.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedBFDConfigurationInformerWithOptions]).
 func NewBFDConfigurationInformerWithOptions(client clientset.Interface, options internalinterfaces.InformerOptions) cache.SharedIndexInformer {
+	return NewTypedBFDConfigurationInformerWithOptions(client, options)
+}
+
+// NewTypedBFDConfigurationInformerWithOptions constructs a new informer for BFDConfiguration type with additional options.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedBFDConfigurationInformerWithOptions(client clientset.Interface, options internalinterfaces.InformerOptions) BFDConfigurationIndexInformer {
 	gvr := schema.GroupVersionResource{Group: "projectcalico.org", Version: "v3", Resource: "bfdconfigurations"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
-	return cache.NewSharedIndexInformerWithOptions(
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.BFDConfiguration](cache.NewSharedIndexInformerWithOptions(
 		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(opts v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
@@ -85,17 +137,57 @@ func NewBFDConfigurationInformerWithOptions(client clientset.Interface, options 
 			Indexers:     options.Indexers,
 			Identifier:   identifier,
 		},
-	)
+	))
 }
 
 func (f *bFDConfigurationInformer) defaultInformer(client clientset.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewBFDConfigurationInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
+	return NewTypedBFDConfigurationInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
 }
 
 func (f *bFDConfigurationInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apisprojectcalicov3.BFDConfiguration{}, f.defaultInformer)
+	return f.TypedInformer()
+}
+
+func (f *bFDConfigurationInformer) TypedInformer() BFDConfigurationIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.BFDConfiguration](f.factory.InformerFor(&apisprojectcalicov3.BFDConfiguration{}, f.defaultInformer))
 }
 
 func (f *bFDConfigurationInformer) Lister() projectcalicov3.BFDConfigurationLister {
 	return projectcalicov3.NewBFDConfigurationLister(f.Informer().GetIndexer())
+}
+
+// ToTypedBFDConfigurationInformer converts an untyped informer into a TypedBFDConfigurationInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *BFDConfiguration. If that is not the case, calling type-safe methods of the returned
+// TypedBFDConfigurationInformer leads to runtime panics. A safer alternative is to pass
+// around a TypedBFDConfigurationInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToTypedBFDConfigurationInformer(informer BFDConfigurationInformer) TypedBFDConfigurationInformer {
+	if informer, ok := informer.(TypedBFDConfigurationInformer); ok {
+		return informer
+	}
+	return &bFDConfigurationTypedInformerAdapter{informer}
+}
+
+type bFDConfigurationTypedInformerAdapter struct {
+	BFDConfigurationInformer
+}
+
+func (a *bFDConfigurationTypedInformerAdapter) TypedInformer() BFDConfigurationIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.BFDConfiguration](a.Informer())
+}
+
+// ToBFDConfigurationIndexInformer converts an untyped informer into a BFDConfigurationIndexInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *BFDConfiguration. If that is not the case, calling type-safe methods of the returned
+// BFDConfigurationIndexInformer leads to runtime panics. A safer alternative is to pass
+// around a BFDConfigurationIndexInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToBFDConfigurationIndexInformer(informer cache.SharedIndexInformer) BFDConfigurationIndexInformer {
+	if informer, ok := informer.(BFDConfigurationIndexInformer); ok {
+		return informer
+	}
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.BFDConfiguration](informer)
 }

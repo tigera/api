@@ -20,11 +20,39 @@ import (
 )
 
 // PacketCaptureInformer provides access to a shared informer and lister for
-// PacketCaptures.
+// PacketCaptures. Prefer using the type-safe variant (see [TypedPacketCaptureInformer]).
 type PacketCaptureInformer interface {
 	Informer() cache.SharedIndexInformer
 	Lister() projectcalicov3.PacketCaptureLister
 }
+
+// TypedPacketCaptureInformer provides access to a shared informer and lister for
+// PacketCaptures, including the type-safe TypedInformer variant.
+// It is a superset of PacketCaptureInformer.
+type TypedPacketCaptureInformer interface {
+	Informer() cache.SharedIndexInformer
+	TypedInformer() PacketCaptureIndexInformer
+	Lister() projectcalicov3.PacketCaptureLister
+}
+
+// PacketCaptureIndexInformer is a wrapper around the underlying [cache.SharedIndexInformer]
+// with type-safe variants of several methods.
+type PacketCaptureIndexInformer cache.TypedSharedIndexInformer[*apisprojectcalicov3.PacketCapture]
+
+// PacketCaptureHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerFuncs] for PacketCapture.
+type PacketCaptureHandlerFuncs = cache.TypedResourceEventHandlerFuncs[*apisprojectcalicov3.PacketCapture]
+
+// PacketCaptureDetailedHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerDetailedFuncs] for PacketCapture.
+type PacketCaptureDetailedHandlerFuncs = cache.TypedResourceEventHandlerDetailedFuncs[*apisprojectcalicov3.PacketCapture]
+
+// PacketCaptureFilteringHandler is a specialization of [cache.TypedFilteringResourceEventHandler] for PacketCapture.
+type PacketCaptureFilteringHandler = cache.TypedFilteringResourceEventHandler[*apisprojectcalicov3.PacketCapture]
+
+// PacketCaptureIndexers is a specialization of [cache.TypedIndexers] for PacketCapture.
+type PacketCaptureIndexers = cache.TypedIndexers[*apisprojectcalicov3.PacketCapture]
+
+// DeletedPacketCapture is a specialization of [cache.DeletedObject] for PacketCapture.
+type DeletedPacketCapture = cache.DeletedObject[*apisprojectcalicov3.PacketCapture]
 
 type packetCaptureInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
@@ -35,25 +63,49 @@ type packetCaptureInformer struct {
 // NewPacketCaptureInformer constructs a new informer for PacketCapture type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedPacketCaptureInformer]).
 func NewPacketCaptureInformer(client clientset.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
 	return NewPacketCaptureInformerWithOptions(client, namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers})
+}
+
+// NewTypedPacketCaptureInformer constructs a new informer for PacketCapture type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedPacketCaptureInformer(client clientset.Interface, namespace string, resyncPeriod time.Duration, indexers PacketCaptureIndexers) PacketCaptureIndexInformer {
+	return NewTypedPacketCaptureInformerWithOptions(client, namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers)})
 }
 
 // NewFilteredPacketCaptureInformer constructs a new informer for PacketCapture type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedFilteredPacketCaptureInformer]).
 func NewFilteredPacketCaptureInformer(client clientset.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewPacketCaptureInformerWithOptions(client, namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+	return NewTypedPacketCaptureInformerWithOptions(client, namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+}
+
+// NewTypedFilteredPacketCaptureInformer constructs a new informer for PacketCapture type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedFilteredPacketCaptureInformer(client clientset.Interface, namespace string, resyncPeriod time.Duration, indexers PacketCaptureIndexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) PacketCaptureIndexInformer {
+	return NewTypedPacketCaptureInformerWithOptions(client, namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers), TweakListOptions: tweakListOptions})
 }
 
 // NewPacketCaptureInformerWithOptions constructs a new informer for PacketCapture type with additional options.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedPacketCaptureInformerWithOptions]).
 func NewPacketCaptureInformerWithOptions(client clientset.Interface, namespace string, options internalinterfaces.InformerOptions) cache.SharedIndexInformer {
+	return NewTypedPacketCaptureInformerWithOptions(client, namespace, options)
+}
+
+// NewTypedPacketCaptureInformerWithOptions constructs a new informer for PacketCapture type with additional options.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedPacketCaptureInformerWithOptions(client clientset.Interface, namespace string, options internalinterfaces.InformerOptions) PacketCaptureIndexInformer {
 	gvr := schema.GroupVersionResource{Group: "projectcalico.org", Version: "v3", Resource: "packetcaptures"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
-	return cache.NewSharedIndexInformerWithOptions(
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.PacketCapture](cache.NewSharedIndexInformerWithOptions(
 		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(opts v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
@@ -86,17 +138,57 @@ func NewPacketCaptureInformerWithOptions(client clientset.Interface, namespace s
 			Indexers:     options.Indexers,
 			Identifier:   identifier,
 		},
-	)
+	))
 }
 
 func (f *packetCaptureInformer) defaultInformer(client clientset.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewPacketCaptureInformerWithOptions(client, f.namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
+	return NewTypedPacketCaptureInformerWithOptions(client, f.namespace, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
 }
 
 func (f *packetCaptureInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apisprojectcalicov3.PacketCapture{}, f.defaultInformer)
+	return f.TypedInformer()
+}
+
+func (f *packetCaptureInformer) TypedInformer() PacketCaptureIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.PacketCapture](f.factory.InformerFor(&apisprojectcalicov3.PacketCapture{}, f.defaultInformer))
 }
 
 func (f *packetCaptureInformer) Lister() projectcalicov3.PacketCaptureLister {
 	return projectcalicov3.NewPacketCaptureLister(f.Informer().GetIndexer())
+}
+
+// ToTypedPacketCaptureInformer converts an untyped informer into a TypedPacketCaptureInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *PacketCapture. If that is not the case, calling type-safe methods of the returned
+// TypedPacketCaptureInformer leads to runtime panics. A safer alternative is to pass
+// around a TypedPacketCaptureInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToTypedPacketCaptureInformer(informer PacketCaptureInformer) TypedPacketCaptureInformer {
+	if informer, ok := informer.(TypedPacketCaptureInformer); ok {
+		return informer
+	}
+	return &packetCaptureTypedInformerAdapter{informer}
+}
+
+type packetCaptureTypedInformerAdapter struct {
+	PacketCaptureInformer
+}
+
+func (a *packetCaptureTypedInformerAdapter) TypedInformer() PacketCaptureIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.PacketCapture](a.Informer())
+}
+
+// ToPacketCaptureIndexInformer converts an untyped informer into a PacketCaptureIndexInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *PacketCapture. If that is not the case, calling type-safe methods of the returned
+// PacketCaptureIndexInformer leads to runtime panics. A safer alternative is to pass
+// around a PacketCaptureIndexInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToPacketCaptureIndexInformer(informer cache.SharedIndexInformer) PacketCaptureIndexInformer {
+	if informer, ok := informer.(PacketCaptureIndexInformer); ok {
+		return informer
+	}
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.PacketCapture](informer)
 }

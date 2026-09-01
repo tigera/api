@@ -20,11 +20,39 @@ import (
 )
 
 // RemoteClusterConfigurationInformer provides access to a shared informer and lister for
-// RemoteClusterConfigurations.
+// RemoteClusterConfigurations. Prefer using the type-safe variant (see [TypedRemoteClusterConfigurationInformer]).
 type RemoteClusterConfigurationInformer interface {
 	Informer() cache.SharedIndexInformer
 	Lister() projectcalicov3.RemoteClusterConfigurationLister
 }
+
+// TypedRemoteClusterConfigurationInformer provides access to a shared informer and lister for
+// RemoteClusterConfigurations, including the type-safe TypedInformer variant.
+// It is a superset of RemoteClusterConfigurationInformer.
+type TypedRemoteClusterConfigurationInformer interface {
+	Informer() cache.SharedIndexInformer
+	TypedInformer() RemoteClusterConfigurationIndexInformer
+	Lister() projectcalicov3.RemoteClusterConfigurationLister
+}
+
+// RemoteClusterConfigurationIndexInformer is a wrapper around the underlying [cache.SharedIndexInformer]
+// with type-safe variants of several methods.
+type RemoteClusterConfigurationIndexInformer cache.TypedSharedIndexInformer[*apisprojectcalicov3.RemoteClusterConfiguration]
+
+// RemoteClusterConfigurationHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerFuncs] for RemoteClusterConfiguration.
+type RemoteClusterConfigurationHandlerFuncs = cache.TypedResourceEventHandlerFuncs[*apisprojectcalicov3.RemoteClusterConfiguration]
+
+// RemoteClusterConfigurationDetailedHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerDetailedFuncs] for RemoteClusterConfiguration.
+type RemoteClusterConfigurationDetailedHandlerFuncs = cache.TypedResourceEventHandlerDetailedFuncs[*apisprojectcalicov3.RemoteClusterConfiguration]
+
+// RemoteClusterConfigurationFilteringHandler is a specialization of [cache.TypedFilteringResourceEventHandler] for RemoteClusterConfiguration.
+type RemoteClusterConfigurationFilteringHandler = cache.TypedFilteringResourceEventHandler[*apisprojectcalicov3.RemoteClusterConfiguration]
+
+// RemoteClusterConfigurationIndexers is a specialization of [cache.TypedIndexers] for RemoteClusterConfiguration.
+type RemoteClusterConfigurationIndexers = cache.TypedIndexers[*apisprojectcalicov3.RemoteClusterConfiguration]
+
+// DeletedRemoteClusterConfiguration is a specialization of [cache.DeletedObject] for RemoteClusterConfiguration.
+type DeletedRemoteClusterConfiguration = cache.DeletedObject[*apisprojectcalicov3.RemoteClusterConfiguration]
 
 type remoteClusterConfigurationInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
@@ -34,25 +62,49 @@ type remoteClusterConfigurationInformer struct {
 // NewRemoteClusterConfigurationInformer constructs a new informer for RemoteClusterConfiguration type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedRemoteClusterConfigurationInformer]).
 func NewRemoteClusterConfigurationInformer(client clientset.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
 	return NewRemoteClusterConfigurationInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers})
+}
+
+// NewTypedRemoteClusterConfigurationInformer constructs a new informer for RemoteClusterConfiguration type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedRemoteClusterConfigurationInformer(client clientset.Interface, resyncPeriod time.Duration, indexers RemoteClusterConfigurationIndexers) RemoteClusterConfigurationIndexInformer {
+	return NewTypedRemoteClusterConfigurationInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers)})
 }
 
 // NewFilteredRemoteClusterConfigurationInformer constructs a new informer for RemoteClusterConfiguration type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedFilteredRemoteClusterConfigurationInformer]).
 func NewFilteredRemoteClusterConfigurationInformer(client clientset.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewRemoteClusterConfigurationInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+	return NewTypedRemoteClusterConfigurationInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+}
+
+// NewTypedFilteredRemoteClusterConfigurationInformer constructs a new informer for RemoteClusterConfiguration type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedFilteredRemoteClusterConfigurationInformer(client clientset.Interface, resyncPeriod time.Duration, indexers RemoteClusterConfigurationIndexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) RemoteClusterConfigurationIndexInformer {
+	return NewTypedRemoteClusterConfigurationInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers), TweakListOptions: tweakListOptions})
 }
 
 // NewRemoteClusterConfigurationInformerWithOptions constructs a new informer for RemoteClusterConfiguration type with additional options.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedRemoteClusterConfigurationInformerWithOptions]).
 func NewRemoteClusterConfigurationInformerWithOptions(client clientset.Interface, options internalinterfaces.InformerOptions) cache.SharedIndexInformer {
+	return NewTypedRemoteClusterConfigurationInformerWithOptions(client, options)
+}
+
+// NewTypedRemoteClusterConfigurationInformerWithOptions constructs a new informer for RemoteClusterConfiguration type with additional options.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedRemoteClusterConfigurationInformerWithOptions(client clientset.Interface, options internalinterfaces.InformerOptions) RemoteClusterConfigurationIndexInformer {
 	gvr := schema.GroupVersionResource{Group: "projectcalico.org", Version: "v3", Resource: "remoteclusterconfigurations"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
-	return cache.NewSharedIndexInformerWithOptions(
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.RemoteClusterConfiguration](cache.NewSharedIndexInformerWithOptions(
 		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(opts v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
@@ -85,17 +137,57 @@ func NewRemoteClusterConfigurationInformerWithOptions(client clientset.Interface
 			Indexers:     options.Indexers,
 			Identifier:   identifier,
 		},
-	)
+	))
 }
 
 func (f *remoteClusterConfigurationInformer) defaultInformer(client clientset.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewRemoteClusterConfigurationInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
+	return NewTypedRemoteClusterConfigurationInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
 }
 
 func (f *remoteClusterConfigurationInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apisprojectcalicov3.RemoteClusterConfiguration{}, f.defaultInformer)
+	return f.TypedInformer()
+}
+
+func (f *remoteClusterConfigurationInformer) TypedInformer() RemoteClusterConfigurationIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.RemoteClusterConfiguration](f.factory.InformerFor(&apisprojectcalicov3.RemoteClusterConfiguration{}, f.defaultInformer))
 }
 
 func (f *remoteClusterConfigurationInformer) Lister() projectcalicov3.RemoteClusterConfigurationLister {
 	return projectcalicov3.NewRemoteClusterConfigurationLister(f.Informer().GetIndexer())
+}
+
+// ToTypedRemoteClusterConfigurationInformer converts an untyped informer into a TypedRemoteClusterConfigurationInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *RemoteClusterConfiguration. If that is not the case, calling type-safe methods of the returned
+// TypedRemoteClusterConfigurationInformer leads to runtime panics. A safer alternative is to pass
+// around a TypedRemoteClusterConfigurationInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToTypedRemoteClusterConfigurationInformer(informer RemoteClusterConfigurationInformer) TypedRemoteClusterConfigurationInformer {
+	if informer, ok := informer.(TypedRemoteClusterConfigurationInformer); ok {
+		return informer
+	}
+	return &remoteClusterConfigurationTypedInformerAdapter{informer}
+}
+
+type remoteClusterConfigurationTypedInformerAdapter struct {
+	RemoteClusterConfigurationInformer
+}
+
+func (a *remoteClusterConfigurationTypedInformerAdapter) TypedInformer() RemoteClusterConfigurationIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.RemoteClusterConfiguration](a.Informer())
+}
+
+// ToRemoteClusterConfigurationIndexInformer converts an untyped informer into a RemoteClusterConfigurationIndexInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *RemoteClusterConfiguration. If that is not the case, calling type-safe methods of the returned
+// RemoteClusterConfigurationIndexInformer leads to runtime panics. A safer alternative is to pass
+// around a RemoteClusterConfigurationIndexInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToRemoteClusterConfigurationIndexInformer(informer cache.SharedIndexInformer) RemoteClusterConfigurationIndexInformer {
+	if informer, ok := informer.(RemoteClusterConfigurationIndexInformer); ok {
+		return informer
+	}
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.RemoteClusterConfiguration](informer)
 }

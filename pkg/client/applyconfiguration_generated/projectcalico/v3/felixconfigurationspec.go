@@ -1182,6 +1182,7 @@ type FelixConfigurationSpecApplyConfiguration struct {
 	TPROXYUpstreamConnMark *uint32 `json:"tproxyUpstreamConnMark,omitempty"`
 	// FloatingIPs configures whether or not Felix will program non-OpenStack floating IP addresses.  (OpenStack-derived
 	// floating IPs are always programmed, regardless of this setting.)
+	//
 	FloatingIPs *projectcalicov3.FloatingIPType `json:"floatingIPs,omitempty"`
 	// LocalSubnetL2Reachability controls whether Felix automatically responds to
 	// ARP (IPv4) and NDP (IPv6) requests on host interfaces for local pod IPs and

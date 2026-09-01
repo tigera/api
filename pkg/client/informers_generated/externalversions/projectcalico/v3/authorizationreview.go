@@ -20,11 +20,39 @@ import (
 )
 
 // AuthorizationReviewInformer provides access to a shared informer and lister for
-// AuthorizationReviews.
+// AuthorizationReviews. Prefer using the type-safe variant (see [TypedAuthorizationReviewInformer]).
 type AuthorizationReviewInformer interface {
 	Informer() cache.SharedIndexInformer
 	Lister() projectcalicov3.AuthorizationReviewLister
 }
+
+// TypedAuthorizationReviewInformer provides access to a shared informer and lister for
+// AuthorizationReviews, including the type-safe TypedInformer variant.
+// It is a superset of AuthorizationReviewInformer.
+type TypedAuthorizationReviewInformer interface {
+	Informer() cache.SharedIndexInformer
+	TypedInformer() AuthorizationReviewIndexInformer
+	Lister() projectcalicov3.AuthorizationReviewLister
+}
+
+// AuthorizationReviewIndexInformer is a wrapper around the underlying [cache.SharedIndexInformer]
+// with type-safe variants of several methods.
+type AuthorizationReviewIndexInformer cache.TypedSharedIndexInformer[*apisprojectcalicov3.AuthorizationReview]
+
+// AuthorizationReviewHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerFuncs] for AuthorizationReview.
+type AuthorizationReviewHandlerFuncs = cache.TypedResourceEventHandlerFuncs[*apisprojectcalicov3.AuthorizationReview]
+
+// AuthorizationReviewDetailedHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerDetailedFuncs] for AuthorizationReview.
+type AuthorizationReviewDetailedHandlerFuncs = cache.TypedResourceEventHandlerDetailedFuncs[*apisprojectcalicov3.AuthorizationReview]
+
+// AuthorizationReviewFilteringHandler is a specialization of [cache.TypedFilteringResourceEventHandler] for AuthorizationReview.
+type AuthorizationReviewFilteringHandler = cache.TypedFilteringResourceEventHandler[*apisprojectcalicov3.AuthorizationReview]
+
+// AuthorizationReviewIndexers is a specialization of [cache.TypedIndexers] for AuthorizationReview.
+type AuthorizationReviewIndexers = cache.TypedIndexers[*apisprojectcalicov3.AuthorizationReview]
+
+// DeletedAuthorizationReview is a specialization of [cache.DeletedObject] for AuthorizationReview.
+type DeletedAuthorizationReview = cache.DeletedObject[*apisprojectcalicov3.AuthorizationReview]
 
 type authorizationReviewInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
@@ -34,25 +62,49 @@ type authorizationReviewInformer struct {
 // NewAuthorizationReviewInformer constructs a new informer for AuthorizationReview type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedAuthorizationReviewInformer]).
 func NewAuthorizationReviewInformer(client clientset.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
 	return NewAuthorizationReviewInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers})
+}
+
+// NewTypedAuthorizationReviewInformer constructs a new informer for AuthorizationReview type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedAuthorizationReviewInformer(client clientset.Interface, resyncPeriod time.Duration, indexers AuthorizationReviewIndexers) AuthorizationReviewIndexInformer {
+	return NewTypedAuthorizationReviewInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers)})
 }
 
 // NewFilteredAuthorizationReviewInformer constructs a new informer for AuthorizationReview type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedFilteredAuthorizationReviewInformer]).
 func NewFilteredAuthorizationReviewInformer(client clientset.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewAuthorizationReviewInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+	return NewTypedAuthorizationReviewInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+}
+
+// NewTypedFilteredAuthorizationReviewInformer constructs a new informer for AuthorizationReview type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedFilteredAuthorizationReviewInformer(client clientset.Interface, resyncPeriod time.Duration, indexers AuthorizationReviewIndexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) AuthorizationReviewIndexInformer {
+	return NewTypedAuthorizationReviewInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers), TweakListOptions: tweakListOptions})
 }
 
 // NewAuthorizationReviewInformerWithOptions constructs a new informer for AuthorizationReview type with additional options.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedAuthorizationReviewInformerWithOptions]).
 func NewAuthorizationReviewInformerWithOptions(client clientset.Interface, options internalinterfaces.InformerOptions) cache.SharedIndexInformer {
+	return NewTypedAuthorizationReviewInformerWithOptions(client, options)
+}
+
+// NewTypedAuthorizationReviewInformerWithOptions constructs a new informer for AuthorizationReview type with additional options.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedAuthorizationReviewInformerWithOptions(client clientset.Interface, options internalinterfaces.InformerOptions) AuthorizationReviewIndexInformer {
 	gvr := schema.GroupVersionResource{Group: "projectcalico.org", Version: "v3", Resource: "authorizationreviews"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
-	return cache.NewSharedIndexInformerWithOptions(
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.AuthorizationReview](cache.NewSharedIndexInformerWithOptions(
 		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(opts v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
@@ -85,17 +137,57 @@ func NewAuthorizationReviewInformerWithOptions(client clientset.Interface, optio
 			Indexers:     options.Indexers,
 			Identifier:   identifier,
 		},
-	)
+	))
 }
 
 func (f *authorizationReviewInformer) defaultInformer(client clientset.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewAuthorizationReviewInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
+	return NewTypedAuthorizationReviewInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
 }
 
 func (f *authorizationReviewInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apisprojectcalicov3.AuthorizationReview{}, f.defaultInformer)
+	return f.TypedInformer()
+}
+
+func (f *authorizationReviewInformer) TypedInformer() AuthorizationReviewIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.AuthorizationReview](f.factory.InformerFor(&apisprojectcalicov3.AuthorizationReview{}, f.defaultInformer))
 }
 
 func (f *authorizationReviewInformer) Lister() projectcalicov3.AuthorizationReviewLister {
 	return projectcalicov3.NewAuthorizationReviewLister(f.Informer().GetIndexer())
+}
+
+// ToTypedAuthorizationReviewInformer converts an untyped informer into a TypedAuthorizationReviewInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *AuthorizationReview. If that is not the case, calling type-safe methods of the returned
+// TypedAuthorizationReviewInformer leads to runtime panics. A safer alternative is to pass
+// around a TypedAuthorizationReviewInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToTypedAuthorizationReviewInformer(informer AuthorizationReviewInformer) TypedAuthorizationReviewInformer {
+	if informer, ok := informer.(TypedAuthorizationReviewInformer); ok {
+		return informer
+	}
+	return &authorizationReviewTypedInformerAdapter{informer}
+}
+
+type authorizationReviewTypedInformerAdapter struct {
+	AuthorizationReviewInformer
+}
+
+func (a *authorizationReviewTypedInformerAdapter) TypedInformer() AuthorizationReviewIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.AuthorizationReview](a.Informer())
+}
+
+// ToAuthorizationReviewIndexInformer converts an untyped informer into a AuthorizationReviewIndexInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *AuthorizationReview. If that is not the case, calling type-safe methods of the returned
+// AuthorizationReviewIndexInformer leads to runtime panics. A safer alternative is to pass
+// around a AuthorizationReviewIndexInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToAuthorizationReviewIndexInformer(informer cache.SharedIndexInformer) AuthorizationReviewIndexInformer {
+	if informer, ok := informer.(AuthorizationReviewIndexInformer); ok {
+		return informer
+	}
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.AuthorizationReview](informer)
 }
