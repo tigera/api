@@ -20,11 +20,39 @@ import (
 )
 
 // GlobalThreatFeedInformer provides access to a shared informer and lister for
-// GlobalThreatFeeds.
+// GlobalThreatFeeds. Prefer using the type-safe variant (see [TypedGlobalThreatFeedInformer]).
 type GlobalThreatFeedInformer interface {
 	Informer() cache.SharedIndexInformer
 	Lister() projectcalicov3.GlobalThreatFeedLister
 }
+
+// TypedGlobalThreatFeedInformer provides access to a shared informer and lister for
+// GlobalThreatFeeds, including the type-safe TypedInformer variant.
+// It is a superset of GlobalThreatFeedInformer.
+type TypedGlobalThreatFeedInformer interface {
+	Informer() cache.SharedIndexInformer
+	TypedInformer() GlobalThreatFeedIndexInformer
+	Lister() projectcalicov3.GlobalThreatFeedLister
+}
+
+// GlobalThreatFeedIndexInformer is a wrapper around the underlying [cache.SharedIndexInformer]
+// with type-safe variants of several methods.
+type GlobalThreatFeedIndexInformer cache.TypedSharedIndexInformer[*apisprojectcalicov3.GlobalThreatFeed]
+
+// GlobalThreatFeedHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerFuncs] for GlobalThreatFeed.
+type GlobalThreatFeedHandlerFuncs = cache.TypedResourceEventHandlerFuncs[*apisprojectcalicov3.GlobalThreatFeed]
+
+// GlobalThreatFeedDetailedHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerDetailedFuncs] for GlobalThreatFeed.
+type GlobalThreatFeedDetailedHandlerFuncs = cache.TypedResourceEventHandlerDetailedFuncs[*apisprojectcalicov3.GlobalThreatFeed]
+
+// GlobalThreatFeedFilteringHandler is a specialization of [cache.TypedFilteringResourceEventHandler] for GlobalThreatFeed.
+type GlobalThreatFeedFilteringHandler = cache.TypedFilteringResourceEventHandler[*apisprojectcalicov3.GlobalThreatFeed]
+
+// GlobalThreatFeedIndexers is a specialization of [cache.TypedIndexers] for GlobalThreatFeed.
+type GlobalThreatFeedIndexers = cache.TypedIndexers[*apisprojectcalicov3.GlobalThreatFeed]
+
+// DeletedGlobalThreatFeed is a specialization of [cache.DeletedObject] for GlobalThreatFeed.
+type DeletedGlobalThreatFeed = cache.DeletedObject[*apisprojectcalicov3.GlobalThreatFeed]
 
 type globalThreatFeedInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
@@ -34,25 +62,49 @@ type globalThreatFeedInformer struct {
 // NewGlobalThreatFeedInformer constructs a new informer for GlobalThreatFeed type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedGlobalThreatFeedInformer]).
 func NewGlobalThreatFeedInformer(client clientset.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
 	return NewGlobalThreatFeedInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers})
+}
+
+// NewTypedGlobalThreatFeedInformer constructs a new informer for GlobalThreatFeed type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedGlobalThreatFeedInformer(client clientset.Interface, resyncPeriod time.Duration, indexers GlobalThreatFeedIndexers) GlobalThreatFeedIndexInformer {
+	return NewTypedGlobalThreatFeedInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers)})
 }
 
 // NewFilteredGlobalThreatFeedInformer constructs a new informer for GlobalThreatFeed type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedFilteredGlobalThreatFeedInformer]).
 func NewFilteredGlobalThreatFeedInformer(client clientset.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewGlobalThreatFeedInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+	return NewTypedGlobalThreatFeedInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+}
+
+// NewTypedFilteredGlobalThreatFeedInformer constructs a new informer for GlobalThreatFeed type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedFilteredGlobalThreatFeedInformer(client clientset.Interface, resyncPeriod time.Duration, indexers GlobalThreatFeedIndexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) GlobalThreatFeedIndexInformer {
+	return NewTypedGlobalThreatFeedInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers), TweakListOptions: tweakListOptions})
 }
 
 // NewGlobalThreatFeedInformerWithOptions constructs a new informer for GlobalThreatFeed type with additional options.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedGlobalThreatFeedInformerWithOptions]).
 func NewGlobalThreatFeedInformerWithOptions(client clientset.Interface, options internalinterfaces.InformerOptions) cache.SharedIndexInformer {
+	return NewTypedGlobalThreatFeedInformerWithOptions(client, options)
+}
+
+// NewTypedGlobalThreatFeedInformerWithOptions constructs a new informer for GlobalThreatFeed type with additional options.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedGlobalThreatFeedInformerWithOptions(client clientset.Interface, options internalinterfaces.InformerOptions) GlobalThreatFeedIndexInformer {
 	gvr := schema.GroupVersionResource{Group: "projectcalico.org", Version: "v3", Resource: "globalthreatfeeds"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
-	return cache.NewSharedIndexInformerWithOptions(
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.GlobalThreatFeed](cache.NewSharedIndexInformerWithOptions(
 		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(opts v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
@@ -85,17 +137,57 @@ func NewGlobalThreatFeedInformerWithOptions(client clientset.Interface, options 
 			Indexers:     options.Indexers,
 			Identifier:   identifier,
 		},
-	)
+	))
 }
 
 func (f *globalThreatFeedInformer) defaultInformer(client clientset.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewGlobalThreatFeedInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
+	return NewTypedGlobalThreatFeedInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
 }
 
 func (f *globalThreatFeedInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apisprojectcalicov3.GlobalThreatFeed{}, f.defaultInformer)
+	return f.TypedInformer()
+}
+
+func (f *globalThreatFeedInformer) TypedInformer() GlobalThreatFeedIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.GlobalThreatFeed](f.factory.InformerFor(&apisprojectcalicov3.GlobalThreatFeed{}, f.defaultInformer))
 }
 
 func (f *globalThreatFeedInformer) Lister() projectcalicov3.GlobalThreatFeedLister {
 	return projectcalicov3.NewGlobalThreatFeedLister(f.Informer().GetIndexer())
+}
+
+// ToTypedGlobalThreatFeedInformer converts an untyped informer into a TypedGlobalThreatFeedInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *GlobalThreatFeed. If that is not the case, calling type-safe methods of the returned
+// TypedGlobalThreatFeedInformer leads to runtime panics. A safer alternative is to pass
+// around a TypedGlobalThreatFeedInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToTypedGlobalThreatFeedInformer(informer GlobalThreatFeedInformer) TypedGlobalThreatFeedInformer {
+	if informer, ok := informer.(TypedGlobalThreatFeedInformer); ok {
+		return informer
+	}
+	return &globalThreatFeedTypedInformerAdapter{informer}
+}
+
+type globalThreatFeedTypedInformerAdapter struct {
+	GlobalThreatFeedInformer
+}
+
+func (a *globalThreatFeedTypedInformerAdapter) TypedInformer() GlobalThreatFeedIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.GlobalThreatFeed](a.Informer())
+}
+
+// ToGlobalThreatFeedIndexInformer converts an untyped informer into a GlobalThreatFeedIndexInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *GlobalThreatFeed. If that is not the case, calling type-safe methods of the returned
+// GlobalThreatFeedIndexInformer leads to runtime panics. A safer alternative is to pass
+// around a GlobalThreatFeedIndexInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToGlobalThreatFeedIndexInformer(informer cache.SharedIndexInformer) GlobalThreatFeedIndexInformer {
+	if informer, ok := informer.(GlobalThreatFeedIndexInformer); ok {
+		return informer
+	}
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.GlobalThreatFeed](informer)
 }

@@ -20,11 +20,39 @@ import (
 )
 
 // PolicyRecommendationScopeInformer provides access to a shared informer and lister for
-// PolicyRecommendationScopes.
+// PolicyRecommendationScopes. Prefer using the type-safe variant (see [TypedPolicyRecommendationScopeInformer]).
 type PolicyRecommendationScopeInformer interface {
 	Informer() cache.SharedIndexInformer
 	Lister() projectcalicov3.PolicyRecommendationScopeLister
 }
+
+// TypedPolicyRecommendationScopeInformer provides access to a shared informer and lister for
+// PolicyRecommendationScopes, including the type-safe TypedInformer variant.
+// It is a superset of PolicyRecommendationScopeInformer.
+type TypedPolicyRecommendationScopeInformer interface {
+	Informer() cache.SharedIndexInformer
+	TypedInformer() PolicyRecommendationScopeIndexInformer
+	Lister() projectcalicov3.PolicyRecommendationScopeLister
+}
+
+// PolicyRecommendationScopeIndexInformer is a wrapper around the underlying [cache.SharedIndexInformer]
+// with type-safe variants of several methods.
+type PolicyRecommendationScopeIndexInformer cache.TypedSharedIndexInformer[*apisprojectcalicov3.PolicyRecommendationScope]
+
+// PolicyRecommendationScopeHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerFuncs] for PolicyRecommendationScope.
+type PolicyRecommendationScopeHandlerFuncs = cache.TypedResourceEventHandlerFuncs[*apisprojectcalicov3.PolicyRecommendationScope]
+
+// PolicyRecommendationScopeDetailedHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerDetailedFuncs] for PolicyRecommendationScope.
+type PolicyRecommendationScopeDetailedHandlerFuncs = cache.TypedResourceEventHandlerDetailedFuncs[*apisprojectcalicov3.PolicyRecommendationScope]
+
+// PolicyRecommendationScopeFilteringHandler is a specialization of [cache.TypedFilteringResourceEventHandler] for PolicyRecommendationScope.
+type PolicyRecommendationScopeFilteringHandler = cache.TypedFilteringResourceEventHandler[*apisprojectcalicov3.PolicyRecommendationScope]
+
+// PolicyRecommendationScopeIndexers is a specialization of [cache.TypedIndexers] for PolicyRecommendationScope.
+type PolicyRecommendationScopeIndexers = cache.TypedIndexers[*apisprojectcalicov3.PolicyRecommendationScope]
+
+// DeletedPolicyRecommendationScope is a specialization of [cache.DeletedObject] for PolicyRecommendationScope.
+type DeletedPolicyRecommendationScope = cache.DeletedObject[*apisprojectcalicov3.PolicyRecommendationScope]
 
 type policyRecommendationScopeInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
@@ -34,25 +62,49 @@ type policyRecommendationScopeInformer struct {
 // NewPolicyRecommendationScopeInformer constructs a new informer for PolicyRecommendationScope type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedPolicyRecommendationScopeInformer]).
 func NewPolicyRecommendationScopeInformer(client clientset.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
 	return NewPolicyRecommendationScopeInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers})
+}
+
+// NewTypedPolicyRecommendationScopeInformer constructs a new informer for PolicyRecommendationScope type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedPolicyRecommendationScopeInformer(client clientset.Interface, resyncPeriod time.Duration, indexers PolicyRecommendationScopeIndexers) PolicyRecommendationScopeIndexInformer {
+	return NewTypedPolicyRecommendationScopeInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers)})
 }
 
 // NewFilteredPolicyRecommendationScopeInformer constructs a new informer for PolicyRecommendationScope type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedFilteredPolicyRecommendationScopeInformer]).
 func NewFilteredPolicyRecommendationScopeInformer(client clientset.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewPolicyRecommendationScopeInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+	return NewTypedPolicyRecommendationScopeInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+}
+
+// NewTypedFilteredPolicyRecommendationScopeInformer constructs a new informer for PolicyRecommendationScope type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedFilteredPolicyRecommendationScopeInformer(client clientset.Interface, resyncPeriod time.Duration, indexers PolicyRecommendationScopeIndexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) PolicyRecommendationScopeIndexInformer {
+	return NewTypedPolicyRecommendationScopeInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers), TweakListOptions: tweakListOptions})
 }
 
 // NewPolicyRecommendationScopeInformerWithOptions constructs a new informer for PolicyRecommendationScope type with additional options.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedPolicyRecommendationScopeInformerWithOptions]).
 func NewPolicyRecommendationScopeInformerWithOptions(client clientset.Interface, options internalinterfaces.InformerOptions) cache.SharedIndexInformer {
+	return NewTypedPolicyRecommendationScopeInformerWithOptions(client, options)
+}
+
+// NewTypedPolicyRecommendationScopeInformerWithOptions constructs a new informer for PolicyRecommendationScope type with additional options.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedPolicyRecommendationScopeInformerWithOptions(client clientset.Interface, options internalinterfaces.InformerOptions) PolicyRecommendationScopeIndexInformer {
 	gvr := schema.GroupVersionResource{Group: "projectcalico.org", Version: "v3", Resource: "policyrecommendationscopes"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
-	return cache.NewSharedIndexInformerWithOptions(
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.PolicyRecommendationScope](cache.NewSharedIndexInformerWithOptions(
 		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(opts v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
@@ -85,17 +137,57 @@ func NewPolicyRecommendationScopeInformerWithOptions(client clientset.Interface,
 			Indexers:     options.Indexers,
 			Identifier:   identifier,
 		},
-	)
+	))
 }
 
 func (f *policyRecommendationScopeInformer) defaultInformer(client clientset.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewPolicyRecommendationScopeInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
+	return NewTypedPolicyRecommendationScopeInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
 }
 
 func (f *policyRecommendationScopeInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apisprojectcalicov3.PolicyRecommendationScope{}, f.defaultInformer)
+	return f.TypedInformer()
+}
+
+func (f *policyRecommendationScopeInformer) TypedInformer() PolicyRecommendationScopeIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.PolicyRecommendationScope](f.factory.InformerFor(&apisprojectcalicov3.PolicyRecommendationScope{}, f.defaultInformer))
 }
 
 func (f *policyRecommendationScopeInformer) Lister() projectcalicov3.PolicyRecommendationScopeLister {
 	return projectcalicov3.NewPolicyRecommendationScopeLister(f.Informer().GetIndexer())
+}
+
+// ToTypedPolicyRecommendationScopeInformer converts an untyped informer into a TypedPolicyRecommendationScopeInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *PolicyRecommendationScope. If that is not the case, calling type-safe methods of the returned
+// TypedPolicyRecommendationScopeInformer leads to runtime panics. A safer alternative is to pass
+// around a TypedPolicyRecommendationScopeInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToTypedPolicyRecommendationScopeInformer(informer PolicyRecommendationScopeInformer) TypedPolicyRecommendationScopeInformer {
+	if informer, ok := informer.(TypedPolicyRecommendationScopeInformer); ok {
+		return informer
+	}
+	return &policyRecommendationScopeTypedInformerAdapter{informer}
+}
+
+type policyRecommendationScopeTypedInformerAdapter struct {
+	PolicyRecommendationScopeInformer
+}
+
+func (a *policyRecommendationScopeTypedInformerAdapter) TypedInformer() PolicyRecommendationScopeIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.PolicyRecommendationScope](a.Informer())
+}
+
+// ToPolicyRecommendationScopeIndexInformer converts an untyped informer into a PolicyRecommendationScopeIndexInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *PolicyRecommendationScope. If that is not the case, calling type-safe methods of the returned
+// PolicyRecommendationScopeIndexInformer leads to runtime panics. A safer alternative is to pass
+// around a PolicyRecommendationScopeIndexInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToPolicyRecommendationScopeIndexInformer(informer cache.SharedIndexInformer) PolicyRecommendationScopeIndexInformer {
+	if informer, ok := informer.(PolicyRecommendationScopeIndexInformer); ok {
+		return informer
+	}
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.PolicyRecommendationScope](informer)
 }

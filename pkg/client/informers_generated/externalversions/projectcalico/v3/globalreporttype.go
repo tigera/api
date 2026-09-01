@@ -20,11 +20,39 @@ import (
 )
 
 // GlobalReportTypeInformer provides access to a shared informer and lister for
-// GlobalReportTypes.
+// GlobalReportTypes. Prefer using the type-safe variant (see [TypedGlobalReportTypeInformer]).
 type GlobalReportTypeInformer interface {
 	Informer() cache.SharedIndexInformer
 	Lister() projectcalicov3.GlobalReportTypeLister
 }
+
+// TypedGlobalReportTypeInformer provides access to a shared informer and lister for
+// GlobalReportTypes, including the type-safe TypedInformer variant.
+// It is a superset of GlobalReportTypeInformer.
+type TypedGlobalReportTypeInformer interface {
+	Informer() cache.SharedIndexInformer
+	TypedInformer() GlobalReportTypeIndexInformer
+	Lister() projectcalicov3.GlobalReportTypeLister
+}
+
+// GlobalReportTypeIndexInformer is a wrapper around the underlying [cache.SharedIndexInformer]
+// with type-safe variants of several methods.
+type GlobalReportTypeIndexInformer cache.TypedSharedIndexInformer[*apisprojectcalicov3.GlobalReportType]
+
+// GlobalReportTypeHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerFuncs] for GlobalReportType.
+type GlobalReportTypeHandlerFuncs = cache.TypedResourceEventHandlerFuncs[*apisprojectcalicov3.GlobalReportType]
+
+// GlobalReportTypeDetailedHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerDetailedFuncs] for GlobalReportType.
+type GlobalReportTypeDetailedHandlerFuncs = cache.TypedResourceEventHandlerDetailedFuncs[*apisprojectcalicov3.GlobalReportType]
+
+// GlobalReportTypeFilteringHandler is a specialization of [cache.TypedFilteringResourceEventHandler] for GlobalReportType.
+type GlobalReportTypeFilteringHandler = cache.TypedFilteringResourceEventHandler[*apisprojectcalicov3.GlobalReportType]
+
+// GlobalReportTypeIndexers is a specialization of [cache.TypedIndexers] for GlobalReportType.
+type GlobalReportTypeIndexers = cache.TypedIndexers[*apisprojectcalicov3.GlobalReportType]
+
+// DeletedGlobalReportType is a specialization of [cache.DeletedObject] for GlobalReportType.
+type DeletedGlobalReportType = cache.DeletedObject[*apisprojectcalicov3.GlobalReportType]
 
 type globalReportTypeInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
@@ -34,25 +62,49 @@ type globalReportTypeInformer struct {
 // NewGlobalReportTypeInformer constructs a new informer for GlobalReportType type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedGlobalReportTypeInformer]).
 func NewGlobalReportTypeInformer(client clientset.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
 	return NewGlobalReportTypeInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers})
+}
+
+// NewTypedGlobalReportTypeInformer constructs a new informer for GlobalReportType type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedGlobalReportTypeInformer(client clientset.Interface, resyncPeriod time.Duration, indexers GlobalReportTypeIndexers) GlobalReportTypeIndexInformer {
+	return NewTypedGlobalReportTypeInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers)})
 }
 
 // NewFilteredGlobalReportTypeInformer constructs a new informer for GlobalReportType type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedFilteredGlobalReportTypeInformer]).
 func NewFilteredGlobalReportTypeInformer(client clientset.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewGlobalReportTypeInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+	return NewTypedGlobalReportTypeInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+}
+
+// NewTypedFilteredGlobalReportTypeInformer constructs a new informer for GlobalReportType type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedFilteredGlobalReportTypeInformer(client clientset.Interface, resyncPeriod time.Duration, indexers GlobalReportTypeIndexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) GlobalReportTypeIndexInformer {
+	return NewTypedGlobalReportTypeInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers), TweakListOptions: tweakListOptions})
 }
 
 // NewGlobalReportTypeInformerWithOptions constructs a new informer for GlobalReportType type with additional options.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedGlobalReportTypeInformerWithOptions]).
 func NewGlobalReportTypeInformerWithOptions(client clientset.Interface, options internalinterfaces.InformerOptions) cache.SharedIndexInformer {
+	return NewTypedGlobalReportTypeInformerWithOptions(client, options)
+}
+
+// NewTypedGlobalReportTypeInformerWithOptions constructs a new informer for GlobalReportType type with additional options.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedGlobalReportTypeInformerWithOptions(client clientset.Interface, options internalinterfaces.InformerOptions) GlobalReportTypeIndexInformer {
 	gvr := schema.GroupVersionResource{Group: "projectcalico.org", Version: "v3", Resource: "globalreporttypes"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
-	return cache.NewSharedIndexInformerWithOptions(
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.GlobalReportType](cache.NewSharedIndexInformerWithOptions(
 		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(opts v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
@@ -85,17 +137,57 @@ func NewGlobalReportTypeInformerWithOptions(client clientset.Interface, options 
 			Indexers:     options.Indexers,
 			Identifier:   identifier,
 		},
-	)
+	))
 }
 
 func (f *globalReportTypeInformer) defaultInformer(client clientset.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewGlobalReportTypeInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
+	return NewTypedGlobalReportTypeInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
 }
 
 func (f *globalReportTypeInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apisprojectcalicov3.GlobalReportType{}, f.defaultInformer)
+	return f.TypedInformer()
+}
+
+func (f *globalReportTypeInformer) TypedInformer() GlobalReportTypeIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.GlobalReportType](f.factory.InformerFor(&apisprojectcalicov3.GlobalReportType{}, f.defaultInformer))
 }
 
 func (f *globalReportTypeInformer) Lister() projectcalicov3.GlobalReportTypeLister {
 	return projectcalicov3.NewGlobalReportTypeLister(f.Informer().GetIndexer())
+}
+
+// ToTypedGlobalReportTypeInformer converts an untyped informer into a TypedGlobalReportTypeInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *GlobalReportType. If that is not the case, calling type-safe methods of the returned
+// TypedGlobalReportTypeInformer leads to runtime panics. A safer alternative is to pass
+// around a TypedGlobalReportTypeInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToTypedGlobalReportTypeInformer(informer GlobalReportTypeInformer) TypedGlobalReportTypeInformer {
+	if informer, ok := informer.(TypedGlobalReportTypeInformer); ok {
+		return informer
+	}
+	return &globalReportTypeTypedInformerAdapter{informer}
+}
+
+type globalReportTypeTypedInformerAdapter struct {
+	GlobalReportTypeInformer
+}
+
+func (a *globalReportTypeTypedInformerAdapter) TypedInformer() GlobalReportTypeIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.GlobalReportType](a.Informer())
+}
+
+// ToGlobalReportTypeIndexInformer converts an untyped informer into a GlobalReportTypeIndexInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *GlobalReportType. If that is not the case, calling type-safe methods of the returned
+// GlobalReportTypeIndexInformer leads to runtime panics. A safer alternative is to pass
+// around a GlobalReportTypeIndexInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToGlobalReportTypeIndexInformer(informer cache.SharedIndexInformer) GlobalReportTypeIndexInformer {
+	if informer, ok := informer.(GlobalReportTypeIndexInformer); ok {
+		return informer
+	}
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.GlobalReportType](informer)
 }

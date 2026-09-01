@@ -20,11 +20,39 @@ import (
 )
 
 // LicenseKeyInformer provides access to a shared informer and lister for
-// LicenseKeys.
+// LicenseKeys. Prefer using the type-safe variant (see [TypedLicenseKeyInformer]).
 type LicenseKeyInformer interface {
 	Informer() cache.SharedIndexInformer
 	Lister() projectcalicov3.LicenseKeyLister
 }
+
+// TypedLicenseKeyInformer provides access to a shared informer and lister for
+// LicenseKeys, including the type-safe TypedInformer variant.
+// It is a superset of LicenseKeyInformer.
+type TypedLicenseKeyInformer interface {
+	Informer() cache.SharedIndexInformer
+	TypedInformer() LicenseKeyIndexInformer
+	Lister() projectcalicov3.LicenseKeyLister
+}
+
+// LicenseKeyIndexInformer is a wrapper around the underlying [cache.SharedIndexInformer]
+// with type-safe variants of several methods.
+type LicenseKeyIndexInformer cache.TypedSharedIndexInformer[*apisprojectcalicov3.LicenseKey]
+
+// LicenseKeyHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerFuncs] for LicenseKey.
+type LicenseKeyHandlerFuncs = cache.TypedResourceEventHandlerFuncs[*apisprojectcalicov3.LicenseKey]
+
+// LicenseKeyDetailedHandlerFuncs is a specialization of [cache.TypedResourceEventHandlerDetailedFuncs] for LicenseKey.
+type LicenseKeyDetailedHandlerFuncs = cache.TypedResourceEventHandlerDetailedFuncs[*apisprojectcalicov3.LicenseKey]
+
+// LicenseKeyFilteringHandler is a specialization of [cache.TypedFilteringResourceEventHandler] for LicenseKey.
+type LicenseKeyFilteringHandler = cache.TypedFilteringResourceEventHandler[*apisprojectcalicov3.LicenseKey]
+
+// LicenseKeyIndexers is a specialization of [cache.TypedIndexers] for LicenseKey.
+type LicenseKeyIndexers = cache.TypedIndexers[*apisprojectcalicov3.LicenseKey]
+
+// DeletedLicenseKey is a specialization of [cache.DeletedObject] for LicenseKey.
+type DeletedLicenseKey = cache.DeletedObject[*apisprojectcalicov3.LicenseKey]
 
 type licenseKeyInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
@@ -34,25 +62,49 @@ type licenseKeyInformer struct {
 // NewLicenseKeyInformer constructs a new informer for LicenseKey type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedLicenseKeyInformer]).
 func NewLicenseKeyInformer(client clientset.Interface, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
 	return NewLicenseKeyInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers})
+}
+
+// NewTypedLicenseKeyInformer constructs a new informer for LicenseKey type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedLicenseKeyInformer(client clientset.Interface, resyncPeriod time.Duration, indexers LicenseKeyIndexers) LicenseKeyIndexInformer {
+	return NewTypedLicenseKeyInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers)})
 }
 
 // NewFilteredLicenseKeyInformer constructs a new informer for LicenseKey type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedFilteredLicenseKeyInformer]).
 func NewFilteredLicenseKeyInformer(client clientset.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewLicenseKeyInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+	return NewTypedLicenseKeyInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: indexers, TweakListOptions: tweakListOptions})
+}
+
+// NewTypedFilteredLicenseKeyInformer constructs a new informer for LicenseKey type.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedFilteredLicenseKeyInformer(client clientset.Interface, resyncPeriod time.Duration, indexers LicenseKeyIndexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) LicenseKeyIndexInformer {
+	return NewTypedLicenseKeyInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.TypedIndexersToIndexers(indexers), TweakListOptions: tweakListOptions})
 }
 
 // NewLicenseKeyInformerWithOptions constructs a new informer for LicenseKey type with additional options.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
+// If you really need an independent one, prefer using the type-safe variant (see [NewTypedLicenseKeyInformerWithOptions]).
 func NewLicenseKeyInformerWithOptions(client clientset.Interface, options internalinterfaces.InformerOptions) cache.SharedIndexInformer {
+	return NewTypedLicenseKeyInformerWithOptions(client, options)
+}
+
+// NewTypedLicenseKeyInformerWithOptions constructs a new informer for LicenseKey type with additional options.
+// Always prefer using an informer factory to get a shared informer instead of getting an independent
+// one. This reduces memory footprint and number of connections to the server.
+func NewTypedLicenseKeyInformerWithOptions(client clientset.Interface, options internalinterfaces.InformerOptions) LicenseKeyIndexInformer {
 	gvr := schema.GroupVersionResource{Group: "projectcalico.org", Version: "v3", Resource: "licensekeys"}
 	identifier := options.InformerName.WithResource(gvr)
 	tweakListOptions := options.TweakListOptions
-	return cache.NewSharedIndexInformerWithOptions(
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.LicenseKey](cache.NewSharedIndexInformerWithOptions(
 		cache.ToListWatcherWithWatchListSemantics(&cache.ListWatch{
 			ListFunc: func(opts v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
@@ -85,17 +137,57 @@ func NewLicenseKeyInformerWithOptions(client clientset.Interface, options intern
 			Indexers:     options.Indexers,
 			Identifier:   identifier,
 		},
-	)
+	))
 }
 
 func (f *licenseKeyInformer) defaultInformer(client clientset.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewLicenseKeyInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
+	return NewTypedLicenseKeyInformerWithOptions(client, internalinterfaces.InformerOptions{ResyncPeriod: resyncPeriod, Indexers: cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, InformerName: f.factory.InformerName(), TweakListOptions: f.tweakListOptions})
 }
 
 func (f *licenseKeyInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apisprojectcalicov3.LicenseKey{}, f.defaultInformer)
+	return f.TypedInformer()
+}
+
+func (f *licenseKeyInformer) TypedInformer() LicenseKeyIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.LicenseKey](f.factory.InformerFor(&apisprojectcalicov3.LicenseKey{}, f.defaultInformer))
 }
 
 func (f *licenseKeyInformer) Lister() projectcalicov3.LicenseKeyLister {
 	return projectcalicov3.NewLicenseKeyLister(f.Informer().GetIndexer())
+}
+
+// ToTypedLicenseKeyInformer converts an untyped informer into a TypedLicenseKeyInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *LicenseKey. If that is not the case, calling type-safe methods of the returned
+// TypedLicenseKeyInformer leads to runtime panics. A safer alternative is to pass
+// around a TypedLicenseKeyInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToTypedLicenseKeyInformer(informer LicenseKeyInformer) TypedLicenseKeyInformer {
+	if informer, ok := informer.(TypedLicenseKeyInformer); ok {
+		return informer
+	}
+	return &licenseKeyTypedInformerAdapter{informer}
+}
+
+type licenseKeyTypedInformerAdapter struct {
+	LicenseKeyInformer
+}
+
+func (a *licenseKeyTypedInformerAdapter) TypedInformer() LicenseKeyIndexInformer {
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.LicenseKey](a.Informer())
+}
+
+// ToLicenseKeyIndexInformer converts an untyped informer into a LicenseKeyIndexInformer.
+//
+// WARNING: this conversion is only safe if the informer handles objects of type
+// *LicenseKey. If that is not the case, calling type-safe methods of the returned
+// LicenseKeyIndexInformer leads to runtime panics. A safer alternative is to pass
+// around a LicenseKeyIndexInformer instances that was obtained from a
+// SharedInformerFactory.
+func ToLicenseKeyIndexInformer(informer cache.SharedIndexInformer) LicenseKeyIndexInformer {
+	if informer, ok := informer.(LicenseKeyIndexInformer); ok {
+		return informer
+	}
+	return cache.NewTypedSharedIndexInformer[*apisprojectcalicov3.LicenseKey](informer)
 }

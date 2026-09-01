@@ -18,6 +18,7 @@ type VRFRoutingApplyConfiguration struct {
 	//
 	// - Local: Felix programs routes to VRF pods local to this node;
 	// routing to pods on other nodes must be handled by BGP.
+	//
 	InClusterMode *projectcalicov3.InClusterRoutingMode `json:"inClusterMode,omitempty"`
 }
 
