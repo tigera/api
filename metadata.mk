@@ -126,10 +126,6 @@ BPFTOOL_IMAGE=calico/bpftool:v7.5.0
 # `make -C hack/rpms/nftables print-tag` in an OSS checkout.
 NFT_RPMS_TAG=6eb1d57c0512
 
-# The operator branch corresponding to this branch.
-OPERATOR_BRANCH ?= master
-OPERATOR_ORGANIZATION ?= tigera
-OPERATOR_GIT_REPO     ?= operator
 # The manager branch corresponding to this branch.
 MANAGER_BRANCH ?= master
 

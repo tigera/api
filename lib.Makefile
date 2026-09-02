@@ -1789,6 +1789,10 @@ stop-k8s-controller-manager:
 # Common functions for create a local kind cluster.
 ###############################################################################
 KIND_DIR := $(REPO_ROOT)/hack/test/kind
+
+# An Enterprise install ships every operator CRD in the tree, so the kind rig
+# creates the whole directory rather than the Calico subset.
+OPERATOR_CRDS_SRC = $(REPO_ROOT)/operator/pkg/crds/operator
 KIND ?= $(KIND_DIR)/kind
 KUBECTL ?= $(KIND_DIR)/kubectl
 
@@ -1847,7 +1851,7 @@ $(REPO_ROOT)/.$(KIND_NAME).created: $(KUBECTL) $(KIND) kind-registry-up
 
 	# Wait for controller manager to be running and healthy, then create Calico CRDs.
 	while ! KUBECONFIG=$(KIND_KUBECONFIG) $(KUBECTL) get serviceaccount default; do echo "Waiting for default serviceaccount to be created..."; sleep 2; done
-	while ! KUBECONFIG=$(KIND_KUBECONFIG) $(KUBECTL) create -f $(REPO_ROOT)/charts/crd.projectcalico.org.v1/templates/; do echo "Waiting for operator CRDs to be created"; sleep 2; done
+	while ! KUBECONFIG=$(KIND_KUBECONFIG) $(KUBECTL) create -f $(OPERATOR_CRDS_SRC)/; do echo "Waiting for operator CRDs to be created"; sleep 2; done
 	while ! KUBECONFIG=$(KIND_KUBECONFIG) $(KUBECTL) create -f $(REPO_ROOT)/$(CALICO_CRD_PATH); do echo "Waiting for calico CRDs to be created"; sleep 2; done
 	while ! KUBECONFIG=$(KIND_KUBECONFIG) $(KUBECTL) create -f $(REPO_ROOT)/charts/crd.projectcalico.org.v1/templates/eck/; do echo "Waiting for ECK CRDs to be created"; sleep 2; done
 
