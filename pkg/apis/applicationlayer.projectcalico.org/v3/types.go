@@ -717,13 +717,12 @@ type ValidationResult struct {
 }
 
 // SecurityPosture represents the overall security posture based on validation
-// +kubebuilder:validation:Enum=Compliant;Warning;Degraded;Critical
+// +kubebuilder:validation:Enum=Compliant;Warning;Critical
 type SecurityPosture string
 
 const (
 	SecurityPostureCompliant SecurityPosture = "Compliant"
 	SecurityPostureWarning   SecurityPosture = "Warning"
-	SecurityPostureDegraded  SecurityPosture = "Degraded"
 	SecurityPostureCritical  SecurityPosture = "Critical"
 )
 
