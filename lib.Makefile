@@ -1487,6 +1487,11 @@ build-images: var-require-all-BUILD_IMAGES
 		@echo $(BUILD_IMAGES)\
 	)
 
+# image-tag-prefix echoes the prefix this component's published tags carry, which
+# a variant selects through its own environment. Empty for an unprefixed build.
+image-tag-prefix:
+	@echo $(IMAGETAG_PREFIX)
+
 # sem-cut-release triggers the cut-release pipeline (or test-cut-release if CONFIRM is not specified) in semaphore to
 # cut the release. The pipeline is triggered for the current commit, and the branch it's triggered on is calculated
 # from the RELEASE_VERSION, CNX, and OS variables given.
@@ -1709,7 +1714,6 @@ $(REPO_ROOT)/bin/crane:
 		chmod +x "$$tmp/crane" && \
 		mv "$$tmp/crane" "$@"
 endif # Windows_NT
-
 
 ###############################################################################
 # Common functions for launching a local Kubernetes control plane.
