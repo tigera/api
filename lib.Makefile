@@ -1810,11 +1810,30 @@ KIND_CONFIG ?= $(KIND_DIR)/kind.config
 KIND_NAME = $(basename $(notdir $(KIND_CONFIG)))
 KIND_KUBECONFIG?=$(KIND_DIR)/$(KIND_NAME)-kubeconfig.yaml
 
-# Dataplane - kind supports iptables and nftables.
+# Dataplane - kind supports iptables, nftables and bpf.
 KIND_DATAPLANE ?= iptables
-ifeq ($(filter $(KIND_DATAPLANE),iptables nftables),)
-  $(error KIND_DATAPLANE must be iptables or nftables, got "$(KIND_DATAPLANE)")
+ifeq ($(filter $(KIND_DATAPLANE),iptables nftables bpf),)
+  $(error KIND_DATAPLANE must be iptables, nftables or bpf, got "$(KIND_DATAPLANE)")
 endif
+
+# kube-proxy mode to render into the kind config. kube-proxy has no "bpf" mode
+# (valid modes are iptables/ipvs/nftables); in a BPF-dataplane cluster kube-proxy
+# runs in iptables mode at start-of-day and is then disabled by the operator
+# (kubeProxyManagement). So map the BPF dataplane onto an iptables kube-proxy.
+ifeq ($(KIND_DATAPLANE),bpf)
+  KIND_KUBE_PROXY_MODE := iptables
+else
+  KIND_KUBE_PROXY_MODE := $(KIND_DATAPLANE)
+endif
+
+# Point the kind nodes at a DNS forwarder instead of the address Docker rewrites.
+# Opt-in: it rewrites every node's /etc/resolv.conf. See dns-forwarder.sh.
+KIND_DNS_FORWARDER?=false
+KIND_DNS_FORWARDER_IMAGE?=coredns/coredns:$(COREDNS_VERSION)
+
+# The external node runs docker-in-docker. Pinned so a new upstream tag cannot
+# change the lane under us. See external-node.sh.
+EXTERNAL_NODE_IMAGE?=docker:$(DOCKER_DIND_VERSION)-dind
 
 .PHONY: kind-registry-up kind-registry-destroy
 ## Start the local kind image registry (idempotent). Persists across cluster recreates.
@@ -1835,7 +1854,7 @@ $(REPO_ROOT)/.$(KIND_NAME).created: $(KUBECTL) $(KIND) kind-registry-up
 	$(MAKE) kind-cluster-destroy
 
 	# Render the kind config with the requested kube-proxy mode.
-	sed 's/^\(  mode: \)iptables$$/\1$(KIND_DATAPLANE)/' $(KIND_CONFIG) > $(KIND_DIR)/.$(KIND_NAME).rendered.config
+	sed 's/^\(  mode: \)iptables$$/\1$(KIND_KUBE_PROXY_MODE)/' $(KIND_CONFIG) > $(KIND_DIR)/.$(KIND_NAME).rendered.config
 
 	# calico-fluent-bit's in_tail (several tail inputs) plus per-node kube-proxy
 	# exhaust the default inotify instance limit (128) across the kind nodes,
@@ -1845,6 +1864,37 @@ $(REPO_ROOT)/.$(KIND_NAME).created: $(KUBECTL) $(KIND) kind-registry-up
 	# blocks a headless run; best-effort warn (don't fail) if we can't set them,
 	# e.g. no passwordless sudo on a dev box.
 	sudo -n sysctl -w fs.inotify.max_user_instances=512 fs.inotify.max_user_watches=524288 || echo "WARNING: could not raise inotify limits; calico-fluent-bit may crash-loop with 'too many open files'"
+
+ifeq ($(KIND_DATAPLANE),bpf)
+	# The BPF lane is IPv4-only (see kind-bpf.config), to mirror the IPv4-only
+	# GCP BPF job. kind creates its "kind" docker network with an IPv6 ULA by
+	# default, which gives every node an IPv6 address; the node resolver then
+	# returns AAAA records for external domains, and kind's IPv6 ULA has no
+	# internet route, so host-networked egress probes (the DNS-policy tests) hang
+	# on the unroutable IPv6 address. Pre-create the "kind" network IPv4-only so
+	# kind reuses it instead of creating a dual-stack one. If a previous
+	# dual-stack cluster left an IPv6-enabled network behind, recreate it
+	# (disconnect its endpoints first, e.g. the persistent kind-registry, which
+	# registry.sh reconnects below). Refuse if another kind cluster's nodes are
+	# attached: the network is shared, so recreating it would break that cluster.
+	@if docker network inspect kind --format '{{range .IPAM.Config}}{{.Subnet}} {{end}}' 2>/dev/null | grep -q ':'; then \
+	  foreign=$$(for c in $$(docker network inspect kind --format '{{range .Containers}}{{.Name}} {{end}}' 2>/dev/null); do \
+	      cl=$$(docker inspect "$$c" --format '{{index .Config.Labels "io.x-k8s.kind.cluster"}}' 2>/dev/null); \
+	      if [ -n "$$cl" ] && [ "$$cl" != "$(KIND_NAME)" ]; then echo "$$cl"; fi; \
+	    done | sort -u | tr '\n' ' '); \
+	  if [ -n "$$foreign" ]; then \
+	    echo "ERROR: the 'kind' network is IPv6-enabled and must be recreated IPv4-only for the BPF lane,"; \
+	    echo "       but nodes of another kind cluster are attached: $$foreign"; \
+	    echo "       Recreating it would break that cluster. Delete it first:"; \
+	    echo "         kind delete cluster --name <name>"; \
+	    exit 1; \
+	  fi; \
+	  echo "Recreating the 'kind' docker network as IPv4-only for the BPF lane"; \
+	  for c in $$(docker network inspect kind --format '{{range .Containers}}{{.Name}} {{end}}' 2>/dev/null); do docker network disconnect -f kind "$$c" 2>/dev/null || true; done; \
+	  docker network rm kind 2>/dev/null || true; \
+	fi
+	@docker network inspect kind >/dev/null 2>&1 || docker network create kind
+endif
 
 	# Create a kind cluster.
 	$(KIND) create cluster \
@@ -1857,6 +1907,12 @@ $(REPO_ROOT)/.$(KIND_NAME).created: $(KUBECTL) $(KIND) kind-registry-up
 	# and write per-node containerd config so localhost:5000 redirects to it.
 	$(REPO_ROOT)/hack/test/kind/registry.sh up
 	KIND_NAME=$(KIND_NAME) $(REPO_ROOT)/hack/test/kind/registry.sh configure-nodes
+
+	# After the registry, so the kind-registry resolution check is meaningful.
+ifeq ($(KIND_DNS_FORWARDER),true)
+	KIND_DNS_FORWARDER_IMAGE=$(KIND_DNS_FORWARDER_IMAGE) $(REPO_ROOT)/hack/test/kind/dns-forwarder.sh up
+	KIND_NAME=$(KIND_NAME) $(REPO_ROOT)/hack/test/kind/dns-forwarder.sh configure-nodes
+endif
 
 	# Wait for controller manager to be running and healthy, then create Calico CRDs.
 	while ! KUBECONFIG=$(KIND_KUBECONFIG) $(KUBECTL) get serviceaccount default; do echo "Waiting for default serviceaccount to be created..."; sleep 2; done
@@ -1876,6 +1932,11 @@ endif
 	touch $@
 
 kind-cluster-destroy kind-down: $(KIND) $(KUBECTL)
+	# Tear down the e2e external node (if any) alongside the cluster. Idempotent
+	# and a no-op when no external node was created (e.g. non-BPF jobs).
+	-$(KIND_DIR)/external-node.sh down
+	# Unconditional: a lane that did not opt in must still clean up after one that did.
+	KIND_NAME=$(KIND_NAME) $(KIND_DIR)/dns-forwarder.sh down || true
 	# We need to drain the cluster gracefully when shutting down to avoid a netdev unregister error from the kernel.
 	# This requires we execute CNI del on pods with pod networking.
 	-$(KIND) delete cluster --name $(KIND_NAME)
@@ -1991,7 +2052,11 @@ KIND_ENTERPRISE_LOCAL_IMAGES = \
 	tigera/gateway-l7-collector:$(KIND_TEST_BUILD_TAG) \
 	tigera/prometheus-operator:$(KIND_TEST_BUILD_TAG) \
 	tigera/prometheus-config-reloader:$(KIND_TEST_BUILD_TAG) \
-	tigera/eck-operator:$(KIND_TEST_BUILD_TAG)
+	tigera/eck-operator:$(KIND_TEST_BUILD_TAG) \
+	tigera/istio-install-cni:$(KIND_TEST_BUILD_TAG) \
+	tigera/istio-pilot:$(KIND_TEST_BUILD_TAG) \
+	tigera/istio-proxyv2:$(KIND_TEST_BUILD_TAG) \
+	tigera/istio-ztunnel:$(KIND_TEST_BUILD_TAG)
 
 # Enterprise images pulled from a registry. Stamp rules pull and tag as
 # latest-$(ARCH); the common tagging loop handles the final tag.
@@ -1999,7 +2064,8 @@ KIND_ENTERPRISE_PULLED_IMAGES = \
 	tigera/prometheus:$(KIND_TEST_BUILD_TAG) \
 	tigera/alertmanager:$(KIND_TEST_BUILD_TAG) \
 	tigera/manager:$(KIND_TEST_BUILD_TAG) \
-	tigera/elasticsearch:$(KIND_TEST_BUILD_TAG)
+	tigera/elasticsearch:$(KIND_TEST_BUILD_TAG) \
+	tigera/kibana:$(KIND_TEST_BUILD_TAG)
 
 # All enterprise images = locally built + pulled from registry.
 KIND_CALICO_ENTERPRISE_IMAGES = $(KIND_ENTERPRISE_LOCAL_IMAGES) $(KIND_ENTERPRISE_PULLED_IMAGES)
@@ -2077,7 +2143,8 @@ KIND_ENTERPRISE_IMAGE_MARKERS = \
 	$(REPO_ROOT)/gateway/.gateway-l7-collector.created-$(ARCH) \
 	$(REPO_ROOT)/third_party/prometheus-operator/.prometheus-operator.created-$(ARCH) \
 	$(REPO_ROOT)/third_party/prometheus-operator/.prometheus-config-reloader.created-$(ARCH) \
-	$(REPO_ROOT)/third_party/eck-operator/.eck-operator.created-$(ARCH)
+	$(REPO_ROOT)/third_party/eck-operator/.eck-operator.created-$(ARCH) \
+	$(REPO_ROOT)/istio/.istio-cni.created-$(ARCH)
 
 # Enterprise-only markers for images pulled from a registry. These have
 # no local source deps and are pulled once per stamp lifetime.
@@ -2085,7 +2152,8 @@ KIND_ENTERPRISE_PULLED_IMAGE_MARKERS = \
 	$(REPO_ROOT)/.stamp.prometheus \
 	$(REPO_ROOT)/.stamp.alertmanager \
 	$(REPO_ROOT)/.stamp.manager \
-	$(REPO_ROOT)/.stamp.elastic
+	$(REPO_ROOT)/.stamp.elastic \
+	$(REPO_ROOT)/.stamp.kibana
 
 # Envoy components: the third_party/envoy-* sub-makes use their own marker
 # names (.envoy-<comp>.created-$(ARCH)). The sub-make handles fetching
@@ -2098,6 +2166,19 @@ $(REPO_ROOT)/third_party/envoy-proxy/.envoy-proxy.created-$(ARCH):
 
 $(REPO_ROOT)/third_party/envoy-ratelimit/.envoy-ratelimit.created-$(ARCH):
 	$(MAKE) -C $(REPO_ROOT)/third_party/envoy-ratelimit image
+
+# Istio integration images (istiod/pilot, install-cni, proxyv2 waypoint,
+# ztunnel). The operator's versions files (calico_versions.yml /
+# enterprise_versions.yml) already reference these at the KIND test-build tag,
+# but the istio/ component Makefile is standalone and not otherwise wired into
+# the kind build, so the operator's istio install fails to pull them
+# (localhost:5000/tigera/istio-*:test-build) and the Istio waypoint e2e test
+# fails. `make -C istio image` fetches the upstream sources and builds all four
+# images (touching every .istio-*.created-$(ARCH) stamp), so a single marker on
+# the install-cni stamp drives the whole set; the other three images are picked
+# up by the tag/push loop via KIND_ENTERPRISE_LOCAL_IMAGES.
+$(REPO_ROOT)/istio/.istio-cni.created-$(ARCH):
+	$(MAKE) -C $(REPO_ROOT)/istio init-sources image ARCH=$(ARCH)
 
 # third-party-cni-plugins clones the upstream CNI and flannel sources and
 # compiles them, tagging the image as calico/third-party-cni-plugins:latest-$(ARCH).
@@ -2270,6 +2351,15 @@ $(REPO_ROOT)/.stamp.elastic: $(shell $(REPO_ROOT)/hack/image-exists $(REPO_ROOT)
 	docker pull gcr.io/unique-caldron-775/cnx/tigera/elasticsearch:$(THIRD_PARTY_RELEASE_BRANCH)
 	docker tag gcr.io/unique-caldron-775/cnx/tigera/elasticsearch:$(THIRD_PARTY_RELEASE_BRANCH) tigera/elasticsearch:latest-$(ARCH)
 	echo "tigera/elasticsearch:latest-$(ARCH)" > $@
+
+$(REPO_ROOT)/.stamp.kibana: $(shell $(REPO_ROOT)/hack/image-exists $(REPO_ROOT)/.stamp.kibana)
+	# Kibana is only deployed by the enterprise-suite lanes (e.g. the BPF e2e
+	# lane enables it for the Feature:Kibana-Auth tests); pull it like the other
+	# third-party base images rather than building it from source here.
+	rm -f $@
+	docker pull gcr.io/unique-caldron-775/cnx/tigera/kibana:$(THIRD_PARTY_RELEASE_BRANCH)
+	docker tag gcr.io/unique-caldron-775/cnx/tigera/kibana:$(THIRD_PARTY_RELEASE_BRANCH) tigera/kibana:latest-$(ARCH)
+	echo "tigera/kibana:latest-$(ARCH)" > $@
 
 ###############################################################################
 # Common functions for setting up a local envtest environment.
