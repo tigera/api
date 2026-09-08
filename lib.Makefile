@@ -473,6 +473,9 @@ DOCKER_BUILD_THIRD_PARTY = $(DOCKER_BUILD) \
 	--build-arg THIRD_PARTY_REGISTRY=$(THIRD_PARTY_REGISTRY) \
 	--build-arg THIRD_PARTY_RELEASE_BRANCH=$(THIRD_PARTY_RELEASE_BRANCH)
 
+fetch_file = $(REPO_ROOT)/hack/fetch-file $(1) $(2)
+fetch_repo = $(REPO_ROOT)/hack/fetch-repo $(1) $(2) $(3)
+
 DOCKER_RUN_PRIV_NET := mkdir -p $(REPO_ROOT)/.go-pkg-cache bin $(GOMOD_CACHE) && \
 	docker run --rm \
 		--init \
@@ -1700,9 +1703,11 @@ bin/crane: $(REPO_ROOT)/bin/crane
 $(REPO_ROOT)/bin/crane:
 	$(info ::: Downloading crane from $(CRANE_URL))
 	@mkdir -p $(REPO_ROOT)/bin
-	@curl -sSfL --retry 5 --retry-all-errors -o /tmp/calico-crane.tar.gz $(CRANE_URL)
-	@tar xz -C $(REPO_ROOT)/bin -f /tmp/calico-crane.tar.gz crane
-	@rm -f /tmp/calico-crane.tar.gz
+	@tmp=$$(mktemp -d $(REPO_ROOT)/bin/.crane.XXXXXX) && trap 'rm -rf "$$tmp"' EXIT && \
+		$(call fetch_file,$(CRANE_URL),"$$tmp/crane.tar.gz") && \
+		tar xz -C "$$tmp" -f "$$tmp/crane.tar.gz" crane && \
+		chmod +x "$$tmp/crane" && \
+		mv "$$tmp/crane" "$@"
 endif # Windows_NT
 
 
@@ -1943,7 +1948,7 @@ publish-charts-oci:
 
 bin/yq:
 	mkdir -p bin
-	curl -sSfL --retry 5 --retry-all-errors -o /tmp/calico-yq.tar.gz https://github.com/mikefarah/yq/releases/download/v4.53.3/yq_linux_$(BUILDARCH).tar.gz
+	$(call fetch_file,https://github.com/mikefarah/yq/releases/download/v4.53.3/yq_linux_$(BUILDARCH).tar.gz,/tmp/calico-yq.tar.gz)
 	tar xz -C bin -f /tmp/calico-yq.tar.gz ./yq_linux_$(BUILDARCH)
 	rm -f /tmp/calico-yq.tar.gz
 	mv bin/yq_linux_$(BUILDARCH) bin/yq
