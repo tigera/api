@@ -45,6 +45,15 @@ KIND_VERSION=v0.32.0
 # release is merged into node-private.
 CALICO_VERSION=v3.33.0
 
+# Upstream versions of the third-party software we build our own images from.
+# The operator declares these on the CRs that ECK and Prometheus Operator manage,
+# so a build that ships one version and declares another is a bug. Renovate bumps
+# them; see the regex managers in renovate.json.
+ELASTIC_VERSION=8.19.19
+KIBANA_VERSION=8.19.19
+PROMETHEUS_VERSION=v3.13.2
+ALERTMANAGER_VERSION=v0.34.0
+
 # The Semaphore calico-private ID, used when making calls to the Semaphore API.
 SEMAPHORE_PROJECT_ID=8a309869-f767-49dc-924f-fa927edbf657
 
