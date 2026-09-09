@@ -121,6 +121,11 @@ THIRD_PARTY_REGISTRY_CD=gcr.io/unique-caldron-775/cnx/tigera/third-party
 # their branch name. For any other branch (feature branches, or PRs whose base is a feature
 # branch such as stacked PRs), fall back to the master-tagged images.
 THIRD_PARTY_RELEASE_BRANCH ?= $(if $(filter master release-calient-%,$(SEMAPHORE_GIT_BRANCH)),$(SEMAPHORE_GIT_BRANCH),master)
+
+# cd-common publishes every image at BRANCH_NAME, so that is the tag a build which names
+# no version of its own can pull. CI exports it; fall back to the checked-out branch, or
+# for a PR to its base, which is what SEMAPHORE_GIT_BRANCH holds.
+BRANCH_IMAGE_TAG ?= $(if $(BRANCH_NAME),$(BRANCH_NAME),$(if $(SEMAPHORE_GIT_BRANCH),$(SEMAPHORE_GIT_BRANCH),$(shell git rev-parse --abbrev-ref HEAD 2>/dev/null)))
 ifeq ($(SEMAPHORE_GIT_REF_TYPE), branch)
     # on master and release-calient branches
     THIRD_PARTY_REGISTRY?=$(THIRD_PARTY_REGISTRY_CD)
@@ -2515,7 +2520,9 @@ ifneq ($(OS),Windows_NT)
 BOOTSTRAP_PASSWORD := $(shell cat /dev/urandom | LC_CTYPE=C tr -dc A-Za-z0-9 | head -c16)
 ELASTIC_PASSWORD := $(BOOTSTRAP_PASSWORD)
 
-ELASTIC_IMAGE   ?= docker.elastic.co/elasticsearch/elasticsearch:$(shell grep -o '^ELASTIC_VERSION=[0-9\.]*' $(REPO_ROOT)/third_party/elasticsearch/Makefile | cut -d "=" -f 2)
+# metadata.mk carries the version, but a Makefile that includes lib.Makefile without it
+# still needs a tag here, so fall back to reading the file.
+ELASTIC_IMAGE   ?= docker.elastic.co/elasticsearch/elasticsearch:$(if $(ELASTIC_VERSION),$(ELASTIC_VERSION),$(shell grep -o '^ELASTIC_VERSION=[0-9.]*' $(REPO_ROOT)/metadata.mk | cut -d "=" -f 2))
 endif
 ELASTIC_EXTRA_DOCKER_ARGS ?=
 ELASTIC_MEMORY ?= 2GB
