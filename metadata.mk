@@ -55,7 +55,7 @@ GIT_REPO      ?= calico-private
 GIT_REMOTE    ?= origin
 
 RELEASE_BRANCH_PREFIX ?=release-calient
-DEV_TAG_SUFFIX        ?= calient-2.dev
+DEV_TAG_SUFFIX        ?= calient-3.dev
 
 # Part of the git remote that is common to git and HTTP representations.
 # Used to auto-detect the right remote.
@@ -92,7 +92,7 @@ WINDOWS_VERSIONS ?= ltsc2019 ltsc2022
 
 # The CNI plugin and flannel code that will be cloned and rebuilt with this repo's go-build image
 # whenever the cni-plugin image is created.
-CNI_VERSION=master
+CNI_VERSION=9ffe547cb3b66f80dd32a00fc69a6d0082b55321
 FLANNEL_VERSION=main
 
 # The libbpf version to use
