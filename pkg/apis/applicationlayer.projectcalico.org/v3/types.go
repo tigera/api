@@ -386,6 +386,33 @@ type ValidationFailure struct {
 	// Message explains why validation failed
 	// +kubebuilder:validation:MaxLength=1024
 	Message string `json:"message,omitempty"`
+
+	// Field is the path of the setting that failed the rule, e.g.
+	// "spec.coreRuleSet.paranoiaLevel". Populated when the rule's Rego emits the
+	// object form of a violation with a "field" key; empty for rules that emit a
+	// bare message. Consumers use it to point a user at the setting to change
+	// rather than making them read the rule.
+	// +optional
+	// +kubebuilder:validation:MaxLength=253
+	Field string `json:"field,omitempty"`
+
+	// Expected is the value the rule requires, rendered as a string. Set from the
+	// violation's "expected" key.
+	// +optional
+	// +kubebuilder:validation:MaxLength=256
+	Expected string `json:"expected,omitempty"`
+
+	// Observed is the value the rule actually found, rendered as a string. Set
+	// from the violation's "observed" key.
+	// +optional
+	// +kubebuilder:validation:MaxLength=256
+	Observed string `json:"observed,omitempty"`
+
+	// Remedy is a short, rule-authored instruction for resolving the failure. Set
+	// from the violation's "remedy" key.
+	// +optional
+	// +kubebuilder:validation:MaxLength=512
+	Remedy string `json:"remedy,omitempty"`
 }
 
 // WAFPolicyStatus defines the observed state.
