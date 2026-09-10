@@ -6688,7 +6688,7 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 					},
 					"flowLogsDynamicAggregationEnabled": {
 						SchemaProps: spec.SchemaProps{
-							Description: "FlowLogsDynamicAggregationEnabled is used to enable/disable dynamically changing aggregation levels. Default is true.",
+							Description: "FlowLogsDynamicAggregationEnabled is used to enable/disable dynamically changing aggregation levels. Default is false.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
