@@ -1109,7 +1109,7 @@ type FelixConfigurationSpec struct {
 	// FlowLogsFileEnabledForDenied is used to enable/disable flow logs entries created for denied flows. Default is true.
 	// This parameter only takes effect when FlowLogsFileReporterEnabled is set to true.
 	FlowLogsFileEnabledForDenied *bool `json:"flowLogsFileEnabledForDenied,omitempty"`
-	// FlowLogsDynamicAggregationEnabled is used to enable/disable dynamically changing aggregation levels. Default is true.
+	// FlowLogsDynamicAggregationEnabled is used to enable/disable dynamically changing aggregation levels. Default is false.
 	FlowLogsDynamicAggregationEnabled *bool `json:"flowLogsDynamicAggregationEnabled,omitempty"`
 	// FlowLogsPositionFilePath is used specify the position of the external pipeline that reads flow logs. Default is /var/log/calico/flows.log.pos.
 	// This parameter only takes effect when FlowLogsDynamicAggregationEnabled is set to true.
