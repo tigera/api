@@ -3141,6 +3141,9 @@ var schemaYAML = typed.YAMLObject(`types:
       type:
         namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.ControllersConfig
       default: {}
+    - name: debugProfileHost
+      type:
+        scalar: string
     - name: debugProfilePort
       type:
         scalar: numeric
