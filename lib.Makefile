@@ -2004,15 +2004,26 @@ helm: bin/helm
 	@echo "helm: $^"
 bin/helm: bin/.helm-updated-$(HELM_VERSION)
 
+# helm-gcs 0.7.0 and up need Helm 4 (platformHooks); every branch still pins Helm 3.
 helm-install-gcs-plugin:
-	bin/helm plugin install https://github.com/viglesiasce/helm-gcs.git
+	bin/helm plugin install https://github.com/hayorov/helm-gcs.git --version 0.6.3
 
 publish-charts: publish-charts-gcs publish-charts-oci
-# Upload to Google tigera-helm-charts storage bucket.
+# Upload to Google tigera-helm-charts storage bucket. --retry reloads index.yaml when a
+# concurrent nightly writes it first, otherwise that branch's entries are silently lost.
+# --force allows republishing a version whose SHA has not moved since the last run.
+# The read-back is the real guard: a lost merge still exits 0, and a for loop reports only
+# its last iteration, so without both this and the || exit 1 the job goes green regardless.
 publish-charts-gcs:
 	bin/helm repo add tigera gs://tigera-helm-charts
 	for chart in ./bin/*.tgz; do \
-		bin/helm gcs push $$chart gs://tigera-helm-charts; \
+		bin/helm gcs push $$chart tigera --force --retry || exit 1; \
+	done
+	bin/helm repo update tigera
+	for chart in ./bin/*.tgz; do \
+		bin/helm search repo "tigera/$$(bin/helm show chart $$chart | awk '/^name:/{print $$2}')" \
+			--version "$$(bin/helm show chart $$chart | awk '/^version:/{print $$2}')" \
+			--fail-on-no-result >/dev/null || exit 1; \
 	done
 
 CHART_REPO?=oci://us-central1-docker.pkg.dev/unique-caldron-775/charts
