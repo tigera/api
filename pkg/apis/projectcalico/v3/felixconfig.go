@@ -1376,7 +1376,10 @@ type FelixConfigurationSpec struct {
 	// NoDelay - Felix does not introduce any delay to the packets. DNS rules may not have been programmed by the time
 	// the first packet traverses the policy rules. Client applications need to handle reconnection attempts if initial
 	// connection attempts fail. This may be problematic for some applications or for very low DNS TTLs.
-	// [Default: DelayDeniedPacket]
+	//
+	// This setting is only used by the eBPF dataplane, which ignores DNSPolicyMode. There is no eBPF
+	// equivalent of the DelayDeniedPacket or DelayDNSResponse modes.
+	// [Default: Inline]
 	BPFDNSPolicyMode *BPFDNSPolicyMode `json:"bpfDNSPolicyMode,omitempty" validate:"omitempty,oneof=NoDelay Inline"`
 	// NFTablesDNSPolicyMode specifies how DNS policy programming will be handled for NFTables.
 	// DelayDeniedPacket - Felix delays any denied packet that traversed a policy that included egress domain matches,
