@@ -2075,6 +2075,12 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: logActionRateLimitBurst
       type:
         scalar: numeric
+    - name: logConnectionTransitions
+      type:
+        scalar: string
+    - name: logConnectionTransitionsPrefix
+      type:
+        scalar: string
     - name: logDebugFilenameRegex
       type:
         scalar: string
