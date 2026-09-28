@@ -103,6 +103,11 @@ ALLOWED_DEV_REGISTRIES ?= gcr.io/unique-caldron-775 quay.io/tigeradev
 # as part of an official release.
 RELEASE_REGISTRIES ?= quay.io/tigera
 
+# A release build pushes straight to the release registries.
+ifeq ($(RELEASE),true)
+ALLOWED_DEV_REGISTRIES += $(RELEASE_REGISTRIES)
+endif
+
 # Archive bucket
 ARTIFACTS_BUCKET ?= tigera-public/ee
 
