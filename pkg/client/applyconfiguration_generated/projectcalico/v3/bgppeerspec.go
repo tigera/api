@@ -108,6 +108,16 @@ type BGPPeerSpecApplyConfiguration struct {
 	// automatically. If set to Manual, a separate BGPPeer must be created
 	// for the reverse peering. [Default: Auto]
 	ReversePeering *projectcalicov3.ReversePeering `json:"reversePeering,omitempty"`
+	// ConnectionMode controls which end initiates the BGP TCP connection for the peerings generated
+	// by this resource, from the perspective of the node(s) selected by Node/NodeSelector. "Auto"
+	// (the default, equivalent to leaving the field unset) uses Calico's built-in active/passive
+	// selection. "Active" makes the selected node(s) initiate the connection; "Passive" makes them
+	// wait for the far end to initiate. Active and Passive are only valid for an explicit-PeerIP or
+	// LocalWorkloadSelector peer; a PeerSelector peer must be Auto (Calico owns both ends). When
+	// PeerIP matches another cluster node, the automatically-generated reverse peering takes the
+	// opposite mode.
+	// [Default: Auto]
+	ConnectionMode *projectcalicov3.BGPPeerConnectionMode `json:"connectionMode,omitempty"`
 }
 
 // BGPPeerSpecApplyConfiguration constructs a declarative configuration of the BGPPeerSpec type for use with
@@ -313,5 +323,13 @@ func (b *BGPPeerSpecApplyConfiguration) WithLocalWorkloadSelector(value string) 
 // If called multiple times, the ReversePeering field is set to the value of the last call.
 func (b *BGPPeerSpecApplyConfiguration) WithReversePeering(value projectcalicov3.ReversePeering) *BGPPeerSpecApplyConfiguration {
 	b.ReversePeering = &value
+	return b
+}
+
+// WithConnectionMode sets the ConnectionMode field in the declarative configuration to the given value
+// and returns the receiver, so that objects can be built by chaining "With" function invocations.
+// If called multiple times, the ConnectionMode field is set to the value of the last call.
+func (b *BGPPeerSpecApplyConfiguration) WithConnectionMode(value projectcalicov3.BGPPeerConnectionMode) *BGPPeerSpecApplyConfiguration {
+	b.ConnectionMode = &value
 	return b
 }
