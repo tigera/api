@@ -64,6 +64,18 @@ spec:
                   type: integer
                 birdGatewayMode:
                   type: string
+                connectionMode:
+                  allOf:
+                    - enum:
+                        - Auto
+                        - Active
+                        - Passive
+                    - enum:
+                        - Auto
+                        - Active
+                        - Passive
+                  default: Auto
+                  type: string
                 extensions:
                   additionalProperties:
                     type: string

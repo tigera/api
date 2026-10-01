@@ -199,6 +199,19 @@ type BGPPeerSpec struct {
 	// for the reverse peering. [Default: Auto]
 	// +kubebuilder:validation:Enum=Auto;Manual;
 	ReversePeering *ReversePeering `json:"reversePeering,omitempty"`
+
+	// ConnectionMode controls which end initiates the BGP TCP connection for the peerings generated
+	// by this resource, from the perspective of the node(s) selected by Node/NodeSelector. "Auto"
+	// (the default, equivalent to leaving the field unset) uses Calico's built-in active/passive
+	// selection. "Active" makes the selected node(s) initiate the connection; "Passive" makes them
+	// wait for the far end to initiate. Active and Passive are only valid for an explicit-PeerIP or
+	// LocalWorkloadSelector peer; a PeerSelector peer must be Auto (Calico owns both ends). When
+	// PeerIP matches another cluster node, the automatically-generated reverse peering takes the
+	// opposite mode.
+	// [Default: Auto]
+	// +kubebuilder:default=Auto
+	// +kubebuilder:validation:Enum=Auto;Active;Passive
+	ConnectionMode BGPPeerConnectionMode `json:"connectionMode,omitempty" validate:"omitempty,bgpPeerConnectionMode"`
 }
 
 // +kubebuilder:validation:Enum=UseNodeIP;None
@@ -228,6 +241,20 @@ type BIRDGatewayMode string
 const (
 	BIRDGatewayModeRecursive                 BIRDGatewayMode = "Recursive"
 	BIRDGatewayModeDirectIfDirectlyConnected BIRDGatewayMode = "DirectIfDirectlyConnected"
+)
+
+// +kubebuilder:validation:Enum=Auto;Active;Passive
+type BGPPeerConnectionMode string
+
+const (
+	// BGPPeerConnectionModeAuto uses Calico's built-in per-peer selection of active vs passive
+	// (the default, and equivalent to leaving the field unset).
+	BGPPeerConnectionModeAuto BGPPeerConnectionMode = "Auto"
+	// BGPPeerConnectionModeActive means the selected node(s) initiate the BGP TCP connection.
+	BGPPeerConnectionModeActive BGPPeerConnectionMode = "Active"
+	// BGPPeerConnectionModePassive means the selected node(s) do not initiate the connection; they
+	// wait for the far end to initiate.
+	BGPPeerConnectionModePassive BGPPeerConnectionMode = "Passive"
 )
 
 // BGPPassword contains ways to specify a BGP password.
