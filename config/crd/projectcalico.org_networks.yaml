@@ -329,6 +329,7 @@ spec:
                         required:
                           - vlan
                         type: object
+                      maxItems: 4094
                       minItems: 1
                       type: array
                       x-kubernetes-list-type: atomic
