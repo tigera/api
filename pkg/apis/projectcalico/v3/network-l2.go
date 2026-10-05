@@ -27,6 +27,7 @@ type L2BridgeSpec struct {
 	// "vlan" field; if spec.vlans has exactly one entry that resolves to
 	// a single VLAN ID, the CNI config "vlan" field may be omitted.
 	// +kubebuilder:validation:MinItems=1
+	// +kubebuilder:validation:MaxItems=4094
 	// +listType=atomic
 	VLANs []L2VLANSpec `json:"vlans" validate:"required,min=1,dive"`
 
