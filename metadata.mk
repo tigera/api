@@ -48,8 +48,8 @@ CALICO_VERSION=v3.33.0
 # The operator declares these on the CRs that ECK and Prometheus Operator manage,
 # so a build that ships one version and declares another is a bug. Renovate bumps
 # them; see the regex managers in renovate.json.
-ELASTIC_VERSION=8.19.20
-KIBANA_VERSION=8.19.20
+ELASTIC_VERSION=8.19.22
+KIBANA_VERSION=8.19.22
 PROMETHEUS_VERSION=v3.13.2
 ALERTMANAGER_VERSION=v0.34.0
 
