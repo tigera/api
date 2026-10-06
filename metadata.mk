@@ -37,7 +37,6 @@ HELM_VERSION=v3.21.2
 # 1.35.x node image shipped with KIND_VERSION below. Bump this only once a
 # KubeVirt/mockvirt release that supports the target Kubernetes minor exists.
 KINDEST_NODE_VERSION=v1.35.5
-KINDEST_NODE_VERSION_DUAL_TOR=v1.24.7
 KIND_VERSION=v0.32.0
 
 # This gets embedded into node as the Calico version, the Enterprise release
