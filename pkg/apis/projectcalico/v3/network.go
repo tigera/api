@@ -35,8 +35,10 @@ type Network struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 
-	Spec   NetworkSpec   `json:"spec" protobuf:"bytes,2,opt,name=spec"`
-	Status NetworkStatus `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
+	Spec NetworkSpec `json:"spec" protobuf:"bytes,2,opt,name=spec"`
+
+	// +optional
+	Status NetworkStatus `json:"status,omitzero" protobuf:"bytes,3,opt,name=status"`
 }
 
 // NetworkSpec contains the specification for a Network resource.  Exactly one of the
