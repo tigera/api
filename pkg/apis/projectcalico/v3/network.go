@@ -187,7 +187,35 @@ type NetworkStatus struct {
 	// Conditions is a list of conditions that apply to this network.
 	// +listType=atomic
 	Conditions []metav1.Condition `json:"conditions,omitempty"`
+
+	// Subnets lists each distinct subnet declared in spec.l2Bridge.vlans, with the IP pools
+	// IPAM can allocate from for it.
+	// +optional
+	// +listType=map
+	// +listMapKey=cidr
+	Subnets []NetworkSubnetStatus `json:"subnets,omitempty"`
 }
+
+// NetworkSubnetStatus reports which IP pools serve one subnet of an L2 network.
+type NetworkSubnetStatus struct {
+	// CIDR is the subnet as written in spec.l2Bridge.vlans[].subnets[].cidr.
+	CIDR string `json:"cidr"`
+
+	// Pools names the L2Workload IP pools whose CIDR is equal to or narrower than this subnet,
+	// which are the pools IPAM considers for it. Empty means workloads on this subnet get no address.
+	// +optional
+	// +listType=set
+	Pools []string `json:"pools,omitempty"`
+}
+
+const (
+	// NetworkConditionNoPoolForSubnet is present while at least one subnet in spec.l2Bridge.vlans
+	// has no IP pool IPAM can allocate from for it.
+	NetworkConditionNoPoolForSubnet = "NoPoolForSubnet"
+
+	// NetworkReasonSubnetUnserved is the reason NoPoolForSubnet carries.
+	NetworkReasonSubnetUnserved = "SubnetUnserved"
+)
 
 // NewNetwork creates a new (zeroed) Network struct with the TypeMetadata initialised to the current
 // version.

@@ -1003,6 +1003,11 @@ func (in NetworkStatus) OpenAPIModelName() string {
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
+func (in NetworkSubnetStatus) OpenAPIModelName() string {
+	return "com.github.tigera.api.pkg.apis.projectcalico.v3.NetworkSubnetStatus"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
 func (in NodeControllerConfig) OpenAPIModelName() string {
 	return "com.github.tigera.api.pkg.apis.projectcalico.v3.NodeControllerConfig"
 }

@@ -221,6 +221,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		v3.NetworkSetSpec{}.OpenAPIModelName():                            schema_pkg_apis_projectcalico_v3_NetworkSetSpec(ref),
 		v3.NetworkSpec{}.OpenAPIModelName():                               schema_pkg_apis_projectcalico_v3_NetworkSpec(ref),
 		v3.NetworkStatus{}.OpenAPIModelName():                             schema_pkg_apis_projectcalico_v3_NetworkStatus(ref),
+		v3.NetworkSubnetStatus{}.OpenAPIModelName():                       schema_pkg_apis_projectcalico_v3_NetworkSubnetStatus(ref),
 		v3.NodeControllerConfig{}.OpenAPIModelName():                      schema_pkg_apis_projectcalico_v3_NodeControllerConfig(ref),
 		v3.PacketCapture{}.OpenAPIModelName():                             schema_pkg_apis_projectcalico_v3_PacketCapture(ref),
 		v3.PacketCaptureFile{}.OpenAPIModelName():                         schema_pkg_apis_projectcalico_v3_PacketCaptureFile(ref),
@@ -12436,11 +12437,73 @@ func schema_pkg_apis_projectcalico_v3_NetworkStatus(ref common.ReferenceCallback
 							},
 						},
 					},
+					"subnets": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"cidr",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "Subnets lists each distinct subnet declared in spec.l2Bridge.vlans, with the IP pools IPAM can allocate from for it.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref(v3.NetworkSubnetStatus{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			metav1.Condition{}.OpenAPIModelName()},
+			v3.NetworkSubnetStatus{}.OpenAPIModelName(), metav1.Condition{}.OpenAPIModelName()},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_NetworkSubnetStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NetworkSubnetStatus reports which IP pools serve one subnet of an L2 network.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"cidr": {
+						SchemaProps: spec.SchemaProps{
+							Description: "CIDR is the subnet as written in spec.l2Bridge.vlans[].subnets[].cidr.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"pools": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "Pools names the L2Workload IP pools whose CIDR is equal to or narrower than this subnet, which are the pools IPAM considers for it. Empty means workloads on this subnet get no address.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type:   []string{"string"},
+										Format: "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"cidr"},
+			},
+		},
 	}
 }
 

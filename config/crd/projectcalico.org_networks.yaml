@@ -535,6 +535,33 @@ spec:
                     type: object
                   type: array
                   x-kubernetes-list-type: atomic
+                subnets:
+                  description: |-
+                    Subnets lists each distinct subnet declared in spec.l2Bridge.vlans, with the IP pools
+                    IPAM can allocate from for it.
+                  items:
+                    description:
+                      NetworkSubnetStatus reports which IP pools serve one
+                      subnet of an L2 network.
+                    properties:
+                      cidr:
+                        description: CIDR is the subnet as written in spec.l2Bridge.vlans[].subnets[].cidr.
+                        type: string
+                      pools:
+                        description: |-
+                          Pools names the L2Workload IP pools whose CIDR is equal to or narrower than this subnet,
+                          which are the pools IPAM considers for it. Empty means workloads on this subnet get no address.
+                        items:
+                          type: string
+                        type: array
+                        x-kubernetes-list-type: set
+                    required:
+                      - cidr
+                    type: object
+                  type: array
+                  x-kubernetes-list-map-keys:
+                    - cidr
+                  x-kubernetes-list-type: map
               type: object
           required:
             - spec

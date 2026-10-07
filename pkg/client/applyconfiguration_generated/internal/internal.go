@@ -3602,6 +3602,27 @@ var schemaYAML = typed.YAMLObject(`types:
           elementType:
             namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Condition
           elementRelationship: atomic
+    - name: subnets
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.NetworkSubnetStatus
+          elementRelationship: associative
+          keys:
+          - cidr
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.NetworkSubnetStatus
+  map:
+    fields:
+    - name: cidr
+      type:
+        scalar: string
+      default: ""
+    - name: pools
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: associative
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.NodeControllerConfig
   map:
     fields:
