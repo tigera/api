@@ -322,6 +322,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &projectcalicov3.NetworkSpecApplyConfiguration{}
 	case v3.SchemeGroupVersion.WithKind("NetworkStatus"):
 		return &projectcalicov3.NetworkStatusApplyConfiguration{}
+	case v3.SchemeGroupVersion.WithKind("NetworkSubnetStatus"):
+		return &projectcalicov3.NetworkSubnetStatusApplyConfiguration{}
 	case v3.SchemeGroupVersion.WithKind("NodeControllerConfig"):
 		return &projectcalicov3.NodeControllerConfigApplyConfiguration{}
 	case v3.SchemeGroupVersion.WithKind("PacketCapture"):
