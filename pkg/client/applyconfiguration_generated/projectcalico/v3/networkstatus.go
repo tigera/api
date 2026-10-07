@@ -15,6 +15,9 @@ import (
 type NetworkStatusApplyConfiguration struct {
 	// Conditions is a list of conditions that apply to this network.
 	Conditions []v1.ConditionApplyConfiguration `json:"conditions,omitempty"`
+	// Subnets lists each distinct subnet declared in spec.l2Bridge.vlans, with the IP pools
+	// IPAM can allocate from for it.
+	Subnets []NetworkSubnetStatusApplyConfiguration `json:"subnets,omitempty"`
 }
 
 // NetworkStatusApplyConfiguration constructs a declarative configuration of the NetworkStatus type for use with
@@ -32,6 +35,19 @@ func (b *NetworkStatusApplyConfiguration) WithConditions(values ...*v1.Condition
 			panic("nil value passed to WithConditions")
 		}
 		b.Conditions = append(b.Conditions, *values[i])
+	}
+	return b
+}
+
+// WithSubnets adds the given value to the Subnets field in the declarative configuration
+// and returns the receiver, so that objects can be build by chaining "With" function invocations.
+// If called multiple times, values provided by each call will be appended to the Subnets field.
+func (b *NetworkStatusApplyConfiguration) WithSubnets(values ...*NetworkSubnetStatusApplyConfiguration) *NetworkStatusApplyConfiguration {
+	for i := range values {
+		if values[i] == nil {
+			panic("nil value passed to WithSubnets")
+		}
+		b.Subnets = append(b.Subnets, *values[i])
 	}
 	return b
 }
