@@ -1,6 +1,6 @@
 module github.com/tigera/api
 
-go 1.25.14
+go 1.26.4
 
 require (
 	github.com/jinzhu/copier v0.4.0
