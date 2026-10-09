@@ -2,19 +2,20 @@
 # This file contains Makefile configuration parameters and metadata for this branch.
 #################################################################################################
 # The project Go version
-GO_VERSION=1.25.14
+GO_VERSION=1.26.4
 # Go toolchain for the third_party/ trees whose go.mod needs a Go newer than
 # GO_VERSION; everything else builds on GO_VERSION. "+auto" means at least this,
 # newer only if a tree asks. Keep it on a current patch release -- this is the
 # Go that ends up in those binaries.
-THIRD_PARTY_GOTOOLCHAIN=go1.26.7+auto
+THIRD_PARTY_GOTOOLCHAIN=go1.26.8+auto
 # Version of Kubernetes to use for dependencies, tests, registry.k8s.io/kubectl, and kubectl binary release.
 K8S_VERSION=v1.35.8
 # The version of LLVM to use for go-build and calico/base images.
-LLVM_VERSION=18.1.8
+LLVM_VERSION=21.1.8
 
 # Calico toolchain versions and the calico/base image to use.
-GO_BUILD_VER=$(GO_VERSION)-llvm$(LLVM_VERSION)-k8s$(K8S_VERSION:v%=%)
+# The newest go-build image for Go 1.26 with k8s 1.35 is on k8s 1.35.6.
+GO_BUILD_VER=$(GO_VERSION)-llvm$(LLVM_VERSION)-k8s1.35.6
 RUST_BUILD_VER=1.93.1
 
 # Calico Enterprise shipping images now builds on UBI 10. For Calico OSS to Enterprise merges,
@@ -23,11 +24,11 @@ CALICO_BASE_VER=ubi10-1787787904
 
 # Version of various tools used in the build and tests.
 COREDNS_VERSION=1.5.2
-CRANE_VERSION=v0.20.7
+CRANE_VERSION=v0.21.3
 ETCD_VERSION=v3.5.24
 GHR_VERSION=v0.17.0
 GITHUB_CLI_VERSION=2.76.2
-GOTESTSUM_VERSION=v1.12.3
+GOTESTSUM_VERSION=v1.13.0
 HELM_VERSION=v3.16.4
 KINDEST_NODE_VERSION=v1.35.5
 KINDEST_NODE_VERSION_DUAL_TOR=v1.24.7

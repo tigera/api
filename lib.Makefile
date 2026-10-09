@@ -93,7 +93,7 @@ endif
 .PHONY: register
 register:
 ifneq ($(BUILDARCH),$(ARCH))
-	docker run --privileged --rm calico/binfmt:qemu-v10.1.3 --install all || true
+	docker run --privileged --rm calico/binfmt:qemu-v10.1.4 --install all || true
 endif
 
 # If this is a release, also tag and push additional images.
@@ -1065,18 +1065,13 @@ gen-mocks:
 	# The generated files need import reordering to pass static-checks
 	$(MAKE) fix-changed
 
-# Run mockery to generate mocks. If a .mockery.yaml config file exists (mockery v3),
-# run mockery with that config. Otherwise, fall back to the v2 CLI flags using MOCKERY_FILE_PATHS.
+# Run mockery (v3) to generate mocks using .mockery.yaml config.
 # Look here for more information https://github.com/vektra/mockery
 mockery-run:
 	if [ -f .mockery.yaml ] || [ -f .mockery.yml ]; then \
 		mockery; \
 	else \
-		for FILE_PATH in $(MOCKERY_FILE_PATHS); do\
-			DIR=$$(dirname $$FILE_PATH); \
-			INTERFACE_NAME=$$(basename $$FILE_PATH); \
-			mockery --dir $$DIR --name $$INTERFACE_NAME --inpackage; \
-		done; \
+		echo "No .mockery.yaml found, skipping mock generation"; \
 	fi
 
 ###############################################################################
