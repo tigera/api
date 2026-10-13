@@ -18,7 +18,7 @@ RUST_BUILD_VER=1.96.0
 
 # Calico Enterprise shipping images now builds on UBI 10. For Calico OSS to Enterprise merges,
 # please don't downgrade the base image back to UBI 9.
-CALICO_BASE_VER=ubi10-1788477346
+CALICO_BASE_VER=ubi10-1791567192
 
 # Version of various tools used in the build and tests.
 COREDNS_VERSION=1.5.2
@@ -50,7 +50,7 @@ CALICO_VERSION=v3.33.0
 # them; see the regex managers in renovate.json.
 ELASTIC_VERSION=8.19.22
 KIBANA_VERSION=8.19.22
-PROMETHEUS_VERSION=v3.13.2
+PROMETHEUS_VERSION=v3.15.0
 ALERTMANAGER_VERSION=v0.34.0
 
 # The Semaphore calico-private ID, used when making calls to the Semaphore API.
