@@ -84,6 +84,28 @@ spec:
                     - Recursive
                     - DirectIfDirectlyConnected
                   type: string
+                connectionMode:
+                  allOf:
+                    - enum:
+                        - Auto
+                        - Active
+                        - Passive
+                    - enum:
+                        - Auto
+                        - Active
+                        - Passive
+                  default: Auto
+                  description: |-
+                    ConnectionMode controls which end initiates the BGP TCP connection for the peerings generated
+                    by this resource, from the perspective of the node(s) selected by Node/NodeSelector. "Auto"
+                    (the default, equivalent to leaving the field unset) uses Calico's built-in active/passive
+                    selection. "Active" makes the selected node(s) initiate the connection; "Passive" makes them
+                    wait for the far end to initiate. Active and Passive are only valid for an explicit-PeerIP or
+                    LocalWorkloadSelector peer; a PeerSelector peer must be Auto (Calico owns both ends). When
+                    PeerIP matches another cluster node, the automatically-generated reverse peering takes the
+                    opposite mode.
+                    [Default: Auto]
+                  type: string
                 extensions:
                   additionalProperties:
                     type: string
@@ -341,6 +363,11 @@ spec:
                   rule:
                     (!has(self.network) || size(self.network) == 0) || (!has(self.externalNetwork)
                     || size(self.externalNetwork) == 0)
+                - message: connectionMode must be Auto when peerSelector is set
+                  reason: FieldValueForbidden
+                  rule:
+                    (!has(self.peerSelector) || size(self.peerSelector) == 0) || (!has(self.connectionMode)
+                    || self.connectionMode == 'Auto')
           required:
             - metadata
             - spec
