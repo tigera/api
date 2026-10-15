@@ -624,10 +624,6 @@ DOCKER_RUST_BUILD := mkdir -p bin && \
 # Host native build images
 HOST_NATIVE_BUILD_IMAGE ?= calico/host-native-build
 
-# Go release for the rhel8 host-native image, derived from GO_BUILD_VER.
-# Sole source of truth — bake file and Dockerfile carry no default.
-RHEL8_GO_VERSION = $(firstword $(subst -, ,$(GO_BUILD_VER)))
-
 # Distros for which we maintain a host-native build image — discovered from
 # Dockerfiles in third_party/host-native/. New distros are picked up
 # automatically by adding a Dockerfile.<distro>.
@@ -645,7 +641,6 @@ host-native-build: $(addprefix host-native-build-,$(HOST_NATIVE_DISTROS))
 define host_native_build_rule
 host-native-build-$(1): $$(REPO_DIR)/third_party/host-native/Dockerfile.$(1)
 	cd $$(REPO_DIR)/third_party/host-native && \
-		RHEL8_GO_VERSION=$$(RHEL8_GO_VERSION) \
 		docker buildx bake --load --pull \
 		-f $$(REPO_DIR)/third_party/host-native/host-native-build-bake.hcl $(1)
 endef
