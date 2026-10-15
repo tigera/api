@@ -661,6 +661,9 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: birdGatewayMode
       type:
         scalar: string
+    - name: connectionMode
+      type:
+        scalar: string
     - name: extensions
       type:
         map:
