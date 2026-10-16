@@ -127,10 +127,10 @@ spec:
               description: |-
                 GlobalWAFPolicyStatus defines the observed state.
 
-                Conditions emitted by the controller:
-                  - Licensed   (LicenseValid / LicenseBlocked)
-                  - Accepted   (Accepted / Invalid / PluginNotFound)
-                  - Ready      (Ready / NotReady / ConflictingGlobalPolicy)
+                The global controller emits three condition types: Licensed, Accepted and
+                Ready. Not the five a WAFPolicy carries; it sets no Programmed and no
+                Validated. Reasons are not listed here, for the same reason they are not
+                listed on WAFPolicyStatus.
               properties:
                 conditions:
                   description: Conditions represent the latest available observations

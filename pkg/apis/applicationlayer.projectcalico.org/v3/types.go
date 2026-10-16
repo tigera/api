@@ -224,10 +224,10 @@ type GlobalWAFPolicySpec struct {
 
 // GlobalWAFPolicyStatus defines the observed state.
 //
-// Conditions emitted by the controller:
-//   - Licensed   (LicenseValid / LicenseBlocked)
-//   - Accepted   (Accepted / Invalid / PluginNotFound)
-//   - Ready      (Ready / NotReady / ConflictingGlobalPolicy)
+// The global controller emits three condition types: Licensed, Accepted and
+// Ready. Not the five a WAFPolicy carries; it sets no Programmed and no
+// Validated. Reasons are not listed here, for the same reason they are not
+// listed on WAFPolicyStatus.
 type GlobalWAFPolicyStatus struct {
 	// Conditions represent the latest available observations
 	Conditions []metav1.Condition `json:"conditions,omitempty"`
@@ -417,14 +417,16 @@ type ValidationFailure struct {
 
 // WAFPolicyStatus defines the observed state.
 //
-// Conditions emitted by the controller:
-//   - Licensed   (LicenseValid / LicenseInGracePeriod / LicenseExpired /
-//     LicenseInvalid / LicenseBlocked)
-//   - Accepted   (Accepted / Invalid / Conflicted / PluginNotFound /
-//     ReplicaUnmanaged / ValidationFailed)
-//   - Programmed (ConfigurationApplied / WASMUnavailable / CheckerError /
-//     NotAttempted)
-//   - Ready      (Ready / NotReady)
+// The controller emits five condition types: Licensed, Accepted, Validated,
+// Programmed and Ready. Consumers count these to decide how many conditions to
+// expect, which is why the count is here and why it used to say four: Validated
+// was missing, so a UI reported "4 of 4 fulfilled" while five were set.
+//
+// The per-type reason lists that used to sit here are gone on purpose. They
+// drifted: four reasons were named that no controller emits, and four the
+// controller does emit were missing. A comment cannot stay in step with reasons
+// built as literals at each call site, so read them from
+// kube-controllers/pkg/controllers/applicationlayer/conditions.go instead.
 type WAFPolicyStatus struct {
 	// Conditions represent the latest available observations
 	Conditions []metav1.Condition `json:"conditions,omitempty"`
