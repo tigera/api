@@ -80,8 +80,10 @@ spec:
                         Deprecated: use State.
                       type: boolean
                     paranoiaLevel:
-                      default: 1
-                      description: ParanoiaLevel sets the CRS paranoia level (1-4)
+                      description: |-
+                        ParanoiaLevel sets the CRS paranoia level (1-4). Unset means inherit: the
+                        GlobalWAFPolicy's level on a WAFPolicy, the built-in baseline (1) on a
+                        global.
                       maximum: 4
                       minimum: 1
                       type: integer
