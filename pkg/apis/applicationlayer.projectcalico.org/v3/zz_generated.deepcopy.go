@@ -20,6 +20,11 @@ func (in *CoreRuleSetConfig) DeepCopyInto(out *CoreRuleSetConfig) {
 		*out = new(bool)
 		**out = **in
 	}
+	if in.ParanoiaLevel != nil {
+		in, out := &in.ParanoiaLevel, &out.ParanoiaLevel
+		*out = new(int)
+		**out = **in
+	}
 	return
 }
 

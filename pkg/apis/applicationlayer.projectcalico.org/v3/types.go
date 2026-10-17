@@ -103,11 +103,17 @@ type CoreRuleSetConfig struct {
 	// Deprecated: use State.
 	Enabled *bool `json:"enabled,omitempty"`
 
-	// ParanoiaLevel sets the CRS paranoia level (1-4)
+	// No default on purpose: Kubernetes defaults the fields of a struct that is
+	// present, so one here would make an inherited level indistinguishable from
+	// a deliberate one. EV-6928. Kept apart from the doc comment below so it
+	// stays out of the CRD description.
+
+	// ParanoiaLevel sets the CRS paranoia level (1-4). Unset means inherit: the
+	// GlobalWAFPolicy's level on a WAFPolicy, the built-in baseline (1) on a
+	// global.
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=4
-	// +kubebuilder:default=1
-	ParanoiaLevel int `json:"paranoiaLevel,omitempty"`
+	ParanoiaLevel *int `json:"paranoiaLevel,omitempty"`
 }
 
 // EffectiveState returns the resolved CoreRuleSetState given State and the
