@@ -50,7 +50,7 @@ CALICO_VERSION=v3.33.0
 # them; see the regex managers in renovate.json.
 ELASTIC_VERSION=8.19.22
 KIBANA_VERSION=8.19.22
-PROMETHEUS_VERSION=v3.15.0
+PROMETHEUS_VERSION=v3.15.1
 ALERTMANAGER_VERSION=v0.34.0
 
 # The Semaphore calico-private ID, used when making calls to the Semaphore API.
