@@ -6,6 +6,11 @@
 GO_BUILD_VER=1.25.14-llvm18.1.8-k8s1.35.8
 RUST_BUILD_VER=1.93.1
 
+# Go 1.25 is end of life. The Go 1.26 go-build images link cgo against glibc
+# 2.34, newer than the ubi8 runtime in calico-node and egress-gateway, so keep
+# the 1.25 container and have it download the Go that compiles our code.
+GOTOOLCHAIN=go1.26.10+auto
+
 CALICO_BASE_VER=ubi9-1790191092
 CALICO_BASE_UBI10_VER=ubi10-1790191092
 

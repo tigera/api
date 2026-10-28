@@ -36,6 +36,7 @@ DOCKER_RUN := mkdir -p ../.go-pkg-cache bin $(GOMOD_CACHE) && \
 		--init \
 		$(EXTRA_DOCKER_ARGS) \
 		-e LOCAL_USER_ID=$(LOCAL_USER_ID) \
+		-e GOTOOLCHAIN=$(GOTOOLCHAIN) \
 		-e GOCACHE=/go-cache \
 		$(GOARCH_FLAGS) \
 		-e GOPATH=/go \
