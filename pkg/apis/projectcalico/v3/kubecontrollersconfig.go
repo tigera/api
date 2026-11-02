@@ -220,6 +220,7 @@ type Template struct {
 	Annotations map[string]string `json:"annotations,omitempty"`
 
 	// NodeSelector allows the AutoHostEndpoint to be created only for specific nodes
+	// +kubebuilder:validation:MaxLength=1024
 	NodeSelector string `json:"nodeSelector,omitempty" validate:"omitempty,selector"`
 }
 

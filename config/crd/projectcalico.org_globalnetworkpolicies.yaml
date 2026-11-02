@@ -198,6 +198,8 @@ spec:
                                   Names is an optional field that restricts the rule to only apply to traffic that originates from (or terminates
                                   at) a pod running as a service account whose name is in the list.
                                 items:
+                                  maxLength: 253
+                                  pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
                                   type: string
                                 type: array
                                 x-kubernetes-list-type: set
@@ -206,6 +208,7 @@ spec:
                                   Selector is an optional field that restricts the rule to only apply to traffic that originates from
                                   (or terminates at) a pod running as a service account that matches the given label selector.
                                   If both Names and Selector are specified then they are AND'ed.
+                                maxLength: 1024
                                 type: string
                             type: object
                           services:
@@ -542,6 +545,8 @@ spec:
                                   Names is an optional field that restricts the rule to only apply to traffic that originates from (or terminates
                                   at) a pod running as a service account whose name is in the list.
                                 items:
+                                  maxLength: 253
+                                  pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
                                   type: string
                                 type: array
                                 x-kubernetes-list-type: set
@@ -550,6 +555,7 @@ spec:
                                   Selector is an optional field that restricts the rule to only apply to traffic that originates from
                                   (or terminates at) a pod running as a service account that matches the given label selector.
                                   If both Names and Selector are specified then they are AND'ed.
+                                maxLength: 1024
                                 type: string
                             type: object
                           services:
@@ -814,6 +820,8 @@ spec:
                                   Names is an optional field that restricts the rule to only apply to traffic that originates from (or terminates
                                   at) a pod running as a service account whose name is in the list.
                                 items:
+                                  maxLength: 253
+                                  pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
                                   type: string
                                 type: array
                                 x-kubernetes-list-type: set
@@ -822,6 +830,7 @@ spec:
                                   Selector is an optional field that restricts the rule to only apply to traffic that originates from
                                   (or terminates at) a pod running as a service account that matches the given label selector.
                                   If both Names and Selector are specified then they are AND'ed.
+                                maxLength: 1024
                                 type: string
                             type: object
                           services:
@@ -1158,6 +1167,8 @@ spec:
                                   Names is an optional field that restricts the rule to only apply to traffic that originates from (or terminates
                                   at) a pod running as a service account whose name is in the list.
                                 items:
+                                  maxLength: 253
+                                  pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
                                   type: string
                                 type: array
                                 x-kubernetes-list-type: set
@@ -1166,6 +1177,7 @@ spec:
                                   Selector is an optional field that restricts the rule to only apply to traffic that originates from
                                   (or terminates at) a pod running as a service account that matches the given label selector.
                                   If both Names and Selector are specified then they are AND'ed.
+                                maxLength: 1024
                                 type: string
                             type: object
                           services:
