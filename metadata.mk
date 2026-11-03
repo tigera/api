@@ -2,9 +2,9 @@
 # This file contains Makefile configuration parameters and metadata for this branch.
 #################################################################################################
 # The project Go version
-GO_VERSION=1.27.1
+GO_VERSION=1.27.3
 # Version of Kubernetes to use for dependencies, tests, registry.k8s.io/kubectl, and kubectl binary release.
-K8S_VERSION=v1.37.0
+K8S_VERSION=v1.37.1
 # The version of LLVM to use for go-build and calico/base images.
 LLVM_VERSION=21.1.8
 
