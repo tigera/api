@@ -178,6 +178,7 @@ endif
 # we do not need to use the arch since go-build:v0.15 now is multi-arch manifest
 GO_BUILD_IMAGE ?= calico/go-build
 CALICO_BUILD    = $(GO_BUILD_IMAGE):$(GO_BUILD_VER)
+CALICO_BUILD_LINT = $(GO_BUILD_IMAGE):$(GO_BUILD_LINT_VER)
 
 RUST_BUILD_IMAGE ?= calico/rust-build
 CALICO_RUST_BUILD = $(RUST_BUILD_IMAGE):$(RUST_BUILD_VER)
@@ -771,10 +772,8 @@ static-checks: $(LOCAL_CHECKS)
 LINT_ARGS ?= --max-issues-per-linter 0 --max-same-issues 0 --timeout 8m
 
 .PHONY: golangci-lint
-# golangci-lint in the image is built with the image's Go and cannot type-check
-# the newer stdlib GOTOOLCHAIN brings in, so lint with the image's own Go.
 golangci-lint: $(GENERATED_FILES)
-	$(DOCKER_RUN) $(CALICO_BUILD) sh -c '$(GIT_CONFIG_SSH) GOTOOLCHAIN=local golangci-lint run $(LINT_ARGS)'
+	$(DOCKER_RUN) $(CALICO_BUILD_LINT) sh -c '$(GIT_CONFIG_SSH) golangci-lint run $(LINT_ARGS)'
 
 REPO_REL_DIR=$(shell if [ -e hack/format-changed-files.sh ]; then echo '.'; else echo '..'; fi )
 
@@ -946,6 +945,12 @@ semaphore-run-auto-pin-update-workflows:
 # Mock helpers
 ###############################################################################
 # Helper targets for testify mock generation
+
+# The mockery binary in the 1.25 go-build image is built with Go 1.25 and can't
+# load packages whose go line is 1.26. Build the same version with GOTOOLCHAIN
+# instead, so the generated mocks don't change.
+MOCKERY_VERSION ?= v3.5.5
+MOCKERY = go run github.com/vektra/mockery/v3@$(MOCKERY_VERSION)
 
 # Generate testify mocks in the build container.
 gen-mocks:
