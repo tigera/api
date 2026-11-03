@@ -11,6 +11,10 @@ RUST_BUILD_VER=1.93.1
 # the 1.25 container and have it download the Go that compiles our code.
 GOTOOLCHAIN=go1.26.10+auto
 
+# golangci-lint in the 1.25 image is built with Go 1.25 and refuses modules whose
+# go line is 1.26, so lint runs in a Go 1.26 image. Keep it on the GOTOOLCHAIN Go.
+GO_BUILD_LINT_VER=1.26.10-llvm21.1.8-k8s1.36.5
+
 CALICO_BASE_VER=ubi9-1790191092
 CALICO_BASE_UBI10_VER=ubi10-1790191092
 
