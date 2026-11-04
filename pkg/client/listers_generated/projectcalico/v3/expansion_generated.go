@@ -92,6 +92,14 @@ type GlobalThreatFeedListerExpansion interface{}
 // HostEndpointLister.
 type HostEndpointListerExpansion interface{}
 
+// HostQoSNodeStatusListerExpansion allows custom methods to be added to
+// HostQoSNodeStatusLister.
+type HostQoSNodeStatusListerExpansion interface{}
+
+// HostQoSPolicyListerExpansion allows custom methods to be added to
+// HostQoSPolicyLister.
+type HostQoSPolicyListerExpansion interface{}
+
 // IPAMBlockListerExpansion allows custom methods to be added to
 // IPAMBlockLister.
 type IPAMBlockListerExpansion interface{}

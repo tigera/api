@@ -35,6 +35,8 @@ type ProjectcalicoV3Interface interface {
 	GlobalReportTypesGetter
 	GlobalThreatFeedsGetter
 	HostEndpointsGetter
+	HostQoSNodeStatusesGetter
+	HostQoSPoliciesGetter
 	IPAMBlocksGetter
 	IPAMConfigurationsGetter
 	IPAMHandlesGetter
@@ -146,6 +148,14 @@ func (c *ProjectcalicoV3Client) GlobalThreatFeeds() GlobalThreatFeedInterface {
 
 func (c *ProjectcalicoV3Client) HostEndpoints() HostEndpointInterface {
 	return newHostEndpoints(c)
+}
+
+func (c *ProjectcalicoV3Client) HostQoSNodeStatuses() HostQoSNodeStatusInterface {
+	return newHostQoSNodeStatuses(c)
+}
+
+func (c *ProjectcalicoV3Client) HostQoSPolicies() HostQoSPolicyInterface {
+	return newHostQoSPolicies(c)
 }
 
 func (c *ProjectcalicoV3Client) IPAMBlocks() IPAMBlockInterface {

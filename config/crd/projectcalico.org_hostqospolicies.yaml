@@ -1,0 +1,670 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.18.0
+  name: hostqospolicies.projectcalico.org
+spec:
+  group: projectcalico.org
+  names:
+    kind: HostQoSPolicy
+    listKind: HostQoSPolicyList
+    plural: hostqospolicies
+    shortNames:
+      - hqp
+    singular: hostqospolicy
+  scope: Cluster
+  versions:
+    - additionalPrinterColumns:
+        - jsonPath: .status.conditions[?(@.type=='Ready')].status
+          name: Ready
+          type: string
+        - jsonPath: .status.conditions[?(@.type=='Ready')].reason
+          name: Reason
+          type: string
+        - jsonPath: .status.appliedBindings
+          name: AppliedBindings
+          type: integer
+        - jsonPath: .status.erroredBindings
+          name: ErroredBindings
+          type: integer
+        - jsonPath: .status.appliedNodes
+          name: AppliedNodes
+          type: integer
+        - jsonPath: .metadata.creationTimestamp
+          name: Age
+          type: date
+      name: v3
+      schema:
+        openAPIV3Schema:
+          description:
+            HostQoSPolicy is cluster-scoped; it controls per-host-NIC traffic
+            shaping.
+          properties:
+            apiVersion:
+              description: |-
+                APIVersion defines the versioned schema of this representation of an object.
+                Servers should convert recognized schemas to the latest internal value, and
+                may reject unrecognized values.
+                More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+              type: string
+            kind:
+              description: |-
+                Kind is a string value representing the REST resource this object represents.
+                Servers may infer this from the endpoint the client submits requests to.
+                Cannot be updated.
+                In CamelCase.
+                More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+              type: string
+            metadata:
+              type: object
+            spec:
+              description: |-
+                HostQoSPolicySpec is shaping intent: link capacity, resource pools, and a selector for the
+                HostEndpoints it shapes.
+              properties:
+                linkCapacity:
+                  anyOf:
+                    - type: integer
+                    - type: string
+                  description:
+                    LinkCapacity in bits/sec, such as 10G; omit to detect
+                    it.
+                  maxLength: 32
+                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                  x-kubernetes-int-or-string: true
+                  x-kubernetes-validations:
+                    - message: linkCapacity must be greater than zero
+                      reason: FieldValueInvalid
+                      rule: quantity(string(self)).isGreaterThan(quantity('0'))
+                resourcePools:
+                  description:
+                    ResourcePools are the traffic classes, uniquely named;
+                    the first matching pool wins.
+                  items:
+                    description:
+                      NetworkResourcePool is one traffic class on the shaped
+                      interface.
+                    properties:
+                      egress:
+                        description:
+                          Egress shapes and classifies traffic leaving the
+                          host interface, and can mark DSCP.
+                        properties:
+                          dscp:
+                            allOf:
+                              - pattern: ^.*
+                              - pattern: ^(0*([0-9]|[1-5][0-9]|6[0-3])|[dD][fF]|[eE][fF]|[aA][fF][1-4][1-3]|[cC][sS][0-6])$
+                            anyOf:
+                              - type: integer
+                              - type: string
+                            description:
+                              DSCP is marked on packets in this pool as they
+                              leave the host interface.
+                            maxLength: 4
+                            x-kubernetes-int-or-string: true
+                          limit:
+                            anyOf:
+                              - type: integer
+                              - type: string
+                            description:
+                              Limit caps bandwidth (HTB ceil) between reservation
+                              and the link capacity, its default.
+                            maxLength: 32
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
+                          match:
+                            description:
+                              Match classifies traffic into this pool; omitted
+                              or empty, the pool catches everything.
+                            properties:
+                              destination:
+                                description: |-
+                                  Destination entity match.
+
+                                  On egress this is the destination the traffic is headed to.
+
+                                  On ingress it is the destination before DNAT: the node IP for NodePort traffic.
+
+                                  So a pod-CIDR destination.nets does not match ingress service traffic.
+                                properties:
+                                  nets:
+                                    description:
+                                      Nets is a list of CIDRs, which may
+                                      mix IPv4 and IPv6.
+                                    items:
+                                      maxLength: 64
+                                      type: string
+                                    maxItems: 64
+                                    type: array
+                                    x-kubernetes-list-type: atomic
+                                    x-kubernetes-validations:
+                                      - message:
+                                          nets entries must be IP addresses or
+                                          strictly masked CIDRs
+                                        reason: FieldValueInvalid
+                                        rule:
+                                          self.all(n, isIP(n) || (isCIDR(n) && cidr(n)
+                                          == cidr(n).masked()))
+                                  ports:
+                                    description:
+                                      Ports lists port numbers or ranges
+                                      such as 8080:8090; named ports are rejected.
+                                    items:
+                                      allOf:
+                                        - pattern: ^.*
+                                        - pattern: ^0*([1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])(:0*([1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5]))?$
+                                      anyOf:
+                                        - type: integer
+                                        - type: string
+                                      maxLength: 11
+                                      x-kubernetes-int-or-string: true
+                                      x-kubernetes-validations:
+                                        - message: port ranges must be written low:high
+                                          reason: FieldValueInvalid
+                                          rule:
+                                            type(self) != string || !self.contains(':')
+                                            || int(self.split(':')[0]) <= int(self.split(':')[1])
+                                    maxItems: 64
+                                    type: array
+                                    x-kubernetes-list-type: atomic
+                                    x-kubernetes-validations:
+                                      - message: ports must be between 1 and 65535
+                                        reason: FieldValueInvalid
+                                        rule:
+                                          self.all(p, type(p) != int || (p >= 1 &&
+                                          p <= 65535))
+                                type: object
+                              dscp:
+                                allOf:
+                                  - pattern: ^.*
+                                  - pattern: ^(0*([0-9]|[1-5][0-9]|6[0-3])|[dD][fF]|[eE][fF]|[aA][fF][1-4][1-3]|[cC][sS][0-6])$
+                                anyOf:
+                                  - type: integer
+                                  - type: string
+                                description:
+                                  DSCP class such as AF31, or 0-63; it survives
+                                  NAT, so prefer it across NAT.
+                                maxLength: 4
+                                x-kubernetes-int-or-string: true
+                              protocol:
+                                anyOf:
+                                  - type: integer
+                                  - type: string
+                                description:
+                                  Protocol is TCP, UDP or SCTP, or their
+                                  numbers. Required with source or destination ports.
+                                maxLength: 8
+                                pattern: ^.*
+                                x-kubernetes-int-or-string: true
+                              source:
+                                description: |-
+                                  Source entity match.
+
+                                  On ingress this is the source on the wire.
+
+                                  On egress it is the source after SNAT: right for host traffic, but the node IP for pods.
+
+                                  So a pod-CIDR source.nets does not match egress pod traffic.
+                                properties:
+                                  nets:
+                                    description:
+                                      Nets is a list of CIDRs, which may
+                                      mix IPv4 and IPv6.
+                                    items:
+                                      maxLength: 64
+                                      type: string
+                                    maxItems: 64
+                                    type: array
+                                    x-kubernetes-list-type: atomic
+                                    x-kubernetes-validations:
+                                      - message:
+                                          nets entries must be IP addresses or
+                                          strictly masked CIDRs
+                                        reason: FieldValueInvalid
+                                        rule:
+                                          self.all(n, isIP(n) || (isCIDR(n) && cidr(n)
+                                          == cidr(n).masked()))
+                                  ports:
+                                    description:
+                                      Ports lists port numbers or ranges
+                                      such as 8080:8090; named ports are rejected.
+                                    items:
+                                      allOf:
+                                        - pattern: ^.*
+                                        - pattern: ^0*([1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])(:0*([1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5]))?$
+                                      anyOf:
+                                        - type: integer
+                                        - type: string
+                                      maxLength: 11
+                                      x-kubernetes-int-or-string: true
+                                      x-kubernetes-validations:
+                                        - message: port ranges must be written low:high
+                                          reason: FieldValueInvalid
+                                          rule:
+                                            type(self) != string || !self.contains(':')
+                                            || int(self.split(':')[0]) <= int(self.split(':')[1])
+                                    maxItems: 64
+                                    type: array
+                                    x-kubernetes-list-type: atomic
+                                    x-kubernetes-validations:
+                                      - message: ports must be between 1 and 65535
+                                        reason: FieldValueInvalid
+                                        rule:
+                                          self.all(p, type(p) != int || (p >= 1 &&
+                                          p <= 65535))
+                                type: object
+                            type: object
+                            x-kubernetes-validations:
+                              - message:
+                                  protocol must be set when source.ports or destination.ports
+                                  is specified
+                                reason: FieldValueRequired
+                                rule:
+                                  ((!has(self.source) || !has(self.source.ports) ||
+                                  size(self.source.ports) == 0) && (!has(self.destination)
+                                  || !has(self.destination.ports) || size(self.destination.ports)
+                                  == 0)) || has(self.protocol)
+                              - message:
+                                  protocol must be one of TCP, UDP, SCTP, or their
+                                  numbers 6, 17, 132
+                                reason: FieldValueInvalid
+                                rule:
+                                  "!has(self.protocol) || (type(self.protocol) ==
+                                  int ? self.protocol in [6, 17, 132] : self.protocol
+                                  in ['TCP', 'UDP', 'SCTP'])"
+                              - message: dscp must be between 0 and 63
+                                reason: FieldValueInvalid
+                                rule:
+                                  "!has(self.dscp) || type(self.dscp) != int || (self.dscp
+                                  >= 0 && self.dscp <= 63)"
+                          reservation:
+                            anyOf:
+                              - type: integer
+                              - type: string
+                            description:
+                              Reservation is the guaranteed bandwidth (HTB
+                              rate) in decimal SI bits/sec; e.g. "3G".
+                            maxLength: 32
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
+                        required:
+                          - reservation
+                        type: object
+                        x-kubernetes-validations:
+                          - message: reservation must be greater than zero
+                            reason: FieldValueInvalid
+                            rule: quantity(string(self.reservation)).isGreaterThan(quantity('0'))
+                          - message: limit must be >= reservation
+                            reason: FieldValueInvalid
+                            rule:
+                              "!has(self.limit) || quantity(string(self.limit)).compareTo(quantity(string(self.reservation)))
+                              >= 0"
+                          - message: dscp must be between 0 and 63
+                            reason: FieldValueInvalid
+                            rule:
+                              "!has(self.dscp) || type(self.dscp) != int || (self.dscp
+                              >= 0 && self.dscp <= 63)"
+                      ingress:
+                        description:
+                          Ingress shapes and classifies traffic arriving
+                          at the host interface.
+                        properties:
+                          limit:
+                            anyOf:
+                              - type: integer
+                              - type: string
+                            description:
+                              Limit caps bandwidth (HTB ceil) between reservation
+                              and the link capacity, its default.
+                            maxLength: 32
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
+                          match:
+                            description:
+                              Match classifies traffic into this pool; omitted
+                              or empty, the pool catches everything.
+                            properties:
+                              destination:
+                                description: |-
+                                  Destination entity match.
+
+                                  On egress this is the destination the traffic is headed to.
+
+                                  On ingress it is the destination before DNAT: the node IP for NodePort traffic.
+
+                                  So a pod-CIDR destination.nets does not match ingress service traffic.
+                                properties:
+                                  nets:
+                                    description:
+                                      Nets is a list of CIDRs, which may
+                                      mix IPv4 and IPv6.
+                                    items:
+                                      maxLength: 64
+                                      type: string
+                                    maxItems: 64
+                                    type: array
+                                    x-kubernetes-list-type: atomic
+                                    x-kubernetes-validations:
+                                      - message:
+                                          nets entries must be IP addresses or
+                                          strictly masked CIDRs
+                                        reason: FieldValueInvalid
+                                        rule:
+                                          self.all(n, isIP(n) || (isCIDR(n) && cidr(n)
+                                          == cidr(n).masked()))
+                                  ports:
+                                    description:
+                                      Ports lists port numbers or ranges
+                                      such as 8080:8090; named ports are rejected.
+                                    items:
+                                      allOf:
+                                        - pattern: ^.*
+                                        - pattern: ^0*([1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])(:0*([1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5]))?$
+                                      anyOf:
+                                        - type: integer
+                                        - type: string
+                                      maxLength: 11
+                                      x-kubernetes-int-or-string: true
+                                      x-kubernetes-validations:
+                                        - message: port ranges must be written low:high
+                                          reason: FieldValueInvalid
+                                          rule:
+                                            type(self) != string || !self.contains(':')
+                                            || int(self.split(':')[0]) <= int(self.split(':')[1])
+                                    maxItems: 64
+                                    type: array
+                                    x-kubernetes-list-type: atomic
+                                    x-kubernetes-validations:
+                                      - message: ports must be between 1 and 65535
+                                        reason: FieldValueInvalid
+                                        rule:
+                                          self.all(p, type(p) != int || (p >= 1 &&
+                                          p <= 65535))
+                                type: object
+                              dscp:
+                                allOf:
+                                  - pattern: ^.*
+                                  - pattern: ^(0*([0-9]|[1-5][0-9]|6[0-3])|[dD][fF]|[eE][fF]|[aA][fF][1-4][1-3]|[cC][sS][0-6])$
+                                anyOf:
+                                  - type: integer
+                                  - type: string
+                                description:
+                                  DSCP class such as AF31, or 0-63; it survives
+                                  NAT, so prefer it across NAT.
+                                maxLength: 4
+                                x-kubernetes-int-or-string: true
+                              protocol:
+                                anyOf:
+                                  - type: integer
+                                  - type: string
+                                description:
+                                  Protocol is TCP, UDP or SCTP, or their
+                                  numbers. Required with source or destination ports.
+                                maxLength: 8
+                                pattern: ^.*
+                                x-kubernetes-int-or-string: true
+                              source:
+                                description: |-
+                                  Source entity match.
+
+                                  On ingress this is the source on the wire.
+
+                                  On egress it is the source after SNAT: right for host traffic, but the node IP for pods.
+
+                                  So a pod-CIDR source.nets does not match egress pod traffic.
+                                properties:
+                                  nets:
+                                    description:
+                                      Nets is a list of CIDRs, which may
+                                      mix IPv4 and IPv6.
+                                    items:
+                                      maxLength: 64
+                                      type: string
+                                    maxItems: 64
+                                    type: array
+                                    x-kubernetes-list-type: atomic
+                                    x-kubernetes-validations:
+                                      - message:
+                                          nets entries must be IP addresses or
+                                          strictly masked CIDRs
+                                        reason: FieldValueInvalid
+                                        rule:
+                                          self.all(n, isIP(n) || (isCIDR(n) && cidr(n)
+                                          == cidr(n).masked()))
+                                  ports:
+                                    description:
+                                      Ports lists port numbers or ranges
+                                      such as 8080:8090; named ports are rejected.
+                                    items:
+                                      allOf:
+                                        - pattern: ^.*
+                                        - pattern: ^0*([1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])(:0*([1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5]))?$
+                                      anyOf:
+                                        - type: integer
+                                        - type: string
+                                      maxLength: 11
+                                      x-kubernetes-int-or-string: true
+                                      x-kubernetes-validations:
+                                        - message: port ranges must be written low:high
+                                          reason: FieldValueInvalid
+                                          rule:
+                                            type(self) != string || !self.contains(':')
+                                            || int(self.split(':')[0]) <= int(self.split(':')[1])
+                                    maxItems: 64
+                                    type: array
+                                    x-kubernetes-list-type: atomic
+                                    x-kubernetes-validations:
+                                      - message: ports must be between 1 and 65535
+                                        reason: FieldValueInvalid
+                                        rule:
+                                          self.all(p, type(p) != int || (p >= 1 &&
+                                          p <= 65535))
+                                type: object
+                            type: object
+                            x-kubernetes-validations:
+                              - message:
+                                  protocol must be set when source.ports or destination.ports
+                                  is specified
+                                reason: FieldValueRequired
+                                rule:
+                                  ((!has(self.source) || !has(self.source.ports) ||
+                                  size(self.source.ports) == 0) && (!has(self.destination)
+                                  || !has(self.destination.ports) || size(self.destination.ports)
+                                  == 0)) || has(self.protocol)
+                              - message:
+                                  protocol must be one of TCP, UDP, SCTP, or their
+                                  numbers 6, 17, 132
+                                reason: FieldValueInvalid
+                                rule:
+                                  "!has(self.protocol) || (type(self.protocol) ==
+                                  int ? self.protocol in [6, 17, 132] : self.protocol
+                                  in ['TCP', 'UDP', 'SCTP'])"
+                              - message: dscp must be between 0 and 63
+                                reason: FieldValueInvalid
+                                rule:
+                                  "!has(self.dscp) || type(self.dscp) != int || (self.dscp
+                                  >= 0 && self.dscp <= 63)"
+                          reservation:
+                            anyOf:
+                              - type: integer
+                              - type: string
+                            description:
+                              Reservation is the guaranteed bandwidth (HTB
+                              rate) in decimal SI bits/sec; e.g. "3G".
+                            maxLength: 32
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
+                        required:
+                          - reservation
+                        type: object
+                        x-kubernetes-validations:
+                          - message: reservation must be greater than zero
+                            reason: FieldValueInvalid
+                            rule: quantity(string(self.reservation)).isGreaterThan(quantity('0'))
+                          - message: limit must be >= reservation
+                            reason: FieldValueInvalid
+                            rule:
+                              "!has(self.limit) || quantity(string(self.limit)).compareTo(quantity(string(self.reservation)))
+                              >= 0"
+                      name:
+                        description:
+                          Name is unique within the policy. Used for status
+                          reporting and Prometheus labels.
+                        maxLength: 128
+                        minLength: 1
+                        pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
+                        type: string
+                      shares:
+                        default: 1
+                        description:
+                          Shares weights this pool's share of spare bandwidth;
+                          defaults to 1.
+                        format: int32
+                        maximum: 1000
+                        minimum: 1
+                        type: integer
+                    required:
+                      - name
+                    type: object
+                    x-kubernetes-validations:
+                      - message: at least one of egress or ingress must be set
+                        reason: FieldValueRequired
+                        rule: has(self.egress) || has(self.ingress)
+                  maxItems: 100
+                  minItems: 1
+                  type: array
+                  x-kubernetes-list-map-keys:
+                    - name
+                  x-kubernetes-list-type: map
+                selector:
+                  description:
+                    Selector picks the HostEndpoints to shape; the alphabetically-first
+                    policy wins a contested one.
+                  maxLength: 1024
+                  minLength: 1
+                  type: string
+              required:
+                - resourcePools
+                - selector
+              type: object
+              x-kubernetes-validations:
+                - message: egress reservation and limit must be <= linkCapacity
+                  reason: FieldValueInvalid
+                  rule:
+                    "!has(self.linkCapacity) || self.resourcePools.all(p, !has(p.egress)
+                    || ((!has(p.egress.limit) || quantity(string(p.egress.limit)).compareTo(quantity(string(self.linkCapacity)))
+                    <= 0) && quantity(string(p.egress.reservation)).compareTo(quantity(string(self.linkCapacity)))
+                    <= 0))"
+                - message: ingress reservation and limit must be <= linkCapacity
+                  reason: FieldValueInvalid
+                  rule:
+                    "!has(self.linkCapacity) || self.resourcePools.all(p, !has(p.ingress)
+                    || ((!has(p.ingress.limit) || quantity(string(p.ingress.limit)).compareTo(quantity(string(self.linkCapacity)))
+                    <= 0) && quantity(string(p.ingress.reservation)).compareTo(quantity(string(self.linkCapacity)))
+                    <= 0))"
+            status:
+              description: |-
+                HostQoSPolicyStatus rolls up every binding of the policy. Per-node detail lives in its
+                HostQoSNodeStatus resources.
+              properties:
+                appliedBindings:
+                  description:
+                    AppliedBindings counts the shaped (HostEndpoint, interface)
+                    bindings.
+                  format: int32
+                  type: integer
+                appliedNodes:
+                  description:
+                    AppliedNodes counts the nodes where every binding is
+                    Applied.
+                  format: int32
+                  type: integer
+                collidedBindings:
+                  description:
+                    CollidedBindings counts the bindings in the HEPCollision
+                    or PolicyCollision state.
+                  format: int32
+                  type: integer
+                conditions:
+                  items:
+                    description:
+                      Condition contains details for one aspect of the current
+                      state of this API Resource.
+                    properties:
+                      lastTransitionTime:
+                        description: |-
+                          lastTransitionTime is the last time the condition transitioned from one status to another.
+                          This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                        format: date-time
+                        type: string
+                      message:
+                        description: |-
+                          message is a human readable message indicating details about the transition.
+                          This may be an empty string.
+                        maxLength: 32768
+                        type: string
+                      observedGeneration:
+                        description: |-
+                          observedGeneration represents the .metadata.generation that the condition was set based upon.
+                          For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                          with respect to the current state of the instance.
+                        format: int64
+                        minimum: 0
+                        type: integer
+                      reason:
+                        description: |-
+                          reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                          Producers of specific condition types may define expected values and meanings for this field,
+                          and whether the values are considered a guaranteed API.
+                          The value should be a CamelCase string.
+                          This field may not be empty.
+                        maxLength: 1024
+                        minLength: 1
+                        pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                        type: string
+                      status:
+                        description: status of the condition, one of True, False, Unknown.
+                        enum:
+                          - "True"
+                          - "False"
+                          - Unknown
+                        type: string
+                      type:
+                        description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                        maxLength: 316
+                        pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                        type: string
+                    required:
+                      - lastTransitionTime
+                      - message
+                      - reason
+                      - status
+                      - type
+                    type: object
+                  type: array
+                  x-kubernetes-list-map-keys:
+                    - type
+                  x-kubernetes-list-type: map
+                erroredBindings:
+                  description: ErroredBindings counts the bindings in the Error state.
+                  format: int32
+                  type: integer
+                erroredNodes:
+                  description:
+                    ErroredNodes counts the nodes with at least one binding
+                    in the Error state.
+                  format: int32
+                  type: integer
+                observedGeneration:
+                  format: int64
+                  type: integer
+              type: object
+          required:
+            - metadata
+            - spec
+          type: object
+      served: true
+      storage: true
+      subresources:
+        status: {}
