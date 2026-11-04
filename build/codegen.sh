@@ -63,6 +63,7 @@ openapi-gen \
 	"${PACKAGE_NAME}/pkg/apis/projectcalico/v3" \
 	"k8s.io/api/core/v1" \
 	"k8s.io/api/networking/v1" \
+	"k8s.io/apimachinery/pkg/api/resource" \
 	"k8s.io/apimachinery/pkg/apis/meta/v1" \
 	"k8s.io/apimachinery/pkg/runtime" \
 	"k8s.io/apimachinery/pkg/util/intstr" \

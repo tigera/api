@@ -154,12 +154,16 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &projectcalicov3.EgressGatewayRuleApplyConfiguration{}
 	case v3.SchemeGroupVersion.WithKind("EgressGatewaySpec"):
 		return &projectcalicov3.EgressGatewaySpecApplyConfiguration{}
+	case v3.SchemeGroupVersion.WithKind("EgressPoolControl"):
+		return &projectcalicov3.EgressPoolControlApplyConfiguration{}
 	case v3.SchemeGroupVersion.WithKind("EgressSpec"):
 		return &projectcalicov3.EgressSpecApplyConfiguration{}
 	case v3.SchemeGroupVersion.WithKind("EndpointPort"):
 		return &projectcalicov3.EndpointPortApplyConfiguration{}
 	case v3.SchemeGroupVersion.WithKind("EndpointsSelection"):
 		return &projectcalicov3.EndpointsSelectionApplyConfiguration{}
+	case v3.SchemeGroupVersion.WithKind("EntityMatch"):
+		return &projectcalicov3.EntityMatchApplyConfiguration{}
 	case v3.SchemeGroupVersion.WithKind("EntityRule"):
 		return &projectcalicov3.EntityRuleApplyConfiguration{}
 	case v3.SchemeGroupVersion.WithKind("ErrorCondition"):
@@ -212,6 +216,20 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &projectcalicov3.HostEndpointApplyConfiguration{}
 	case v3.SchemeGroupVersion.WithKind("HostEndpointSpec"):
 		return &projectcalicov3.HostEndpointSpecApplyConfiguration{}
+	case v3.SchemeGroupVersion.WithKind("HostQoSNodeStatus"):
+		return &projectcalicov3.HostQoSNodeStatusApplyConfiguration{}
+	case v3.SchemeGroupVersion.WithKind("HostQoSNodeStatusSpec"):
+		return &projectcalicov3.HostQoSNodeStatusSpecApplyConfiguration{}
+	case v3.SchemeGroupVersion.WithKind("HostQoSNodeStatusStatus"):
+		return &projectcalicov3.HostQoSNodeStatusStatusApplyConfiguration{}
+	case v3.SchemeGroupVersion.WithKind("HostQoSPolicy"):
+		return &projectcalicov3.HostQoSPolicyApplyConfiguration{}
+	case v3.SchemeGroupVersion.WithKind("HostQoSPolicyBindingStatus"):
+		return &projectcalicov3.HostQoSPolicyBindingStatusApplyConfiguration{}
+	case v3.SchemeGroupVersion.WithKind("HostQoSPolicySpec"):
+		return &projectcalicov3.HostQoSPolicySpecApplyConfiguration{}
+	case v3.SchemeGroupVersion.WithKind("HostQoSPolicyStatus"):
+		return &projectcalicov3.HostQoSPolicyStatusApplyConfiguration{}
 	case v3.SchemeGroupVersion.WithKind("HTTPHeader"):
 		return &projectcalicov3.HTTPHeaderApplyConfiguration{}
 	case v3.SchemeGroupVersion.WithKind("HTTPHeaderCriteria"):
@@ -226,6 +244,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &projectcalicov3.HTTPPullApplyConfiguration{}
 	case v3.SchemeGroupVersion.WithKind("ICMPFields"):
 		return &projectcalicov3.ICMPFieldsApplyConfiguration{}
+	case v3.SchemeGroupVersion.WithKind("IngressPoolControl"):
+		return &projectcalicov3.IngressPoolControlApplyConfiguration{}
 	case v3.SchemeGroupVersion.WithKind("InterfaceMatch"):
 		return &projectcalicov3.InterfaceMatchApplyConfiguration{}
 	case v3.SchemeGroupVersion.WithKind("IPAMBlock"):
@@ -314,6 +334,10 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &projectcalicov3.NetworkPolicyApplyConfiguration{}
 	case v3.SchemeGroupVersion.WithKind("NetworkPolicySpec"):
 		return &projectcalicov3.NetworkPolicySpecApplyConfiguration{}
+	case v3.SchemeGroupVersion.WithKind("NetworkPoolControl"):
+		return &projectcalicov3.NetworkPoolControlApplyConfiguration{}
+	case v3.SchemeGroupVersion.WithKind("NetworkResourcePool"):
+		return &projectcalicov3.NetworkResourcePoolApplyConfiguration{}
 	case v3.SchemeGroupVersion.WithKind("NetworkSet"):
 		return &projectcalicov3.NetworkSetApplyConfiguration{}
 	case v3.SchemeGroupVersion.WithKind("NetworkSetSpec"):
@@ -436,6 +460,8 @@ func ForKind(kind schema.GroupVersionKind) interface{} {
 		return &projectcalicov3.TierSpecApplyConfiguration{}
 	case v3.SchemeGroupVersion.WithKind("TierStatus"):
 		return &projectcalicov3.TierStatusApplyConfiguration{}
+	case v3.SchemeGroupVersion.WithKind("TrafficMatch"):
+		return &projectcalicov3.TrafficMatchApplyConfiguration{}
 	case v3.SchemeGroupVersion.WithKind("UIDashboard"):
 		return &projectcalicov3.UIDashboardApplyConfiguration{}
 	case v3.SchemeGroupVersion.WithKind("UIGraphLayer"):

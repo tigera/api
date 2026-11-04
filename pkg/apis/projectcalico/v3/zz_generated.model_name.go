@@ -443,6 +443,11 @@ func (in EgressGatewaySpec) OpenAPIModelName() string {
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
+func (in EgressPoolControl) OpenAPIModelName() string {
+	return "com.github.tigera.api.pkg.apis.projectcalico.v3.EgressPoolControl"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
 func (in EgressSpec) OpenAPIModelName() string {
 	return "com.github.tigera.api.pkg.apis.projectcalico.v3.EgressSpec"
 }
@@ -480,6 +485,11 @@ func (in EndpointsSelection) OpenAPIModelName() string {
 // OpenAPIModelName returns the OpenAPI model name for this type.
 func (in EndpointsSummary) OpenAPIModelName() string {
 	return "com.github.tigera.api.pkg.apis.projectcalico.v3.EndpointsSummary"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in EntityMatch) OpenAPIModelName() string {
+	return "com.github.tigera.api.pkg.apis.projectcalico.v3.EntityMatch"
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
@@ -698,6 +708,51 @@ func (in HostEndpointSpec) OpenAPIModelName() string {
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
+func (in HostQoSNodeStatus) OpenAPIModelName() string {
+	return "com.github.tigera.api.pkg.apis.projectcalico.v3.HostQoSNodeStatus"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in HostQoSNodeStatusList) OpenAPIModelName() string {
+	return "com.github.tigera.api.pkg.apis.projectcalico.v3.HostQoSNodeStatusList"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in HostQoSNodeStatusSpec) OpenAPIModelName() string {
+	return "com.github.tigera.api.pkg.apis.projectcalico.v3.HostQoSNodeStatusSpec"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in HostQoSNodeStatusStatus) OpenAPIModelName() string {
+	return "com.github.tigera.api.pkg.apis.projectcalico.v3.HostQoSNodeStatusStatus"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in HostQoSPolicy) OpenAPIModelName() string {
+	return "com.github.tigera.api.pkg.apis.projectcalico.v3.HostQoSPolicy"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in HostQoSPolicyBindingStatus) OpenAPIModelName() string {
+	return "com.github.tigera.api.pkg.apis.projectcalico.v3.HostQoSPolicyBindingStatus"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in HostQoSPolicyList) OpenAPIModelName() string {
+	return "com.github.tigera.api.pkg.apis.projectcalico.v3.HostQoSPolicyList"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in HostQoSPolicySpec) OpenAPIModelName() string {
+	return "com.github.tigera.api.pkg.apis.projectcalico.v3.HostQoSPolicySpec"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in HostQoSPolicyStatus) OpenAPIModelName() string {
+	return "com.github.tigera.api.pkg.apis.projectcalico.v3.HostQoSPolicyStatus"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
 func (in ICMPFields) OpenAPIModelName() string {
 	return "com.github.tigera.api.pkg.apis.projectcalico.v3.ICMPFields"
 }
@@ -785,6 +840,11 @@ func (in IPReservationList) OpenAPIModelName() string {
 // OpenAPIModelName returns the OpenAPI model name for this type.
 func (in IPReservationSpec) OpenAPIModelName() string {
 	return "com.github.tigera.api.pkg.apis.projectcalico.v3.IPReservationSpec"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in IngressPoolControl) OpenAPIModelName() string {
+	return "com.github.tigera.api.pkg.apis.projectcalico.v3.IngressPoolControl"
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
@@ -975,6 +1035,16 @@ func (in NetworkPolicyList) OpenAPIModelName() string {
 // OpenAPIModelName returns the OpenAPI model name for this type.
 func (in NetworkPolicySpec) OpenAPIModelName() string {
 	return "com.github.tigera.api.pkg.apis.projectcalico.v3.NetworkPolicySpec"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in NetworkPoolControl) OpenAPIModelName() string {
+	return "com.github.tigera.api.pkg.apis.projectcalico.v3.NetworkPoolControl"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in NetworkResourcePool) OpenAPIModelName() string {
+	return "com.github.tigera.api.pkg.apis.projectcalico.v3.NetworkResourcePool"
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
@@ -1345,6 +1415,11 @@ func (in TierSpec) OpenAPIModelName() string {
 // OpenAPIModelName returns the OpenAPI model name for this type.
 func (in TierStatus) OpenAPIModelName() string {
 	return "com.github.tigera.api.pkg.apis.projectcalico.v3.TierStatus"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
+func (in TrafficMatch) OpenAPIModelName() string {
+	return "com.github.tigera.api.pkg.apis.projectcalico.v3.TrafficMatch"
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.

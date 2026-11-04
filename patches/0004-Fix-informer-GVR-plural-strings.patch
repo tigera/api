@@ -25,12 +25,14 @@ file can be deleted.
  .../externalversions/projectcalico/v3/caliconodestatus.go           | 2 +-
  .../externalversions/projectcalico/v3/egressgatewaypolicy.go        | 2 +-
  .../externalversions/projectcalico/v3/globalnetworkpolicy.go        | 2 +-
+ .../externalversions/projectcalico/v3/hostqosnodestatus.go          | 2 +-
+ .../externalversions/projectcalico/v3/hostqospolicy.go              | 2 +-
  .../externalversions/projectcalico/v3/networkpolicy.go              | 2 +-
  .../externalversions/projectcalico/v3/stagedglobalnetworkpolicy.go  | 2 +-
  .../projectcalico/v3/stagedkubernetesnetworkpolicy.go               | 2 +-
  .../externalversions/projectcalico/v3/stagednetworkpolicy.go        | 2 +-
  .../externalversions/projectcalico/v3/uisettings.go                 | 2 +-
- 9 files changed, 9 insertions(+), 9 deletions(-)
+ 11 files changed, 11 insertions(+), 11 deletions(-)
 
 diff --git a/api/pkg/client/informers_generated/externalversions/projectcalico/v3/blockaffinity.go b/api/pkg/client/informers_generated/externalversions/projectcalico/v3/blockaffinity.go
 --- a/api/pkg/client/informers_generated/externalversions/projectcalico/v3/blockaffinity.go
@@ -70,6 +72,26 @@ diff --git a/api/pkg/client/informers_generated/externalversions/projectcalico/v
  func NewGlobalNetworkPolicyInformerWithOptions(client clientset.Interface, options internalinterfaces.InformerOptions) cache.SharedIndexInformer {
 -	gvr := schema.GroupVersionResource{Group: "projectcalico.org", Version: "v3", Resource: "globalnetworkpolicys"}
 +	gvr := schema.GroupVersionResource{Group: "projectcalico.org", Version: "v3", Resource: "globalnetworkpolicies"}
+ 	identifier := options.InformerName.WithResource(gvr)
+ 	tweakListOptions := options.TweakListOptions
+diff --git a/api/pkg/client/informers_generated/externalversions/projectcalico/v3/hostqosnodestatus.go b/api/pkg/client/informers_generated/externalversions/projectcalico/v3/hostqosnodestatus.go
+--- a/api/pkg/client/informers_generated/externalversions/projectcalico/v3/hostqosnodestatus.go
++++ b/api/pkg/client/informers_generated/externalversions/projectcalico/v3/hostqosnodestatus.go
+@@ -102,5 +102,5 @@ func NewHostQoSNodeStatusInformerWithOptions(client clientset.Interface, options
+ // one. This reduces memory footprint and number of connections to the server.
+ func NewTypedHostQoSNodeStatusInformerWithOptions(client clientset.Interface, options internalinterfaces.InformerOptions) HostQoSNodeStatusIndexInformer {
+-	gvr := schema.GroupVersionResource{Group: "projectcalico.org", Version: "v3", Resource: "hostqosnodestatuss"}
++	gvr := schema.GroupVersionResource{Group: "projectcalico.org", Version: "v3", Resource: "hostqosnodestatuses"}
+ 	identifier := options.InformerName.WithResource(gvr)
+ 	tweakListOptions := options.TweakListOptions
+diff --git a/api/pkg/client/informers_generated/externalversions/projectcalico/v3/hostqospolicy.go b/api/pkg/client/informers_generated/externalversions/projectcalico/v3/hostqospolicy.go
+--- a/api/pkg/client/informers_generated/externalversions/projectcalico/v3/hostqospolicy.go
++++ b/api/pkg/client/informers_generated/externalversions/projectcalico/v3/hostqospolicy.go
+@@ -50,5 +50,5 @@ func NewFilteredHostQoSPolicyInformer(client clientset.Interface, resyncPeriod t
+ // one. This reduces memory footprint and number of connections to the server.
+ func NewHostQoSPolicyInformerWithOptions(client clientset.Interface, options internalinterfaces.InformerOptions) cache.SharedIndexInformer {
+-	gvr := schema.GroupVersionResource{Group: "projectcalico.org", Version: "v3", Resource: "hostqospolicys"}
++	gvr := schema.GroupVersionResource{Group: "projectcalico.org", Version: "v3", Resource: "hostqospolicies"}
  	identifier := options.InformerName.WithResource(gvr)
  	tweakListOptions := options.TweakListOptions
 diff --git a/api/pkg/client/informers_generated/externalversions/projectcalico/v3/networkpolicy.go b/api/pkg/client/informers_generated/externalversions/projectcalico/v3/networkpolicy.go

@@ -12,6 +12,7 @@ import (
 	numorstring "github.com/tigera/api/pkg/lib/numorstring"
 	v1 "k8s.io/api/core/v1"
 	networkingv1 "k8s.io/api/networking/v1"
+	resource "k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	intstr "k8s.io/apimachinery/pkg/util/intstr"
@@ -109,6 +110,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		v3.EgressGatewayPolicySpec{}.OpenAPIModelName():                   schema_pkg_apis_projectcalico_v3_EgressGatewayPolicySpec(ref),
 		v3.EgressGatewayRule{}.OpenAPIModelName():                         schema_pkg_apis_projectcalico_v3_EgressGatewayRule(ref),
 		v3.EgressGatewaySpec{}.OpenAPIModelName():                         schema_pkg_apis_projectcalico_v3_EgressGatewaySpec(ref),
+		v3.EgressPoolControl{}.OpenAPIModelName():                         schema_pkg_apis_projectcalico_v3_EgressPoolControl(ref),
 		v3.EgressSpec{}.OpenAPIModelName():                                schema_pkg_apis_projectcalico_v3_EgressSpec(ref),
 		v3.EndpointPort{}.OpenAPIModelName():                              schema_pkg_apis_projectcalico_v3_EndpointPort(ref),
 		v3.EndpointsReportEndpoint{}.OpenAPIModelName():                   schema_pkg_apis_projectcalico_v3_EndpointsReportEndpoint(ref),
@@ -117,6 +119,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		v3.EndpointsReportService{}.OpenAPIModelName():                    schema_pkg_apis_projectcalico_v3_EndpointsReportService(ref),
 		v3.EndpointsSelection{}.OpenAPIModelName():                        schema_pkg_apis_projectcalico_v3_EndpointsSelection(ref),
 		v3.EndpointsSummary{}.OpenAPIModelName():                          schema_pkg_apis_projectcalico_v3_EndpointsSummary(ref),
+		v3.EntityMatch{}.OpenAPIModelName():                               schema_pkg_apis_projectcalico_v3_EntityMatch(ref),
 		v3.EntityRule{}.OpenAPIModelName():                                schema_pkg_apis_projectcalico_v3_EntityRule(ref),
 		v3.ErrorCondition{}.OpenAPIModelName():                            schema_pkg_apis_projectcalico_v3_ErrorCondition(ref),
 		v3.EtcdConfig{}.OpenAPIModelName():                                schema_pkg_apis_projectcalico_v3_EtcdConfig(ref),
@@ -160,6 +163,15 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		v3.HostEndpoint{}.OpenAPIModelName():                              schema_pkg_apis_projectcalico_v3_HostEndpoint(ref),
 		v3.HostEndpointList{}.OpenAPIModelName():                          schema_pkg_apis_projectcalico_v3_HostEndpointList(ref),
 		v3.HostEndpointSpec{}.OpenAPIModelName():                          schema_pkg_apis_projectcalico_v3_HostEndpointSpec(ref),
+		v3.HostQoSNodeStatus{}.OpenAPIModelName():                         schema_pkg_apis_projectcalico_v3_HostQoSNodeStatus(ref),
+		v3.HostQoSNodeStatusList{}.OpenAPIModelName():                     schema_pkg_apis_projectcalico_v3_HostQoSNodeStatusList(ref),
+		v3.HostQoSNodeStatusSpec{}.OpenAPIModelName():                     schema_pkg_apis_projectcalico_v3_HostQoSNodeStatusSpec(ref),
+		v3.HostQoSNodeStatusStatus{}.OpenAPIModelName():                   schema_pkg_apis_projectcalico_v3_HostQoSNodeStatusStatus(ref),
+		v3.HostQoSPolicy{}.OpenAPIModelName():                             schema_pkg_apis_projectcalico_v3_HostQoSPolicy(ref),
+		v3.HostQoSPolicyBindingStatus{}.OpenAPIModelName():                schema_pkg_apis_projectcalico_v3_HostQoSPolicyBindingStatus(ref),
+		v3.HostQoSPolicyList{}.OpenAPIModelName():                         schema_pkg_apis_projectcalico_v3_HostQoSPolicyList(ref),
+		v3.HostQoSPolicySpec{}.OpenAPIModelName():                         schema_pkg_apis_projectcalico_v3_HostQoSPolicySpec(ref),
+		v3.HostQoSPolicyStatus{}.OpenAPIModelName():                       schema_pkg_apis_projectcalico_v3_HostQoSPolicyStatus(ref),
 		v3.ICMPFields{}.OpenAPIModelName():                                schema_pkg_apis_projectcalico_v3_ICMPFields(ref),
 		v3.IPAMBlock{}.OpenAPIModelName():                                 schema_pkg_apis_projectcalico_v3_IPAMBlock(ref),
 		v3.IPAMBlockList{}.OpenAPIModelName():                             schema_pkg_apis_projectcalico_v3_IPAMBlockList(ref),
@@ -178,6 +190,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		v3.IPReservation{}.OpenAPIModelName():                             schema_pkg_apis_projectcalico_v3_IPReservation(ref),
 		v3.IPReservationList{}.OpenAPIModelName():                         schema_pkg_apis_projectcalico_v3_IPReservationList(ref),
 		v3.IPReservationSpec{}.OpenAPIModelName():                         schema_pkg_apis_projectcalico_v3_IPReservationSpec(ref),
+		v3.IngressPoolControl{}.OpenAPIModelName():                        schema_pkg_apis_projectcalico_v3_IngressPoolControl(ref),
 		v3.InterfaceMatch{}.OpenAPIModelName():                            schema_pkg_apis_projectcalico_v3_InterfaceMatch(ref),
 		v3.KubeConfig{}.OpenAPIModelName():                                schema_pkg_apis_projectcalico_v3_KubeConfig(ref),
 		v3.KubeControllersConfiguration{}.OpenAPIModelName():              schema_pkg_apis_projectcalico_v3_KubeControllersConfiguration(ref),
@@ -216,6 +229,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		v3.NetworkPolicy{}.OpenAPIModelName():                             schema_pkg_apis_projectcalico_v3_NetworkPolicy(ref),
 		v3.NetworkPolicyList{}.OpenAPIModelName():                         schema_pkg_apis_projectcalico_v3_NetworkPolicyList(ref),
 		v3.NetworkPolicySpec{}.OpenAPIModelName():                         schema_pkg_apis_projectcalico_v3_NetworkPolicySpec(ref),
+		v3.NetworkPoolControl{}.OpenAPIModelName():                        schema_pkg_apis_projectcalico_v3_NetworkPoolControl(ref),
+		v3.NetworkResourcePool{}.OpenAPIModelName():                       schema_pkg_apis_projectcalico_v3_NetworkResourcePool(ref),
 		v3.NetworkSet{}.OpenAPIModelName():                                schema_pkg_apis_projectcalico_v3_NetworkSet(ref),
 		v3.NetworkSetList{}.OpenAPIModelName():                            schema_pkg_apis_projectcalico_v3_NetworkSetList(ref),
 		v3.NetworkSetSpec{}.OpenAPIModelName():                            schema_pkg_apis_projectcalico_v3_NetworkSetSpec(ref),
@@ -290,6 +305,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		v3.TierList{}.OpenAPIModelName():                                  schema_pkg_apis_projectcalico_v3_TierList(ref),
 		v3.TierSpec{}.OpenAPIModelName():                                  schema_pkg_apis_projectcalico_v3_TierSpec(ref),
 		v3.TierStatus{}.OpenAPIModelName():                                schema_pkg_apis_projectcalico_v3_TierStatus(ref),
+		v3.TrafficMatch{}.OpenAPIModelName():                              schema_pkg_apis_projectcalico_v3_TrafficMatch(ref),
 		v3.UIDashboard{}.OpenAPIModelName():                               schema_pkg_apis_projectcalico_v3_UIDashboard(ref),
 		v3.UIGraphLayer{}.OpenAPIModelName():                              schema_pkg_apis_projectcalico_v3_UIGraphLayer(ref),
 		v3.UIGraphNode{}.OpenAPIModelName():                               schema_pkg_apis_projectcalico_v3_UIGraphNode(ref),
@@ -591,6 +607,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		networkingv1.ServiceCIDRList{}.OpenAPIModelName():                 schema_k8sio_api_networking_v1_ServiceCIDRList(ref),
 		networkingv1.ServiceCIDRSpec{}.OpenAPIModelName():                 schema_k8sio_api_networking_v1_ServiceCIDRSpec(ref),
 		networkingv1.ServiceCIDRStatus{}.OpenAPIModelName():               schema_k8sio_api_networking_v1_ServiceCIDRStatus(ref),
+		resource.Quantity{}.OpenAPIModelName():                            schema_apimachinery_pkg_api_resource_Quantity(ref),
 		metav1.APIGroup{}.OpenAPIModelName():                              schema_pkg_apis_meta_v1_APIGroup(ref),
 		metav1.APIGroupList{}.OpenAPIModelName():                          schema_pkg_apis_meta_v1_APIGroupList(ref),
 		metav1.APIResource{}.OpenAPIModelName():                           schema_pkg_apis_meta_v1_APIResource(ref),
@@ -4979,6 +4996,46 @@ func schema_pkg_apis_projectcalico_v3_EgressGatewaySpec(ref common.ReferenceCall
 	}
 }
 
+func schema_pkg_apis_projectcalico_v3_EgressPoolControl(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "EgressPoolControl is a pool's egress controls, plus DSCP marking.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"reservation": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Reservation is the guaranteed bandwidth (HTB rate) in decimal SI bits/sec; e.g. \"3G\".",
+							Ref:         ref(resource.Quantity{}.OpenAPIModelName()),
+						},
+					},
+					"limit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Limit caps bandwidth (HTB ceil) between reservation and the link capacity, its default.",
+							Ref:         ref(resource.Quantity{}.OpenAPIModelName()),
+						},
+					},
+					"match": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Match classifies traffic into this pool; omitted or empty, the pool catches everything.",
+							Ref:         ref(v3.TrafficMatch{}.OpenAPIModelName()),
+						},
+					},
+					"dscp": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DSCP is marked on packets in this pool as they leave the host interface.",
+							Ref:         ref(numorstring.DSCP{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"reservation"},
+			},
+		},
+		Dependencies: []string{
+			v3.TrafficMatch{}.OpenAPIModelName(), numorstring.DSCP{}.OpenAPIModelName(), resource.Quantity{}.OpenAPIModelName()},
+	}
+}
+
 func schema_pkg_apis_projectcalico_v3_EgressSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -5419,6 +5476,58 @@ func schema_pkg_apis_projectcalico_v3_EndpointsSummary(ref common.ReferenceCallb
 				},
 			},
 		},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_EntityMatch(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "EntityMatch is a source or destination match for QoS classification.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"nets": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "Nets is a list of CIDRs, which may mix IPv4 and IPv6.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type:   []string{"string"},
+										Format: "",
+									},
+								},
+							},
+						},
+					},
+					"ports": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "Ports lists port numbers or ranges such as 8080:8090; named ports are rejected.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref(numorstring.Port{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			numorstring.Port{}.OpenAPIModelName()},
 	}
 }
 
@@ -9807,6 +9916,464 @@ func schema_pkg_apis_projectcalico_v3_HostEndpointSpec(ref common.ReferenceCallb
 	}
 }
 
+func schema_pkg_apis_projectcalico_v3_HostQoSNodeStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "HostQoSNodeStatus is one host's view of one HostQoSPolicy, written by that host's Felix.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref(metav1.ObjectMeta{}.OpenAPIModelName()),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref(v3.HostQoSNodeStatusSpec{}.OpenAPIModelName()),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref(v3.HostQoSNodeStatusStatus{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"metadata", "spec"},
+			},
+		},
+		Dependencies: []string{
+			v3.HostQoSNodeStatusSpec{}.OpenAPIModelName(), v3.HostQoSNodeStatusStatus{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_HostQoSNodeStatusList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "HostQoSNodeStatusList contains a list of HostQoSNodeStatus resources.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref(metav1.ListMeta{}.OpenAPIModelName()),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref(v3.HostQoSNodeStatus{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			v3.HostQoSNodeStatus{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_HostQoSNodeStatusSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "HostQoSNodeStatusSpec identifies the policy and host this status describes.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"policy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Policy is the name of the HostQoSPolicy.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"node": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Node is the cluster node name, or the hostname of a non-cluster host.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"hostType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "HostType keeps a cluster node apart from a non-cluster host of the same name.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"policy", "node", "hostType"},
+			},
+		},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_HostQoSNodeStatusStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "HostQoSNodeStatusStatus is the state of the policy's bindings on this host.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"state": {
+						SchemaProps: spec.SchemaProps{
+							Description: "State summarizes the bindings; PartiallyApplied when they mix Applied with other states.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"bindings": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"hostEndpointName",
+									"interfaceName",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "Bindings has one entry per (HostEndpoint, interface) the policy resolves to on this host.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref(v3.HostQoSPolicyBindingStatus{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+					"lastTransitionTime": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref(metav1.Time{}.OpenAPIModelName()),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			v3.HostQoSPolicyBindingStatus{}.OpenAPIModelName(), metav1.Time{}.OpenAPIModelName()},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_HostQoSPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "HostQoSPolicy is cluster-scoped; it controls per-host-NIC traffic shaping.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref(metav1.ObjectMeta{}.OpenAPIModelName()),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref(v3.HostQoSPolicySpec{}.OpenAPIModelName()),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref(v3.HostQoSPolicyStatus{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"metadata", "spec"},
+			},
+		},
+		Dependencies: []string{
+			v3.HostQoSPolicySpec{}.OpenAPIModelName(), v3.HostQoSPolicyStatus{}.OpenAPIModelName(), metav1.ObjectMeta{}.OpenAPIModelName()},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_HostQoSPolicyBindingStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "HostQoSPolicyBindingStatus is the state of one (HostEndpoint, interface) binding. A HostEndpoint with interfaceName \"*\" has one binding per interface.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"hostEndpointName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "HostEndpointName is the HostEndpoint the policy selected.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"interfaceName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "InterfaceName is the interface this binding shapes, or attempted to.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"state": {
+						SchemaProps: spec.SchemaProps{
+							Description: "State is Applied, Error, PolicyCollision or HEPCollision; never PartiallyApplied.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"message": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Message explains a non-Applied state, as \"<HostQoSPolicyCause>: <detail>\".",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"lastTransitionTime": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref(metav1.Time{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"hostEndpointName", "interfaceName", "state"},
+			},
+		},
+		Dependencies: []string{
+			metav1.Time{}.OpenAPIModelName()},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_HostQoSPolicyList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "HostQoSPolicyList contains a list of HostQoSPolicy resources.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref(metav1.ListMeta{}.OpenAPIModelName()),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref(v3.HostQoSPolicy{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			v3.HostQoSPolicy{}.OpenAPIModelName(), metav1.ListMeta{}.OpenAPIModelName()},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_HostQoSPolicySpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "HostQoSPolicySpec is shaping intent: link capacity, resource pools, and a selector for the HostEndpoints it shapes.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"selector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Selector picks the HostEndpoints to shape; the alphabetically-first policy wins a contested one.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"linkCapacity": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LinkCapacity in bits/sec, such as 10G; omit to detect it.",
+							Ref:         ref(resource.Quantity{}.OpenAPIModelName()),
+						},
+					},
+					"resourcePools": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "ResourcePools are the traffic classes, uniquely named; the first matching pool wins.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref(v3.NetworkResourcePool{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"selector", "resourcePools"},
+			},
+		},
+		Dependencies: []string{
+			v3.NetworkResourcePool{}.OpenAPIModelName(), resource.Quantity{}.OpenAPIModelName()},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_HostQoSPolicyStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "HostQoSPolicyStatus rolls up every binding of the policy. Per-node detail lives in its HostQoSNodeStatus resources.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref(metav1.Condition{}.OpenAPIModelName()),
+									},
+								},
+							},
+						},
+					},
+					"observedGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"appliedBindings": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AppliedBindings counts the shaped (HostEndpoint, interface) bindings.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"erroredBindings": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ErroredBindings counts the bindings in the Error state.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"collidedBindings": {
+						SchemaProps: spec.SchemaProps{
+							Description: "CollidedBindings counts the bindings in the HEPCollision or PolicyCollision state.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"appliedNodes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AppliedNodes counts the nodes where every binding is Applied.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"erroredNodes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ErroredNodes counts the nodes with at least one binding in the Error state.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			metav1.Condition{}.OpenAPIModelName()},
+	}
+}
+
 func schema_pkg_apis_projectcalico_v3_ICMPFields(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -10714,6 +11281,40 @@ func schema_pkg_apis_projectcalico_v3_IPReservationSpec(ref common.ReferenceCall
 				},
 			},
 		},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_IngressPoolControl(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "IngressPoolControl is a pool's ingress controls.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"reservation": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Reservation is the guaranteed bandwidth (HTB rate) in decimal SI bits/sec; e.g. \"3G\".",
+							Ref:         ref(resource.Quantity{}.OpenAPIModelName()),
+						},
+					},
+					"limit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Limit caps bandwidth (HTB ceil) between reservation and the link capacity, its default.",
+							Ref:         ref(resource.Quantity{}.OpenAPIModelName()),
+						},
+					},
+					"match": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Match classifies traffic into this pool; omitted or empty, the pool catches everything.",
+							Ref:         ref(v3.TrafficMatch{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"reservation"},
+			},
+		},
+		Dependencies: []string{
+			v3.TrafficMatch{}.OpenAPIModelName(), resource.Quantity{}.OpenAPIModelName()},
 	}
 }
 
@@ -12256,6 +12857,83 @@ func schema_pkg_apis_projectcalico_v3_NetworkPolicySpec(ref common.ReferenceCall
 		},
 		Dependencies: []string{
 			v3.Rule{}.OpenAPIModelName()},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_NetworkPoolControl(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NetworkPoolControl is the reservation, limit and traffic match for one direction of a pool.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"reservation": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Reservation is the guaranteed bandwidth (HTB rate) in decimal SI bits/sec; e.g. \"3G\".",
+							Ref:         ref(resource.Quantity{}.OpenAPIModelName()),
+						},
+					},
+					"limit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Limit caps bandwidth (HTB ceil) between reservation and the link capacity, its default.",
+							Ref:         ref(resource.Quantity{}.OpenAPIModelName()),
+						},
+					},
+					"match": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Match classifies traffic into this pool; omitted or empty, the pool catches everything.",
+							Ref:         ref(v3.TrafficMatch{}.OpenAPIModelName()),
+						},
+					},
+				},
+				Required: []string{"reservation"},
+			},
+		},
+		Dependencies: []string{
+			v3.TrafficMatch{}.OpenAPIModelName(), resource.Quantity{}.OpenAPIModelName()},
+	}
+}
+
+func schema_pkg_apis_projectcalico_v3_NetworkResourcePool(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NetworkResourcePool is one traffic class on the shaped interface.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name is unique within the policy. Used for status reporting and Prometheus labels.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"egress": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Egress shapes and classifies traffic leaving the host interface, and can mark DSCP.",
+							Ref:         ref(v3.EgressPoolControl{}.OpenAPIModelName()),
+						},
+					},
+					"ingress": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Ingress shapes and classifies traffic arriving at the host interface.",
+							Ref:         ref(v3.IngressPoolControl{}.OpenAPIModelName()),
+						},
+					},
+					"shares": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Shares weights this pool's share of spare bandwidth; defaults to 1.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+		Dependencies: []string{
+			v3.EgressPoolControl{}.OpenAPIModelName(), v3.IngressPoolControl{}.OpenAPIModelName()},
 	}
 }
 
@@ -15802,6 +16480,45 @@ func schema_pkg_apis_projectcalico_v3_TierStatus(ref common.ReferenceCallback) c
 	}
 }
 
+func schema_pkg_apis_projectcalico_v3_TrafficMatch(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "TrafficMatch matches headers at the qdisc: egress after SNAT, ingress before DNAT.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"dscp": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DSCP class such as AF31, or 0-63; it survives NAT, so prefer it across NAT.",
+							Ref:         ref(numorstring.DSCP{}.OpenAPIModelName()),
+						},
+					},
+					"protocol": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Protocol is TCP, UDP or SCTP, or their numbers. Required with source or destination ports.",
+							Ref:         ref(numorstring.Protocol{}.OpenAPIModelName()),
+						},
+					},
+					"source": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Source entity match.\n\nOn ingress this is the source on the wire.\n\nOn egress it is the source after SNAT: right for host traffic, but the node IP for pods.\n\nSo a pod-CIDR source.nets does not match egress pod traffic.",
+							Ref:         ref(v3.EntityMatch{}.OpenAPIModelName()),
+						},
+					},
+					"destination": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Destination entity match.\n\nOn egress this is the destination the traffic is headed to.\n\nOn ingress it is the destination before DNAT: the node IP for NodePort traffic.\n\nSo a pod-CIDR destination.nets does not match ingress service traffic.",
+							Ref:         ref(v3.EntityMatch{}.OpenAPIModelName()),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			v3.EntityMatch{}.OpenAPIModelName(), numorstring.DSCP{}.OpenAPIModelName(), numorstring.Protocol{}.OpenAPIModelName()},
+	}
+}
+
 func schema_pkg_apis_projectcalico_v3_UIDashboard(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -18781,7 +19498,7 @@ func schema_k8sio_api_core_v1_ContainerStatus(ref common.ReferenceCallback) comm
 								Allows: true,
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+										Ref: ref(resource.Quantity{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -18858,7 +19575,7 @@ func schema_k8sio_api_core_v1_ContainerStatus(ref common.ReferenceCallback) comm
 			},
 		},
 		Dependencies: []string{
-			v1.ContainerState{}.OpenAPIModelName(), v1.ContainerUser{}.OpenAPIModelName(), v1.ResourceRequirements{}.OpenAPIModelName(), v1.ResourceStatus{}.OpenAPIModelName(), v1.VolumeMountStatus{}.OpenAPIModelName(), "k8s.io/apimachinery/pkg/api/resource.Quantity"},
+			v1.ContainerState{}.OpenAPIModelName(), v1.ContainerUser{}.OpenAPIModelName(), v1.ResourceRequirements{}.OpenAPIModelName(), v1.ResourceStatus{}.OpenAPIModelName(), v1.VolumeMountStatus{}.OpenAPIModelName(), resource.Quantity{}.OpenAPIModelName()},
 	}
 }
 
@@ -19052,7 +19769,7 @@ func schema_k8sio_api_core_v1_EmptyDirVolumeSource(ref common.ReferenceCallback)
 					"sizeLimit": {
 						SchemaProps: spec.SchemaProps{
 							Description: "sizeLimit is the total amount of local storage required for this EmptyDir volume. The size limit is also applicable for memory medium. The maximum usage on memory medium EmptyDir would be the minimum value between the SizeLimit specified here and the sum of memory limits of all containers in a pod. The default is nil which means that the limit is undefined. More info: https://kubernetes.io/docs/concepts/storage/volumes#emptydir",
-							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+							Ref:         ref(resource.Quantity{}.OpenAPIModelName()),
 						},
 					},
 					"mode": {
@@ -19066,7 +19783,7 @@ func schema_k8sio_api_core_v1_EmptyDirVolumeSource(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/api/resource.Quantity"},
+			resource.Quantity{}.OpenAPIModelName()},
 	}
 }
 
@@ -21518,7 +22235,7 @@ func schema_k8sio_api_core_v1_LimitRangeItem(ref common.ReferenceCallback) commo
 								Allows: true,
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+										Ref: ref(resource.Quantity{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -21532,7 +22249,7 @@ func schema_k8sio_api_core_v1_LimitRangeItem(ref common.ReferenceCallback) commo
 								Allows: true,
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+										Ref: ref(resource.Quantity{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -21546,7 +22263,7 @@ func schema_k8sio_api_core_v1_LimitRangeItem(ref common.ReferenceCallback) commo
 								Allows: true,
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+										Ref: ref(resource.Quantity{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -21560,7 +22277,7 @@ func schema_k8sio_api_core_v1_LimitRangeItem(ref common.ReferenceCallback) commo
 								Allows: true,
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+										Ref: ref(resource.Quantity{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -21574,7 +22291,7 @@ func schema_k8sio_api_core_v1_LimitRangeItem(ref common.ReferenceCallback) commo
 								Allows: true,
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+										Ref: ref(resource.Quantity{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -21585,7 +22302,7 @@ func schema_k8sio_api_core_v1_LimitRangeItem(ref common.ReferenceCallback) commo
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/api/resource.Quantity"},
+			resource.Quantity{}.OpenAPIModelName()},
 	}
 }
 
@@ -22348,7 +23065,7 @@ func schema_k8sio_api_core_v1_NodeAllocatableMappedResources(ref common.Referenc
 					"quantity": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Quantity is the total node allocatable resource capacity allocated for the claim. This claim's allocated devices is shared by all the containers referencing the claim. Kubelet adds this value to both requests and limits at the pod-level cgroup, and to limits at the container-level cgroup for each container referencing the claim.",
-							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+							Ref:         ref(resource.Quantity{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -22356,7 +23073,7 @@ func schema_k8sio_api_core_v1_NodeAllocatableMappedResources(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/api/resource.Quantity"},
+			resource.Quantity{}.OpenAPIModelName()},
 	}
 }
 
@@ -22378,13 +23095,13 @@ func schema_k8sio_api_core_v1_NodeAllocatableOverheadResources(ref common.Refere
 					"perPod": {
 						SchemaProps: spec.SchemaProps{
 							Description: "PerPod is the flat overhead quantity allocated per pod. Adding to each container limit allows individual containers to utilize the overhead, while the parent pod-level cgroup limit caps the total usage at the pod boundary where the overhead is accounted for exactly once. At least one of PerPod or PerContainer must be specified. Specifying neither is an invalid configuration.",
-							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+							Ref:         ref(resource.Quantity{}.OpenAPIModelName()),
 						},
 					},
 					"perContainer": {
 						SchemaProps: spec.SchemaProps{
 							Description: "PerContainer is the variable overhead quantity applied for each container referencing the claim. The container references are recorded in `nodeAllocatableResourceClaimStatuses.containers`. The total overhead quantity allocated for the claim is computed as: Quantity = PerPod + (PerContainer * NumReferences) Kubelet accounts for this overhead in cgroups: - Pod-level cgroup (requests and limits): Kubelet adds PerPod + (PerContainer * NumReferences). - Container-level cgroup (limits only): Kubelet adds PerPod + PerContainer for each referencing container. This allows any single container to access the pod-level overhead, while the parent cgroup caps the total usage to account for PerPod exactly once. At least one of PerPod or PerContainer must be specified. Specifying neither is an invalid configuration.",
-							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+							Ref:         ref(resource.Quantity{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -22392,7 +23109,7 @@ func schema_k8sio_api_core_v1_NodeAllocatableOverheadResources(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/api/resource.Quantity"},
+			resource.Quantity{}.OpenAPIModelName()},
 	}
 }
 
@@ -23071,7 +23788,7 @@ func schema_k8sio_api_core_v1_NodeStatus(ref common.ReferenceCallback) common.Op
 								Allows: true,
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+										Ref: ref(resource.Quantity{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -23085,7 +23802,7 @@ func schema_k8sio_api_core_v1_NodeStatus(ref common.ReferenceCallback) common.Op
 								Allows: true,
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+										Ref: ref(resource.Quantity{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -23267,7 +23984,7 @@ func schema_k8sio_api_core_v1_NodeStatus(ref common.ReferenceCallback) common.Op
 			},
 		},
 		Dependencies: []string{
-			v1.AttachedVolume{}.OpenAPIModelName(), v1.ContainerImage{}.OpenAPIModelName(), v1.NodeAddress{}.OpenAPIModelName(), v1.NodeCondition{}.OpenAPIModelName(), v1.NodeConfigStatus{}.OpenAPIModelName(), v1.NodeDaemonEndpoints{}.OpenAPIModelName(), v1.NodeFeatures{}.OpenAPIModelName(), v1.NodeRuntimeHandler{}.OpenAPIModelName(), v1.NodeSystemInfo{}.OpenAPIModelName(), "k8s.io/apimachinery/pkg/api/resource.Quantity"},
+			v1.AttachedVolume{}.OpenAPIModelName(), v1.ContainerImage{}.OpenAPIModelName(), v1.NodeAddress{}.OpenAPIModelName(), v1.NodeCondition{}.OpenAPIModelName(), v1.NodeConfigStatus{}.OpenAPIModelName(), v1.NodeDaemonEndpoints{}.OpenAPIModelName(), v1.NodeFeatures{}.OpenAPIModelName(), v1.NodeRuntimeHandler{}.OpenAPIModelName(), v1.NodeSystemInfo{}.OpenAPIModelName(), resource.Quantity{}.OpenAPIModelName()},
 	}
 }
 
@@ -23841,7 +24558,7 @@ func schema_k8sio_api_core_v1_PersistentVolumeClaimStatus(ref common.ReferenceCa
 								Allows: true,
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+										Ref: ref(resource.Quantity{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -23878,7 +24595,7 @@ func schema_k8sio_api_core_v1_PersistentVolumeClaimStatus(ref common.ReferenceCa
 								Allows: true,
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+										Ref: ref(resource.Quantity{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -23928,7 +24645,7 @@ func schema_k8sio_api_core_v1_PersistentVolumeClaimStatus(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			v1.ModifyVolumeStatus{}.OpenAPIModelName(), v1.PersistentVolumeClaimCondition{}.OpenAPIModelName(), v1.VolumeHealthStatus{}.OpenAPIModelName(), "k8s.io/apimachinery/pkg/api/resource.Quantity"},
+			v1.ModifyVolumeStatus{}.OpenAPIModelName(), v1.PersistentVolumeClaimCondition{}.OpenAPIModelName(), v1.VolumeHealthStatus{}.OpenAPIModelName(), resource.Quantity{}.OpenAPIModelName()},
 	}
 }
 
@@ -24203,7 +24920,7 @@ func schema_k8sio_api_core_v1_PersistentVolumeSpec(ref common.ReferenceCallback)
 								Allows: true,
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+										Ref: ref(resource.Quantity{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -24431,7 +25148,7 @@ func schema_k8sio_api_core_v1_PersistentVolumeSpec(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			v1.AWSElasticBlockStoreVolumeSource{}.OpenAPIModelName(), v1.AzureDiskVolumeSource{}.OpenAPIModelName(), v1.AzureFilePersistentVolumeSource{}.OpenAPIModelName(), v1.CSIPersistentVolumeSource{}.OpenAPIModelName(), v1.CephFSPersistentVolumeSource{}.OpenAPIModelName(), v1.CinderPersistentVolumeSource{}.OpenAPIModelName(), v1.FCVolumeSource{}.OpenAPIModelName(), v1.FlexPersistentVolumeSource{}.OpenAPIModelName(), v1.FlockerVolumeSource{}.OpenAPIModelName(), v1.GCEPersistentDiskVolumeSource{}.OpenAPIModelName(), v1.GlusterfsPersistentVolumeSource{}.OpenAPIModelName(), v1.HostPathVolumeSource{}.OpenAPIModelName(), v1.ISCSIPersistentVolumeSource{}.OpenAPIModelName(), v1.LocalVolumeSource{}.OpenAPIModelName(), v1.NFSVolumeSource{}.OpenAPIModelName(), v1.ObjectReference{}.OpenAPIModelName(), v1.PhotonPersistentDiskVolumeSource{}.OpenAPIModelName(), v1.PortworxVolumeSource{}.OpenAPIModelName(), v1.QuobyteVolumeSource{}.OpenAPIModelName(), v1.RBDPersistentVolumeSource{}.OpenAPIModelName(), v1.ScaleIOPersistentVolumeSource{}.OpenAPIModelName(), v1.StorageOSPersistentVolumeSource{}.OpenAPIModelName(), v1.VolumeNodeAffinity{}.OpenAPIModelName(), v1.VsphereVirtualDiskVolumeSource{}.OpenAPIModelName(), "k8s.io/apimachinery/pkg/api/resource.Quantity"},
+			v1.AWSElasticBlockStoreVolumeSource{}.OpenAPIModelName(), v1.AzureDiskVolumeSource{}.OpenAPIModelName(), v1.AzureFilePersistentVolumeSource{}.OpenAPIModelName(), v1.CSIPersistentVolumeSource{}.OpenAPIModelName(), v1.CephFSPersistentVolumeSource{}.OpenAPIModelName(), v1.CinderPersistentVolumeSource{}.OpenAPIModelName(), v1.FCVolumeSource{}.OpenAPIModelName(), v1.FlexPersistentVolumeSource{}.OpenAPIModelName(), v1.FlockerVolumeSource{}.OpenAPIModelName(), v1.GCEPersistentDiskVolumeSource{}.OpenAPIModelName(), v1.GlusterfsPersistentVolumeSource{}.OpenAPIModelName(), v1.HostPathVolumeSource{}.OpenAPIModelName(), v1.ISCSIPersistentVolumeSource{}.OpenAPIModelName(), v1.LocalVolumeSource{}.OpenAPIModelName(), v1.NFSVolumeSource{}.OpenAPIModelName(), v1.ObjectReference{}.OpenAPIModelName(), v1.PhotonPersistentDiskVolumeSource{}.OpenAPIModelName(), v1.PortworxVolumeSource{}.OpenAPIModelName(), v1.QuobyteVolumeSource{}.OpenAPIModelName(), v1.RBDPersistentVolumeSource{}.OpenAPIModelName(), v1.ScaleIOPersistentVolumeSource{}.OpenAPIModelName(), v1.StorageOSPersistentVolumeSource{}.OpenAPIModelName(), v1.VolumeNodeAffinity{}.OpenAPIModelName(), v1.VsphereVirtualDiskVolumeSource{}.OpenAPIModelName(), resource.Quantity{}.OpenAPIModelName()},
 	}
 }
 
@@ -26109,7 +26826,7 @@ func schema_k8sio_api_core_v1_PodSpec(ref common.ReferenceCallback) common.OpenA
 								Allows: true,
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+										Ref: ref(resource.Quantity{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -26252,7 +26969,7 @@ func schema_k8sio_api_core_v1_PodSpec(ref common.ReferenceCallback) common.OpenA
 			},
 		},
 		Dependencies: []string{
-			v1.Affinity{}.OpenAPIModelName(), v1.Container{}.OpenAPIModelName(), v1.EphemeralContainer{}.OpenAPIModelName(), v1.EvictionResponder{}.OpenAPIModelName(), v1.HostAlias{}.OpenAPIModelName(), v1.LocalObjectReference{}.OpenAPIModelName(), v1.PodDNSConfig{}.OpenAPIModelName(), v1.PodOS{}.OpenAPIModelName(), v1.PodReadinessGate{}.OpenAPIModelName(), v1.PodResourceClaim{}.OpenAPIModelName(), v1.PodSchedulingGate{}.OpenAPIModelName(), v1.PodSchedulingGroup{}.OpenAPIModelName(), v1.PodSecurityContext{}.OpenAPIModelName(), v1.ResourceRequirements{}.OpenAPIModelName(), v1.Toleration{}.OpenAPIModelName(), v1.TopologySpreadConstraint{}.OpenAPIModelName(), v1.Volume{}.OpenAPIModelName(), "k8s.io/apimachinery/pkg/api/resource.Quantity"},
+			v1.Affinity{}.OpenAPIModelName(), v1.Container{}.OpenAPIModelName(), v1.EphemeralContainer{}.OpenAPIModelName(), v1.EvictionResponder{}.OpenAPIModelName(), v1.HostAlias{}.OpenAPIModelName(), v1.LocalObjectReference{}.OpenAPIModelName(), v1.PodDNSConfig{}.OpenAPIModelName(), v1.PodOS{}.OpenAPIModelName(), v1.PodReadinessGate{}.OpenAPIModelName(), v1.PodResourceClaim{}.OpenAPIModelName(), v1.PodSchedulingGate{}.OpenAPIModelName(), v1.PodSchedulingGroup{}.OpenAPIModelName(), v1.PodSecurityContext{}.OpenAPIModelName(), v1.ResourceRequirements{}.OpenAPIModelName(), v1.Toleration{}.OpenAPIModelName(), v1.TopologySpreadConstraint{}.OpenAPIModelName(), v1.Volume{}.OpenAPIModelName(), resource.Quantity{}.OpenAPIModelName()},
 	}
 }
 
@@ -26491,7 +27208,7 @@ func schema_k8sio_api_core_v1_PodStatus(ref common.ReferenceCallback) common.Ope
 								Allows: true,
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+										Ref: ref(resource.Quantity{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -26551,7 +27268,7 @@ func schema_k8sio_api_core_v1_PodStatus(ref common.ReferenceCallback) common.Ope
 			},
 		},
 		Dependencies: []string{
-			v1.ContainerStatus{}.OpenAPIModelName(), v1.HostIP{}.OpenAPIModelName(), v1.NodeAllocatableResourceClaimStatus{}.OpenAPIModelName(), v1.PodCondition{}.OpenAPIModelName(), v1.PodExtendedResourceClaimStatus{}.OpenAPIModelName(), v1.PodIP{}.OpenAPIModelName(), v1.PodResourceClaimStatus{}.OpenAPIModelName(), v1.PodVolumeHealth{}.OpenAPIModelName(), v1.ResourceRequirements{}.OpenAPIModelName(), "k8s.io/apimachinery/pkg/api/resource.Quantity", metav1.Time{}.OpenAPIModelName()},
+			v1.ContainerStatus{}.OpenAPIModelName(), v1.HostIP{}.OpenAPIModelName(), v1.NodeAllocatableResourceClaimStatus{}.OpenAPIModelName(), v1.PodCondition{}.OpenAPIModelName(), v1.PodExtendedResourceClaimStatus{}.OpenAPIModelName(), v1.PodIP{}.OpenAPIModelName(), v1.PodResourceClaimStatus{}.OpenAPIModelName(), v1.PodVolumeHealth{}.OpenAPIModelName(), v1.ResourceRequirements{}.OpenAPIModelName(), resource.Quantity{}.OpenAPIModelName(), metav1.Time{}.OpenAPIModelName()},
 	}
 }
 
@@ -27668,7 +28385,7 @@ func schema_k8sio_api_core_v1_ResourceFieldSelector(ref common.ReferenceCallback
 					"divisor": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies the output format of the exposed resources, defaults to \"1\"",
-							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+							Ref:         ref(resource.Quantity{}.OpenAPIModelName()),
 						},
 					},
 				},
@@ -27681,7 +28398,7 @@ func schema_k8sio_api_core_v1_ResourceFieldSelector(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/api/resource.Quantity"},
+			resource.Quantity{}.OpenAPIModelName()},
 	}
 }
 
@@ -27836,7 +28553,7 @@ func schema_k8sio_api_core_v1_ResourceQuotaSpec(ref common.ReferenceCallback) co
 								Allows: true,
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+										Ref: ref(resource.Quantity{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -27872,7 +28589,7 @@ func schema_k8sio_api_core_v1_ResourceQuotaSpec(ref common.ReferenceCallback) co
 			},
 		},
 		Dependencies: []string{
-			v1.ScopeSelector{}.OpenAPIModelName(), "k8s.io/apimachinery/pkg/api/resource.Quantity"},
+			v1.ScopeSelector{}.OpenAPIModelName(), resource.Quantity{}.OpenAPIModelName()},
 	}
 }
 
@@ -27891,7 +28608,7 @@ func schema_k8sio_api_core_v1_ResourceQuotaStatus(ref common.ReferenceCallback) 
 								Allows: true,
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+										Ref: ref(resource.Quantity{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -27905,7 +28622,7 @@ func schema_k8sio_api_core_v1_ResourceQuotaStatus(ref common.ReferenceCallback) 
 								Allows: true,
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+										Ref: ref(resource.Quantity{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -27915,7 +28632,7 @@ func schema_k8sio_api_core_v1_ResourceQuotaStatus(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/api/resource.Quantity"},
+			resource.Quantity{}.OpenAPIModelName()},
 	}
 }
 
@@ -27934,7 +28651,7 @@ func schema_k8sio_api_core_v1_ResourceRequirements(ref common.ReferenceCallback)
 								Allows: true,
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+										Ref: ref(resource.Quantity{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -27948,7 +28665,7 @@ func schema_k8sio_api_core_v1_ResourceRequirements(ref common.ReferenceCallback)
 								Allows: true,
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+										Ref: ref(resource.Quantity{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -27979,7 +28696,7 @@ func schema_k8sio_api_core_v1_ResourceRequirements(ref common.ReferenceCallback)
 			},
 		},
 		Dependencies: []string{
-			v1.ResourceClaim{}.OpenAPIModelName(), "k8s.io/apimachinery/pkg/api/resource.Quantity"},
+			v1.ResourceClaim{}.OpenAPIModelName(), resource.Quantity{}.OpenAPIModelName()},
 	}
 }
 
@@ -30595,7 +31312,7 @@ func schema_k8sio_api_core_v1_VolumeResourceRequirements(ref common.ReferenceCal
 								Allows: true,
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+										Ref: ref(resource.Quantity{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -30609,7 +31326,7 @@ func schema_k8sio_api_core_v1_VolumeResourceRequirements(ref common.ReferenceCal
 								Allows: true,
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+										Ref: ref(resource.Quantity{}.OpenAPIModelName()),
 									},
 								},
 							},
@@ -30619,7 +31336,7 @@ func schema_k8sio_api_core_v1_VolumeResourceRequirements(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/api/resource.Quantity"},
+			resource.Quantity{}.OpenAPIModelName()},
 	}
 }
 
@@ -32388,6 +33105,54 @@ func schema_k8sio_api_networking_v1_ServiceCIDRStatus(ref common.ReferenceCallba
 		},
 		Dependencies: []string{
 			metav1.Condition{}.OpenAPIModelName()},
+	}
+}
+
+func schema_apimachinery_pkg_api_resource_Quantity(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.EmbedOpenAPIDefinitionIntoV2Extension(common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Quantity is a fixed-point representation of a number. It provides convenient marshaling/unmarshaling in JSON and YAML, in addition to String() and AsInt64() accessors.\n\nThe serialization format is:\n\n``` <quantity>        ::= <signedNumber><suffix>\n\n\t(Note that <suffix> may be empty, from the \"\" case in <decimalSI>.)\n\n<digit>           ::= 0 | 1 | ... | 9 <digits>          ::= <digit> | <digit><digits> <number>          ::= <digits> | <digits>.<digits> | <digits>. | .<digits> <sign>            ::= \"+\" | \"-\" <signedNumber>    ::= <number> | <sign><number> <suffix>          ::= <binarySI> | <decimalExponent> | <decimalSI> <binarySI>        ::= Ki | Mi | Gi | Ti | Pi | Ei\n\n\t(International System of units; See: http://physics.nist.gov/cuu/Units/binary.html)\n\n<decimalSI>       ::= m | \"\" | k | M | G | T | P | E\n\n\t(Note that 1024 = 1Ki but 1000 = 1k; I didn't choose the capitalization.)\n\n<decimalExponent> ::= \"e\" <signedNumber> | \"E\" <signedNumber> ```\n\nNo matter which of the three exponent forms is used, no quantity may represent a number greater than 2^63-1 in magnitude, nor may it have more than 3 decimal places. Numbers larger or more precise will be capped or rounded up. (E.g.: 0.1m will rounded up to 1m.) This may be extended in the future if we require larger or smaller quantities.\n\nWhen a Quantity is parsed from a string, it will remember the type of suffix it had, and will use the same type again when it is serialized.\n\nBefore serializing, Quantity will be put in \"canonical form\". This means that Exponent/suffix will be adjusted up or down (with a corresponding increase or decrease in Mantissa) such that:\n\n- No precision is lost - No fractional digits will be emitted - The exponent (or suffix) is as large as possible.\n\nThe sign will be omitted unless the number is negative.\n\nExamples:\n\n- 1.5 will be serialized as \"1500m\" - 1.5Gi will be serialized as \"1536Mi\"\n\nNote that the quantity will NEVER be internally represented by a floating point number. That is the whole point of this exercise.\n\nNon-canonical values will still parse as long as they are well formed, but will be re-emitted in their canonical form. (So always use canonical form, or don't diff.)\n\nThis format is intended to make it difficult to use these numbers without writing some sort of special handling code in the hopes that that will cause implementors to also use a fixed point implementation.",
+				OneOf:       common.GenerateOpenAPIV3OneOfSchema(resource.Quantity{}.OpenAPIV3OneOfTypes()),
+				Format:      resource.Quantity{}.OpenAPISchemaFormat(),
+			},
+		},
+	}, common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Quantity is a fixed-point representation of a number. It provides convenient marshaling/unmarshaling in JSON and YAML, in addition to String() and AsInt64() accessors.\n\nThe serialization format is:\n\n``` <quantity>        ::= <signedNumber><suffix>\n\n\t(Note that <suffix> may be empty, from the \"\" case in <decimalSI>.)\n\n<digit>           ::= 0 | 1 | ... | 9 <digits>          ::= <digit> | <digit><digits> <number>          ::= <digits> | <digits>.<digits> | <digits>. | .<digits> <sign>            ::= \"+\" | \"-\" <signedNumber>    ::= <number> | <sign><number> <suffix>          ::= <binarySI> | <decimalExponent> | <decimalSI> <binarySI>        ::= Ki | Mi | Gi | Ti | Pi | Ei\n\n\t(International System of units; See: http://physics.nist.gov/cuu/Units/binary.html)\n\n<decimalSI>       ::= m | \"\" | k | M | G | T | P | E\n\n\t(Note that 1024 = 1Ki but 1000 = 1k; I didn't choose the capitalization.)\n\n<decimalExponent> ::= \"e\" <signedNumber> | \"E\" <signedNumber> ```\n\nNo matter which of the three exponent forms is used, no quantity may represent a number greater than 2^63-1 in magnitude, nor may it have more than 3 decimal places. Numbers larger or more precise will be capped or rounded up. (E.g.: 0.1m will rounded up to 1m.) This may be extended in the future if we require larger or smaller quantities.\n\nWhen a Quantity is parsed from a string, it will remember the type of suffix it had, and will use the same type again when it is serialized.\n\nBefore serializing, Quantity will be put in \"canonical form\". This means that Exponent/suffix will be adjusted up or down (with a corresponding increase or decrease in Mantissa) such that:\n\n- No precision is lost - No fractional digits will be emitted - The exponent (or suffix) is as large as possible.\n\nThe sign will be omitted unless the number is negative.\n\nExamples:\n\n- 1.5 will be serialized as \"1500m\" - 1.5Gi will be serialized as \"1536Mi\"\n\nNote that the quantity will NEVER be internally represented by a floating point number. That is the whole point of this exercise.\n\nNon-canonical values will still parse as long as they are well formed, but will be re-emitted in their canonical form. (So always use canonical form, or don't diff.)\n\nThis format is intended to make it difficult to use these numbers without writing some sort of special handling code in the hopes that that will cause implementors to also use a fixed point implementation.",
+				Type:        resource.Quantity{}.OpenAPISchemaType(),
+				Format:      resource.Quantity{}.OpenAPISchemaFormat(),
+			},
+		},
+	})
+}
+
+func schema_apimachinery_pkg_api_resource_int64Amount(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "int64Amount represents a fixed precision numerator and arbitrary scale exponent. It is faster than operations on inf.Dec for values that can be represented as int64.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"value": {
+						SchemaProps: spec.SchemaProps{
+							Default: 0,
+							Type:    []string{"integer"},
+							Format:  "int64",
+						},
+					},
+					"scale": {
+						SchemaProps: spec.SchemaProps{
+							Default: 0,
+							Type:    []string{"integer"},
+							Format:  "int32",
+						},
+					},
+				},
+				Required: []string{"value", "scale"},
+			},
+		},
 	}
 }
 
