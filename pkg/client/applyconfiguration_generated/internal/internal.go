@@ -1288,6 +1288,21 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: policy
       type:
         scalar: string
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.EgressPoolControl
+  map:
+    fields:
+    - name: dscp
+      type:
+        namedType: com.github.tigera.api.pkg.lib.numorstring.DSCP
+    - name: limit
+      type:
+        namedType: io.k8s.apimachinery.pkg.api.resource.Quantity
+    - name: match
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.TrafficMatch
+    - name: reservation
+      type:
+        namedType: io.k8s.apimachinery.pkg.api.resource.Quantity
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.EgressSpec
   map:
     fields:
@@ -1326,6 +1341,21 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: serviceAccounts
       type:
         namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.NamesAndLabelsMatch
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.EntityMatch
+  map:
+    fields:
+    - name: nets
+      type:
+        list:
+          elementType:
+            scalar: string
+          elementRelationship: atomic
+    - name: ports
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.lib.numorstring.Port
+          elementRelationship: atomic
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.EntityRule
   map:
     fields:
@@ -2875,6 +2905,149 @@ var schemaYAML = typed.YAMLObject(`types:
           elementType:
             scalar: string
           elementRelationship: associative
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.HostQoSNodeStatus
+  map:
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.HostQoSNodeStatusSpec
+      default: {}
+    - name: status
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.HostQoSNodeStatusStatus
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.HostQoSNodeStatusSpec
+  map:
+    fields:
+    - name: hostType
+      type:
+        scalar: string
+      default: ""
+    - name: node
+      type:
+        scalar: string
+      default: ""
+    - name: policy
+      type:
+        scalar: string
+      default: ""
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.HostQoSNodeStatusStatus
+  map:
+    fields:
+    - name: bindings
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.HostQoSPolicyBindingStatus
+          elementRelationship: associative
+          keys:
+          - hostEndpointName
+          - interfaceName
+    - name: lastTransitionTime
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+    - name: state
+      type:
+        scalar: string
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.HostQoSPolicy
+  map:
+    fields:
+    - name: apiVersion
+      type:
+        scalar: string
+    - name: kind
+      type:
+        scalar: string
+    - name: metadata
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta
+      default: {}
+    - name: spec
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.HostQoSPolicySpec
+      default: {}
+    - name: status
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.HostQoSPolicyStatus
+      default: {}
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.HostQoSPolicyBindingStatus
+  map:
+    fields:
+    - name: hostEndpointName
+      type:
+        scalar: string
+      default: ""
+    - name: interfaceName
+      type:
+        scalar: string
+      default: ""
+    - name: lastTransitionTime
+      type:
+        namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Time
+    - name: message
+      type:
+        scalar: string
+    - name: state
+      type:
+        scalar: string
+      default: ""
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.HostQoSPolicySpec
+  map:
+    fields:
+    - name: linkCapacity
+      type:
+        namedType: io.k8s.apimachinery.pkg.api.resource.Quantity
+    - name: resourcePools
+      type:
+        list:
+          elementType:
+            namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.NetworkResourcePool
+          elementRelationship: associative
+          keys:
+          - name
+    - name: selector
+      type:
+        scalar: string
+      default: ""
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.HostQoSPolicyStatus
+  map:
+    fields:
+    - name: appliedBindings
+      type:
+        scalar: numeric
+    - name: appliedNodes
+      type:
+        scalar: numeric
+    - name: collidedBindings
+      type:
+        scalar: numeric
+    - name: conditions
+      type:
+        list:
+          elementType:
+            namedType: io.k8s.apimachinery.pkg.apis.meta.v1.Condition
+          elementRelationship: associative
+          keys:
+          - type
+    - name: erroredBindings
+      type:
+        scalar: numeric
+    - name: erroredNodes
+      type:
+        scalar: numeric
+    - name: observedGeneration
+      type:
+        scalar: numeric
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.ICMPFields
   map:
     fields:
@@ -3119,6 +3292,18 @@ var schemaYAML = typed.YAMLObject(`types:
           elementType:
             scalar: string
           elementRelationship: associative
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.IngressPoolControl
+  map:
+    fields:
+    - name: limit
+      type:
+        namedType: io.k8s.apimachinery.pkg.api.resource.Quantity
+    - name: match
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.TrafficMatch
+    - name: reservation
+      type:
+        namedType: io.k8s.apimachinery.pkg.api.resource.Quantity
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.InterfaceMatch
   map:
     fields:
@@ -3558,6 +3743,22 @@ var schemaYAML = typed.YAMLObject(`types:
           elementType:
             scalar: string
           elementRelationship: associative
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.NetworkResourcePool
+  map:
+    fields:
+    - name: egress
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.EgressPoolControl
+    - name: ingress
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.IngressPoolControl
+    - name: name
+      type:
+        scalar: string
+      default: ""
+    - name: shares
+      type:
+        scalar: numeric
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.NetworkSet
   map:
     fields:
@@ -4596,6 +4797,21 @@ var schemaYAML = typed.YAMLObject(`types:
           elementRelationship: associative
           keys:
           - type
+- name: com.github.tigera.api.pkg.apis.projectcalico.v3.TrafficMatch
+  map:
+    fields:
+    - name: destination
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.EntityMatch
+    - name: dscp
+      type:
+        namedType: com.github.tigera.api.pkg.lib.numorstring.DSCP
+    - name: protocol
+      type:
+        namedType: com.github.tigera.api.pkg.lib.numorstring.Protocol
+    - name: source
+      type:
+        namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.EntityMatch
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.UIDashboard
   map:
     fields:
@@ -4971,6 +5187,16 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: protocol
       type:
         scalar: string
+- name: io.k8s.apimachinery.pkg.api.resource.Quantity
+  scalar: untyped
+  list:
+    elementType:
+      namedType: __untyped_atomic_
+    elementRelationship: atomic
+  map:
+    elementType:
+      namedType: __untyped_deduced_
+    elementRelationship: separable
 - name: io.k8s.apimachinery.pkg.apis.meta.v1.Condition
   map:
     fields:

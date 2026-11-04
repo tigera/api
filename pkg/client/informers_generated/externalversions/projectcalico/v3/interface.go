@@ -52,6 +52,10 @@ type Interface interface {
 	GlobalThreatFeeds() TypedGlobalThreatFeedInformer
 	// HostEndpoints returns a HostEndpointInformer.
 	HostEndpoints() TypedHostEndpointInformer
+	// HostQoSNodeStatuses returns a HostQoSNodeStatusInformer.
+	HostQoSNodeStatuses() TypedHostQoSNodeStatusInformer
+	// HostQoSPolicies returns a HostQoSPolicyInformer.
+	HostQoSPolicies() TypedHostQoSPolicyInformer
 	// IPAMBlocks returns a IPAMBlockInformer.
 	IPAMBlocks() TypedIPAMBlockInformer
 	// IPAMConfigurations returns a IPAMConfigurationInformer.
@@ -212,6 +216,16 @@ func (v *version) GlobalThreatFeeds() TypedGlobalThreatFeedInformer {
 // HostEndpoints returns a TypedHostEndpointInformer.
 func (v *version) HostEndpoints() TypedHostEndpointInformer {
 	return &hostEndpointInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// HostQoSNodeStatuses returns a TypedHostQoSNodeStatusInformer.
+func (v *version) HostQoSNodeStatuses() TypedHostQoSNodeStatusInformer {
+	return &hostQoSNodeStatusInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// HostQoSPolicies returns a TypedHostQoSPolicyInformer.
+func (v *version) HostQoSPolicies() TypedHostQoSPolicyInformer {
+	return &hostQoSPolicyInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // IPAMBlocks returns a TypedIPAMBlockInformer.

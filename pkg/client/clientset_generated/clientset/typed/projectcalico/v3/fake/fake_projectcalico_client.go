@@ -99,6 +99,14 @@ func (c *FakeProjectcalicoV3) HostEndpoints() v3.HostEndpointInterface {
 	return newFakeHostEndpoints(c)
 }
 
+func (c *FakeProjectcalicoV3) HostQoSNodeStatuses() v3.HostQoSNodeStatusInterface {
+	return newFakeHostQoSNodeStatuses(c)
+}
+
+func (c *FakeProjectcalicoV3) HostQoSPolicies() v3.HostQoSPolicyInterface {
+	return newFakeHostQoSPolicies(c)
+}
+
 func (c *FakeProjectcalicoV3) IPAMBlocks() v3.IPAMBlockInterface {
 	return newFakeIPAMBlocks(c)
 }

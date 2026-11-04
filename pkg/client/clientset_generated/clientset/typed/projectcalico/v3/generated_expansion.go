@@ -46,6 +46,10 @@ type GlobalThreatFeedExpansion interface{}
 
 type HostEndpointExpansion interface{}
 
+type HostQoSNodeStatusExpansion interface{}
+
+type HostQoSPolicyExpansion interface{}
+
 type IPAMBlockExpansion interface{}
 
 type IPAMConfigurationExpansion interface{}
