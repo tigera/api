@@ -23,7 +23,7 @@ const (
 	KindLicenseKeyList = "LicenseKeyList"
 )
 
-// +kubebuilder:validation:Enum=CloudCommunity;CloudStarter;CloudPro;Enterprise
+// +kubebuilder:validation:Enum=CloudCommunity;CloudStarter;CloudPro;Enterprise;Lynx
 type LicensePackageType string
 
 const (
@@ -31,6 +31,7 @@ const (
 	CloudStarter   LicensePackageType = "CloudStarter"
 	CloudPro       LicensePackageType = "CloudPro"
 	Enterprise     LicensePackageType = "Enterprise"
+	Lynx           LicensePackageType = "Lynx"
 )
 
 // +genclient

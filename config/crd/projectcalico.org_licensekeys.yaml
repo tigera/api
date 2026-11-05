@@ -166,6 +166,7 @@ spec:
                     - CloudStarter
                     - CloudPro
                     - Enterprise
+                    - Lynx
                   type: string
               type: object
           required:
