@@ -96,7 +96,8 @@ type Position struct {
 
 // A Calico format label selector with an associated name.
 type NamedSelector struct {
-	Name     string `json:"name" validate:"uiDescription"`
+	Name string `json:"name" validate:"uiDescription"`
+	// +kubebuilder:validation:MaxLength=1024
 	Selector string `json:"selector" validate:"selector"`
 }
 

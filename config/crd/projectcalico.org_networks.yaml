@@ -189,6 +189,7 @@ spec:
                               applies to all nodes.  When multiple HostConfig entries are
                               present, the first entry whose selector matches a given node wins;
                               subsequent entries are ignored for that node.
+                            maxLength: 1024
                             type: string
                         required:
                           - bridge
@@ -388,6 +389,7 @@ spec:
                               configuration applies to.  If omitted, the entry applies to all nodes.
                               When multiple HostConfig entries are present, the first entry whose selector
                               matches a given node wins.
+                            maxLength: 1024
                             type: string
                           routeTableIndex:
                             description: |-

@@ -70,7 +70,9 @@ type ProfileSpec struct {
 type EgressGatewaySpec struct {
 	// Only one of these may be set.
 	// Reference to an EgressGatewayPolicy to use.
-	Policy string `json:"policy,omitempty" validate:"omitempty"`
+	// +kubebuilder:validation:MaxLength=253
+	// +kubebuilder:validation:Pattern=`^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$`
+	Policy string `json:"policy,omitempty" validate:"omitempty,name"`
 
 	// Reference to a specific EgressGateway to use.
 	Gateway *EgressSpec `json:"gateway,omitempty" validate:"omitempty"`
@@ -79,10 +81,12 @@ type EgressGatewaySpec struct {
 // EgressSpec defines which egress gateway should be used.
 type EgressSpec struct {
 	// NamespaceSelector selects one or more namespaces containing an egress gateway deployment.
+	// +kubebuilder:validation:MaxLength=1024
 	NamespaceSelector string `json:"namespaceSelector,omitempty" validate:"omitempty,selector"`
 
 	// Selector is an expression used to pick out the egress gateway that the destination can
 	// be reached via.
+	// +kubebuilder:validation:MaxLength=1024
 	Selector string `json:"selector,omitempty" validate:"omitempty,selector"`
 
 	// MaxNextHops specifies the maximum number of egress gateway replicas from the selected

@@ -154,6 +154,7 @@ type L2HostConfig struct {
 	// subsequent entries are ignored for that node.
 	// +optional
 	// +kubebuilder:default=""
+	// +kubebuilder:validation:MaxLength=1024
 	NodeSelector string `json:"nodeSelector,omitempty" validate:"omitempty,selector"`
 
 	// Bridge selects the bridge device for these nodes: either a
