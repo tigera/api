@@ -76,6 +76,7 @@ type PacketCaptureSpec struct {
 	// 	deployment != "dev"
 	// 	! has(label_name)
 	// +kubebuilder:default:="all()"
+	// +kubebuilder:validation:MaxLength=1024
 	Selector string `json:"selector,omitempty" validate:"selector"`
 
 	// The ordered set of filters applied to traffic captured from an interface.  Each rule contains a set of

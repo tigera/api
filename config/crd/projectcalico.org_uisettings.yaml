@@ -214,6 +214,7 @@ spec:
                           name:
                             type: string
                           selector:
+                            maxLength: 1024
                             type: string
                         required:
                           - name

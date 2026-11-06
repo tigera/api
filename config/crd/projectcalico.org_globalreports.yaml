@@ -124,6 +124,8 @@ spec:
                             Names is an optional field that specifies a set
                             of resources by name.
                           items:
+                            maxLength: 253
+                            pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
                             type: string
                           type: array
                           x-kubernetes-list-type: atomic
@@ -131,12 +133,14 @@ spec:
                           description: |-
                             Selector is an optional field that selects a set of resources by label.
                             If both Names and Selector are specified then they are AND'ed.
+                          maxLength: 1024
                           type: string
                       type: object
                     selector:
                       description: |-
                         Selector, selects endpoints by endpoint labels. If omitted, all endpoints are included in the report
                         data.
+                      maxLength: 1024
                       type: string
                     serviceAccounts:
                       description:
@@ -148,6 +152,8 @@ spec:
                             Names is an optional field that specifies a set
                             of resources by name.
                           items:
+                            maxLength: 253
+                            pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
                             type: string
                           type: array
                           x-kubernetes-list-type: atomic
@@ -155,6 +161,7 @@ spec:
                           description: |-
                             Selector is an optional field that selects a set of resources by label.
                             If both Names and Selector are specified then they are AND'ed.
+                          maxLength: 1024
                           type: string
                       type: object
                   type: object
