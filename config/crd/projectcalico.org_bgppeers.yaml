@@ -117,6 +117,8 @@ spec:
                   description:
                     Name of the external network to which this peer belongs.  Cannot
                     be set if network is set.
+                  maxLength: 253
+                  pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
                   type: string
                 failureDetectionMode:
                   description: |-
@@ -172,6 +174,8 @@ spec:
                   description:
                     Name of the network to which this peer belongs.  Cannot
                     be set if externalNetwork is set.
+                  maxLength: 253
+                  pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
                   type: string
                 nextHopMode:
                   description: |-
