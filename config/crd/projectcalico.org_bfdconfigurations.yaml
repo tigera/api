@@ -85,6 +85,7 @@ spec:
                   type: array
                   x-kubernetes-list-type: atomic
                 nodeSelector:
+                  maxLength: 1024
                   type: string
               type: object
           required:

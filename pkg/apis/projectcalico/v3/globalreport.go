@@ -48,7 +48,7 @@ type ReportSpec struct {
 	// Endpoints is used to specify which endpoints are in-scope and stored in the generated report data.
 	// Only used if endpoints data and/or audit logs are gathered in the report. If omitted, treated as everything
 	// in-scope.
-	Endpoints *EndpointsSelection `json:"endpoints,omitempty" validate:"omitempty,selector"`
+	Endpoints *EndpointsSelection `json:"endpoints,omitempty" validate:"omitempty"`
 
 	// The report schedule specified in cron format. This specifies both the start and end times of each report,
 	// where the end time of one report becomes the start time of the next report.
@@ -162,6 +162,7 @@ type CompletedReportJob struct {
 type EndpointsSelection struct {
 	// Selector, selects endpoints by endpoint labels. If omitted, all endpoints are included in the report
 	// data.
+	// +kubebuilder:validation:MaxLength=1024
 	Selector string `json:"selector,omitempty" validate:"omitempty,selector"`
 
 	// Namespace match restricts endpoint selection to those in the selected namespaces.
@@ -175,10 +176,13 @@ type EndpointsSelection struct {
 type NamesAndLabelsMatch struct {
 	// Names is an optional field that specifies a set of resources by name.
 	// +listType=atomic
-	Names []string `json:"names,omitempty" validate:"omitempty"`
+	// +kubebuilder:validation:items:MaxLength=253
+	// +kubebuilder:validation:items:Pattern=`^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$`
+	Names []string `json:"names,omitempty" validate:"omitempty,dive,name"`
 
 	// Selector is an optional field that selects a set of resources by label.
 	// If both Names and Selector are specified then they are AND'ed.
+	// +kubebuilder:validation:MaxLength=1024
 	Selector string `json:"selector,omitempty" validate:"omitempty,selector"`
 }
 

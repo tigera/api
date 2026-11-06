@@ -57,6 +57,7 @@ spec:
                     support escape characters.\n\nExamples (with made-up labels):\n\n\ttype
                     == \"webserver\" && deployment == \"prod\"\n\ttype in {\"frontend\",
                     \"backend\"}\n\tdeployment != \"dev\"\n\t! has(label_name)"
+                  maxLength: 1024
                   type: string
               type: object
             status:
