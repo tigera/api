@@ -103,6 +103,7 @@ spec:
                     (with made-up labels):\n\n\ttype == \"webserver\" && deployment
                     == \"prod\"\n\ttype in {\"frontend\", \"backend\"}\n\tdeployment
                     != \"dev\"\n\t! has(label_name)"
+                  maxLength: 1024
                   type: string
                 startTime:
                   description: |-

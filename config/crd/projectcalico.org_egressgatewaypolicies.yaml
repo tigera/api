@@ -75,11 +75,13 @@ spec:
                             description:
                               NamespaceSelector selects one or more namespaces
                               containing an egress gateway deployment.
+                            maxLength: 1024
                             type: string
                           selector:
                             description: |-
                               Selector is an expression used to pick out the egress gateway that the destination can
                               be reached via.
+                            maxLength: 1024
                             type: string
                         type: object
                       gatewayPreference:

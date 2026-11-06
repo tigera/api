@@ -47,7 +47,8 @@ type BFDConfiguration struct {
 
 // BFDConfigurationSpec contains the specification for a BFDConfiguration resource.
 type BFDConfigurationSpec struct {
-	NodeSelector string `json:"nodeSelector,omitempty"`
+	// +kubebuilder:validation:MaxLength=1024
+	NodeSelector string `json:"nodeSelector,omitempty" validate:"omitempty,selector"`
 
 	// +listType=atomic
 	Interfaces []BFDInterface `json:"interfaces,omitempty"`
