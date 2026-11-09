@@ -67,14 +67,12 @@ gen-files .generate_files: lint-cache-dir clean-generated
 	   sh -c '$(GIT_CONFIG_SSH) deepcopy-gen \
 		--v 1 --logtostderr \
 		--go-header-file "/go/src/$(PACKAGE_NAME)/hack/boilerplate/boilerplate.go.txt" \
-		--bounding-dirs $(PACKAGE_NAME) \
 		--output-file zz_generated.deepcopy.go \
 		"$(PACKAGE_NAME)/pkg/apis/projectcalico/v3"'
 	$(DOCKER_RUN) $(CALICO_BUILD) \
 	   sh -c '$(GIT_CONFIG_SSH) deepcopy-gen \
 		--v 1 --logtostderr \
 		--go-header-file "/go/src/$(PACKAGE_NAME)/hack/boilerplate/boilerplate.go.txt" \
-		--bounding-dirs $(PACKAGE_NAME) \
 		--output-file zz_generated.deepcopy.go \
 		"$(PACKAGE_NAME)/pkg/apis/usage.tigera.io/v1"'
 	# generate OpenAPI model name accessors for Calico types. These implement
