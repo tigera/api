@@ -14,7 +14,7 @@ LLVM_VERSION=21.1.8
 # those three versions moves.
 GO_BUILD_VER_SUFFIX=
 GO_BUILD_VER=$(GO_VERSION)-llvm$(LLVM_VERSION)-k8s$(K8S_VERSION:v%=%)$(GO_BUILD_VER_SUFFIX)
-RUST_BUILD_VER=1.96.0
+RUST_BUILD_VER=1.99.1
 
 # Calico Enterprise shipping images now builds on UBI 10. For Calico OSS to Enterprise merges,
 # please don't downgrade the base image back to UBI 9.
