@@ -447,11 +447,32 @@ DOCKER_RUST_BUILD := mkdir -p bin && \
 # Host native build images
 HOST_NATIVE_BUILD_IMAGE ?= calico/host-native-build
 
-.PHONY: host-native-build
-host-native-build: $(wildcard $(REPO_DIR)/third_party/host-native/Dockerfile.*)
-	cd $(REPO_DIR)/third_party/host-native && \
+# Go release for the rhel8 host-native image, derived from GO_BUILD_VER.
+# Sole source of truth — bake file and Dockerfile carry no default.
+RHEL8_GO_VERSION = $(firstword $(subst -, ,$(GO_BUILD_VER)))
+
+# Distros for which we maintain a host-native build image — discovered from
+# Dockerfiles in third_party/host-native/. New distros are picked up
+# automatically by adding a Dockerfile.<distro>.
+HOST_NATIVE_DISTROS := $(patsubst Dockerfile.%,%,$(notdir $(wildcard $(REPO_DIR)/third_party/host-native/Dockerfile.*)))
+
+.PHONY: host-native-build $(addprefix host-native-build-,$(HOST_NATIVE_DISTROS))
+
+# Umbrella — build host-native images for every supported distro.
+host-native-build: $(addprefix host-native-build-,$(HOST_NATIVE_DISTROS))
+
+# Per-distro — build only the named host-native image. Package targets should
+# depend on `host-native-build-<distro>` to avoid triggering bakes of images
+# they don't use. Generated as explicit rules per distro because GNU make
+# does not apply pattern rules to .PHONY targets.
+define host_native_build_rule
+host-native-build-$(1): $$(REPO_DIR)/third_party/host-native/Dockerfile.$(1)
+	cd $$(REPO_DIR)/third_party/host-native && \
+		RHEL8_GO_VERSION=$$(RHEL8_GO_VERSION) \
 		docker buildx bake --load --pull \
-		-f $(REPO_DIR)/third_party/host-native/host-native-build-bake.hcl
+		-f $$(REPO_DIR)/third_party/host-native/host-native-build-bake.hcl $(1)
+endef
+$(foreach d,$(HOST_NATIVE_DISTROS),$(eval $(call host_native_build_rule,$(d))))
 
 DOCKER_HOST_NATIVE_RUN := docker run --rm \
 	--net=host \
@@ -461,22 +482,40 @@ DOCKER_HOST_NATIVE_RUN := docker run --rm \
 	-v $(REPO_ROOT):/go/src/github.com/projectcalico/calico:rw \
 	-w /go/src/$(PACKAGE_NAME)
 
-# This function replaces the version string in the spec template and builds the rpm package.
-define host_native_rpm_build
-	$(eval version := $(shell $(REPO_ROOT)/hack/generate-package-version.sh $(REPO_ROOT) rpm "" $(3)))
+# Like DOCKER_HOST_NATIVE_RUN, but with the Go build cache mounted and HOME
+# pointed at /tmp (the --user UID has no entry in /etc/passwd, so HOME would
+# otherwise default to /). Only the rhel8 image has Go installed.
+DOCKER_HOST_NATIVE_GO_RUN = mkdir -p $(REPO_ROOT)/.go-pkg-cache && \
+	$(DOCKER_HOST_NATIVE_RUN) \
+		-e GOCACHE=/go-cache \
+		-e GOPATH=/go \
+		-e HOME=/tmp \
+		-v $(REPO_ROOT)/.go-pkg-cache:/go-cache:rw
 
-	sed 's/@VERSION@/$(version)/g' rhel/$(2).spec.in > rhel/$(2).spec
+# This function replaces the version and release strings in the spec template and builds the rpm package.
+# Args: $(1) distro, $(2) package name, $(3) component version (passed to
+# generate-package-version.sh), $(4) optional package revision (RPM Release,
+# defaults to 1), $(5) optional sourcedir override (relative to component
+# directory; defaults to component dir itself).
+define host_native_rpm_build
+	$(eval version := $(shell $(REPO_ROOT)/hack/generate-package-version.sh $(REPO_ROOT) rpm "" "$(3)" "$(4)"))
+	$(eval release := $(or $(4),1))
+
+	sed -e 's/@VERSION@/$(version)/g' \
+	    -e 's/@RELEASE@/$(release)/g' \
+		rhel/$(2).spec.in > rhel/$(2).spec
 
 	mkdir -p package/$(1) && $(DOCKER_HOST_NATIVE_RUN) \
 		$(HOST_NATIVE_BUILD_IMAGE):$(1) \
 			sh -c 'rpmbuild \
 				--define "_topdir $$PWD/package/$(1)" \
-				--define "_sourcedir $$PWD" \
+				--define "_sourcedir $$PWD$(if $(5),/$(5),)" \
 				-ba rhel/$(2).spec'
 endef
 
+# The optional sixth parameter is the package revision, defaulting to 1.
 define host_native_deb_build
-	$(eval version := $(shell $(REPO_ROOT)/hack/generate-package-version.sh $(REPO_ROOT) deb $(4) $(3)))
+	$(eval version := $(shell $(REPO_ROOT)/hack/generate-package-version.sh $(REPO_ROOT) deb $(4) "$(3)" "$(6)"))
 
 	$(eval timestamp := $(shell date -u '+%a, %d %b %Y %H:%M:%S +0000'))
 
@@ -1519,7 +1558,9 @@ bin/crane: $(REPO_ROOT)/bin/crane
 $(REPO_ROOT)/bin/crane:
 	$(info ::: Downloading crane from $(CRANE_URL))
 	@mkdir -p $(REPO_ROOT)/bin
-	@curl -sSfL --retry 5 $(CRANE_URL) | tar xz -C $(REPO_ROOT)/bin crane
+	@curl -sSfL --retry 5 --retry-all-errors -o /tmp/calico-crane.tar.gz $(CRANE_URL)
+	@tar xz -C $(REPO_ROOT)/bin -f /tmp/calico-crane.tar.gz crane
+	@rm -f /tmp/calico-crane.tar.gz
 endif # Windows_NT
 
 
