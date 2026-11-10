@@ -8230,6 +8230,13 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 							Format:      "int32",
 						},
 					},
+					"hostQoSReservationSafetyMargin": {
+						SchemaProps: spec.SchemaProps{
+							Description: "HostQoSReservationSafetyMargin caps each direction's HostQoSPolicy reservations as a share of link capacity. [Default: 0.75]",
+							Type:        []string{"number"},
+							Format:      "double",
+						},
+					},
 				},
 			},
 		},

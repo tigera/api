@@ -1247,6 +1247,14 @@ spec:
                     type: object
                   type: array
                   x-kubernetes-list-type: atomic
+                hostQoSReservationSafetyMargin:
+                  description: |-
+                    HostQoSReservationSafetyMargin caps each direction's HostQoSPolicy reservations as a share
+                    of link capacity. [Default: 0.75]
+                  exclusiveMinimum: true
+                  maximum: 1
+                  minimum: 0
+                  type: number
                 interfaceExclude:
                   description: |-
                     InterfaceExclude A comma-separated list of interface names that should be excluded when Felix is resolving
