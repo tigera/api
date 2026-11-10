@@ -1915,6 +1915,14 @@ type FelixConfigurationSpec struct {
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=3000
 	BPFMaglevMaxServices *int `json:"bpfMaglevMaxServices,omitempty" validate:"omitempty,gt=0,lte=3000"`
+
+	// HostQoSReservationSafetyMargin caps each direction's HostQoSPolicy reservations as a share
+	// of link capacity. [Default: 0.75]
+	// +optional
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:ExclusiveMinimum=true
+	// +kubebuilder:validation:Maximum=1
+	HostQoSReservationSafetyMargin *float64 `json:"hostQoSReservationSafetyMargin,omitempty" validate:"omitempty,gt=0,lte=1"`
 }
 
 type HealthTimeoutOverride struct {

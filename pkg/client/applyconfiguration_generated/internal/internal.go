@@ -1949,6 +1949,9 @@ var schemaYAML = typed.YAMLObject(`types:
           elementType:
             namedType: com.github.tigera.api.pkg.apis.projectcalico.v3.HealthTimeoutOverride
           elementRelationship: atomic
+    - name: hostQoSReservationSafetyMargin
+      type:
+        scalar: numeric
     - name: interfaceExclude
       type:
         scalar: string

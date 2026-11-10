@@ -4100,6 +4100,11 @@ func (in *FelixConfigurationSpec) DeepCopyInto(out *FelixConfigurationSpec) {
 		*out = new(int)
 		**out = **in
 	}
+	if in.HostQoSReservationSafetyMargin != nil {
+		in, out := &in.HostQoSReservationSafetyMargin, &out.HostQoSReservationSafetyMargin
+		*out = new(float64)
+		**out = **in
+	}
 	return
 }
 

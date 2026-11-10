@@ -340,3 +340,23 @@ func NewHostQoSPolicyList() *HostQoSPolicyList {
 		},
 	}
 }
+
+// DefaultHostQoSReservationSafetyMargin is the value used for
+// FelixConfiguration.HostQoSReservationSafetyMargin when the field is unset or no
+// FelixConfiguration resource exists. Keep in sync with the felix config param default
+// ("float(>0:1);0.75") in felix/config/config_params.go.
+const DefaultHostQoSReservationSafetyMargin = 0.75
+
+// WithinSafetyMargin reports whether a per-direction reservation total fits under a link
+// capacity scaled by the safety margin. sumReservations and linkCapacity are in bits/sec
+// (resource.Quantity.Value()); margin is in (0,1]. Callers guard linkCapacity>0 before
+// calling.
+//
+// The clientv3 admission hook is the only consumer: it applies the margin against an explicit
+// spec.linkCapacity. Felix does not enforce it.
+//
+// Takes Quantities rather than int64 bit/s: Quantity.Value() returns 0 for a value that
+// overflows int64, which would read as "no reservations" and pass every cap.
+func WithinSafetyMargin(sumReservations, linkCapacity resource.Quantity, margin float64) bool {
+	return sumReservations.AsApproximateFloat64() <= linkCapacity.AsApproximateFloat64()*margin
+}
