@@ -1281,6 +1281,9 @@ type FelixConfigurationSpecApplyConfiguration struct {
 	//
 	// [Default: 100]
 	BPFMaglevMaxServices *int `json:"bpfMaglevMaxServices,omitempty"`
+	// HostQoSReservationSafetyMargin caps each direction's HostQoSPolicy reservations as a share
+	// of link capacity. [Default: 0.75]
+	HostQoSReservationSafetyMargin *float64 `json:"hostQoSReservationSafetyMargin,omitempty"`
 }
 
 // FelixConfigurationSpecApplyConfiguration constructs a declarative configuration of the FelixConfigurationSpec type for use with
@@ -3819,5 +3822,13 @@ func (b *FelixConfigurationSpecApplyConfiguration) WithBPFMaglevMaxEndpointsPerS
 // If called multiple times, the BPFMaglevMaxServices field is set to the value of the last call.
 func (b *FelixConfigurationSpecApplyConfiguration) WithBPFMaglevMaxServices(value int) *FelixConfigurationSpecApplyConfiguration {
 	b.BPFMaglevMaxServices = &value
+	return b
+}
+
+// WithHostQoSReservationSafetyMargin sets the HostQoSReservationSafetyMargin field in the declarative configuration to the given value
+// and returns the receiver, so that objects can be built by chaining "With" function invocations.
+// If called multiple times, the HostQoSReservationSafetyMargin field is set to the value of the last call.
+func (b *FelixConfigurationSpecApplyConfiguration) WithHostQoSReservationSafetyMargin(value float64) *FelixConfigurationSpecApplyConfiguration {
+	b.HostQoSReservationSafetyMargin = &value
 	return b
 }
