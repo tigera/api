@@ -155,6 +155,8 @@ type BGPPeerSpec struct {
 
 	// Name of the external network to which this peer belongs.
 	// +optional
+	// +kubebuilder:validation:MaxLength=253
+	// +kubebuilder:validation:Pattern=`^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$`
 	ExternalNetwork string `json:"externalNetwork,omitempty" validate:"omitempty,name"`
 
 	// Add an exact, i.e. /32, static route toward peer IP in order to prevent route flapping.
