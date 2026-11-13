@@ -112,6 +112,10 @@ DEV_REGISTRY ?= $(firstword $(DEV_REGISTRIES))
 # remove from the list to push to manifest any registries that do not support multi-arch
 MANIFEST_REGISTRIES         ?= $(DEV_REGISTRIES)
 
+# Set by Semaphore or ArgoCI, and empty locally. For a PR, the branch is its base.
+GIT_CONTEXT_BRANCH := $(or $(SEMAPHORE_GIT_BRANCH),$(CI_GIT_BRANCH))
+GIT_CONTEXT_REF_TYPE := $(or $(SEMAPHORE_GIT_REF_TYPE),$(if $(CI_GIT_REF_TYPE),$(if $(filter PR,$(CI_GIT_REF_TYPE)),pull-request,$(if $(filter TAG,$(CI_GIT_REF_TYPE)),tag,branch))))
+
 # The registry when running CI/CD pipelines.
 THIRD_PARTY_REGISTRY_CI=gcr.io/unique-caldron-775/third-party-ci
 THIRD_PARTY_REGISTRY_CD=gcr.io/unique-caldron-775/cnx/tigera/third-party
@@ -120,20 +124,19 @@ THIRD_PARTY_REGISTRY_CD=gcr.io/unique-caldron-775/cnx/tigera/third-party
 # Only master and release-calient-* branches have third-party base images published under
 # their branch name. For any other branch (feature branches, or PRs whose base is a feature
 # branch such as stacked PRs), fall back to the master-tagged images.
-THIRD_PARTY_RELEASE_BRANCH ?= $(if $(filter master release-calient-%,$(SEMAPHORE_GIT_BRANCH)),$(SEMAPHORE_GIT_BRANCH),master)
+THIRD_PARTY_RELEASE_BRANCH ?= $(if $(filter master release-calient-%,$(GIT_CONTEXT_BRANCH)),$(GIT_CONTEXT_BRANCH),master)
 
 # cd-common publishes every image at BRANCH_NAME, so that is the tag a build which names
-# no version of its own can pull. CI exports it; fall back to the checked-out branch, or
-# for a PR to its base, which is what SEMAPHORE_GIT_BRANCH holds.
-BRANCH_IMAGE_TAG ?= $(if $(BRANCH_NAME),$(BRANCH_NAME),$(if $(SEMAPHORE_GIT_BRANCH),$(SEMAPHORE_GIT_BRANCH),$(shell git rev-parse --abbrev-ref HEAD 2>/dev/null)))
-ifeq ($(SEMAPHORE_GIT_REF_TYPE), branch)
+# no version of its own can pull.
+BRANCH_IMAGE_TAG ?= $(if $(BRANCH_NAME),$(BRANCH_NAME),$(if $(GIT_CONTEXT_BRANCH),$(GIT_CONTEXT_BRANCH),$(shell git rev-parse --abbrev-ref HEAD 2>/dev/null)))
+ifeq ($(GIT_CONTEXT_REF_TYPE), branch)
     # on master and release-calient branches
     THIRD_PARTY_REGISTRY?=$(THIRD_PARTY_REGISTRY_CD)
-else ifeq ($(SEMAPHORE_GIT_REF_TYPE), pull-request)
+else ifeq ($(GIT_CONTEXT_REF_TYPE), pull-request)
     # on pull requests
     THIRD_PARTY_REGISTRY?=$(THIRD_PARTY_REGISTRY_CI)
 else
-    # Local builds. The Semaphore git-context vars aren't set, so default to the
+    # Local builds. No CI git context is set, so default to the
     # CD registry, which serves the master-tagged base images that local enterprise
     # builds (fluentd, elasticsearch, deep-packet-inspection, kibana) pull from.
     THIRD_PARTY_REGISTRY?=$(THIRD_PARTY_REGISTRY_CD)
@@ -395,6 +398,11 @@ EXTRA_DOCKER_ARGS += --cpuset-cpus=$(DOCKER_CPUSET_CPUS)
 endif
 ifneq ($(GOMAXPROCS),)
 EXTRA_DOCKER_ARGS += -e GOMAXPROCS=$(GOMAXPROCS)
+endif
+# By name, so docker reads the value from the environment: a proxy list can hold
+# a `|`, which spliced into the recipe would reach the shell as a pipe.
+ifneq ($(GOPROXY),)
+EXTRA_DOCKER_ARGS += -e GOPROXY
 endif
 ifneq ($(DOCKER_MEMORY),)
 EXTRA_DOCKER_ARGS += --memory=$(DOCKER_MEMORY) --memory-swap=$(if $(DOCKER_MEMORY_SWAP),$(DOCKER_MEMORY_SWAP),$(DOCKER_MEMORY))
@@ -945,7 +953,7 @@ commit-and-push-pr:
 ###############################################################################
 GIT_COMMIT_MESSAGE?="Automatic Pin Updates"
 GIT_COMMIT_TITLE?="Semaphore Auto Pin Update"
-GIT_PR_BRANCH_BASE?=$(SEMAPHORE_GIT_BRANCH)
+GIT_PR_BRANCH_BASE?=$(GIT_CONTEXT_BRANCH)
 PIN_UPDATE_BRANCH?=semaphore-auto-pin-updates-$(GIT_PR_BRANCH_BASE)
 GIT_PR_BRANCH_HEAD?=$(PIN_UPDATE_BRANCH)
 GIT_PIN_UPDATE_COMMIT_FILES?=go.mod go.sum
@@ -1069,12 +1077,17 @@ REPO_REL_DIR=$(shell if [ -e hack/format-changed-files.sh ]; then echo '.'; else
 
 .PHONY: fix-changed go-fmt-changed goimports-changed
 # Format changed files only.
+# The parent-branch probe needs an upstream remote, which a fork's clone lacks,
+# so skip it when CI supplies the range.
 fix-changed go-fmt-changed goimports-changed:
 	if [ "$(SKIP_FIX_CHANGED)" != "true" ]; then \
-	  parent_branch=`release_prefix=$(RELEASE_BRANCH_PREFIX)-v git_repo_slug=$(GIT_REPO_SLUG) $(REPO_REL_DIR)/hack/find-parent-release-branch.sh`; \
+	  if [ -z "$(CI_GIT_COMMIT_RANGE)" ]; then \
+	    parent_branch=`release_prefix=$(RELEASE_BRANCH_PREFIX)-v git_repo_slug=$(GIT_REPO_SLUG) $(REPO_REL_DIR)/hack/find-parent-release-branch.sh`; \
+	  fi; \
 	  $(DOCKER_RUN) -e release_prefix=$(RELEASE_BRANCH_PREFIX)-v \
 	                -e git_repo_slug=$(GIT_REPO_SLUG) \
 	                -e parent_branch=$$parent_branch \
+	                -e CI_GIT_COMMIT_RANGE=$(CI_GIT_COMMIT_RANGE) \
 	                $(CALICO_BUILD) $(REPO_REL_DIR)/hack/format-changed-files.sh; \
 	fi
 
@@ -2573,6 +2586,7 @@ $(ENVTEST_MIN_ASSETS_MARKER):
 run-etcd:
 	@if ! $(call container_running,calico-etcd); then \
 		docker rm -f calico-etcd >/dev/null 2>&1 || true; \
+		$(call retry_docker_cmd,pull $(ETCD_IMAGE),docker pull -q $(ETCD_IMAGE),$(MANIFEST_RETRIES),$(MANIFEST_RETRY_DELAY)); \
 		docker run --detach \
 			--net=host \
 			--entrypoint=/usr/local/bin/etcd \
