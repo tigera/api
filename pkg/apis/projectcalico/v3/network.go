@@ -122,6 +122,7 @@ type VRFHostConfig struct {
 	// matches a given node wins.
 	// +optional
 	// +kubebuilder:default=""
+	// +kubebuilder:validation:MaxLength=1024
 	NodeSelector string `json:"nodeSelector,omitempty" validate:"omitempty,selector"`
 
 	// RouteTableIndex is the Linux kernel routing table number to use for this VRF.
