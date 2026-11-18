@@ -539,8 +539,8 @@ spec:
                   x-kubernetes-list-type: map
                 selector:
                   description:
-                    Selector picks the HostEndpoints to shape; the alphabetically-first
-                    policy wins a contested one.
+                    Selector matches HostEndpoints' own labels, not profile
+                    labels; the alphabetically-first policy wins.
                   maxLength: 1024
                   minLength: 1
                   type: string
