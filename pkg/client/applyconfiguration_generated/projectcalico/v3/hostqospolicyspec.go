@@ -14,7 +14,7 @@ import (
 // HostQoSPolicySpec is shaping intent: link capacity, resource pools, and a selector for the
 // HostEndpoints it shapes.
 type HostQoSPolicySpecApplyConfiguration struct {
-	// Selector picks the HostEndpoints to shape; the alphabetically-first policy wins a contested one.
+	// Selector matches HostEndpoints' own labels, not profile labels; the alphabetically-first policy wins.
 	Selector *string `json:"selector,omitempty"`
 	// LinkCapacity in bits/sec, such as 10G; omit to detect it.
 	LinkCapacity *resource.Quantity `json:"linkCapacity,omitempty"`

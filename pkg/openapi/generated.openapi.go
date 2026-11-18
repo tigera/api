@@ -10277,7 +10277,7 @@ func schema_pkg_apis_projectcalico_v3_HostQoSPolicySpec(ref common.ReferenceCall
 				Properties: map[string]spec.Schema{
 					"selector": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Selector picks the HostEndpoints to shape; the alphabetically-first policy wins a contested one.",
+							Description: "Selector matches HostEndpoints' own labels, not profile labels; the alphabetically-first policy wins.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
