@@ -280,6 +280,13 @@ spec:
                             rule:
                               "!has(self.services) || (!has(self.nets) || size(self.nets)
                               == 0) && (!has(self.notNets) || size(self.notNets) == 0)"
+                          - message:
+                              a namespaceSelector that uses global() must be exactly
+                              global()
+                            reason: FieldValueInvalid
+                            rule:
+                              "!has(self.namespaceSelector) || !self.namespaceSelector.contains('global(')
+                              || self.namespaceSelector.matches('^ *global[(] *[)] *$')"
                       http:
                         description:
                           HTTP contains match criteria that apply to HTTP
@@ -652,6 +659,13 @@ spec:
                             rule:
                               "!has(self.services) || (!has(self.nets) || size(self.nets)
                               == 0) && (!has(self.notNets) || size(self.notNets) == 0)"
+                          - message:
+                              a namespaceSelector that uses global() must be exactly
+                              global()
+                            reason: FieldValueInvalid
+                            rule:
+                              "!has(self.namespaceSelector) || !self.namespaceSelector.contains('global(')
+                              || self.namespaceSelector.matches('^ *global[(] *[)] *$')"
                     required:
                       - action
                     type: object
@@ -975,6 +989,13 @@ spec:
                             rule:
                               "!has(self.services) || (!has(self.nets) || size(self.nets)
                               == 0) && (!has(self.notNets) || size(self.notNets) == 0)"
+                          - message:
+                              a namespaceSelector that uses global() must be exactly
+                              global()
+                            reason: FieldValueInvalid
+                            rule:
+                              "!has(self.namespaceSelector) || !self.namespaceSelector.contains('global(')
+                              || self.namespaceSelector.matches('^ *global[(] *[)] *$')"
                       http:
                         description:
                           HTTP contains match criteria that apply to HTTP
@@ -1347,6 +1368,13 @@ spec:
                             rule:
                               "!has(self.services) || (!has(self.nets) || size(self.nets)
                               == 0) && (!has(self.notNets) || size(self.notNets) == 0)"
+                          - message:
+                              a namespaceSelector that uses global() must be exactly
+                              global()
+                            reason: FieldValueInvalid
+                            rule:
+                              "!has(self.namespaceSelector) || !self.namespaceSelector.contains('global(')
+                              || self.namespaceSelector.matches('^ *global[(] *[)] *$')"
                     required:
                       - action
                     type: object
@@ -1533,6 +1561,14 @@ spec:
                 - message: global() can only be used in an EntityRule namespaceSelector
                   reason: FieldValueInvalid
                   rule: "!has(self.serviceAccountSelector) || !self.serviceAccountSelector.contains('global(')"
+                - message: services are not allowed in an egress rule source
+                  reason: FieldValueForbidden
+                  rule: "!has(self.egress) || self.egress.all(r, !has(r.source) || !has(r.source.services))"
+                - message: services are not allowed in an ingress rule destination
+                  reason: FieldValueForbidden
+                  rule:
+                    "!has(self.ingress) || self.ingress.all(r, !has(r.destination)
+                    || !has(r.destination.services))"
           required:
             - metadata
             - spec
