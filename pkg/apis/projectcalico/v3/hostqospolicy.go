@@ -55,7 +55,7 @@ type HostQoSPolicy struct {
 // HostQoSPolicySpec is shaping intent: link capacity, resource pools, and a selector for the
 // HostEndpoints it shapes.
 type HostQoSPolicySpec struct {
-	// Selector picks the HostEndpoints to shape; the alphabetically-first policy wins a contested one.
+	// Selector matches HostEndpoints' own labels, not profile labels; the alphabetically-first policy wins.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=1024
