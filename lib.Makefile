@@ -2103,9 +2103,9 @@ publish-charts-gcs:
 	done
 
 CHART_REPO?=oci://us-central1-docker.pkg.dev/unique-caldron-775/charts
-publish-charts-oci:
+publish-charts-oci: bin/helm
 	# publish charts to the new enterprise oci repo.
-	gcloud auth application-default print-access-token | helm registry login -u oauth2accesstoken --password-stdin https://us-central1-docker.pkg.dev
+	gcloud auth application-default print-access-token | bin/helm registry login -u oauth2accesstoken --password-stdin https://us-central1-docker.pkg.dev
 	find ./bin -maxdepth 1 -type f -name "*.tgz" -print0 | xargs -0 -I {} bin/helm push {} $(CHART_REPO)
 
 bin/yq:
