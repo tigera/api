@@ -378,6 +378,7 @@ type FelixConfigurationSpecApplyConfiguration struct {
 	IPForwarding *string `json:"ipForwarding,omitempty"`
 	// ExternalNodesCIDRList is a list of CIDR's of external, non-Calico nodes from which VXLAN/IPIP overlay traffic
 	// will be allowed.  By default, external tunneled traffic is blocked to reduce attack surface.
+	// Entries must be IPv4 CIDRs or IPv4 addresses.
 	ExternalNodesCIDRList *[]string `json:"externalNodesList,omitempty"`
 	// NfNetlinkBufSize controls the size of NFLOG messages that the kernel will try to send to Felix.  NFLOG messages
 	// are used to report flow verdicts from the kernel.  Warning: currently increasing the value may cause errors
