@@ -16,6 +16,9 @@ type RemoteClusterSyncOptionsApplyConfiguration struct {
 	// at the time of RemoteClusterConfiguration application: "Enabled" if VXLAN, "Disabled" otherwise. If upgrading from
 	// a version that predates this field, this field will default to "Disabled".
 	OverlayRoutingMode *projectcalicov3.OverlayRoutingMode `json:"overlayRoutingMode,omitempty"`
+	// Determines whether the Istio root certificates this remote cluster publishes are added to the local cluster's
+	// Istio trust bundle. A trusted root can issue any workload identity in the local mesh. [Default: Disabled]
+	IstioTrustAnchors *projectcalicov3.IstioTrustAnchorsMode `json:"istioTrustAnchors,omitempty"`
 }
 
 // RemoteClusterSyncOptionsApplyConfiguration constructs a declarative configuration of the RemoteClusterSyncOptions type for use with
@@ -29,5 +32,13 @@ func RemoteClusterSyncOptions() *RemoteClusterSyncOptionsApplyConfiguration {
 // If called multiple times, the OverlayRoutingMode field is set to the value of the last call.
 func (b *RemoteClusterSyncOptionsApplyConfiguration) WithOverlayRoutingMode(value projectcalicov3.OverlayRoutingMode) *RemoteClusterSyncOptionsApplyConfiguration {
 	b.OverlayRoutingMode = &value
+	return b
+}
+
+// WithIstioTrustAnchors sets the IstioTrustAnchors field in the declarative configuration to the given value
+// and returns the receiver, so that objects can be built by chaining "With" function invocations.
+// If called multiple times, the IstioTrustAnchors field is set to the value of the last call.
+func (b *RemoteClusterSyncOptionsApplyConfiguration) WithIstioTrustAnchors(value projectcalicov3.IstioTrustAnchorsMode) *RemoteClusterSyncOptionsApplyConfiguration {
+	b.IstioTrustAnchors = &value
 	return b
 }

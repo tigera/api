@@ -14438,6 +14438,13 @@ func schema_pkg_apis_projectcalico_v3_RemoteClusterSyncOptions(ref common.Refere
 							Format:      "",
 						},
 					},
+					"istioTrustAnchors": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Determines whether the Istio root certificates this remote cluster publishes are added to the local cluster's Istio trust bundle. A trusted root can issue any workload identity in the local mesh. [Default: Disabled]",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 			},
 		},
