@@ -172,12 +172,22 @@ spec:
                   type: string
                 syncOptions:
                   default:
+                    istioTrustAnchors: Disabled
                     overlayRoutingMode: Disabled
                   description: |-
                     Configuration options that do not relate to the underlying datastore connection. These fields relate to the
                     syncing of resources once the connection is established. These fields can be set independent of the other
                     connection-oriented fields, e.g. they can be set when ClusterAccessSecret is non-nil.
                   properties:
+                    istioTrustAnchors:
+                      default: Disabled
+                      description: |-
+                        Determines whether the Istio root certificates this remote cluster publishes are added to the local cluster's
+                        Istio trust bundle. A trusted root can issue any workload identity in the local mesh. [Default: Disabled]
+                      enum:
+                        - Enabled
+                        - Disabled
+                      type: string
                     overlayRoutingMode:
                       default: Disabled
                       description: |-

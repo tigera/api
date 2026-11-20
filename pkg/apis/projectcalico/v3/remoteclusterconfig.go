@@ -46,7 +46,7 @@ type RemoteClusterConfigurationSpec struct {
 	// Configuration options that do not relate to the underlying datastore connection. These fields relate to the
 	// syncing of resources once the connection is established. These fields can be set independent of the other
 	// connection-oriented fields, e.g. they can be set when ClusterAccessSecret is non-nil.
-	// +kubebuilder:default={overlayRoutingMode: "Disabled"}
+	// +kubebuilder:default={overlayRoutingMode: "Disabled", istioTrustAnchors: "Disabled"}
 	SyncOptions RemoteClusterSyncOptions `json:"syncOptions,omitempty"`
 }
 
@@ -57,6 +57,12 @@ type RemoteClusterSyncOptions struct {
 	// a version that predates this field, this field will default to "Disabled".
 	// +kubebuilder:default=Disabled
 	OverlayRoutingMode OverlayRoutingMode `json:"overlayRoutingMode,omitempty" validate:"omitempty,oneof=Enabled Disabled"`
+
+	// Determines whether the Istio root certificates this remote cluster publishes are added to the local cluster's
+	// Istio trust bundle. A trusted root can issue any workload identity in the local mesh. [Default: Disabled]
+	// +kubebuilder:default=Disabled
+	// +kubebuilder:validation:Enum=Enabled;Disabled
+	IstioTrustAnchors IstioTrustAnchorsMode `json:"istioTrustAnchors,omitempty" validate:"omitempty,oneof=Enabled Disabled"`
 }
 
 type OverlayRoutingMode string
@@ -64,6 +70,13 @@ type OverlayRoutingMode string
 const (
 	OverlayRoutingModeEnabled  OverlayRoutingMode = "Enabled"
 	OverlayRoutingModeDisabled OverlayRoutingMode = "Disabled"
+)
+
+type IstioTrustAnchorsMode string
+
+const (
+	IstioTrustAnchorsEnabled  IstioTrustAnchorsMode = "Enabled"
+	IstioTrustAnchorsDisabled IstioTrustAnchorsMode = "Disabled"
 )
 
 type EtcdConfig struct {
