@@ -38,6 +38,9 @@ HELM_VERSION=v3.21.2
 # KubeVirt/mockvirt release that supports the target Kubernetes minor exists.
 KINDEST_NODE_VERSION=v1.35.5
 KIND_VERSION=v0.32.0
+UV_VERSION=0.9.5
+# What the cytopia/yamllint image that yaml-lint runs ships; a native run pins it.
+YAMLLINT_VERSION=1.32.0
 
 # This gets embedded into node as the Calico version, the Enterprise release
 # is based off of. This should be updated everytime a new opensource Calico
