@@ -4222,6 +4222,9 @@ var schemaYAML = typed.YAMLObject(`types:
 - name: com.github.tigera.api.pkg.apis.projectcalico.v3.RemoteClusterSyncOptions
   map:
     fields:
+    - name: istioTrustAnchors
+      type:
+        scalar: string
     - name: overlayRoutingMode
       type:
         scalar: string
