@@ -551,8 +551,10 @@ BUILD_REPO_ROOT := $(REPO_ROOT)
 export GOARCH := $(ARCH)
 export GOOS := $(BUILDOS)
 export GOFLAGS := $(GOFLAGS)
+# The level the go-build container builds at: it is in every build cache key,
+# so a native build and a containerised one share entries only when they agree.
 ifeq ($(ARCH),amd64)
-export GOAMD64 := v2
+export GOAMD64 := v3
 endif
 endif
 
