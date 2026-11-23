@@ -55,7 +55,7 @@ GIT_REPO      ?= calico-private
 GIT_REMOTE    ?= origin
 
 RELEASE_BRANCH_PREFIX ?=release-calient
-DEV_TAG_SUFFIX        ?= calient-4.dev
+DEV_TAG_SUFFIX        ?= calient-5.dev
 
 # Part of the git remote that is common to git and HTTP representations.
 # Used to auto-detect the right remote.
