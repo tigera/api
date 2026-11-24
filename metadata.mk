@@ -7,7 +7,6 @@ GO_VERSION=1.27.4
 K8S_VERSION=v1.37.2
 # The version of LLVM to use for go-build and calico/base images.
 LLVM_VERSION=22.1.8
-
 # Calico toolchain versions and the calico/base image to use.
 # Set when go-build is rebuilt for the same Go/LLVM/Kubernetes versions, which is
 # published as -1, -2 and so on. Empty for a normal tag; clear it whenever any of
