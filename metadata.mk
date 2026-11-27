@@ -146,5 +146,8 @@ NFT_RPMS_TAG=6eb1d57c0512
 # The manager branch corresponding to this branch.
 MANAGER_BRANCH ?= master
 
+# The tigera/forklift branch corresponding to this branch.
+FORKLIFT_BRANCH ?= main
+
 # quay.io expiry time for hashrelease/dev images
 QUAY_EXPIRE_DAYS=90
