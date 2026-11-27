@@ -266,9 +266,17 @@ CGO_WINDOWS_DOCKER_ENV = \
 	-e GOOS=windows \
 	-e GOEXPERIMENT=nodwarf5
 
+# The prefix that runs a command with that toolchain: the go-build image already
+# carries MinGW, so a native build only needs the env.
+ifeq ($(NATIVE_GO_BUILD),true)
+CGO_WINDOWS_GO_BUILD = env $(subst -e ,,$(CGO_WINDOWS_DOCKER_ENV))
+else
+CGO_WINDOWS_GO_BUILD = $(DOCKER_RUN) $(CGO_WINDOWS_DOCKER_ENV) $(CALICO_BUILD)
+endif
+
 # For windows builds that require cgo.
 define build_cgo_windows_binary
-	$(DOCKER_RUN) $(CGO_WINDOWS_DOCKER_ENV) $(CALICO_BUILD) \
+	$(CGO_WINDOWS_GO_BUILD) \
 		sh -c '$(GIT_CONFIG_SSH) go build -o $(2) $(if $(BUILD_TAGS),-tags $(BUILD_TAGS)) -v -buildvcs=false -ldflags "$(LDFLAGS) -s -w" $(1)'
 endef
 
